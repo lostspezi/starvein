@@ -28,6 +28,12 @@ export function Header() {
           >
             {t("nav.locations")}
           </Link>
+          <Link
+            href="/signatures"
+            className="text-text-muted hover:text-text-primary"
+          >
+            {t("nav.signatures")}
+          </Link>
         </nav>
       </div>
       <div className="flex items-center gap-4">

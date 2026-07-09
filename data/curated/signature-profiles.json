@@ -1,0 +1,185 @@
+{
+  "_meta": {
+    "patchVersion": "4.7",
+    "generatedAt": "2026-07-09",
+    "sources": [
+      "Diftic/SC_Signature_Scanner SignatureValue.md, SC 4.7 (MIT, extrahiert aus Game2.dcb; siehe CREDITS.md)"
+    ],
+    "notes": "Ship: Signatur identifiziert das dominante Mineral direkt (SC 4.7 hat das alte Asteroiden-Typ-System ersetzt). ROC/FPS: Signatur codiert nur die Groesse (3000 = FPS-Klein-Deposit, 4000 = ROC/GV-Gross-Deposit), das Mineral ergibt sich aus der Location. Achtung: Signatur 3000 kollidiert mit Capital-Wrack-Truemmern (890 Jump) - Kontext entscheidet.",
+    "defaults": {
+      "patchVersion": "4.7",
+      "sourceType": "curated",
+      "confidenceScore": 0.6
+    }
+  },
+  "shipProfiles": [
+    {
+      "oreCode": "QUAN",
+      "signatureValue": 3170,
+      "dominantCompositionRange": { "min": 40, "max": 80 },
+      "notes": "+ Beryl (10-20%)"
+    },
+    {
+      "oreCode": "STIL",
+      "signatureValue": 3185,
+      "dominantCompositionRange": { "min": 40, "max": 80 },
+      "notes": "+ Taranite (10-20%)"
+    },
+    {
+      "oreCode": "SAVR",
+      "signatureValue": 3200,
+      "dominantCompositionRange": { "min": 40, "max": 80 },
+      "notes": "+ Gold (10-20%)"
+    },
+    {
+      "oreCode": "OURA",
+      "signatureValue": 3370,
+      "dominantCompositionRange": { "min": 40, "max": 80 },
+      "notes": "+ Agricium (10-20%)"
+    },
+    {
+      "oreCode": "RICC",
+      "signatureValue": 3385,
+      "dominantCompositionRange": { "min": 40, "max": 80 },
+      "notes": "+ Laranite (10-20%)"
+    },
+    {
+      "oreCode": "LIND",
+      "signatureValue": 3400,
+      "dominantCompositionRange": { "min": 40, "max": 80 },
+      "notes": "+ Tungsten (10-20%)"
+    },
+    {
+      "oreCode": "BERY",
+      "signatureValue": 3540,
+      "dominantCompositionRange": { "min": 50, "max": 100 }
+    },
+    {
+      "oreCode": "TARA",
+      "signatureValue": 3555,
+      "dominantCompositionRange": { "min": 50, "max": 100 }
+    },
+    {
+      "oreCode": "BORA",
+      "signatureValue": 3570,
+      "dominantCompositionRange": { "min": 40, "max": 80 },
+      "notes": "+ Gold (5-10%), + Bexalite (5-10%)"
+    },
+    {
+      "oreCode": "GOLD",
+      "signatureValue": 3585,
+      "dominantCompositionRange": { "min": 40, "max": 80 },
+      "notes": "+ Borase (5-10%), + Bexalite (5-10%)"
+    },
+    {
+      "oreCode": "BEXA",
+      "signatureValue": 3600,
+      "dominantCompositionRange": { "min": 40, "max": 80 },
+      "notes": "+ Gold (5-10%), + Borase (5-10%)"
+    },
+    {
+      "oreCode": "LARA",
+      "signatureValue": 3825,
+      "dominantCompositionRange": { "min": 40, "max": 80 },
+      "notes": "+ Tungsten (10-20%)"
+    },
+    {
+      "oreCode": "ASLA",
+      "signatureValue": 3840,
+      "dominantCompositionRange": { "min": 40, "max": 80 },
+      "notes": "+ Titanium (5-10%), + Agricium (5-10%)"
+    },
+    {
+      "oreCode": "TITA",
+      "signatureValue": 3855,
+      "dominantCompositionRange": { "min": 40, "max": 80 },
+      "notes": "+ Aslarite (5-10%), + Agricium (5-10%)"
+    },
+    {
+      "oreCode": "TUNG",
+      "signatureValue": 3870,
+      "dominantCompositionRange": { "min": 40, "max": 80 },
+      "notes": "+ Laranite (10-20%)"
+    },
+    {
+      "oreCode": "AGRI",
+      "signatureValue": 3885,
+      "dominantCompositionRange": { "min": 40, "max": 80 },
+      "notes": "+ Titanium (5-10%), + Aslarite (5-10%)"
+    },
+    {
+      "oreCode": "TORI",
+      "signatureValue": 3900,
+      "dominantCompositionRange": { "min": 50, "max": 100 }
+    },
+    {
+      "oreCode": "HEPH",
+      "signatureValue": 4180,
+      "dominantCompositionRange": { "min": 40, "max": 80 },
+      "notes": "+ Quartz (5-10%), + Silicon (5-10%)"
+    },
+    {
+      "oreCode": "TIN",
+      "signatureValue": 4195,
+      "dominantCompositionRange": { "min": 40, "max": 80 },
+      "notes": "+ Copper (10-20%)"
+    },
+    {
+      "oreCode": "QUAR",
+      "signatureValue": 4210,
+      "dominantCompositionRange": { "min": 40, "max": 80 },
+      "notes": "+ Hephaestanite (5-10%), + Silicon (5-10%)"
+    },
+    {
+      "oreCode": "CORU",
+      "signatureValue": 4225,
+      "dominantCompositionRange": { "min": 40, "max": 80 },
+      "notes": "+ Aluminum (10-20%)"
+    },
+    {
+      "oreCode": "COPP",
+      "signatureValue": 4240,
+      "dominantCompositionRange": { "min": 40, "max": 80 },
+      "notes": "+ Tin (10-20%)"
+    },
+    {
+      "oreCode": "SILI",
+      "signatureValue": 4255,
+      "dominantCompositionRange": { "min": 40, "max": 80 },
+      "notes": "+ Hephaestanite (5-10%), + Quartz (5-10%)"
+    },
+    {
+      "oreCode": "IRON",
+      "signatureValue": 4270,
+      "dominantCompositionRange": { "min": 50, "max": 100 }
+    },
+    {
+      "oreCode": "ALUM",
+      "signatureValue": 4285,
+      "dominantCompositionRange": { "min": 40, "max": 80 },
+      "notes": "+ Corundum (10-20%)"
+    },
+    {
+      "oreCode": "ICEW",
+      "signatureValue": 4300,
+      "dominantCompositionRange": { "min": 50, "max": 100 }
+    }
+  ],
+  "groundMinerals": [
+    "HADA",
+    "DOLI",
+    "APHO",
+    "BERA",
+    "GLAC",
+    "FEYN",
+    "JACO",
+    "SADA",
+    "JANA",
+    "SALD",
+    "CARI"
+  ],
+  "groundSignatures": {
+    "fps": 3000,
+    "roc": 4000
+  }
+}

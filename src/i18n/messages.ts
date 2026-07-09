@@ -17,6 +17,8 @@ import deOres from "@/features/ores/messages/de.json";
 import enOres from "@/features/ores/messages/en.json";
 import deSearch from "@/features/search/messages/de.json";
 import enSearch from "@/features/search/messages/en.json";
+import deSignatures from "@/features/signature-profiles/messages/de.json";
+import enSignatures from "@/features/signature-profiles/messages/en.json";
 
 const messages = {
   de: {
@@ -27,6 +29,7 @@ const messages = {
     ...deLocations,
     ...deSearch,
     ...deOccurrences,
+    ...deSignatures,
   },
   en: {
     ...enCommon,
@@ -36,6 +39,7 @@ const messages = {
     ...enLocations,
     ...enSearch,
     ...enOccurrences,
+    ...enSignatures,
   },
 };
 

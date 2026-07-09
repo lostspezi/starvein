@@ -1,0 +1,21 @@
+{
+  "signatures": {
+    "title": "Signature Reference",
+    "shipTitle": "Ship mining (Prospector / MOLE)",
+    "shipExplainer": "In ship mining the scan signature identifies the dominant mineral directly — one value, one mineral. Rocks additionally contain secondary minerals.",
+    "groundTitle": "ROC & FPS mining (ground deposits)",
+    "groundExplainer": "For ground deposits the signature only indicates the size of the deposit — it does not identify the mineral. Each cluster is 100% one single mineral; which one depends on the location.",
+    "groundFpsLabel": "Small deposit (FPS / hand mining)",
+    "groundRocLabel": "Large deposit (ROC / ground vehicle)",
+    "groundMineralsTitle": "Possible ground deposit minerals",
+    "collisionNote": "Note: signature 3000 is shared with capital wreck debris (890 Jump class) — context decides: planet surface = deposit, open space = debris.",
+    "oreInfoTitle": "Scan signature",
+    "oreGroundNote": "The signature does not identify the mineral — check the location's mineral list instead.",
+    "table": {
+      "mineral": "Mineral",
+      "signature": "Signature",
+      "composition": "Dominant share",
+      "secondaries": "Secondary minerals"
+    }
+  }
+}

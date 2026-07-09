@@ -14,6 +14,8 @@ import { loadCuratedOccurrences } from "@/features/ore-occurrences/curated-occur
 import { upsertOreOccurrences } from "@/features/ore-occurrences/ore-occurrences.repository";
 import { loadCuratedOres } from "@/features/ores/curated-ores";
 import { upsertOres } from "@/features/ores/ores.repository";
+import { loadCuratedSignatureProfiles } from "@/features/signature-profiles/curated-signatures";
+import { upsertSignatureProfiles } from "@/features/signature-profiles/signature-profiles.repository";
 import { closeMongo, getDb } from "@/lib/db";
 
 async function main() {
@@ -34,6 +36,10 @@ async function main() {
   const occurrences = loadCuratedOccurrences();
   await upsertOreOccurrences(db, occurrences);
   console.log(`Seeded ${occurrences.length} ore occurrences`);
+
+  const signatureProfiles = loadCuratedSignatureProfiles();
+  await upsertSignatureProfiles(db, signatureProfiles);
+  console.log(`Seeded ${signatureProfiles.length} signature profiles`);
 
   console.log(`Done (database '${db.databaseName}').`);
 }
