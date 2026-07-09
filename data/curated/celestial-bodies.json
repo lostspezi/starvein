@@ -3,10 +3,10 @@
     "patchVersion": "4.7",
     "generatedAt": "2026-07-09",
     "sources": [
-      "Generiert aus UEX Corp API 2.0 /planets, /moons, /orbits (is_lagrange=1) (2026-07-09)",
+      "Generiert aus UEX Corp API 2.0 /planets, /moons, /orbits (is_lagrange=1), /outposts (2026-07-09)",
       "Lagrange-Parent-Zuordnung ueber Code-Praefix (PYR6 -\u003e Terminus etc.)"
     ],
-    "notes": "Nur Planeten, Monde und Lagrange-Punkte. Stationen, Outposts, Guertel und Hoehlen folgen mit spaeteren Slices (Schema unterstuetzt sie bereits)."
+    "notes": "Planeten, Monde, Lagrange-Punkte und Outposts. Stationen, Guertel und Hoehlen folgen mit spaeteren Slices (Schema unterstuetzt sie bereits)."
   },
   "celestialBodies": [
     {
@@ -264,6 +264,302 @@
       "name": "Vuur",
       "parentSlug": "pyro-v",
       "uexId": 73
+    },
+    {
+      "slug": "arid-reach",
+      "systemCode": "PYRO",
+      "type": "outpost",
+      "name": "Arid Reach",
+      "parentSlug": "monox",
+      "uexId": 90
+    },
+    {
+      "slug": "ashland",
+      "systemCode": "PYRO",
+      "type": "outpost",
+      "name": "Ashland",
+      "parentSlug": "ignis",
+      "uexId": 98
+    },
+    {
+      "slug": "blackrock-exchange",
+      "systemCode": "PYRO",
+      "type": "outpost",
+      "name": "Blackrock Exchange",
+      "parentSlug": "terminus",
+      "uexId": 104
+    },
+    {
+      "slug": "bueno-ravine",
+      "systemCode": "PYRO",
+      "type": "outpost",
+      "name": "Bueno Ravine",
+      "parentSlug": "bloom",
+      "uexId": 73
+    },
+    {
+      "slug": "bullock-s-reach",
+      "systemCode": "PYRO",
+      "type": "outpost",
+      "name": "Bullock\u0027s Reach",
+      "parentSlug": "terminus",
+      "uexId": 105
+    },
+    {
+      "slug": "canard-view",
+      "systemCode": "PYRO",
+      "type": "outpost",
+      "name": "Canard View",
+      "parentSlug": "terminus",
+      "uexId": 106
+    },
+    {
+      "slug": "carver-s-ridge",
+      "systemCode": "PYRO",
+      "type": "outpost",
+      "name": "Carver\u0027s Ridge",
+      "parentSlug": "bloom",
+      "uexId": 93
+    },
+    {
+      "slug": "chawla-s-beach",
+      "systemCode": "PYRO",
+      "type": "outpost",
+      "name": "Chawla\u0027s Beach",
+      "parentSlug": "pyro-iv",
+      "uexId": 99
+    },
+    {
+      "slug": "fallow-field",
+      "systemCode": "PYRO",
+      "type": "outpost",
+      "name": "Fallow Field",
+      "parentSlug": "pyro-iv",
+      "uexId": 100
+    },
+    {
+      "slug": "feo-canyon-depot",
+      "systemCode": "PYRO",
+      "type": "outpost",
+      "name": "Feo Canyon Depot",
+      "parentSlug": "fairo",
+      "uexId": 117
+    },
+    {
+      "slug": "frigid-knot",
+      "systemCode": "PYRO",
+      "type": "outpost",
+      "name": "Frigid Knot",
+      "parentSlug": "bloom",
+      "uexId": 94
+    },
+    {
+      "slug": "goner-s-deal",
+      "systemCode": "PYRO",
+      "type": "outpost",
+      "name": "Goner\u0027s Deal",
+      "parentSlug": "pyro-iv",
+      "uexId": 101
+    },
+    {
+      "slug": "gray-gardens-depot",
+      "systemCode": "PYRO",
+      "type": "outpost",
+      "name": "Gray Gardens Depot",
+      "parentSlug": "pyro-i",
+      "uexId": 118
+    },
+    {
+      "slug": "jackson-s-swap",
+      "systemCode": "PYRO",
+      "type": "outpost",
+      "name": "Jackson\u0027s Swap",
+      "parentSlug": "monox",
+      "uexId": 69
+    },
+    {
+      "slug": "kabir-s-post",
+      "systemCode": "PYRO",
+      "type": "outpost",
+      "name": "Kabir\u0027s Post",
+      "parentSlug": "ignis",
+      "uexId": 103
+    },
+    {
+      "slug": "kinder-plots",
+      "systemCode": "PYRO",
+      "type": "outpost",
+      "name": "Kinder Plots",
+      "parentSlug": "terminus",
+      "uexId": 107
+    },
+    {
+      "slug": "last-ditch",
+      "systemCode": "PYRO",
+      "type": "outpost",
+      "name": "Last Ditch",
+      "parentSlug": "monox",
+      "uexId": 70
+    },
+    {
+      "slug": "last-landings",
+      "systemCode": "PYRO",
+      "type": "outpost",
+      "name": "Last Landings",
+      "parentSlug": "terminus",
+      "uexId": 108
+    },
+    {
+      "slug": "narena-s-rest",
+      "systemCode": "PYRO",
+      "type": "outpost",
+      "name": "Narena\u0027s Rest",
+      "parentSlug": "bloom",
+      "uexId": 95
+    },
+    {
+      "slug": "ostler-s-claim",
+      "systemCode": "PYRO",
+      "type": "outpost",
+      "name": "Ostler\u0027s Claim",
+      "parentSlug": "monox",
+      "uexId": 92
+    },
+    {
+      "slug": "prophet-s-peak",
+      "systemCode": "PYRO",
+      "type": "outpost",
+      "name": "Prophet\u0027s Peak",
+      "parentSlug": "adir",
+      "uexId": 112
+    },
+    {
+      "slug": "prospect-depot",
+      "systemCode": "PYRO",
+      "type": "outpost",
+      "name": "Prospect Depot",
+      "parentSlug": "bloom",
+      "uexId": 114
+    },
+    {
+      "slug": "rough-landing",
+      "systemCode": "PYRO",
+      "type": "outpost",
+      "name": "Rough Landing",
+      "parentSlug": "terminus",
+      "uexId": 109
+    },
+    {
+      "slug": "rustville",
+      "systemCode": "PYRO",
+      "type": "outpost",
+      "name": "Rustville",
+      "parentSlug": "pyro-i",
+      "uexId": 68
+    },
+    {
+      "slug": "sacren-s-plot",
+      "systemCode": "PYRO",
+      "type": "outpost",
+      "name": "Sacren\u0027s Plot",
+      "parentSlug": "pyro-iv",
+      "uexId": 102
+    },
+    {
+      "slug": "scarper-s-turn",
+      "systemCode": "PYRO",
+      "type": "outpost",
+      "name": "Scarper\u0027s Turn",
+      "parentSlug": "terminus",
+      "uexId": 110
+    },
+    {
+      "slug": "seer-s-canyon",
+      "systemCode": "PYRO",
+      "type": "outpost",
+      "name": "Seer\u0027s Canyon",
+      "parentSlug": "vatra",
+      "uexId": 113
+    },
+    {
+      "slug": "shadowfall",
+      "systemCode": "PYRO",
+      "type": "outpost",
+      "name": "Shadowfall",
+      "parentSlug": "bloom",
+      "uexId": 74
+    },
+    {
+      "slug": "shepherd-s-rest",
+      "systemCode": "PYRO",
+      "type": "outpost",
+      "name": "Shepherd\u0027s Rest",
+      "parentSlug": "bloom",
+      "uexId": 75
+    },
+    {
+      "slug": "slowburn-depot",
+      "systemCode": "PYRO",
+      "type": "outpost",
+      "name": "Slowburn Depot",
+      "parentSlug": "monox",
+      "uexId": 116
+    },
+    {
+      "slug": "stag-s-rut",
+      "systemCode": "PYRO",
+      "type": "outpost",
+      "name": "Stag\u0027s Rut",
+      "parentSlug": "pyro-i",
+      "uexId": 89
+    },
+    {
+      "slug": "stonetree",
+      "systemCode": "PYRO",
+      "type": "outpost",
+      "name": "Stonetree",
+      "parentSlug": "terminus",
+      "uexId": 111
+    },
+    {
+      "slug": "sunset-mesa",
+      "systemCode": "PYRO",
+      "type": "outpost",
+      "name": "Sunset Mesa",
+      "parentSlug": "monox",
+      "uexId": 71
+    },
+    {
+      "slug": "the-golden-riviera",
+      "systemCode": "PYRO",
+      "type": "outpost",
+      "name": "The Golden Riviera",
+      "parentSlug": "bloom",
+      "uexId": 76
+    },
+    {
+      "slug": "the-yard",
+      "systemCode": "PYRO",
+      "type": "outpost",
+      "name": "The Yard",
+      "parentSlug": "bloom",
+      "uexId": 77
+    },
+    {
+      "slug": "windfall",
+      "systemCode": "PYRO",
+      "type": "outpost",
+      "name": "Windfall",
+      "parentSlug": "bloom",
+      "uexId": 96
+    },
+    {
+      "slug": "yang-s-place",
+      "systemCode": "PYRO",
+      "type": "outpost",
+      "name": "Yang\u0027s Place",
+      "parentSlug": "monox",
+      "uexId": 72
     },
     {
       "slug": "bloom",
@@ -568,6 +864,630 @@
       "name": "Yela",
       "parentSlug": "crusader",
       "uexId": 75
+    },
+    {
+      "slug": "arccorp-mining-area-045",
+      "systemCode": "STANTON",
+      "type": "outpost",
+      "name": "ArcCorp Mining Area 045",
+      "parentSlug": "wala",
+      "uexId": 1
+    },
+    {
+      "slug": "arccorp-mining-area-048",
+      "systemCode": "STANTON",
+      "type": "outpost",
+      "name": "ArcCorp Mining Area 048",
+      "parentSlug": "wala",
+      "uexId": 2
+    },
+    {
+      "slug": "arccorp-mining-area-056",
+      "systemCode": "STANTON",
+      "type": "outpost",
+      "name": "ArcCorp Mining Area 056",
+      "parentSlug": "wala",
+      "uexId": 3
+    },
+    {
+      "slug": "arccorp-mining-area-061",
+      "systemCode": "STANTON",
+      "type": "outpost",
+      "name": "ArcCorp Mining Area 061",
+      "parentSlug": "wala",
+      "uexId": 4
+    },
+    {
+      "slug": "arccorp-mining-area-141",
+      "systemCode": "STANTON",
+      "type": "outpost",
+      "name": "ArcCorp Mining Area 141",
+      "parentSlug": "daymar",
+      "uexId": 5
+    },
+    {
+      "slug": "arccorp-mining-area-157",
+      "systemCode": "STANTON",
+      "type": "outpost",
+      "name": "ArcCorp Mining Area 157",
+      "parentSlug": "yela",
+      "uexId": 6
+    },
+    {
+      "slug": "astor-s-clearing",
+      "systemCode": "STANTON",
+      "type": "outpost",
+      "name": "Astor\u0027s Clearing",
+      "parentSlug": "microtech",
+      "uexId": 60
+    },
+    {
+      "slug": "benson-mining-outpost",
+      "systemCode": "STANTON",
+      "type": "outpost",
+      "name": "Benson Mining Outpost",
+      "parentSlug": "yela",
+      "uexId": 7
+    },
+    {
+      "slug": "bloodshot-ridge",
+      "systemCode": "STANTON",
+      "type": "outpost",
+      "name": "Bloodshot Ridge",
+      "parentSlug": "microtech",
+      "uexId": 82
+    },
+    {
+      "slug": "bountiful-harvest-hydroponics",
+      "systemCode": "STANTON",
+      "type": "outpost",
+      "name": "Bountiful Harvest Hydroponics",
+      "parentSlug": "daymar",
+      "uexId": 8
+    },
+    {
+      "slug": "brio-s-breaker-yard",
+      "systemCode": "STANTON",
+      "type": "outpost",
+      "name": "Brio\u0027s Breaker Yard",
+      "parentSlug": "daymar",
+      "uexId": 9
+    },
+    {
+      "slug": "bud-s-growery",
+      "systemCode": "STANTON",
+      "type": "outpost",
+      "name": "Bud\u0027s Growery",
+      "parentSlug": "euterpe",
+      "uexId": 10
+    },
+    {
+      "slug": "cutter-s-rig",
+      "systemCode": "STANTON",
+      "type": "outpost",
+      "name": "Cutter\u0027s Rig",
+      "parentSlug": "hurston",
+      "uexId": 79
+    },
+    {
+      "slug": "deakins-research",
+      "systemCode": "STANTON",
+      "type": "outpost",
+      "name": "Deakins Research",
+      "parentSlug": "yela",
+      "uexId": 11
+    },
+    {
+      "slug": "devlin-scrap-salvage",
+      "systemCode": "STANTON",
+      "type": "outpost",
+      "name": "Devlin Scrap \u0026 Salvage",
+      "parentSlug": "euterpe",
+      "uexId": 12
+    },
+    {
+      "slug": "dunboro",
+      "systemCode": "STANTON",
+      "type": "outpost",
+      "name": "Dunboro",
+      "parentSlug": "microtech",
+      "uexId": 62
+    },
+    {
+      "slug": "finn-s-folly",
+      "systemCode": "STANTON",
+      "type": "outpost",
+      "name": "Finn\u0027s Folly",
+      "parentSlug": "hurston",
+      "uexId": 80
+    },
+    {
+      "slug": "frostbite",
+      "systemCode": "STANTON",
+      "type": "outpost",
+      "name": "Frostbite",
+      "parentSlug": "microtech",
+      "uexId": 83
+    },
+    {
+      "slug": "gallete-family-farms",
+      "systemCode": "STANTON",
+      "type": "outpost",
+      "name": "Gallete Family Farms",
+      "parentSlug": "cellin",
+      "uexId": 13
+    },
+    {
+      "slug": "ghost-hollow",
+      "systemCode": "STANTON",
+      "type": "outpost",
+      "name": "Ghost Hollow",
+      "parentSlug": "microtech",
+      "uexId": 84
+    },
+    {
+      "slug": "harper-s-point",
+      "systemCode": "STANTON",
+      "type": "outpost",
+      "name": "Harper\u0027s Point",
+      "parentSlug": "microtech",
+      "uexId": 61
+    },
+    {
+      "slug": "hdms-anderson",
+      "systemCode": "STANTON",
+      "type": "outpost",
+      "name": "HDMS-Anderson",
+      "parentSlug": "aberdeen",
+      "uexId": 14
+    },
+    {
+      "slug": "hdms-bezdek",
+      "systemCode": "STANTON",
+      "type": "outpost",
+      "name": "HDMS-Bezdek",
+      "parentSlug": "arial",
+      "uexId": 15
+    },
+    {
+      "slug": "hdms-edmond",
+      "systemCode": "STANTON",
+      "type": "outpost",
+      "name": "HDMS-Edmond",
+      "parentSlug": "hurston",
+      "uexId": 16
+    },
+    {
+      "slug": "hdms-hadley",
+      "systemCode": "STANTON",
+      "type": "outpost",
+      "name": "HDMS-Hadley",
+      "parentSlug": "hurston",
+      "uexId": 17
+    },
+    {
+      "slug": "hdms-hahn",
+      "systemCode": "STANTON",
+      "type": "outpost",
+      "name": "HDMS-Hahn",
+      "parentSlug": "magda",
+      "uexId": 18
+    },
+    {
+      "slug": "hdms-lathan",
+      "systemCode": "STANTON",
+      "type": "outpost",
+      "name": "HDMS-Lathan",
+      "parentSlug": "arial",
+      "uexId": 19
+    },
+    {
+      "slug": "hdms-norgaard",
+      "systemCode": "STANTON",
+      "type": "outpost",
+      "name": "HDMS-Norgaard",
+      "parentSlug": "aberdeen",
+      "uexId": 20
+    },
+    {
+      "slug": "hdms-oparei",
+      "systemCode": "STANTON",
+      "type": "outpost",
+      "name": "HDMS-Oparei",
+      "parentSlug": "hurston",
+      "uexId": 21
+    },
+    {
+      "slug": "hdms-perlman",
+      "systemCode": "STANTON",
+      "type": "outpost",
+      "name": "HDMS-Perlman",
+      "parentSlug": "magda",
+      "uexId": 22
+    },
+    {
+      "slug": "hdms-pinewood",
+      "systemCode": "STANTON",
+      "type": "outpost",
+      "name": "HDMS-Pinewood",
+      "parentSlug": "hurston",
+      "uexId": 23
+    },
+    {
+      "slug": "hdms-ryder",
+      "systemCode": "STANTON",
+      "type": "outpost",
+      "name": "HDMS-Ryder",
+      "parentSlug": "ita",
+      "uexId": 24
+    },
+    {
+      "slug": "hdms-stanhope",
+      "systemCode": "STANTON",
+      "type": "outpost",
+      "name": "HDMS-Stanhope",
+      "parentSlug": "hurston",
+      "uexId": 25
+    },
+    {
+      "slug": "hdms-thedus",
+      "systemCode": "STANTON",
+      "type": "outpost",
+      "name": "HDMS-Thedus",
+      "parentSlug": "hurston",
+      "uexId": 26
+    },
+    {
+      "slug": "hdms-woodruff",
+      "systemCode": "STANTON",
+      "type": "outpost",
+      "name": "HDMS-Woodruff",
+      "parentSlug": "ita",
+      "uexId": 27
+    },
+    {
+      "slug": "hickes-research",
+      "systemCode": "STANTON",
+      "type": "outpost",
+      "name": "Hickes Research",
+      "parentSlug": "cellin",
+      "uexId": 28
+    },
+    {
+      "slug": "humboldt-mines",
+      "systemCode": "STANTON",
+      "type": "outpost",
+      "name": "Humboldt Mines",
+      "parentSlug": "lyria",
+      "uexId": 29
+    },
+    {
+      "slug": "jumptown-daymar",
+      "systemCode": "STANTON",
+      "type": "outpost",
+      "name": "Jumptown",
+      "parentSlug": "daymar",
+      "uexId": 87
+    },
+    {
+      "slug": "jumptown-yela",
+      "systemCode": "STANTON",
+      "type": "outpost",
+      "name": "Jumptown",
+      "parentSlug": "yela",
+      "uexId": 30
+    },
+    {
+      "slug": "kudre-ore",
+      "systemCode": "STANTON",
+      "type": "outpost",
+      "name": "Kudre Ore",
+      "parentSlug": "daymar",
+      "uexId": 31
+    },
+    {
+      "slug": "loveridge-mineral-reserve",
+      "systemCode": "STANTON",
+      "type": "outpost",
+      "name": "Loveridge Mineral Reserve",
+      "parentSlug": "lyria",
+      "uexId": 32
+    },
+    {
+      "slug": "ludlow",
+      "systemCode": "STANTON",
+      "type": "outpost",
+      "name": "Ludlow",
+      "parentSlug": "hurston",
+      "uexId": 81
+    },
+    {
+      "slug": "maker-s-point",
+      "systemCode": "STANTON",
+      "type": "outpost",
+      "name": "Maker\u0027s Point",
+      "parentSlug": "hurston",
+      "uexId": 64
+    },
+    {
+      "slug": "moreland-hills",
+      "systemCode": "STANTON",
+      "type": "outpost",
+      "name": "Moreland Hills",
+      "parentSlug": "microtech",
+      "uexId": 85
+    },
+    {
+      "slug": "nt-999-xx",
+      "systemCode": "STANTON",
+      "type": "outpost",
+      "name": "NT-999-XX",
+      "parentSlug": "yela",
+      "uexId": 33
+    },
+    {
+      "slug": "nt-999-xxii",
+      "systemCode": "STANTON",
+      "type": "outpost",
+      "name": "NT-999-XXII",
+      "parentSlug": "yela",
+      "uexId": 67
+    },
+    {
+      "slug": "nuen-waste-management",
+      "systemCode": "STANTON",
+      "type": "outpost",
+      "name": "Nuen Waste Management",
+      "parentSlug": "daymar",
+      "uexId": 34
+    },
+    {
+      "slug": "outpost-54",
+      "systemCode": "STANTON",
+      "type": "outpost",
+      "name": "Outpost 54",
+      "parentSlug": "microtech",
+      "uexId": 35
+    },
+    {
+      "slug": "paradise-cove",
+      "systemCode": "STANTON",
+      "type": "outpost",
+      "name": "Paradise Cove",
+      "parentSlug": "wala",
+      "uexId": 36
+    },
+    {
+      "slug": "picker-s-field",
+      "systemCode": "STANTON",
+      "type": "outpost",
+      "name": "Picker\u0027s Field",
+      "parentSlug": "hurston",
+      "uexId": 66
+    },
+    {
+      "slug": "private-property",
+      "systemCode": "STANTON",
+      "type": "outpost",
+      "name": "Private Property",
+      "parentSlug": "cellin",
+      "uexId": 37
+    },
+    {
+      "slug": "rappel",
+      "systemCode": "STANTON",
+      "type": "outpost",
+      "name": "Rappel",
+      "parentSlug": "hurston",
+      "uexId": 65
+    },
+    {
+      "slug": "raven-s-roost",
+      "systemCode": "STANTON",
+      "type": "outpost",
+      "name": "Raven\u0027s Roost",
+      "parentSlug": "microtech",
+      "uexId": 38
+    },
+    {
+      "slug": "rayari-anvik-research-outpost",
+      "systemCode": "STANTON",
+      "type": "outpost",
+      "name": "Rayari Anvik Research Outpost",
+      "parentSlug": "calliope",
+      "uexId": 39
+    },
+    {
+      "slug": "rayari-cantwell-research-outpost",
+      "systemCode": "STANTON",
+      "type": "outpost",
+      "name": "Rayari Cantwell Research Outpost",
+      "parentSlug": "clio",
+      "uexId": 40
+    },
+    {
+      "slug": "rayari-deltana-research-outpost",
+      "systemCode": "STANTON",
+      "type": "outpost",
+      "name": "Rayari Deltana Research Outpost",
+      "parentSlug": "microtech",
+      "uexId": 41
+    },
+    {
+      "slug": "rayari-kaltag-research-outpost",
+      "systemCode": "STANTON",
+      "type": "outpost",
+      "name": "Rayari Kaltag Research Outpost",
+      "parentSlug": "calliope",
+      "uexId": 42
+    },
+    {
+      "slug": "rayari-mcgrath-research-outpost",
+      "systemCode": "STANTON",
+      "type": "outpost",
+      "name": "Rayari McGrath Research Outpost",
+      "parentSlug": "clio",
+      "uexId": 43
+    },
+    {
+      "slug": "razor-s-edge",
+      "systemCode": "STANTON",
+      "type": "outpost",
+      "name": "Razor\u0027s Edge",
+      "parentSlug": "microtech",
+      "uexId": 86
+    },
+    {
+      "slug": "reclamation-disposal-orinth",
+      "systemCode": "STANTON",
+      "type": "outpost",
+      "name": "Reclamation \u0026 Disposal Orinth",
+      "parentSlug": "hurston",
+      "uexId": 44
+    },
+    {
+      "slug": "sakura-sun-magnolia-workcenter",
+      "systemCode": "STANTON",
+      "type": "outpost",
+      "name": "Sakura Sun Magnolia Workcenter",
+      "parentSlug": "hurston",
+      "uexId": 88
+    },
+    {
+      "slug": "samson-son-s-salvage-center",
+      "systemCode": "STANTON",
+      "type": "outpost",
+      "name": "Samson \u0026 Son\u0027s Salvage Center",
+      "parentSlug": "wala",
+      "uexId": 45
+    },
+    {
+      "slug": "shady-glen",
+      "systemCode": "STANTON",
+      "type": "outpost",
+      "name": "Shady Glen",
+      "parentSlug": "wala",
+      "uexId": 59
+    },
+    {
+      "slug": "shubin-mining-facility-sal-2",
+      "systemCode": "STANTON",
+      "type": "outpost",
+      "name": "Shubin Mining Facility SAL-2",
+      "parentSlug": "lyria",
+      "uexId": 46
+    },
+    {
+      "slug": "shubin-mining-facility-sal-5",
+      "systemCode": "STANTON",
+      "type": "outpost",
+      "name": "Shubin Mining Facility SAL-5",
+      "parentSlug": "lyria",
+      "uexId": 47
+    },
+    {
+      "slug": "shubin-mining-facility-scd-1",
+      "systemCode": "STANTON",
+      "type": "outpost",
+      "name": "Shubin Mining Facility SCD-1",
+      "parentSlug": "daymar",
+      "uexId": 48
+    },
+    {
+      "slug": "shubin-mining-facility-sm0-10",
+      "systemCode": "STANTON",
+      "type": "outpost",
+      "name": "Shubin Mining Facility SM0-10",
+      "parentSlug": "microtech",
+      "uexId": 49
+    },
+    {
+      "slug": "shubin-mining-facility-sm0-13",
+      "systemCode": "STANTON",
+      "type": "outpost",
+      "name": "Shubin Mining Facility SM0-13",
+      "parentSlug": "microtech",
+      "uexId": 50
+    },
+    {
+      "slug": "shubin-mining-facility-sm0-18",
+      "systemCode": "STANTON",
+      "type": "outpost",
+      "name": "Shubin Mining Facility SM0-18",
+      "parentSlug": "microtech",
+      "uexId": 51
+    },
+    {
+      "slug": "shubin-mining-facility-sm0-22",
+      "systemCode": "STANTON",
+      "type": "outpost",
+      "name": "Shubin Mining Facility SM0-22",
+      "parentSlug": "microtech",
+      "uexId": 52
+    },
+    {
+      "slug": "shubin-mining-facility-smca-6",
+      "systemCode": "STANTON",
+      "type": "outpost",
+      "name": "Shubin Mining Facility SMCa-6",
+      "parentSlug": "calliope",
+      "uexId": 53
+    },
+    {
+      "slug": "shubin-mining-facility-smca-8",
+      "systemCode": "STANTON",
+      "type": "outpost",
+      "name": "Shubin Mining Facility SMCa-8",
+      "parentSlug": "calliope",
+      "uexId": 54
+    },
+    {
+      "slug": "terra-mills-hydrofarm",
+      "systemCode": "STANTON",
+      "type": "outpost",
+      "name": "Terra Mills HydroFarm",
+      "parentSlug": "cellin",
+      "uexId": 55
+    },
+    {
+      "slug": "the-necropolis",
+      "systemCode": "STANTON",
+      "type": "outpost",
+      "name": "The Necropolis",
+      "parentSlug": "microtech",
+      "uexId": 56
+    },
+    {
+      "slug": "the-orphanage",
+      "systemCode": "STANTON",
+      "type": "outpost",
+      "name": "The Orphanage",
+      "parentSlug": "lyria",
+      "uexId": 57
+    },
+    {
+      "slug": "tram-myers-mining",
+      "systemCode": "STANTON",
+      "type": "outpost",
+      "name": "Tram \u0026 Myers Mining",
+      "parentSlug": "cellin",
+      "uexId": 58
+    },
+    {
+      "slug": "weeping-cove",
+      "systemCode": "STANTON",
+      "type": "outpost",
+      "name": "Weeping Cove",
+      "parentSlug": "hurston",
+      "uexId": 63
+    },
+    {
+      "slug": "zephyr",
+      "systemCode": "STANTON",
+      "type": "outpost",
+      "name": "Zephyr",
+      "parentSlug": "hurston",
+      "uexId": 78
     },
     {
       "slug": "arccorp",

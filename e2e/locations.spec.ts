@@ -28,6 +28,26 @@ test("browses system -> planet -> moon with breadcrumbs", async ({ page }) => {
   ).toBeVisible();
 });
 
+test("outpost page shows the full ancestor chain in breadcrumbs", async ({
+  page,
+}) => {
+  await page.goto("/en/locations/stanton/arccorp-mining-area-045");
+
+  await expect(
+    page.getByRole("heading", { name: "ArcCorp Mining Area 045" }),
+  ).toBeVisible();
+  await expect(page.getByText("Outpost")).toBeVisible();
+
+  const breadcrumbs = page.getByRole("navigation", { name: "Breadcrumb" });
+  await expect(
+    breadcrumbs.getByRole("link", { name: "Stanton" }),
+  ).toBeVisible();
+  await expect(
+    breadcrumbs.getByRole("link", { name: "ArcCorp", exact: true }),
+  ).toBeVisible();
+  await expect(breadcrumbs.getByRole("link", { name: "Wala" })).toBeVisible();
+});
+
 test("unknown system returns 404", async ({ page }) => {
   const response = await page.goto("/en/locations/atlantis");
   expect(response?.status()).toBe(404);

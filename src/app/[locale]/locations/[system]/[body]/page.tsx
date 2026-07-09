@@ -36,20 +36,25 @@ export default async function BodyPage({
   const t = await getTranslations("locations");
   const systemPath = `/locations/${system.code.toLowerCase()}`;
 
+  // Ahnenkette hochlaufen (z. B. Outpost -> Mond -> Planet), Tiefe begrenzt
+  const ancestors: BreadcrumbItem[] = [];
+  let parentSlug = body.parentSlug;
+  for (let depth = 0; parentSlug && depth < 5; depth++) {
+    const parent = await findBodyBySlug(db, system.code, parentSlug);
+    if (!parent) break;
+    ancestors.unshift({
+      label: parent.name,
+      href: `${systemPath}/${parent.slug}`,
+    });
+    parentSlug = parent.parentSlug;
+  }
+
   const crumbs: BreadcrumbItem[] = [
     { label: t("title"), href: "/locations" },
     { label: system.name, href: systemPath },
+    ...ancestors,
+    { label: body.name },
   ];
-  if (body.parentSlug) {
-    const parent = await findBodyBySlug(db, system.code, body.parentSlug);
-    if (parent) {
-      crumbs.push({
-        label: parent.name,
-        href: `${systemPath}/${parent.slug}`,
-      });
-    }
-  }
-  crumbs.push({ label: body.name });
 
   const children = await findChildBodies(db, system.code, body.slug);
 

@@ -16,7 +16,7 @@ describe("curated star systems dataset", () => {
 });
 
 describe("curated celestial bodies dataset", () => {
-  it("loads 74 bodies (11 planets, 18 moons, 45 lagrange points)", () => {
+  it("loads 189 bodies (11 planets, 18 moons, 45 lagrange points, 115 outposts)", () => {
     const bodies = loadCuratedCelestialBodies();
     const byType = (type: string) =>
       bodies.filter((b) => b.type === type).length;
@@ -24,7 +24,19 @@ describe("curated celestial bodies dataset", () => {
     expect(byType("planet")).toBe(11);
     expect(byType("moon")).toBe(18);
     expect(byType("lagrangePoint")).toBe(45);
-    expect(bodies.length).toBe(74);
+    expect(byType("outpost")).toBe(115);
+    expect(bodies.length).toBe(189);
+  });
+
+  it("links ArcCorp Mining Area 045 to the moon Wala", () => {
+    const outpost = loadCuratedCelestialBodies().find(
+      (b) => b.slug === "arccorp-mining-area-045",
+    );
+    expect(outpost).toMatchObject({
+      type: "outpost",
+      systemCode: "STANTON",
+      parentSlug: "wala",
+    });
   });
 
   it("has unique slugs", () => {
