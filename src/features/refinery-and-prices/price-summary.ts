@@ -54,6 +54,24 @@ export async function getOrePriceSummary(
   };
 }
 
+/**
+ * Bester Verkaufspreis (raffiniert) je Erz in einem Roundtrip — für den
+ * Startseiten-Explorer. Leere Map, solange nie gesynct wurde.
+ */
+export async function getBestRefinedSellByOre(
+  db: Db,
+): Promise<Map<string, number>> {
+  const results = await db
+    .collection("priceSnapshots")
+    .aggregate<{ _id: string; best: number }>([
+      { $match: { kind: "refined", priceSell: { $gt: 0 } } },
+      { $group: { _id: "$oreCode", best: { $max: "$priceSell" } } },
+    ])
+    .toArray();
+
+  return new Map(results.map((entry) => [entry._id, entry.best]));
+}
+
 export async function findRefineryYieldsByOre(
   db: Db,
   oreCode: string,

@@ -3,6 +3,7 @@ import type { Db } from "mongodb";
 import { closeMongo, getDb } from "@/lib/db";
 import { uniqueDbName } from "@/test/factories";
 import {
+  findAllOccurrences,
   findOccurrencesByLocation,
   findOccurrencesByOre,
   upsertOreOccurrences,
@@ -77,6 +78,29 @@ describe("ore occurrences repository", () => {
       "fps",
     );
     expect(results.map((o) => o.oreCode).sort()).toEqual(["DOLI", "HADA"]);
+  });
+
+  it("lists all occurrences sorted by probability desc", async () => {
+    const all = await findAllOccurrences(db, {});
+    expect(all).toHaveLength(4);
+    expect(all[0].probabilityPercent).toBe(60);
+    expect(all.map((o) => o.probabilityPercent)).toEqual([60, 50, 45, 30]);
+  });
+
+  it("filters all occurrences by method, system and ore", async () => {
+    const rocOnly = await findAllOccurrences(db, { method: "roc" });
+    expect(rocOnly).toHaveLength(1);
+    expect(rocOnly[0].method).toBe("roc");
+
+    const stanton = await findAllOccurrences(db, { systemCode: "STANTON" });
+    expect(stanton).toHaveLength(4);
+
+    const doliFps = await findAllOccurrences(db, {
+      oreCode: "DOLI",
+      method: "fps",
+    });
+    expect(doliFps).toHaveLength(1);
+    expect(doliFps[0].oreCode).toBe("DOLI");
   });
 
   it("upserts idempotently by ore+location+method+patch", async () => {

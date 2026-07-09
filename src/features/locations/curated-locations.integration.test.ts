@@ -3,6 +3,7 @@ import {
   loadCuratedCelestialBodies,
   loadCuratedStarSystems,
 } from "./curated-locations";
+import { SYSTEM_CODES } from "./locations.schema";
 
 describe("curated star systems dataset", () => {
   it("contains Stanton, Pyro and Nyx", () => {
@@ -12,6 +13,13 @@ describe("curated star systems dataset", () => {
       "PYRO",
       "STANTON",
     ]);
+  });
+
+  it("keeps SYSTEM_CODES in sync with the curated systems", () => {
+    const curated = loadCuratedStarSystems()
+      .map((s) => s.code)
+      .sort();
+    expect([...SYSTEM_CODES].sort()).toEqual(curated);
   });
 });
 

@@ -1,6 +1,14 @@
 {
   "home": {
     "title": "STARVEIN",
-    "tagline": "Community mining reference for Star Citizen — ores, locations, scan signatures."
+    "tagline": "Community mining reference for Star Citizen — ores, locations, scan signatures.",
+    "explorer": {
+      "systemLabel": "Filter by star system",
+      "systemAll": "All",
+      "oreLabel": "Ore",
+      "oreAll": "All ores",
+      "priceHeader": "Best sell (refined)",
+      "empty": "No occurrences match these filters."
+    }
   }
 }

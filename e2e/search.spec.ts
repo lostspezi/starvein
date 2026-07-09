@@ -12,7 +12,9 @@ test("finds a moon via the header search and navigates to it", async ({
   const input = page.getByRole("combobox", { name: "Search" });
   await input.fill("yela");
 
-  const option = page.getByRole("option", { name: "Yela Moon", exact: true });
+  const option = page
+    .getByRole("listbox")
+    .getByRole("option", { name: "Yela Moon", exact: true });
   await expect(option).toBeVisible();
   await option.click();
 
@@ -24,7 +26,10 @@ test("finds an ore and navigates to its detail page", async ({ page }) => {
   await page.goto("/en");
 
   await page.getByRole("combobox", { name: "Search" }).fill("quanta");
-  await page.getByRole("option", { name: /Quantainium/ }).click();
+  await page
+    .getByRole("listbox")
+    .getByRole("option", { name: /Quantainium/ })
+    .click();
 
   await expect(page).toHaveURL(/\/en\/ores\/quan$/);
   await expect(

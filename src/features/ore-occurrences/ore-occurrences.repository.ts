@@ -16,6 +16,30 @@ const SORT = {
   method: 1,
 } as const;
 
+export type OccurrenceQueryFilter = {
+  method?: MiningMethod | null;
+  systemCode?: string | null;
+  oreCode?: string | null;
+};
+
+/** Alle Vorkommen (für den Startseiten-Explorer), optional vorgefiltert. */
+export async function findAllOccurrences(
+  db: Db,
+  filter: OccurrenceQueryFilter,
+): Promise<OreOccurrence[]> {
+  const query: Record<string, unknown> = {};
+  if (filter.method) query.method = filter.method;
+  if (filter.systemCode) query.systemCode = filter.systemCode;
+  if (filter.oreCode) query.oreCode = filter.oreCode;
+
+  const docs = await db
+    .collection(COLLECTION)
+    .find(query, NO_ID)
+    .sort(SORT)
+    .toArray();
+  return docs.map((doc) => oreOccurrenceSchema.parse(doc));
+}
+
 export async function findOccurrencesByOre(
   db: Db,
   oreCode: string,

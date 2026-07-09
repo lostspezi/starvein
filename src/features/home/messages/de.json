@@ -1,6 +1,14 @@
 {
   "home": {
     "title": "STARVEIN",
-    "tagline": "Community-Mining-Referenz für Star Citizen — Erze, Fundorte, Scan-Signaturen."
+    "tagline": "Community-Mining-Referenz für Star Citizen — Erze, Fundorte, Scan-Signaturen.",
+    "explorer": {
+      "systemLabel": "Nach Sternsystem filtern",
+      "systemAll": "Alle",
+      "oreLabel": "Erz",
+      "oreAll": "Alle Erze",
+      "priceHeader": "Bester Verkauf (raffiniert)",
+      "empty": "Keine Vorkommen für diese Filter."
+    }
   }
 }

@@ -1,14 +1,15 @@
 import { useTranslations } from "next-intl";
 
+/** Kompakter Hero über dem Explorer. */
 export function HomePage() {
   const t = useTranslations("home");
 
   return (
-    <main className="flex flex-1 flex-col items-center justify-center gap-4 px-4 py-12 text-center sm:px-6 sm:py-16">
-      <h1 className="text-4xl font-semibold tracking-widest text-accent-glow">
+    <div className="flex flex-col gap-1 py-2 text-center sm:py-4">
+      <h1 className="text-2xl font-semibold tracking-widest text-accent-glow sm:text-3xl">
         {t("title")}
       </h1>
-      <p className="max-w-xl text-text-muted">{t("tagline")}</p>
-    </main>
+      <p className="text-sm text-text-muted">{t("tagline")}</p>
+    </div>
   );
 }

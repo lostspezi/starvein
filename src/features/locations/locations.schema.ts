@@ -2,6 +2,10 @@ import { z } from "zod";
 
 export const SYSTEM_STATUS = ["live", "ptu"] as const;
 
+/** Verfügbare Sternsysteme — bei neuen Systemen zusammen mit den kuratierten Daten erweitern. */
+export const SYSTEM_CODES = ["STANTON", "PYRO", "NYX"] as const;
+export type SystemCode = (typeof SYSTEM_CODES)[number];
+
 export const BODY_TYPES = [
   "planet",
   "moon",
