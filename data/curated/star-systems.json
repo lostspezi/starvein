@@ -1,0 +1,27 @@
+{
+  "_meta": {
+    "patchVersion": "4.7",
+    "generatedAt": "2026-07-09",
+    "sources": ["Generiert aus UEX Corp API 2.0 /star_systems (2026-07-09)"]
+  },
+  "starSystems": [
+    {
+      "code": "NYX",
+      "name": "Nyx",
+      "status": "live",
+      "uexId": 55
+    },
+    {
+      "code": "PYRO",
+      "name": "Pyro",
+      "status": "live",
+      "uexId": 64
+    },
+    {
+      "code": "STANTON",
+      "name": "Stanton",
+      "status": "live",
+      "uexId": 68
+    }
+  ]
+}

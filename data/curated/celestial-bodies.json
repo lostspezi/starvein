@@ -1,0 +1,605 @@
+{
+  "_meta": {
+    "patchVersion": "4.7",
+    "generatedAt": "2026-07-09",
+    "sources": [
+      "Generiert aus UEX Corp API 2.0 /planets, /moons, /orbits (is_lagrange=1) (2026-07-09)",
+      "Lagrange-Parent-Zuordnung ueber Code-Praefix (PYR6 -\u003e Terminus etc.)"
+    ],
+    "notes": "Nur Planeten, Monde und Lagrange-Punkte. Stationen, Outposts, Guertel und Hoehlen folgen mit spaeteren Slices (Schema unterstuetzt sie bereits)."
+  },
+  "celestialBodies": [
+    {
+      "slug": "delamar",
+      "systemCode": "NYX",
+      "type": "planet",
+      "name": "Delamar",
+      "parentSlug": null,
+      "uexId": 325
+    },
+    {
+      "slug": "pyr3-l1",
+      "systemCode": "PYRO",
+      "type": "lagrangePoint",
+      "name": "Bloom Lagrange Point 1",
+      "parentSlug": "bloom",
+      "uexId": 393
+    },
+    {
+      "slug": "pyr3-l2",
+      "systemCode": "PYRO",
+      "type": "lagrangePoint",
+      "name": "Bloom Lagrange Point 2",
+      "parentSlug": "bloom",
+      "uexId": 345
+    },
+    {
+      "slug": "pyr3-l3",
+      "systemCode": "PYRO",
+      "type": "lagrangePoint",
+      "name": "Bloom Lagrange Point 3",
+      "parentSlug": "bloom",
+      "uexId": 387
+    },
+    {
+      "slug": "pyr3-l4",
+      "systemCode": "PYRO",
+      "type": "lagrangePoint",
+      "name": "Bloom Lagrange Point 4",
+      "parentSlug": "bloom",
+      "uexId": 347
+    },
+    {
+      "slug": "pyr3-l5",
+      "systemCode": "PYRO",
+      "type": "lagrangePoint",
+      "name": "Bloom Lagrange Point 5",
+      "parentSlug": "bloom",
+      "uexId": 348
+    },
+    {
+      "slug": "pyr2-l1",
+      "systemCode": "PYRO",
+      "type": "lagrangePoint",
+      "name": "Monox Lagrange Point 1",
+      "parentSlug": "monox",
+      "uexId": 362
+    },
+    {
+      "slug": "pyr2-l2",
+      "systemCode": "PYRO",
+      "type": "lagrangePoint",
+      "name": "Monox Lagrange Point 2",
+      "parentSlug": "monox",
+      "uexId": 363
+    },
+    {
+      "slug": "pyr2-l3",
+      "systemCode": "PYRO",
+      "type": "lagrangePoint",
+      "name": "Monox Lagrange Point 3",
+      "parentSlug": "monox",
+      "uexId": 364
+    },
+    {
+      "slug": "pyr2-l4",
+      "systemCode": "PYRO",
+      "type": "lagrangePoint",
+      "name": "Monox Lagrange Point 4",
+      "parentSlug": "monox",
+      "uexId": 392
+    },
+    {
+      "slug": "pyr2-l5",
+      "systemCode": "PYRO",
+      "type": "lagrangePoint",
+      "name": "Monox Lagrange Point 5",
+      "parentSlug": "monox",
+      "uexId": 366
+    },
+    {
+      "slug": "pyr1-l1",
+      "systemCode": "PYRO",
+      "type": "lagrangePoint",
+      "name": "Pyro I Lagrange Point 1",
+      "parentSlug": "pyro-i",
+      "uexId": 367
+    },
+    {
+      "slug": "pyr1-l2",
+      "systemCode": "PYRO",
+      "type": "lagrangePoint",
+      "name": "Pyro I Lagrange Point 2",
+      "parentSlug": "pyro-i",
+      "uexId": 368
+    },
+    {
+      "slug": "pyr1-l3",
+      "systemCode": "PYRO",
+      "type": "lagrangePoint",
+      "name": "Pyro I Lagrange Point 3",
+      "parentSlug": "pyro-i",
+      "uexId": 369
+    },
+    {
+      "slug": "pyr1-l4",
+      "systemCode": "PYRO",
+      "type": "lagrangePoint",
+      "name": "Pyro I Lagrange Point 4",
+      "parentSlug": "pyro-i",
+      "uexId": 370
+    },
+    {
+      "slug": "pyr1-l5",
+      "systemCode": "PYRO",
+      "type": "lagrangePoint",
+      "name": "Pyro I Lagrange Point 5",
+      "parentSlug": "pyro-i",
+      "uexId": 371
+    },
+    {
+      "slug": "pyr5-l1",
+      "systemCode": "PYRO",
+      "type": "lagrangePoint",
+      "name": "Pyro V Lagrange Point 1",
+      "parentSlug": "pyro-v",
+      "uexId": 349
+    },
+    {
+      "slug": "pyr5-l2",
+      "systemCode": "PYRO",
+      "type": "lagrangePoint",
+      "name": "Pyro V Lagrange Point 2",
+      "parentSlug": "pyro-v",
+      "uexId": 388
+    },
+    {
+      "slug": "pyr5-l3",
+      "systemCode": "PYRO",
+      "type": "lagrangePoint",
+      "name": "Pyro V Lagrange Point 3",
+      "parentSlug": "pyro-v",
+      "uexId": 351
+    },
+    {
+      "slug": "pyr5-l4",
+      "systemCode": "PYRO",
+      "type": "lagrangePoint",
+      "name": "Pyro V Lagrange Point 4",
+      "parentSlug": "pyro-v",
+      "uexId": 389
+    },
+    {
+      "slug": "pyr5-l5",
+      "systemCode": "PYRO",
+      "type": "lagrangePoint",
+      "name": "Pyro V Lagrange Point 5",
+      "parentSlug": "pyro-v",
+      "uexId": 390
+    },
+    {
+      "slug": "pyr6-l1",
+      "systemCode": "PYRO",
+      "type": "lagrangePoint",
+      "name": "Pyro VI Lagrange Point 1",
+      "parentSlug": "terminus",
+      "uexId": 354
+    },
+    {
+      "slug": "pyr6-l2",
+      "systemCode": "PYRO",
+      "type": "lagrangePoint",
+      "name": "Pyro VI Lagrange Point 2",
+      "parentSlug": "terminus",
+      "uexId": 358
+    },
+    {
+      "slug": "pyr6-l3",
+      "systemCode": "PYRO",
+      "type": "lagrangePoint",
+      "name": "Pyro VI Lagrange Point 3",
+      "parentSlug": "terminus",
+      "uexId": 355
+    },
+    {
+      "slug": "pyr6-l4",
+      "systemCode": "PYRO",
+      "type": "lagrangePoint",
+      "name": "Pyro VI Lagrange Point 4",
+      "parentSlug": "terminus",
+      "uexId": 391
+    },
+    {
+      "slug": "pyr6-l5",
+      "systemCode": "PYRO",
+      "type": "lagrangePoint",
+      "name": "Pyro VI Lagrange Point 5",
+      "parentSlug": "terminus",
+      "uexId": 374
+    },
+    {
+      "slug": "adir",
+      "systemCode": "PYRO",
+      "type": "moon",
+      "name": "Adir",
+      "parentSlug": "pyro-v",
+      "uexId": 2
+    },
+    {
+      "slug": "fairo",
+      "systemCode": "PYRO",
+      "type": "moon",
+      "name": "Fairo",
+      "parentSlug": "pyro-v",
+      "uexId": 35
+    },
+    {
+      "slug": "fuego",
+      "systemCode": "PYRO",
+      "type": "moon",
+      "name": "Fuego",
+      "parentSlug": "pyro-v",
+      "uexId": 36
+    },
+    {
+      "slug": "ignis",
+      "systemCode": "PYRO",
+      "type": "moon",
+      "name": "Ignis",
+      "parentSlug": "pyro-v",
+      "uexId": 43
+    },
+    {
+      "slug": "vatra",
+      "systemCode": "PYRO",
+      "type": "moon",
+      "name": "Vatra",
+      "parentSlug": "pyro-v",
+      "uexId": 69
+    },
+    {
+      "slug": "vuur",
+      "systemCode": "PYRO",
+      "type": "moon",
+      "name": "Vuur",
+      "parentSlug": "pyro-v",
+      "uexId": 73
+    },
+    {
+      "slug": "bloom",
+      "systemCode": "PYRO",
+      "type": "planet",
+      "name": "Bloom",
+      "parentSlug": null,
+      "uexId": 242
+    },
+    {
+      "slug": "monox",
+      "systemCode": "PYRO",
+      "type": "planet",
+      "name": "Monox",
+      "parentSlug": null,
+      "uexId": 241
+    },
+    {
+      "slug": "pyro-i",
+      "systemCode": "PYRO",
+      "type": "planet",
+      "name": "Pyro I",
+      "parentSlug": null,
+      "uexId": 240
+    },
+    {
+      "slug": "pyro-iv",
+      "systemCode": "PYRO",
+      "type": "planet",
+      "name": "Pyro IV",
+      "parentSlug": null,
+      "uexId": 243
+    },
+    {
+      "slug": "pyro-v",
+      "systemCode": "PYRO",
+      "type": "planet",
+      "name": "Pyro V",
+      "parentSlug": null,
+      "uexId": 244
+    },
+    {
+      "slug": "terminus",
+      "systemCode": "PYRO",
+      "type": "planet",
+      "name": "Terminus",
+      "parentSlug": null,
+      "uexId": 245
+    },
+    {
+      "slug": "arc-l1",
+      "systemCode": "STANTON",
+      "type": "lagrangePoint",
+      "name": "ArcCorp Lagrange Point 1",
+      "parentSlug": "arccorp",
+      "uexId": 326
+    },
+    {
+      "slug": "arc-l2",
+      "systemCode": "STANTON",
+      "type": "lagrangePoint",
+      "name": "ArcCorp Lagrange Point 2",
+      "parentSlug": "arccorp",
+      "uexId": 327
+    },
+    {
+      "slug": "arc-l3",
+      "systemCode": "STANTON",
+      "type": "lagrangePoint",
+      "name": "ArcCorp Lagrange Point 3",
+      "parentSlug": "arccorp",
+      "uexId": 328
+    },
+    {
+      "slug": "arc-l4",
+      "systemCode": "STANTON",
+      "type": "lagrangePoint",
+      "name": "ArcCorp Lagrange Point 4",
+      "parentSlug": "arccorp",
+      "uexId": 329
+    },
+    {
+      "slug": "arc-l5",
+      "systemCode": "STANTON",
+      "type": "lagrangePoint",
+      "name": "ArcCorp Lagrange Point 5",
+      "parentSlug": "arccorp",
+      "uexId": 330
+    },
+    {
+      "slug": "cru-l1",
+      "systemCode": "STANTON",
+      "type": "lagrangePoint",
+      "name": "Crusader Lagrange Point 1",
+      "parentSlug": "crusader",
+      "uexId": 331
+    },
+    {
+      "slug": "cru-l2",
+      "systemCode": "STANTON",
+      "type": "lagrangePoint",
+      "name": "Crusader Lagrange Point 2",
+      "parentSlug": "crusader",
+      "uexId": 372
+    },
+    {
+      "slug": "cru-l3",
+      "systemCode": "STANTON",
+      "type": "lagrangePoint",
+      "name": "Crusader Lagrange Point 3",
+      "parentSlug": "crusader",
+      "uexId": 373
+    },
+    {
+      "slug": "cru-l4",
+      "systemCode": "STANTON",
+      "type": "lagrangePoint",
+      "name": "Crusader Lagrange Point 4",
+      "parentSlug": "crusader",
+      "uexId": 332
+    },
+    {
+      "slug": "cru-l5",
+      "systemCode": "STANTON",
+      "type": "lagrangePoint",
+      "name": "Crusader Lagrange Point 5",
+      "parentSlug": "crusader",
+      "uexId": 333
+    },
+    {
+      "slug": "hur-l1",
+      "systemCode": "STANTON",
+      "type": "lagrangePoint",
+      "name": "Hurston Lagrange Point 1",
+      "parentSlug": "hurston",
+      "uexId": 334
+    },
+    {
+      "slug": "hur-l2",
+      "systemCode": "STANTON",
+      "type": "lagrangePoint",
+      "name": "Hurston Lagrange Point 2",
+      "parentSlug": "hurston",
+      "uexId": 335
+    },
+    {
+      "slug": "hur-l3",
+      "systemCode": "STANTON",
+      "type": "lagrangePoint",
+      "name": "Hurston Lagrange Point 3",
+      "parentSlug": "hurston",
+      "uexId": 336
+    },
+    {
+      "slug": "hur-l4",
+      "systemCode": "STANTON",
+      "type": "lagrangePoint",
+      "name": "Hurston Lagrange Point 4",
+      "parentSlug": "hurston",
+      "uexId": 337
+    },
+    {
+      "slug": "hur-l5",
+      "systemCode": "STANTON",
+      "type": "lagrangePoint",
+      "name": "Hurston Lagrange Point 5",
+      "parentSlug": "hurston",
+      "uexId": 338
+    },
+    {
+      "slug": "mic-l1",
+      "systemCode": "STANTON",
+      "type": "lagrangePoint",
+      "name": "microTech Lagrange Point 1",
+      "parentSlug": "microtech",
+      "uexId": 339
+    },
+    {
+      "slug": "mic-l2",
+      "systemCode": "STANTON",
+      "type": "lagrangePoint",
+      "name": "microTech Lagrange Point 2",
+      "parentSlug": "microtech",
+      "uexId": 340
+    },
+    {
+      "slug": "mic-l3",
+      "systemCode": "STANTON",
+      "type": "lagrangePoint",
+      "name": "microTech Lagrange Point 3",
+      "parentSlug": "microtech",
+      "uexId": 341
+    },
+    {
+      "slug": "mic-l4",
+      "systemCode": "STANTON",
+      "type": "lagrangePoint",
+      "name": "microTech Lagrange Point 4",
+      "parentSlug": "microtech",
+      "uexId": 342
+    },
+    {
+      "slug": "mic-l5",
+      "systemCode": "STANTON",
+      "type": "lagrangePoint",
+      "name": "microTech Lagrange Point 5",
+      "parentSlug": "microtech",
+      "uexId": 343
+    },
+    {
+      "slug": "aberdeen",
+      "systemCode": "STANTON",
+      "type": "moon",
+      "name": "Aberdeen",
+      "parentSlug": "hurston",
+      "uexId": 1
+    },
+    {
+      "slug": "arial",
+      "systemCode": "STANTON",
+      "type": "moon",
+      "name": "Arial",
+      "parentSlug": "hurston",
+      "uexId": 4
+    },
+    {
+      "slug": "calliope",
+      "systemCode": "STANTON",
+      "type": "moon",
+      "name": "Calliope",
+      "parentSlug": "microtech",
+      "uexId": 16
+    },
+    {
+      "slug": "cellin",
+      "systemCode": "STANTON",
+      "type": "moon",
+      "name": "Cellin",
+      "parentSlug": "crusader",
+      "uexId": 18
+    },
+    {
+      "slug": "clio",
+      "systemCode": "STANTON",
+      "type": "moon",
+      "name": "Clio",
+      "parentSlug": "microtech",
+      "uexId": 23
+    },
+    {
+      "slug": "daymar",
+      "systemCode": "STANTON",
+      "type": "moon",
+      "name": "Daymar",
+      "parentSlug": "crusader",
+      "uexId": 25
+    },
+    {
+      "slug": "euterpe",
+      "systemCode": "STANTON",
+      "type": "moon",
+      "name": "Euterpe",
+      "parentSlug": "microtech",
+      "uexId": 34
+    },
+    {
+      "slug": "ita",
+      "systemCode": "STANTON",
+      "type": "moon",
+      "name": "Ita",
+      "parentSlug": "hurston",
+      "uexId": 45
+    },
+    {
+      "slug": "lyria",
+      "systemCode": "STANTON",
+      "type": "moon",
+      "name": "Lyria",
+      "parentSlug": "arccorp",
+      "uexId": 50
+    },
+    {
+      "slug": "magda",
+      "systemCode": "STANTON",
+      "type": "moon",
+      "name": "Magda",
+      "parentSlug": "hurston",
+      "uexId": 51
+    },
+    {
+      "slug": "wala",
+      "systemCode": "STANTON",
+      "type": "moon",
+      "name": "Wala",
+      "parentSlug": "arccorp",
+      "uexId": 74
+    },
+    {
+      "slug": "yela",
+      "systemCode": "STANTON",
+      "type": "moon",
+      "name": "Yela",
+      "parentSlug": "crusader",
+      "uexId": 75
+    },
+    {
+      "slug": "arccorp",
+      "systemCode": "STANTON",
+      "type": "planet",
+      "name": "ArcCorp",
+      "parentSlug": null,
+      "uexId": 4
+    },
+    {
+      "slug": "crusader",
+      "systemCode": "STANTON",
+      "type": "planet",
+      "name": "Crusader",
+      "parentSlug": null,
+      "uexId": 59
+    },
+    {
+      "slug": "hurston",
+      "systemCode": "STANTON",
+      "type": "planet",
+      "name": "Hurston",
+      "parentSlug": null,
+      "uexId": 116
+    },
+    {
+      "slug": "microtech",
+      "systemCode": "STANTON",
+      "type": "planet",
+      "name": "MicroTech",
+      "parentSlug": null,
+      "uexId": 190
+    }
+  ]
+}

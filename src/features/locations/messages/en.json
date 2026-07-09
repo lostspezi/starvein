@@ -1,0 +1,17 @@
+{
+  "locations": {
+    "title": "Locations",
+    "empty": "No locations here yet.",
+    "breadcrumbLabel": "Breadcrumb",
+    "systemSuffix": "system",
+    "bodyType": {
+      "planet": "Planet",
+      "moon": "Moon",
+      "lagrangePoint": "Lagrange point",
+      "spaceStation": "Space station",
+      "outpost": "Outpost",
+      "asteroidBelt": "Asteroid belt",
+      "cave": "Cave"
+    }
+  }
+}

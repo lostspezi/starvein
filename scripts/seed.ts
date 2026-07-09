@@ -2,15 +2,34 @@
  * Spielt die kuratierten Seed-Daten (data/curated/*.json) nach MongoDB ein.
  * Aufruf: pnpm seed (lädt .env.local über tsx --env-file)
  */
+import {
+  loadCuratedCelestialBodies,
+  loadCuratedStarSystems,
+} from "@/features/locations/curated-locations";
+import {
+  upsertCelestialBodies,
+  upsertStarSystems,
+} from "@/features/locations/locations.repository";
 import { loadCuratedOres } from "@/features/ores/curated-ores";
 import { upsertOres } from "@/features/ores/ores.repository";
 import { closeMongo, getDb } from "@/lib/db";
 
 async function main() {
-  const ores = loadCuratedOres();
   const db = await getDb();
+
+  const ores = loadCuratedOres();
   await upsertOres(db, ores);
-  console.log(`Seeded ${ores.length} ores into '${db.databaseName}'.`);
+  console.log(`Seeded ${ores.length} ores`);
+
+  const systems = loadCuratedStarSystems();
+  await upsertStarSystems(db, systems);
+  console.log(`Seeded ${systems.length} star systems`);
+
+  const bodies = loadCuratedCelestialBodies();
+  await upsertCelestialBodies(db, bodies);
+  console.log(`Seeded ${bodies.length} celestial bodies`);
+
+  console.log(`Done (database '${db.databaseName}').`);
 }
 
 main()

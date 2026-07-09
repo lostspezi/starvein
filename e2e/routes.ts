@@ -5,4 +5,15 @@
  * (beide Locales). e2e/branding-compliance.spec.ts prüft auf jeder dieser
  * Seiten die RSI-Fansite-Policy-Pflichten.
  */
-export const ROUTES: string[] = ["/de", "/en", "/de/ores", "/en/ores"];
+export const ROUTES: string[] = [
+  "/de",
+  "/en",
+  "/de/ores",
+  "/en/ores",
+  "/de/locations",
+  "/en/locations",
+  "/de/locations/stanton",
+  "/en/locations/stanton",
+  "/de/locations/stanton/crusader",
+  "/en/locations/stanton/crusader",
+];

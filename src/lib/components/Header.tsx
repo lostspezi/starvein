@@ -21,6 +21,12 @@ export function Header() {
           >
             {t("nav.ores")}
           </Link>
+          <Link
+            href="/locations"
+            className="text-text-muted hover:text-text-primary"
+          >
+            {t("nav.locations")}
+          </Link>
         </nav>
       </div>
       <LocaleSwitcher />

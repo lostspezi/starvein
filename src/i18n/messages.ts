@@ -9,12 +9,14 @@ import deHome from "@/features/home/messages/de.json";
 import enHome from "@/features/home/messages/en.json";
 import deSwitcher from "@/features/i18n-switcher/messages/de.json";
 import enSwitcher from "@/features/i18n-switcher/messages/en.json";
+import deLocations from "@/features/locations/messages/de.json";
+import enLocations from "@/features/locations/messages/en.json";
 import deOres from "@/features/ores/messages/de.json";
 import enOres from "@/features/ores/messages/en.json";
 
 const messages = {
-  de: { ...deCommon, ...deHome, ...deSwitcher, ...deOres },
-  en: { ...enCommon, ...enHome, ...enSwitcher, ...enOres },
+  de: { ...deCommon, ...deHome, ...deSwitcher, ...deOres, ...deLocations },
+  en: { ...enCommon, ...enHome, ...enSwitcher, ...enOres, ...enLocations },
 };
 
 export type AppLocale = keyof typeof messages;
