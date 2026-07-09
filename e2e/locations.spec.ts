@@ -48,6 +48,23 @@ test("outpost page shows the full ancestor chain in breadcrumbs", async ({
   await expect(breadcrumbs.getByRole("link", { name: "Wala" })).toBeVisible();
 });
 
+test("system page groups space mining areas and Aaron Halo lists ship ores", async ({
+  page,
+}) => {
+  await page.goto("/en/locations/stanton");
+
+  await expect(
+    page.getByRole("heading", { name: "Asteroid belts" }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "Asteroid fields & mining bases" }),
+  ).toBeVisible();
+
+  await page.getByRole("link", { name: /Aaron Halo/ }).click();
+  await expect(page).toHaveURL(/\/en\/locations\/stanton\/aaron-halo$/);
+  await expect(page.getByRole("link", { name: /Quantainium/ })).toBeVisible();
+});
+
 test("unknown system returns 404", async ({ page }) => {
   const response = await page.goto("/en/locations/atlantis");
   expect(response?.status()).toBe(404);

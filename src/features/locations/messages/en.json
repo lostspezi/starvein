@@ -11,7 +11,18 @@
       "spaceStation": "Space station",
       "outpost": "Outpost",
       "asteroidBelt": "Asteroid belt",
+      "asteroidField": "Asteroid field",
       "cave": "Cave"
+    },
+    "groups": {
+      "planet": "Planets",
+      "moon": "Moons",
+      "lagrangePoint": "Lagrange points",
+      "spaceStation": "Space stations",
+      "outpost": "Outposts",
+      "asteroidBelt": "Asteroid belts",
+      "asteroidField": "Asteroid fields & mining bases",
+      "cave": "Caves"
     }
   }
 }

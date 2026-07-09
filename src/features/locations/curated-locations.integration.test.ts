@@ -16,7 +16,7 @@ describe("curated star systems dataset", () => {
 });
 
 describe("curated celestial bodies dataset", () => {
-  it("loads 189 bodies (11 planets, 18 moons, 45 lagrange points, 115 outposts)", () => {
+  it("loads 288 bodies incl. asteroid belts and fields", () => {
     const bodies = loadCuratedCelestialBodies();
     const byType = (type: string) =>
       bodies.filter((b) => b.type === type).length;
@@ -25,7 +25,31 @@ describe("curated celestial bodies dataset", () => {
     expect(byType("moon")).toBe(18);
     expect(byType("lagrangePoint")).toBe(45);
     expect(byType("outpost")).toBe(115);
-    expect(bodies.length).toBe(189);
+    expect(byType("asteroidBelt")).toBe(6);
+    expect(byType("asteroidField")).toBe(93);
+    expect(bodies.length).toBe(288);
+  });
+
+  it("contains the Aaron Halo as system-level asteroid belt", () => {
+    const belt = loadCuratedCelestialBodies().find(
+      (b) => b.slug === "aaron-halo",
+    );
+    expect(belt).toMatchObject({
+      type: "asteroidBelt",
+      systemCode: "STANTON",
+      parentSlug: null,
+    });
+  });
+
+  it("parents the Yela Ring to the moon Yela", () => {
+    const ring = loadCuratedCelestialBodies().find(
+      (b) => b.slug === "yela-ring",
+    );
+    expect(ring).toMatchObject({
+      type: "asteroidBelt",
+      systemCode: "STANTON",
+      parentSlug: "yela",
+    });
   });
 
   it("links ArcCorp Mining Area 045 to the moon Wala", () => {

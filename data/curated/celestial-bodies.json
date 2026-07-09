@@ -10,12 +10,396 @@
   },
   "celestialBodies": [
     {
+      "slug": "glaciem-ring",
+      "systemCode": "NYX",
+      "type": "asteroidBelt",
+      "name": "Glaciem Ring",
+      "parentSlug": null,
+      "uexId": 226
+    },
+    {
+      "slug": "keeger-belt",
+      "systemCode": "NYX",
+      "type": "asteroidBelt",
+      "name": "Keeger Belt",
+      "parentSlug": null,
+      "uexId": 225
+    },
+    {
       "slug": "delamar",
       "systemCode": "NYX",
       "type": "planet",
       "name": "Delamar",
       "parentSlug": null,
       "uexId": 325
+    },
+    {
+      "slug": "akiro-cluster-alpha",
+      "systemCode": "PYRO",
+      "type": "asteroidBelt",
+      "name": "Akiro Cluster Alpha",
+      "parentSlug": null,
+      "uexId": 272
+    },
+    {
+      "slug": "pyro-asteroid-clusters",
+      "systemCode": "PYRO",
+      "type": "asteroidBelt",
+      "name": "Pyro Asteroid Clusters",
+      "parentSlug": null,
+      "uexId": 270
+    },
+    {
+      "slug": "cluster-bgr-560",
+      "systemCode": "PYRO",
+      "type": "asteroidField",
+      "name": "Cluster BGR-560",
+      "parentSlug": null,
+      "uexId": 222
+    },
+    {
+      "slug": "cluster-caj-445",
+      "systemCode": "PYRO",
+      "type": "asteroidField",
+      "name": "Cluster CAJ-445",
+      "parentSlug": null,
+      "uexId": 254
+    },
+    {
+      "slug": "cluster-dlo-486",
+      "systemCode": "PYRO",
+      "type": "asteroidField",
+      "name": "Cluster DLO-486",
+      "parentSlug": null,
+      "uexId": 255
+    },
+    {
+      "slug": "cluster-emm-567",
+      "systemCode": "PYRO",
+      "type": "asteroidField",
+      "name": "Cluster EMM-567",
+      "parentSlug": null,
+      "uexId": 256
+    },
+    {
+      "slug": "cluster-fsn-704",
+      "systemCode": "PYRO",
+      "type": "asteroidField",
+      "name": "Cluster FSN-704",
+      "parentSlug": null,
+      "uexId": 257
+    },
+    {
+      "slug": "cluster-grp-839",
+      "systemCode": "PYRO",
+      "type": "asteroidField",
+      "name": "Cluster GRP-839",
+      "parentSlug": null,
+      "uexId": 258
+    },
+    {
+      "slug": "cluster-hjs-232",
+      "systemCode": "PYRO",
+      "type": "asteroidField",
+      "name": "Cluster HJS-232",
+      "parentSlug": null,
+      "uexId": 259
+    },
+    {
+      "slug": "cluster-jwy-925",
+      "systemCode": "PYRO",
+      "type": "asteroidField",
+      "name": "Cluster JWY-925",
+      "parentSlug": null,
+      "uexId": 260
+    },
+    {
+      "slug": "cluster-kke-717",
+      "systemCode": "PYRO",
+      "type": "asteroidField",
+      "name": "Cluster KKE-717",
+      "parentSlug": null,
+      "uexId": 261
+    },
+    {
+      "slug": "cluster-lhb-976",
+      "systemCode": "PYRO",
+      "type": "asteroidField",
+      "name": "Cluster LHB-976",
+      "parentSlug": null,
+      "uexId": 262
+    },
+    {
+      "slug": "cluster-mnk-833",
+      "systemCode": "PYRO",
+      "type": "asteroidField",
+      "name": "Cluster MNK-833",
+      "parentSlug": null,
+      "uexId": 263
+    },
+    {
+      "slug": "cluster-nbd-102",
+      "systemCode": "PYRO",
+      "type": "asteroidField",
+      "name": "Cluster NBD-102",
+      "parentSlug": null,
+      "uexId": 264
+    },
+    {
+      "slug": "cluster-rsc-340",
+      "systemCode": "PYRO",
+      "type": "asteroidField",
+      "name": "Cluster RSC-340",
+      "parentSlug": null,
+      "uexId": 265
+    },
+    {
+      "slug": "cluster-wdh-387",
+      "systemCode": "PYRO",
+      "type": "asteroidField",
+      "name": "Cluster WDH-387",
+      "parentSlug": null,
+      "uexId": 266
+    },
+    {
+      "slug": "cluster-yka-011",
+      "systemCode": "PYRO",
+      "type": "asteroidField",
+      "name": "Cluster YKA-011",
+      "parentSlug": null,
+      "uexId": 267
+    },
+    {
+      "slug": "rab-alpha",
+      "systemCode": "PYRO",
+      "type": "asteroidField",
+      "name": "RAB-ALPHA",
+      "parentSlug": null,
+      "uexId": 227
+    },
+    {
+      "slug": "rab-bravo",
+      "systemCode": "PYRO",
+      "type": "asteroidField",
+      "name": "RAB-BRAVO",
+      "parentSlug": null,
+      "uexId": 228
+    },
+    {
+      "slug": "rab-charlie",
+      "systemCode": "PYRO",
+      "type": "asteroidField",
+      "name": "RAB-CHARLIE",
+      "parentSlug": null,
+      "uexId": 229
+    },
+    {
+      "slug": "rab-cook",
+      "systemCode": "PYRO",
+      "type": "asteroidField",
+      "name": "RAB-COOK",
+      "parentSlug": null,
+      "uexId": 230
+    },
+    {
+      "slug": "rab-delta",
+      "systemCode": "PYRO",
+      "type": "asteroidField",
+      "name": "RAB-DELTA",
+      "parentSlug": null,
+      "uexId": 231
+    },
+    {
+      "slug": "rab-echo",
+      "systemCode": "PYRO",
+      "type": "asteroidField",
+      "name": "RAB-ECHO",
+      "parentSlug": null,
+      "uexId": 232
+    },
+    {
+      "slug": "rab-foxtrot",
+      "systemCode": "PYRO",
+      "type": "asteroidField",
+      "name": "RAB-FOXTROT",
+      "parentSlug": null,
+      "uexId": 224
+    },
+    {
+      "slug": "rab-gulf",
+      "systemCode": "PYRO",
+      "type": "asteroidField",
+      "name": "RAB-GULF",
+      "parentSlug": null,
+      "uexId": 233
+    },
+    {
+      "slug": "rab-helio",
+      "systemCode": "PYRO",
+      "type": "asteroidField",
+      "name": "RAB-HELIO",
+      "parentSlug": null,
+      "uexId": 234
+    },
+    {
+      "slug": "rab-ignition",
+      "systemCode": "PYRO",
+      "type": "asteroidField",
+      "name": "RAB-IGNITION",
+      "parentSlug": null,
+      "uexId": 235
+    },
+    {
+      "slug": "rab-ion",
+      "systemCode": "PYRO",
+      "type": "asteroidField",
+      "name": "RAB-ION",
+      "parentSlug": null,
+      "uexId": 236
+    },
+    {
+      "slug": "rab-jak",
+      "systemCode": "PYRO",
+      "type": "asteroidField",
+      "name": "RAB-JAK",
+      "parentSlug": null,
+      "uexId": 237
+    },
+    {
+      "slug": "rab-kilo",
+      "systemCode": "PYRO",
+      "type": "asteroidField",
+      "name": "RAB-KILO",
+      "parentSlug": null,
+      "uexId": 223
+    },
+    {
+      "slug": "rab-lamda",
+      "systemCode": "PYRO",
+      "type": "asteroidField",
+      "name": "RAB-LAMDA",
+      "parentSlug": null,
+      "uexId": 238
+    },
+    {
+      "slug": "rab-lynx",
+      "systemCode": "PYRO",
+      "type": "asteroidField",
+      "name": "RAB-LYNX",
+      "parentSlug": null,
+      "uexId": 239
+    },
+    {
+      "slug": "rab-mat",
+      "systemCode": "PYRO",
+      "type": "asteroidField",
+      "name": "RAB-MAT",
+      "parentSlug": null,
+      "uexId": 240
+    },
+    {
+      "slug": "rab-november",
+      "systemCode": "PYRO",
+      "type": "asteroidField",
+      "name": "RAB-NOVEMBER",
+      "parentSlug": null,
+      "uexId": 241
+    },
+    {
+      "slug": "rab-over",
+      "systemCode": "PYRO",
+      "type": "asteroidField",
+      "name": "RAB-OVER",
+      "parentSlug": null,
+      "uexId": 242
+    },
+    {
+      "slug": "rab-point",
+      "systemCode": "PYRO",
+      "type": "asteroidField",
+      "name": "RAB-POINT",
+      "parentSlug": null,
+      "uexId": 243
+    },
+    {
+      "slug": "rab-quagmire",
+      "systemCode": "PYRO",
+      "type": "asteroidField",
+      "name": "RAB-QUAGMIRE",
+      "parentSlug": null,
+      "uexId": 244
+    },
+    {
+      "slug": "rab-roth",
+      "systemCode": "PYRO",
+      "type": "asteroidField",
+      "name": "RAB-ROTH",
+      "parentSlug": null,
+      "uexId": 245
+    },
+    {
+      "slug": "rab-sierra",
+      "systemCode": "PYRO",
+      "type": "asteroidField",
+      "name": "RAB-SIERRA",
+      "parentSlug": null,
+      "uexId": 246
+    },
+    {
+      "slug": "rab-tung",
+      "systemCode": "PYRO",
+      "type": "asteroidField",
+      "name": "RAB-TUNG",
+      "parentSlug": null,
+      "uexId": 247
+    },
+    {
+      "slug": "rab-ultra",
+      "systemCode": "PYRO",
+      "type": "asteroidField",
+      "name": "RAB-ULTRA",
+      "parentSlug": null,
+      "uexId": 248
+    },
+    {
+      "slug": "rab-victory",
+      "systemCode": "PYRO",
+      "type": "asteroidField",
+      "name": "RAB-VICTORY",
+      "parentSlug": null,
+      "uexId": 249
+    },
+    {
+      "slug": "rab-whiskey",
+      "systemCode": "PYRO",
+      "type": "asteroidField",
+      "name": "RAB-WHISKEY",
+      "parentSlug": null,
+      "uexId": 250
+    },
+    {
+      "slug": "rab-xeno",
+      "systemCode": "PYRO",
+      "type": "asteroidField",
+      "name": "RAB-XENO",
+      "parentSlug": null,
+      "uexId": 251
+    },
+    {
+      "slug": "rab-york",
+      "systemCode": "PYRO",
+      "type": "asteroidField",
+      "name": "RAB-YORK",
+      "parentSlug": null,
+      "uexId": 252
+    },
+    {
+      "slug": "rab-zeta",
+      "systemCode": "PYRO",
+      "type": "asteroidField",
+      "name": "RAB-ZETA",
+      "parentSlug": null,
+      "uexId": 253
     },
     {
       "slug": "pyr3-l1",
@@ -608,6 +992,414 @@
       "name": "Terminus",
       "parentSlug": null,
       "uexId": 245
+    },
+    {
+      "slug": "aaron-halo",
+      "systemCode": "STANTON",
+      "type": "asteroidBelt",
+      "name": "Aaron Halo",
+      "parentSlug": null,
+      "uexId": 221
+    },
+    {
+      "slug": "yela-ring",
+      "systemCode": "STANTON",
+      "type": "asteroidBelt",
+      "name": "Yela Ring",
+      "parentSlug": "yela",
+      "uexId": 273
+    },
+    {
+      "slug": "mining-base-1xa-3gi",
+      "systemCode": "STANTON",
+      "type": "asteroidField",
+      "name": "Mining Base #1XA-3GI",
+      "parentSlug": null,
+      "uexId": 203
+    },
+    {
+      "slug": "mining-base-4pi-3yy",
+      "systemCode": "STANTON",
+      "type": "asteroidField",
+      "name": "Mining Base #4PI-3YY",
+      "parentSlug": null,
+      "uexId": 211
+    },
+    {
+      "slug": "mining-base-4ro-nvx",
+      "systemCode": "STANTON",
+      "type": "asteroidField",
+      "name": "Mining Base #4RO-NVX",
+      "parentSlug": null,
+      "uexId": 170
+    },
+    {
+      "slug": "mining-base-51f-ogh",
+      "systemCode": "STANTON",
+      "type": "asteroidField",
+      "name": "Mining Base #51F-OGH",
+      "parentSlug": null,
+      "uexId": 214
+    },
+    {
+      "slug": "mining-base-5u5-tlc",
+      "systemCode": "STANTON",
+      "type": "asteroidField",
+      "name": "Mining Base #5U5-TLC",
+      "parentSlug": null,
+      "uexId": 197
+    },
+    {
+      "slug": "mining-base-6in-po2",
+      "systemCode": "STANTON",
+      "type": "asteroidField",
+      "name": "Mining Base #6IN-PO2",
+      "parentSlug": null,
+      "uexId": 191
+    },
+    {
+      "slug": "mining-base-74h-2do",
+      "systemCode": "STANTON",
+      "type": "asteroidField",
+      "name": "Mining Base #74H-2DO",
+      "parentSlug": null,
+      "uexId": 179
+    },
+    {
+      "slug": "mining-base-7iq-29q",
+      "systemCode": "STANTON",
+      "type": "asteroidField",
+      "name": "Mining Base #7IQ-29Q",
+      "parentSlug": null,
+      "uexId": 182
+    },
+    {
+      "slug": "mining-base-7li-oda",
+      "systemCode": "STANTON",
+      "type": "asteroidField",
+      "name": "Mining Base #7LI-ODA",
+      "parentSlug": null,
+      "uexId": 188
+    },
+    {
+      "slug": "mining-base-7yh-jx7",
+      "systemCode": "STANTON",
+      "type": "asteroidField",
+      "name": "Mining Base #7YH-JX7",
+      "parentSlug": null,
+      "uexId": 174
+    },
+    {
+      "slug": "mining-base-8cg-osa",
+      "systemCode": "STANTON",
+      "type": "asteroidField",
+      "name": "Mining Base #8CG-OSA",
+      "parentSlug": null,
+      "uexId": 173
+    },
+    {
+      "slug": "mining-base-8pv-wne",
+      "systemCode": "STANTON",
+      "type": "asteroidField",
+      "name": "Mining Base #8PV-WNE",
+      "parentSlug": null,
+      "uexId": 175
+    },
+    {
+      "slug": "mining-base-a73-htj",
+      "systemCode": "STANTON",
+      "type": "asteroidField",
+      "name": "Mining Base #A73-HTJ",
+      "parentSlug": null,
+      "uexId": 180
+    },
+    {
+      "slug": "mining-base-al5-xpd",
+      "systemCode": "STANTON",
+      "type": "asteroidField",
+      "name": "Mining Base #AL5-XPD",
+      "parentSlug": null,
+      "uexId": 202
+    },
+    {
+      "slug": "mining-base-bbr-4jq",
+      "systemCode": "STANTON",
+      "type": "asteroidField",
+      "name": "Mining Base #BBR-4JQ",
+      "parentSlug": null,
+      "uexId": 194
+    },
+    {
+      "slug": "mining-base-bre-582",
+      "systemCode": "STANTON",
+      "type": "asteroidField",
+      "name": "Mining Base #BRE-582",
+      "parentSlug": null,
+      "uexId": 178
+    },
+    {
+      "slug": "mining-base-bsk-ij5",
+      "systemCode": "STANTON",
+      "type": "asteroidField",
+      "name": "Mining Base #BSK-IJ5",
+      "parentSlug": null,
+      "uexId": 181
+    },
+    {
+      "slug": "mining-base-cvf-t6h",
+      "systemCode": "STANTON",
+      "type": "asteroidField",
+      "name": "Mining Base #CVF-T6H",
+      "parentSlug": null,
+      "uexId": 200
+    },
+    {
+      "slug": "mining-base-czw-rry",
+      "systemCode": "STANTON",
+      "type": "asteroidField",
+      "name": "Mining Base #CZW-RRY",
+      "parentSlug": null,
+      "uexId": 184
+    },
+    {
+      "slug": "mining-base-e38-s5g",
+      "systemCode": "STANTON",
+      "type": "asteroidField",
+      "name": "Mining Base #E38-S5G",
+      "parentSlug": null,
+      "uexId": 220
+    },
+    {
+      "slug": "mining-base-go4-cho",
+      "systemCode": "STANTON",
+      "type": "asteroidField",
+      "name": "Mining Base #GO4-CHO",
+      "parentSlug": null,
+      "uexId": 201
+    },
+    {
+      "slug": "mining-base-igb-fxw",
+      "systemCode": "STANTON",
+      "type": "asteroidField",
+      "name": "Mining Base #IGB-FXW",
+      "parentSlug": null,
+      "uexId": 186
+    },
+    {
+      "slug": "mining-base-io3-h1f",
+      "systemCode": "STANTON",
+      "type": "asteroidField",
+      "name": "Mining Base #IO3-H1F",
+      "parentSlug": null,
+      "uexId": 210
+    },
+    {
+      "slug": "mining-base-jug-okz",
+      "systemCode": "STANTON",
+      "type": "asteroidField",
+      "name": "Mining Base #JUG-OKZ",
+      "parentSlug": null,
+      "uexId": 205
+    },
+    {
+      "slug": "mining-base-lbp-un5",
+      "systemCode": "STANTON",
+      "type": "asteroidField",
+      "name": "Mining Base #LBP-UN5",
+      "parentSlug": null,
+      "uexId": 192
+    },
+    {
+      "slug": "mining-base-n6j-xkh",
+      "systemCode": "STANTON",
+      "type": "asteroidField",
+      "name": "Mining Base #N6J-XKH",
+      "parentSlug": null,
+      "uexId": 183
+    },
+    {
+      "slug": "mining-base-o1k-i43",
+      "systemCode": "STANTON",
+      "type": "asteroidField",
+      "name": "Mining Base #O1K-I43",
+      "parentSlug": null,
+      "uexId": 193
+    },
+    {
+      "slug": "mining-base-odd-e9b",
+      "systemCode": "STANTON",
+      "type": "asteroidField",
+      "name": "Mining Base #ODD-E9B",
+      "parentSlug": null,
+      "uexId": 195
+    },
+    {
+      "slug": "mining-base-oyv-jke",
+      "systemCode": "STANTON",
+      "type": "asteroidField",
+      "name": "Mining Base #OYV-JKE",
+      "parentSlug": null,
+      "uexId": 171
+    },
+    {
+      "slug": "mining-base-oyx-o7z",
+      "systemCode": "STANTON",
+      "type": "asteroidField",
+      "name": "Mining Base #OYX-O7Z",
+      "parentSlug": null,
+      "uexId": 177
+    },
+    {
+      "slug": "mining-base-q4u-i2o",
+      "systemCode": "STANTON",
+      "type": "asteroidField",
+      "name": "Mining Base #Q4U-I2O",
+      "parentSlug": null,
+      "uexId": 218
+    },
+    {
+      "slug": "mining-base-q9q-o9o",
+      "systemCode": "STANTON",
+      "type": "asteroidField",
+      "name": "Mining Base #Q9Q-O9O",
+      "parentSlug": null,
+      "uexId": 199
+    },
+    {
+      "slug": "mining-base-qxs-nbs",
+      "systemCode": "STANTON",
+      "type": "asteroidField",
+      "name": "Mining Base #QXS-NBS",
+      "parentSlug": null,
+      "uexId": 213
+    },
+    {
+      "slug": "mining-base-r75-5pz",
+      "systemCode": "STANTON",
+      "type": "asteroidField",
+      "name": "Mining Base #R75-5PZ",
+      "parentSlug": null,
+      "uexId": 215
+    },
+    {
+      "slug": "mining-base-r7j-wj7",
+      "systemCode": "STANTON",
+      "type": "asteroidField",
+      "name": "Mining Base #R7J-WJ7",
+      "parentSlug": null,
+      "uexId": 204
+    },
+    {
+      "slug": "mining-base-rcd-ob3",
+      "systemCode": "STANTON",
+      "type": "asteroidField",
+      "name": "Mining Base #RCD-OB3",
+      "parentSlug": null,
+      "uexId": 198
+    },
+    {
+      "slug": "mining-base-ro8-y3k",
+      "systemCode": "STANTON",
+      "type": "asteroidField",
+      "name": "Mining Base #RO8-Y3K",
+      "parentSlug": null,
+      "uexId": 190
+    },
+    {
+      "slug": "mining-base-rsv-8hl",
+      "systemCode": "STANTON",
+      "type": "asteroidField",
+      "name": "Mining Base #RSV-8HL",
+      "parentSlug": null,
+      "uexId": 172
+    },
+    {
+      "slug": "mining-base-sag-2un",
+      "systemCode": "STANTON",
+      "type": "asteroidField",
+      "name": "Mining Base #SAG-2UN",
+      "parentSlug": null,
+      "uexId": 196
+    },
+    {
+      "slug": "mining-base-u5x-ngq",
+      "systemCode": "STANTON",
+      "type": "asteroidField",
+      "name": "Mining Base #U5X-NGQ",
+      "parentSlug": null,
+      "uexId": 209
+    },
+    {
+      "slug": "mining-base-udk-ijx",
+      "systemCode": "STANTON",
+      "type": "asteroidField",
+      "name": "Mining Base #UDK-IJX",
+      "parentSlug": null,
+      "uexId": 208
+    },
+    {
+      "slug": "mining-base-urb-h3v",
+      "systemCode": "STANTON",
+      "type": "asteroidField",
+      "name": "Mining Base #URB-H3V",
+      "parentSlug": null,
+      "uexId": 212
+    },
+    {
+      "slug": "mining-base-uu6-1ei",
+      "systemCode": "STANTON",
+      "type": "asteroidField",
+      "name": "Mining Base #UU6-1EI",
+      "parentSlug": null,
+      "uexId": 217
+    },
+    {
+      "slug": "mining-base-w79-2h7",
+      "systemCode": "STANTON",
+      "type": "asteroidField",
+      "name": "Mining Base #W79-2H7",
+      "parentSlug": null,
+      "uexId": 219
+    },
+    {
+      "slug": "mining-base-wuo-zru",
+      "systemCode": "STANTON",
+      "type": "asteroidField",
+      "name": "Mining Base #WUO-ZRU",
+      "parentSlug": null,
+      "uexId": 189
+    },
+    {
+      "slug": "mining-base-x92-iva",
+      "systemCode": "STANTON",
+      "type": "asteroidField",
+      "name": "Mining Base #X92-IVA",
+      "parentSlug": null,
+      "uexId": 207
+    },
+    {
+      "slug": "mining-base-xjz-jr2",
+      "systemCode": "STANTON",
+      "type": "asteroidField",
+      "name": "Mining Base #XJZ-JR2",
+      "parentSlug": null,
+      "uexId": 176
+    },
+    {
+      "slug": "mining-base-yto-glq",
+      "systemCode": "STANTON",
+      "type": "asteroidField",
+      "name": "Mining Base #YTO-GLQ",
+      "parentSlug": null,
+      "uexId": 185
+    },
+    {
+      "slug": "mining-base-z48-o13",
+      "systemCode": "STANTON",
+      "type": "asteroidField",
+      "name": "Mining Base #Z48-O13",
+      "parentSlug": null,
+      "uexId": 216
     },
     {
       "slug": "arc-l1",

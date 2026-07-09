@@ -1106,6 +1106,216 @@
       "bodySlug": "pyr6-l1",
       "method": "ship",
       "probabilityPercent": 5
+    },
+    {
+      "oreCode": "QUAN",
+      "systemCode": "STANTON",
+      "bodySlug": "aaron-halo",
+      "method": "ship",
+      "probabilityPercent": 8
+    },
+    {
+      "oreCode": "BEXA",
+      "systemCode": "STANTON",
+      "bodySlug": "aaron-halo",
+      "method": "ship",
+      "probabilityPercent": 12
+    },
+    {
+      "oreCode": "TARA",
+      "systemCode": "STANTON",
+      "bodySlug": "aaron-halo",
+      "method": "ship",
+      "probabilityPercent": 12
+    },
+    {
+      "oreCode": "GOLD",
+      "systemCode": "STANTON",
+      "bodySlug": "aaron-halo",
+      "method": "ship",
+      "probabilityPercent": 15
+    },
+    {
+      "oreCode": "LARA",
+      "systemCode": "STANTON",
+      "bodySlug": "aaron-halo",
+      "method": "ship",
+      "probabilityPercent": 18
+    },
+    {
+      "oreCode": "BERY",
+      "systemCode": "STANTON",
+      "bodySlug": "aaron-halo",
+      "method": "ship",
+      "probabilityPercent": 20
+    },
+    {
+      "oreCode": "AGRI",
+      "systemCode": "STANTON",
+      "bodySlug": "aaron-halo",
+      "method": "ship",
+      "probabilityPercent": 20
+    },
+    {
+      "oreCode": "TUNG",
+      "systemCode": "STANTON",
+      "bodySlug": "aaron-halo",
+      "method": "ship",
+      "probabilityPercent": 25
+    },
+    {
+      "oreCode": "QUAR",
+      "systemCode": "STANTON",
+      "bodySlug": "aaron-halo",
+      "method": "ship",
+      "probabilityPercent": 35
+    },
+    {
+      "oreCode": "QUAN",
+      "systemCode": "STANTON",
+      "bodySlug": "yela-ring",
+      "method": "ship",
+      "probabilityPercent": 6
+    },
+    {
+      "oreCode": "BEXA",
+      "systemCode": "STANTON",
+      "bodySlug": "yela-ring",
+      "method": "ship",
+      "probabilityPercent": 10
+    },
+    {
+      "oreCode": "GOLD",
+      "systemCode": "STANTON",
+      "bodySlug": "yela-ring",
+      "method": "ship",
+      "probabilityPercent": 14
+    },
+    {
+      "oreCode": "TUNG",
+      "systemCode": "STANTON",
+      "bodySlug": "yela-ring",
+      "method": "ship",
+      "probabilityPercent": 25
+    },
+    {
+      "oreCode": "QUAR",
+      "systemCode": "STANTON",
+      "bodySlug": "yela-ring",
+      "method": "ship",
+      "probabilityPercent": 35
+    },
+    {
+      "oreCode": "QUAN",
+      "systemCode": "NYX",
+      "bodySlug": "keeger-belt",
+      "method": "ship",
+      "probabilityPercent": 5
+    },
+    {
+      "oreCode": "BEXA",
+      "systemCode": "NYX",
+      "bodySlug": "keeger-belt",
+      "method": "ship",
+      "probabilityPercent": 10
+    },
+    {
+      "oreCode": "GOLD",
+      "systemCode": "NYX",
+      "bodySlug": "keeger-belt",
+      "method": "ship",
+      "probabilityPercent": 12
+    },
+    {
+      "oreCode": "CORU",
+      "systemCode": "NYX",
+      "bodySlug": "keeger-belt",
+      "method": "ship",
+      "probabilityPercent": 35
+    },
+    {
+      "oreCode": "ICEW",
+      "systemCode": "NYX",
+      "bodySlug": "glaciem-ring",
+      "method": "ship",
+      "probabilityPercent": 40
+    },
+    {
+      "oreCode": "BEXA",
+      "systemCode": "NYX",
+      "bodySlug": "glaciem-ring",
+      "method": "ship",
+      "probabilityPercent": 8
+    },
+    {
+      "oreCode": "BERY",
+      "systemCode": "NYX",
+      "bodySlug": "glaciem-ring",
+      "method": "ship",
+      "probabilityPercent": 18
+    },
+    {
+      "oreCode": "QUAN",
+      "systemCode": "PYRO",
+      "bodySlug": "pyro-asteroid-clusters",
+      "method": "ship",
+      "probabilityPercent": 5
+    },
+    {
+      "oreCode": "STIL",
+      "systemCode": "PYRO",
+      "bodySlug": "pyro-asteroid-clusters",
+      "method": "ship",
+      "probabilityPercent": 3
+    },
+    {
+      "oreCode": "RICC",
+      "systemCode": "PYRO",
+      "bodySlug": "pyro-asteroid-clusters",
+      "method": "ship",
+      "probabilityPercent": 8
+    },
+    {
+      "oreCode": "SAVR",
+      "systemCode": "PYRO",
+      "bodySlug": "pyro-asteroid-clusters",
+      "method": "ship",
+      "probabilityPercent": 3
+    },
+    {
+      "oreCode": "TARA",
+      "systemCode": "PYRO",
+      "bodySlug": "pyro-asteroid-clusters",
+      "method": "ship",
+      "probabilityPercent": 12
+    },
+    {
+      "oreCode": "BEXA",
+      "systemCode": "PYRO",
+      "bodySlug": "pyro-asteroid-clusters",
+      "method": "ship",
+      "probabilityPercent": 10
+    },
+    {
+      "oreCode": "STIL",
+      "systemCode": "PYRO",
+      "bodySlug": "akiro-cluster-alpha",
+      "method": "ship",
+      "probabilityPercent": 4
+    },
+    {
+      "oreCode": "QUAN",
+      "systemCode": "PYRO",
+      "bodySlug": "akiro-cluster-alpha",
+      "method": "ship",
+      "probabilityPercent": 5
+    },
+    {
+      "oreCode": "GOLD",
+      "systemCode": "PYRO",
+      "bodySlug": "akiro-cluster-alpha",
+      "method": "ship",
+      "probabilityPercent": 12
     }
   ]
 }

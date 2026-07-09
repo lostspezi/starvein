@@ -9,6 +9,7 @@ export const BODY_TYPES = [
   "spaceStation",
   "outpost",
   "asteroidBelt",
+  "asteroidField",
   "cave",
 ] as const;
 

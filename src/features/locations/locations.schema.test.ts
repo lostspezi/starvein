@@ -46,6 +46,28 @@ describe("celestialBodySchema", () => {
     expect(celestialBodySchema.parse(planet)).toEqual(planet);
   });
 
+  it("accepts asteroid belts and asteroid fields", () => {
+    const belt = {
+      ...validBody,
+      slug: "aaron-halo",
+      type: "asteroidBelt",
+      name: "Aaron Halo",
+      parentSlug: null,
+      uexId: 221,
+    };
+    expect(celestialBodySchema.parse(belt)).toEqual(belt);
+
+    const field = {
+      ...validBody,
+      slug: "mining-base-4ro-nvx",
+      type: "asteroidField",
+      name: "Mining Base #4RO-NVX",
+      parentSlug: null,
+      uexId: 170,
+    };
+    expect(celestialBodySchema.parse(field)).toEqual(field);
+  });
+
   it("rejects unknown body types", () => {
     expect(
       celestialBodySchema.safeParse({ ...validBody, type: "blackHole" })

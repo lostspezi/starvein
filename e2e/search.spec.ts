@@ -12,7 +12,7 @@ test("finds a moon via the header search and navigates to it", async ({
   const input = page.getByRole("combobox", { name: "Search" });
   await input.fill("yela");
 
-  const option = page.getByRole("option", { name: /Yela/ });
+  const option = page.getByRole("option", { name: "Yela Moon", exact: true });
   await expect(option).toBeVisible();
   await option.click();
 

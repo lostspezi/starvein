@@ -11,7 +11,18 @@
       "spaceStation": "Raumstation",
       "outpost": "Outpost",
       "asteroidBelt": "Asteroidengürtel",
+      "asteroidField": "Asteroidenfeld",
       "cave": "Höhle"
+    },
+    "groups": {
+      "planet": "Planeten",
+      "moon": "Monde",
+      "lagrangePoint": "Lagrange-Punkte",
+      "spaceStation": "Raumstationen",
+      "outpost": "Outposts",
+      "asteroidBelt": "Asteroidengürtel",
+      "asteroidField": "Asteroidenfelder & Mining-Bases",
+      "cave": "Höhlen"
     }
   }
 }

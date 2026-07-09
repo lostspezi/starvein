@@ -46,6 +46,15 @@ describe("curated ore occurrences dataset", () => {
     }
   });
 
+  it("contains ship occurrences for the Aaron Halo asteroid belt", () => {
+    const halo = loadCuratedOccurrences().filter(
+      (o) => o.bodySlug === "aaron-halo",
+    );
+    expect(halo.length).toBeGreaterThanOrEqual(5);
+    expect(halo.every((o) => o.method === "ship")).toBe(true);
+    expect(halo.some((o) => o.oreCode === "QUAN")).toBe(true);
+  });
+
   it("contains the classic Daymar Hadanite FPS spot", () => {
     const hit = loadCuratedOccurrences().find(
       (o) =>
