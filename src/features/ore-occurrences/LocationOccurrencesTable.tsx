@@ -15,8 +15,11 @@ const RARITY_TEXT_CLASS: Record<RarityTier, string> = {
 /** "Location auswählen → alle Vorkommen dort". */
 export function LocationOccurrencesTable({
   occurrences,
+  disputedKeys,
 }: {
   occurrences: OccurrenceWithOre[];
+  /** Schlüssel "ORECODE|methode" mit stark unterstützter Korrektur-Submission */
+  disputedKeys?: Set<string>;
 }) {
   const t = useTranslations();
 
@@ -79,7 +82,16 @@ export function LocationOccurrencesTable({
                 <ProbabilityCell percent={occurrence.probabilityPercent} />
               </td>
               <td className="px-4 py-3">
-                <ConfidenceBadge occurrence={occurrence} />
+                <span className="flex flex-wrap gap-1">
+                  <ConfidenceBadge occurrence={occurrence} />
+                  {disputedKeys?.has(
+                    `${occurrence.oreCode}|${occurrence.method}`,
+                  ) && (
+                    <span className="rounded bg-bg-nebula-2 px-1.5 py-0.5 text-xs text-rarity-epic">
+                      {t("submissions.disputed")}
+                    </span>
+                  )}
+                </span>
               </td>
             </tr>
           ))}

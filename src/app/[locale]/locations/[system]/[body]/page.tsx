@@ -3,6 +3,10 @@ import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { FavoriteButton } from "@/features/favorites/FavoriteButton";
 import { isFavorite } from "@/features/favorites/favorites.repository";
+import { findAllOres } from "@/features/ores/ores.repository";
+import { SubmissionsPanel } from "@/features/submissions/SubmissionsPanel";
+import { findDisputedKeys } from "@/features/submissions/disputed";
+import { listSubmissionsForLocation } from "@/features/submissions/submissions.service";
 import { getSessionUserId } from "@/lib/session";
 import { LocationOccurrencesTable } from "@/features/ore-occurrences/LocationOccurrencesTable";
 import { MethodFilter } from "@/features/ore-occurrences/MethodFilter";
@@ -83,6 +87,12 @@ export default async function BodyPage({
     ? await isFavorite(db, userId, system.code, body.slug)
     : false;
 
+  const [submissions, allOres] = await Promise.all([
+    listSubmissionsForLocation(db, system.code, body.slug),
+    findAllOres(db),
+  ]);
+  const disputedKeys = findDisputedKeys(submissions);
+
   return (
     <section className="mx-auto flex w-full max-w-4xl flex-col gap-4 px-4 py-6 sm:px-6 sm:py-8">
       <Breadcrumbs items={crumbs} />
@@ -103,8 +113,19 @@ export default async function BodyPage({
 
       <h2 className="text-lg font-medium">{t("occurrences.atLocation")}</h2>
       <MethodFilter />
-      <LocationOccurrencesTable occurrences={occurrences} />
+      <LocationOccurrencesTable
+        occurrences={occurrences}
+        disputedKeys={disputedKeys}
+      />
       <p className="text-xs text-text-muted">{t("occurrences.disclaimer")}</p>
+
+      <SubmissionsPanel
+        systemCode={system.code}
+        bodySlug={body.slug}
+        initialSubmissions={submissions}
+        ores={allOres}
+        isAuthenticated={userId !== null}
+      />
 
       {children.length > 0 && (
         <>

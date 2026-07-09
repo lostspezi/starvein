@@ -23,6 +23,8 @@ import deOres from "@/features/ores/messages/de.json";
 import enOres from "@/features/ores/messages/en.json";
 import deSearch from "@/features/search/messages/de.json";
 import enSearch from "@/features/search/messages/en.json";
+import deSubmissions from "@/features/submissions/messages/de.json";
+import enSubmissions from "@/features/submissions/messages/en.json";
 import deSignatures from "@/features/signature-profiles/messages/de.json";
 import enSignatures from "@/features/signature-profiles/messages/en.json";
 
@@ -39,6 +41,7 @@ const messages = {
     ...dePrices,
     ...deAuth,
     ...deFavorites,
+    ...deSubmissions,
   },
   en: {
     ...enCommon,
@@ -52,6 +55,7 @@ const messages = {
     ...enPrices,
     ...enAuth,
     ...enFavorites,
+    ...enSubmissions,
   },
 };
 
