@@ -1,0 +1,28 @@
+import type { Db } from "mongodb";
+import { oreSchema, type Ore } from "./ores.schema";
+
+const COLLECTION = "ores";
+
+export async function findAllOres(db: Db): Promise<Ore[]> {
+  const docs = await db
+    .collection(COLLECTION)
+    .find({}, { projection: { _id: 0 } })
+    .sort({ name_en: 1 })
+    .toArray();
+
+  return docs.map((doc) => oreSchema.parse(doc));
+}
+
+export async function upsertOres(db: Db, ores: Ore[]): Promise<void> {
+  if (ores.length === 0) return;
+
+  await db.collection(COLLECTION).bulkWrite(
+    ores.map((ore) => ({
+      updateOne: {
+        filter: { code: ore.code },
+        update: { $set: ore },
+        upsert: true,
+      },
+    })),
+  );
+}

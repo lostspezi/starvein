@@ -1,0 +1,30 @@
+{
+  "ores": {
+    "title": "Erz-Referenz",
+    "empty": "Keine Erze gefunden — Filter anpassen oder Seed ausführen.",
+    "table": {
+      "name": "Name",
+      "code": "Code",
+      "rarity": "Seltenheit",
+      "methods": "Methoden"
+    },
+    "rarity": {
+      "all": "Alle",
+      "common": "Gewöhnlich",
+      "uncommon": "Ungewöhnlich",
+      "rare": "Selten",
+      "epic": "Episch",
+      "legendary": "Legendär"
+    },
+    "method": {
+      "all": "Alle",
+      "ship": "Ship",
+      "roc": "ROC",
+      "fps": "FPS"
+    },
+    "filter": {
+      "rarityLabel": "Nach Seltenheit filtern",
+      "methodLabel": "Nach Mining-Methode filtern"
+    }
+  }
+}

@@ -13,6 +13,7 @@
     "test:watch": "vitest",
     "test:e2e": "playwright test",
     "e2e:server": "next build && next start -p 3100",
+    "seed": "tsx --env-file=.env.local scripts/seed.ts",
     "prepare": "husky"
   },
   "lint-staged": {
@@ -24,6 +25,7 @@
     "mongodb": "^7.5.0",
     "next": "16.2.10",
     "next-intl": "^4.13.1",
+    "nuqs": "^2.9.0",
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "zod": "^4.4.3"
@@ -47,6 +49,7 @@
     "mongodb-memory-server": "^11.2.0",
     "prettier": "^3.9.4",
     "tailwindcss": "^4",
+    "tsx": "^4.23.0",
     "typescript": "~5.9.3",
     "vitest": "^4.1.10"
   }

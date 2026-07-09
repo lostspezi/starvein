@@ -7,12 +7,22 @@ export function Header() {
 
   return (
     <header className="flex items-center justify-between border-b border-bg-nebula-2 bg-bg-nebula px-6 py-3">
-      <Link
-        href="/"
-        className="font-mono text-sm font-semibold tracking-widest text-text-primary"
-      >
-        {t("appName")}
-      </Link>
+      <div className="flex items-center gap-6">
+        <Link
+          href="/"
+          className="font-mono text-sm font-semibold tracking-widest text-text-primary"
+        >
+          {t("appName")}
+        </Link>
+        <nav className="flex gap-4 text-sm">
+          <Link
+            href="/ores"
+            className="text-text-muted hover:text-text-primary"
+          >
+            {t("nav.ores")}
+          </Link>
+        </nav>
+      </div>
       <LocaleSwitcher />
     </header>
   );

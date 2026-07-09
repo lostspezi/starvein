@@ -3,6 +3,7 @@ import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { setRequestLocale } from "next-intl/server";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import { notFound } from "next/navigation";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { routing } from "@/i18n/routing";
 import { FanDisclaimer } from "@/lib/components/FanDisclaimer";
 import { Header } from "@/lib/components/Header";
@@ -47,11 +48,13 @@ export default async function LocaleLayout({
       className={`${inter.variable} ${jetbrainsMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <NextIntlClientProvider>
-          <Header />
-          <div className="flex flex-1 flex-col">{children}</div>
-          <FanDisclaimer />
-        </NextIntlClientProvider>
+        <NuqsAdapter>
+          <NextIntlClientProvider>
+            <Header />
+            <div className="flex flex-1 flex-col">{children}</div>
+            <FanDisclaimer />
+          </NextIntlClientProvider>
+        </NuqsAdapter>
       </body>
     </html>
   );

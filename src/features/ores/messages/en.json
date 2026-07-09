@@ -1,0 +1,30 @@
+{
+  "ores": {
+    "title": "Ore Reference",
+    "empty": "No ores found — adjust filters or run the seed.",
+    "table": {
+      "name": "Name",
+      "code": "Code",
+      "rarity": "Rarity",
+      "methods": "Methods"
+    },
+    "rarity": {
+      "all": "All",
+      "common": "Common",
+      "uncommon": "Uncommon",
+      "rare": "Rare",
+      "epic": "Epic",
+      "legendary": "Legendary"
+    },
+    "method": {
+      "all": "All",
+      "ship": "Ship",
+      "roc": "ROC",
+      "fps": "FPS"
+    },
+    "filter": {
+      "rarityLabel": "Filter by rarity",
+      "methodLabel": "Filter by mining method"
+    }
+  }
+}
