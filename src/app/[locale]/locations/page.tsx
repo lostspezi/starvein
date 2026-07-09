@@ -17,7 +17,7 @@ export default async function LocationsPage({
   const systems = await findAllStarSystems(await getDb());
 
   return (
-    <section className="mx-auto flex w-full max-w-4xl flex-col gap-4 px-6 py-8">
+    <section className="mx-auto flex w-full max-w-4xl flex-col gap-4 px-4 py-6 sm:px-6 sm:py-8">
       <h1 className="text-2xl font-semibold">{t("title")}</h1>
       <SystemList systems={systems} />
     </section>

@@ -35,7 +35,9 @@ export function ShipSignatureTable({
             <th className="px-4 py-3 font-medium">{t("table.mineral")}</th>
             <th className="px-4 py-3 font-medium">{t("table.signature")}</th>
             <th className="px-4 py-3 font-medium">{t("table.composition")}</th>
-            <th className="px-4 py-3 font-medium">{t("table.secondaries")}</th>
+            <th className="hidden px-4 py-3 font-medium md:table-cell">
+              {t("table.secondaries")}
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -60,7 +62,7 @@ export function ShipSignatureTable({
               <td className="px-4 py-3 font-mono text-text-muted">
                 {formatRange(profile.dominantCompositionRange)}
               </td>
-              <td className="px-4 py-3 text-text-muted">
+              <td className="hidden px-4 py-3 text-text-muted md:table-cell">
                 {profile.notes ?? "—"}
               </td>
             </tr>

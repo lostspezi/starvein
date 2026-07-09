@@ -46,7 +46,7 @@ export default async function OreDetailPage({
     ]);
 
   return (
-    <section className="mx-auto flex w-full max-w-4xl flex-col gap-4 px-6 py-8">
+    <section className="mx-auto flex w-full max-w-4xl flex-col gap-4 px-4 py-6 sm:px-6 sm:py-8">
       <div>
         <h1 className="text-2xl font-semibold">
           {ore.name_en}{" "}

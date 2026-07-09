@@ -36,7 +36,7 @@ export default async function SystemPage({
   })).filter((group) => group.bodies.length > 0);
 
   return (
-    <section className="mx-auto flex w-full max-w-4xl flex-col gap-4 px-6 py-8">
+    <section className="mx-auto flex w-full max-w-4xl flex-col gap-4 px-4 py-6 sm:px-6 sm:py-8">
       <Breadcrumbs
         items={[
           { label: t("title"), href: "/locations" },

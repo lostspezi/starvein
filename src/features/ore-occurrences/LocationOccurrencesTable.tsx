@@ -36,7 +36,7 @@ export function LocationOccurrencesTable({
             <th className="px-4 py-3 font-medium">
               {t("occurrences.table.ore")}
             </th>
-            <th className="px-4 py-3 font-medium">
+            <th className="hidden px-4 py-3 font-medium sm:table-cell">
               {t("occurrences.table.rarity")}
             </th>
             <th className="px-4 py-3 font-medium">
@@ -68,7 +68,7 @@ export function LocationOccurrencesTable({
                 </span>
               </td>
               <td
-                className={`px-4 py-3 ${RARITY_TEXT_CLASS[occurrence.rarityTier]}`}
+                className={`hidden px-4 py-3 sm:table-cell ${RARITY_TEXT_CLASS[occurrence.rarityTier]}`}
               >
                 {t(`ores.rarity.${occurrence.rarityTier}`)}
               </td>

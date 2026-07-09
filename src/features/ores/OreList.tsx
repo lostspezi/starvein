@@ -23,7 +23,9 @@ export function OreList({ ores }: { ores: Ore[] }) {
         <thead>
           <tr className="border-b border-bg-nebula-2 text-text-muted">
             <th className="px-4 py-3 font-medium">{t("table.name")}</th>
-            <th className="px-4 py-3 font-medium">{t("table.code")}</th>
+            <th className="hidden px-4 py-3 font-medium sm:table-cell">
+              {t("table.code")}
+            </th>
             <th className="px-4 py-3 font-medium">{t("table.rarity")}</th>
             <th className="px-4 py-3 font-medium">{t("table.methods")}</th>
           </tr>
@@ -43,7 +45,7 @@ export function OreList({ ores }: { ores: Ore[] }) {
                   {ore.name_en}
                 </Link>
               </td>
-              <td className="px-4 py-3 font-mono text-text-muted">
+              <td className="hidden px-4 py-3 font-mono text-text-muted sm:table-cell">
                 {ore.code}
               </td>
               <td

@@ -10,7 +10,7 @@ export function FanDisclaimer() {
   const t = useTranslations("common.disclaimer");
 
   return (
-    <footer className="border-t border-bg-nebula-2 bg-bg-nebula px-6 py-4 text-sm text-text-muted">
+    <footer className="border-t border-bg-nebula-2 bg-bg-nebula px-4 py-4 text-sm text-text-muted sm:px-6">
       <p>{t("text")}</p>
       <p className="mt-2">
         <a

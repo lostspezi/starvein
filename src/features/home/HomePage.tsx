@@ -4,7 +4,7 @@ export function HomePage() {
   const t = useTranslations("home");
 
   return (
-    <main className="flex flex-1 flex-col items-center justify-center gap-4 px-6 py-16 text-center">
+    <main className="flex flex-1 flex-col items-center justify-center gap-4 px-4 py-12 text-center sm:px-6 sm:py-16">
       <h1 className="text-4xl font-semibold tracking-widest text-accent-glow">
         {t("title")}
       </h1>

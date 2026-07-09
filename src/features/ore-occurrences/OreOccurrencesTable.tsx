@@ -27,7 +27,7 @@ export function OreOccurrencesTable({
             <th className="px-4 py-3 font-medium">
               {t("occurrences.table.location")}
             </th>
-            <th className="px-4 py-3 font-medium">
+            <th className="hidden px-4 py-3 font-medium sm:table-cell">
               {t("occurrences.table.system")}
             </th>
             <th className="px-4 py-3 font-medium">
@@ -58,7 +58,7 @@ export function OreOccurrencesTable({
                   {t(`locations.bodyType.${occurrence.bodyType}`)}
                 </span>
               </td>
-              <td className="px-4 py-3 text-text-muted">
+              <td className="hidden px-4 py-3 text-text-muted sm:table-cell">
                 {occurrence.systemCode}
               </td>
               <td className="px-4 py-3">

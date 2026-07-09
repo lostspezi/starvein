@@ -80,7 +80,7 @@ export function SearchBox({ debounceMs = 200 }: { debounceMs?: number }) {
   }
 
   return (
-    <div className="relative w-full max-w-xs">
+    <div className="relative w-full">
       <input
         role="combobox"
         type="search"

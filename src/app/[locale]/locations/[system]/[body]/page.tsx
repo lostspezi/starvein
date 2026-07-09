@@ -75,7 +75,7 @@ export default async function BodyPage({
   );
 
   return (
-    <section className="mx-auto flex w-full max-w-4xl flex-col gap-4 px-6 py-8">
+    <section className="mx-auto flex w-full max-w-4xl flex-col gap-4 px-4 py-6 sm:px-6 sm:py-8">
       <Breadcrumbs items={crumbs} />
       <div>
         <h1 className="text-2xl font-semibold">{body.name}</h1>
