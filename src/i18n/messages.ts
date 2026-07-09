@@ -13,6 +13,8 @@ import deLocations from "@/features/locations/messages/de.json";
 import enLocations from "@/features/locations/messages/en.json";
 import deOccurrences from "@/features/ore-occurrences/messages/de.json";
 import enOccurrences from "@/features/ore-occurrences/messages/en.json";
+import dePrices from "@/features/refinery-and-prices/messages/de.json";
+import enPrices from "@/features/refinery-and-prices/messages/en.json";
 import deOres from "@/features/ores/messages/de.json";
 import enOres from "@/features/ores/messages/en.json";
 import deSearch from "@/features/search/messages/de.json";
@@ -30,6 +32,7 @@ const messages = {
     ...deSearch,
     ...deOccurrences,
     ...deSignatures,
+    ...dePrices,
   },
   en: {
     ...enCommon,
@@ -40,6 +43,7 @@ const messages = {
     ...enSearch,
     ...enOccurrences,
     ...enSignatures,
+    ...enPrices,
   },
 };
 

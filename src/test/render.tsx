@@ -8,7 +8,11 @@ export function renderWithIntl(
   { locale = "en" }: { locale?: AppLocale } = {},
 ) {
   return render(
-    <NextIntlClientProvider locale={locale} messages={loadMessages(locale)}>
+    <NextIntlClientProvider
+      locale={locale}
+      messages={loadMessages(locale)}
+      timeZone="UTC"
+    >
       {ui}
     </NextIntlClientProvider>,
   );

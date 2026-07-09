@@ -5,6 +5,11 @@ import { OreOccurrencesTable } from "@/features/ore-occurrences/OreOccurrencesTa
 import { findOccurrencesByOreWithLocation } from "@/features/ore-occurrences/ore-occurrences.service";
 import { findOreByCode } from "@/features/ores/ores.repository";
 import { MINING_METHODS, type MiningMethod } from "@/features/ores/ores.schema";
+import { PriceAndYieldPanel } from "@/features/refinery-and-prices/PriceAndYieldPanel";
+import {
+  findRefineryYieldsByOre,
+  getCachedOrePriceSummary,
+} from "@/features/refinery-and-prices/price-summary";
 import { OreSignatureInfo } from "@/features/signature-profiles/OreSignatureInfo";
 import { findSignatureProfilesByOre } from "@/features/signature-profiles/signature-profiles.repository";
 import { getDb } from "@/lib/db";
@@ -32,10 +37,13 @@ export default async function OreDetailPage({
   const method = parseEnumParam<MiningMethod>(sp.method, MINING_METHODS);
 
   const t = await getTranslations();
-  const [occurrences, signatureProfiles] = await Promise.all([
-    findOccurrencesByOreWithLocation(db, ore.code, method),
-    findSignatureProfilesByOre(db, ore.code),
-  ]);
+  const [occurrences, signatureProfiles, priceSummary, refineryYields] =
+    await Promise.all([
+      findOccurrencesByOreWithLocation(db, ore.code, method),
+      findSignatureProfilesByOre(db, ore.code),
+      getCachedOrePriceSummary(db, ore.code),
+      findRefineryYieldsByOre(db, ore.code),
+    ]);
 
   return (
     <section className="mx-auto flex w-full max-w-4xl flex-col gap-4 px-6 py-8">
@@ -55,6 +63,8 @@ export default async function OreDetailPage({
       </div>
 
       <OreSignatureInfo profiles={signatureProfiles} />
+
+      <PriceAndYieldPanel summary={priceSummary} yields={refineryYields} />
 
       <h2 className="text-lg font-medium">{t("occurrences.whereToFind")}</h2>
       <MethodFilter />

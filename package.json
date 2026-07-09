@@ -14,6 +14,7 @@
     "test:e2e": "playwright test",
     "e2e:server": "next build && next start -p 3100",
     "seed": "tsx --env-file=.env.local scripts/seed.ts",
+    "sync:uex": "tsx --env-file=.env.local scripts/sync-uex.ts",
     "prepare": "husky"
   },
   "lint-staged": {
@@ -47,6 +48,7 @@
     "jsdom": "^29.1.1",
     "lint-staged": "^17.0.8",
     "mongodb-memory-server": "^11.2.0",
+    "msw": "^2.15.0",
     "prettier": "^3.9.4",
     "tailwindcss": "^4",
     "tsx": "^4.23.0",

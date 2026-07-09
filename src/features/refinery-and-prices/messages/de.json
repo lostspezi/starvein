@@ -1,0 +1,15 @@
+{
+  "prices": {
+    "title": "Preise & Refinery",
+    "raw": "Roh",
+    "refined": "Raffiniert",
+    "bestSell": "Bester Verkaufspreis",
+    "perScu": "aUEC/SCU",
+    "topTerminals": "Top-Verkaufsterminals",
+    "yieldTitle": "Refinery-Yield-Bonus",
+    "lastSynced": "Zuletzt synchronisiert: {date}",
+    "neverSynced": "Noch nicht mit UEX synchronisiert.",
+    "empty": "Keine Preisdaten vorhanden.",
+    "source": "Preis- und Refinery-Daten von UEX Corp."
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "prices": {
+    "title": "Prices & refinery",
+    "raw": "Raw",
+    "refined": "Refined",
+    "bestSell": "Best sell price",
+    "perScu": "aUEC/SCU",
+    "topTerminals": "Top sell terminals",
+    "yieldTitle": "Refinery yield bonus",
+    "lastSynced": "Last synced: {date}",
+    "neverSynced": "Not synced with UEX yet.",
+    "empty": "No price data available.",
+    "source": "Price and refinery data from UEX Corp."
+  }
+}
