@@ -29,6 +29,14 @@ describe("OreList", () => {
     expect(screen.getByText("Hadanite")).toBeVisible();
   });
 
+  it("anchors each row by ore code for deep links (/ores#QUAN)", () => {
+    renderWithIntl(<OreList ores={ores} />, { locale: "en" });
+    expect(screen.getByText("Quantainium").closest("tr")).toHaveAttribute(
+      "id",
+      "QUAN",
+    );
+  });
+
   it("shows the localized rarity label", () => {
     renderWithIntl(<OreList ores={ores} />, { locale: "de" });
     expect(screen.getByText("Legendär")).toBeVisible();

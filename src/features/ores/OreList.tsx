@@ -31,7 +31,8 @@ export function OreList({ ores }: { ores: Ore[] }) {
           {ores.map((ore) => (
             <tr
               key={ore.code}
-              className="border-b border-bg-nebula-2 last:border-b-0 hover:bg-bg-nebula-2"
+              id={ore.code}
+              className="scroll-mt-20 border-b border-bg-nebula-2 last:border-b-0 hover:bg-bg-nebula-2"
             >
               <td className="px-4 py-3">{ore.name_en}</td>
               <td className="px-4 py-3 font-mono text-text-muted">

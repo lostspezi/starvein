@@ -1,5 +1,6 @@
 import { useTranslations } from "next-intl";
 import { LocaleSwitcher } from "@/features/i18n-switcher/LocaleSwitcher";
+import { SearchBox } from "@/features/search/SearchBox";
 import { Link } from "@/i18n/navigation";
 
 export function Header() {
@@ -29,7 +30,10 @@ export function Header() {
           </Link>
         </nav>
       </div>
-      <LocaleSwitcher />
+      <div className="flex items-center gap-4">
+        <SearchBox />
+        <LocaleSwitcher />
+      </div>
     </header>
   );
 }
