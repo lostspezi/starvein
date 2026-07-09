@@ -73,7 +73,7 @@ describe("search service", () => {
       kind: "ore",
       label: "Quantainium",
       detail: "legendary",
-      href: "/ores#QUAN",
+      href: "/ores/quan",
     });
 
     const byCode = await searchAll(db, "QUAR");

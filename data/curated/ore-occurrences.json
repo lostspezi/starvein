@@ -1,0 +1,1111 @@
+{
+  "_meta": {
+    "patchVersion": "4.7",
+    "generatedAt": "2026-07-09",
+    "sources": [
+      "Kuratierter Start-Datensatz aus Community-Wissen (Stand SC 4.7)",
+      "Methoden-Zuordnung konsistent mit Diftic/SC_Signature_Scanner (siehe CREDITS.md)"
+    ],
+    "notes": "Wahrscheinlichkeiten sind vorlaeufige Schaetzwerte (confidenceScore 0.3) und warten auf Community-Bestaetigung ueber das Voting-System (Slice 7). Original-Regolith-Daten sind nicht mehr verfuegbar.",
+    "defaults": {
+      "patchVersion": "4.7",
+      "sourceType": "curated",
+      "confidenceScore": 0.3,
+      "lastVerifiedAt": "2026-07-09"
+    }
+  },
+  "occurrences": [
+    {
+      "oreCode": "APHO",
+      "systemCode": "STANTON",
+      "bodySlug": "daymar",
+      "method": "fps",
+      "probabilityPercent": 45
+    },
+    {
+      "oreCode": "APHO",
+      "systemCode": "STANTON",
+      "bodySlug": "daymar",
+      "method": "roc",
+      "probabilityPercent": 40
+    },
+    {
+      "oreCode": "DOLI",
+      "systemCode": "STANTON",
+      "bodySlug": "daymar",
+      "method": "fps",
+      "probabilityPercent": 35
+    },
+    {
+      "oreCode": "DOLI",
+      "systemCode": "STANTON",
+      "bodySlug": "daymar",
+      "method": "roc",
+      "probabilityPercent": 35
+    },
+    {
+      "oreCode": "HADA",
+      "systemCode": "STANTON",
+      "bodySlug": "daymar",
+      "method": "fps",
+      "probabilityPercent": 20
+    },
+    {
+      "oreCode": "HADA",
+      "systemCode": "STANTON",
+      "bodySlug": "daymar",
+      "method": "roc",
+      "probabilityPercent": 25
+    },
+    {
+      "oreCode": "DOLI",
+      "systemCode": "STANTON",
+      "bodySlug": "yela",
+      "method": "fps",
+      "probabilityPercent": 45
+    },
+    {
+      "oreCode": "APHO",
+      "systemCode": "STANTON",
+      "bodySlug": "yela",
+      "method": "fps",
+      "probabilityPercent": 40
+    },
+    {
+      "oreCode": "HADA",
+      "systemCode": "STANTON",
+      "bodySlug": "yela",
+      "method": "fps",
+      "probabilityPercent": 15
+    },
+    {
+      "oreCode": "APHO",
+      "systemCode": "STANTON",
+      "bodySlug": "cellin",
+      "method": "fps",
+      "probabilityPercent": 40
+    },
+    {
+      "oreCode": "DOLI",
+      "systemCode": "STANTON",
+      "bodySlug": "cellin",
+      "method": "fps",
+      "probabilityPercent": 40
+    },
+    {
+      "oreCode": "HADA",
+      "systemCode": "STANTON",
+      "bodySlug": "cellin",
+      "method": "fps",
+      "probabilityPercent": 20
+    },
+    {
+      "oreCode": "APHO",
+      "systemCode": "STANTON",
+      "bodySlug": "aberdeen",
+      "method": "fps",
+      "probabilityPercent": 35
+    },
+    {
+      "oreCode": "DOLI",
+      "systemCode": "STANTON",
+      "bodySlug": "aberdeen",
+      "method": "fps",
+      "probabilityPercent": 35
+    },
+    {
+      "oreCode": "HADA",
+      "systemCode": "STANTON",
+      "bodySlug": "aberdeen",
+      "method": "fps",
+      "probabilityPercent": 30
+    },
+    {
+      "oreCode": "DOLI",
+      "systemCode": "STANTON",
+      "bodySlug": "arial",
+      "method": "fps",
+      "probabilityPercent": 40
+    },
+    {
+      "oreCode": "APHO",
+      "systemCode": "STANTON",
+      "bodySlug": "arial",
+      "method": "fps",
+      "probabilityPercent": 35
+    },
+    {
+      "oreCode": "HADA",
+      "systemCode": "STANTON",
+      "bodySlug": "arial",
+      "method": "fps",
+      "probabilityPercent": 25
+    },
+    {
+      "oreCode": "APHO",
+      "systemCode": "STANTON",
+      "bodySlug": "ita",
+      "method": "fps",
+      "probabilityPercent": 40
+    },
+    {
+      "oreCode": "DOLI",
+      "systemCode": "STANTON",
+      "bodySlug": "ita",
+      "method": "fps",
+      "probabilityPercent": 40
+    },
+    {
+      "oreCode": "HADA",
+      "systemCode": "STANTON",
+      "bodySlug": "ita",
+      "method": "fps",
+      "probabilityPercent": 20
+    },
+    {
+      "oreCode": "DOLI",
+      "systemCode": "STANTON",
+      "bodySlug": "magda",
+      "method": "fps",
+      "probabilityPercent": 40
+    },
+    {
+      "oreCode": "APHO",
+      "systemCode": "STANTON",
+      "bodySlug": "magda",
+      "method": "fps",
+      "probabilityPercent": 35
+    },
+    {
+      "oreCode": "HADA",
+      "systemCode": "STANTON",
+      "bodySlug": "magda",
+      "method": "fps",
+      "probabilityPercent": 25
+    },
+    {
+      "oreCode": "APHO",
+      "systemCode": "STANTON",
+      "bodySlug": "lyria",
+      "method": "fps",
+      "probabilityPercent": 40
+    },
+    {
+      "oreCode": "APHO",
+      "systemCode": "STANTON",
+      "bodySlug": "lyria",
+      "method": "roc",
+      "probabilityPercent": 40
+    },
+    {
+      "oreCode": "DOLI",
+      "systemCode": "STANTON",
+      "bodySlug": "lyria",
+      "method": "fps",
+      "probabilityPercent": 40
+    },
+    {
+      "oreCode": "DOLI",
+      "systemCode": "STANTON",
+      "bodySlug": "lyria",
+      "method": "roc",
+      "probabilityPercent": 40
+    },
+    {
+      "oreCode": "HADA",
+      "systemCode": "STANTON",
+      "bodySlug": "lyria",
+      "method": "fps",
+      "probabilityPercent": 20
+    },
+    {
+      "oreCode": "HADA",
+      "systemCode": "STANTON",
+      "bodySlug": "lyria",
+      "method": "roc",
+      "probabilityPercent": 20
+    },
+    {
+      "oreCode": "APHO",
+      "systemCode": "STANTON",
+      "bodySlug": "wala",
+      "method": "fps",
+      "probabilityPercent": 35
+    },
+    {
+      "oreCode": "DOLI",
+      "systemCode": "STANTON",
+      "bodySlug": "wala",
+      "method": "fps",
+      "probabilityPercent": 35
+    },
+    {
+      "oreCode": "BERA",
+      "systemCode": "STANTON",
+      "bodySlug": "wala",
+      "method": "fps",
+      "probabilityPercent": 30
+    },
+    {
+      "oreCode": "GLAC",
+      "systemCode": "STANTON",
+      "bodySlug": "calliope",
+      "method": "fps",
+      "probabilityPercent": 35
+    },
+    {
+      "oreCode": "GLAC",
+      "systemCode": "STANTON",
+      "bodySlug": "calliope",
+      "method": "roc",
+      "probabilityPercent": 35
+    },
+    {
+      "oreCode": "APHO",
+      "systemCode": "STANTON",
+      "bodySlug": "calliope",
+      "method": "fps",
+      "probabilityPercent": 35
+    },
+    {
+      "oreCode": "DOLI",
+      "systemCode": "STANTON",
+      "bodySlug": "calliope",
+      "method": "fps",
+      "probabilityPercent": 30
+    },
+    {
+      "oreCode": "APHO",
+      "systemCode": "STANTON",
+      "bodySlug": "clio",
+      "method": "fps",
+      "probabilityPercent": 35
+    },
+    {
+      "oreCode": "GLAC",
+      "systemCode": "STANTON",
+      "bodySlug": "clio",
+      "method": "fps",
+      "probabilityPercent": 30
+    },
+    {
+      "oreCode": "DOLI",
+      "systemCode": "STANTON",
+      "bodySlug": "clio",
+      "method": "fps",
+      "probabilityPercent": 30
+    },
+    {
+      "oreCode": "JANA",
+      "systemCode": "STANTON",
+      "bodySlug": "clio",
+      "method": "fps",
+      "probabilityPercent": 5
+    },
+    {
+      "oreCode": "GLAC",
+      "systemCode": "STANTON",
+      "bodySlug": "euterpe",
+      "method": "fps",
+      "probabilityPercent": 40
+    },
+    {
+      "oreCode": "DOLI",
+      "systemCode": "STANTON",
+      "bodySlug": "euterpe",
+      "method": "fps",
+      "probabilityPercent": 30
+    },
+    {
+      "oreCode": "APHO",
+      "systemCode": "STANTON",
+      "bodySlug": "euterpe",
+      "method": "fps",
+      "probabilityPercent": 30
+    },
+    {
+      "oreCode": "GLAC",
+      "systemCode": "PYRO",
+      "bodySlug": "monox",
+      "method": "fps",
+      "probabilityPercent": 30
+    },
+    {
+      "oreCode": "FEYN",
+      "systemCode": "PYRO",
+      "bodySlug": "monox",
+      "method": "fps",
+      "probabilityPercent": 20
+    },
+    {
+      "oreCode": "FEYN",
+      "systemCode": "PYRO",
+      "bodySlug": "monox",
+      "method": "roc",
+      "probabilityPercent": 25
+    },
+    {
+      "oreCode": "GLAC",
+      "systemCode": "PYRO",
+      "bodySlug": "bloom",
+      "method": "fps",
+      "probabilityPercent": 35
+    },
+    {
+      "oreCode": "FEYN",
+      "systemCode": "PYRO",
+      "bodySlug": "bloom",
+      "method": "fps",
+      "probabilityPercent": 20
+    },
+    {
+      "oreCode": "CARI",
+      "systemCode": "PYRO",
+      "bodySlug": "adir",
+      "method": "fps",
+      "probabilityPercent": 35
+    },
+    {
+      "oreCode": "JACO",
+      "systemCode": "PYRO",
+      "bodySlug": "adir",
+      "method": "fps",
+      "probabilityPercent": 10
+    },
+    {
+      "oreCode": "CARI",
+      "systemCode": "PYRO",
+      "bodySlug": "fairo",
+      "method": "fps",
+      "probabilityPercent": 30
+    },
+    {
+      "oreCode": "JACO",
+      "systemCode": "PYRO",
+      "bodySlug": "fairo",
+      "method": "fps",
+      "probabilityPercent": 8
+    },
+    {
+      "oreCode": "CARI",
+      "systemCode": "PYRO",
+      "bodySlug": "fuego",
+      "method": "fps",
+      "probabilityPercent": 30
+    },
+    {
+      "oreCode": "FEYN",
+      "systemCode": "PYRO",
+      "bodySlug": "fuego",
+      "method": "fps",
+      "probabilityPercent": 20
+    },
+    {
+      "oreCode": "CARI",
+      "systemCode": "PYRO",
+      "bodySlug": "ignis",
+      "method": "fps",
+      "probabilityPercent": 30
+    },
+    {
+      "oreCode": "SALD",
+      "systemCode": "PYRO",
+      "bodySlug": "ignis",
+      "method": "fps",
+      "probabilityPercent": 5
+    },
+    {
+      "oreCode": "FEYN",
+      "systemCode": "PYRO",
+      "bodySlug": "vatra",
+      "method": "fps",
+      "probabilityPercent": 25
+    },
+    {
+      "oreCode": "SADA",
+      "systemCode": "PYRO",
+      "bodySlug": "vatra",
+      "method": "fps",
+      "probabilityPercent": 15
+    },
+    {
+      "oreCode": "FEYN",
+      "systemCode": "PYRO",
+      "bodySlug": "vuur",
+      "method": "fps",
+      "probabilityPercent": 20
+    },
+    {
+      "oreCode": "SADA",
+      "systemCode": "PYRO",
+      "bodySlug": "vuur",
+      "method": "fps",
+      "probabilityPercent": 10
+    },
+    {
+      "oreCode": "TITA",
+      "systemCode": "STANTON",
+      "bodySlug": "hurston",
+      "method": "ship",
+      "probabilityPercent": 30
+    },
+    {
+      "oreCode": "IRON",
+      "systemCode": "STANTON",
+      "bodySlug": "hurston",
+      "method": "ship",
+      "probabilityPercent": 40
+    },
+    {
+      "oreCode": "QUAR",
+      "systemCode": "STANTON",
+      "bodySlug": "hurston",
+      "method": "ship",
+      "probabilityPercent": 40
+    },
+    {
+      "oreCode": "ALUM",
+      "systemCode": "STANTON",
+      "bodySlug": "hurston",
+      "method": "ship",
+      "probabilityPercent": 40
+    },
+    {
+      "oreCode": "GOLD",
+      "systemCode": "STANTON",
+      "bodySlug": "hurston",
+      "method": "ship",
+      "probabilityPercent": 12
+    },
+    {
+      "oreCode": "LARA",
+      "systemCode": "STANTON",
+      "bodySlug": "hurston",
+      "method": "ship",
+      "probabilityPercent": 18
+    },
+    {
+      "oreCode": "QUAR",
+      "systemCode": "STANTON",
+      "bodySlug": "aberdeen",
+      "method": "ship",
+      "probabilityPercent": 40
+    },
+    {
+      "oreCode": "GOLD",
+      "systemCode": "STANTON",
+      "bodySlug": "aberdeen",
+      "method": "ship",
+      "probabilityPercent": 15
+    },
+    {
+      "oreCode": "LARA",
+      "systemCode": "STANTON",
+      "bodySlug": "aberdeen",
+      "method": "ship",
+      "probabilityPercent": 20
+    },
+    {
+      "oreCode": "TITA",
+      "systemCode": "STANTON",
+      "bodySlug": "arial",
+      "method": "ship",
+      "probabilityPercent": 30
+    },
+    {
+      "oreCode": "GOLD",
+      "systemCode": "STANTON",
+      "bodySlug": "arial",
+      "method": "ship",
+      "probabilityPercent": 12
+    },
+    {
+      "oreCode": "TUNG",
+      "systemCode": "STANTON",
+      "bodySlug": "magda",
+      "method": "ship",
+      "probabilityPercent": 30
+    },
+    {
+      "oreCode": "GOLD",
+      "systemCode": "STANTON",
+      "bodySlug": "magda",
+      "method": "ship",
+      "probabilityPercent": 10
+    },
+    {
+      "oreCode": "QUAR",
+      "systemCode": "STANTON",
+      "bodySlug": "ita",
+      "method": "ship",
+      "probabilityPercent": 40
+    },
+    {
+      "oreCode": "SILI",
+      "systemCode": "STANTON",
+      "bodySlug": "ita",
+      "method": "ship",
+      "probabilityPercent": 35
+    },
+    {
+      "oreCode": "TUNG",
+      "systemCode": "STANTON",
+      "bodySlug": "daymar",
+      "method": "ship",
+      "probabilityPercent": 28
+    },
+    {
+      "oreCode": "QUAR",
+      "systemCode": "STANTON",
+      "bodySlug": "daymar",
+      "method": "ship",
+      "probabilityPercent": 40
+    },
+    {
+      "oreCode": "GOLD",
+      "systemCode": "STANTON",
+      "bodySlug": "daymar",
+      "method": "ship",
+      "probabilityPercent": 12
+    },
+    {
+      "oreCode": "QUAN",
+      "systemCode": "STANTON",
+      "bodySlug": "yela",
+      "method": "ship",
+      "probabilityPercent": 6
+    },
+    {
+      "oreCode": "BEXA",
+      "systemCode": "STANTON",
+      "bodySlug": "yela",
+      "method": "ship",
+      "probabilityPercent": 10
+    },
+    {
+      "oreCode": "GOLD",
+      "systemCode": "STANTON",
+      "bodySlug": "yela",
+      "method": "ship",
+      "probabilityPercent": 14
+    },
+    {
+      "oreCode": "TUNG",
+      "systemCode": "STANTON",
+      "bodySlug": "cellin",
+      "method": "ship",
+      "probabilityPercent": 30
+    },
+    {
+      "oreCode": "IRON",
+      "systemCode": "STANTON",
+      "bodySlug": "cellin",
+      "method": "ship",
+      "probabilityPercent": 40
+    },
+    {
+      "oreCode": "BERY",
+      "systemCode": "STANTON",
+      "bodySlug": "lyria",
+      "method": "ship",
+      "probabilityPercent": 22
+    },
+    {
+      "oreCode": "TUNG",
+      "systemCode": "STANTON",
+      "bodySlug": "lyria",
+      "method": "ship",
+      "probabilityPercent": 28
+    },
+    {
+      "oreCode": "CORU",
+      "systemCode": "STANTON",
+      "bodySlug": "lyria",
+      "method": "ship",
+      "probabilityPercent": 40
+    },
+    {
+      "oreCode": "BERY",
+      "systemCode": "STANTON",
+      "bodySlug": "wala",
+      "method": "ship",
+      "probabilityPercent": 25
+    },
+    {
+      "oreCode": "QUAR",
+      "systemCode": "STANTON",
+      "bodySlug": "wala",
+      "method": "ship",
+      "probabilityPercent": 40
+    },
+    {
+      "oreCode": "GOLD",
+      "systemCode": "STANTON",
+      "bodySlug": "wala",
+      "method": "ship",
+      "probabilityPercent": 10
+    },
+    {
+      "oreCode": "TITA",
+      "systemCode": "STANTON",
+      "bodySlug": "microtech",
+      "method": "ship",
+      "probabilityPercent": 28
+    },
+    {
+      "oreCode": "BERY",
+      "systemCode": "STANTON",
+      "bodySlug": "microtech",
+      "method": "ship",
+      "probabilityPercent": 20
+    },
+    {
+      "oreCode": "ICEW",
+      "systemCode": "STANTON",
+      "bodySlug": "microtech",
+      "method": "ship",
+      "probabilityPercent": 35
+    },
+    {
+      "oreCode": "QUAN",
+      "systemCode": "STANTON",
+      "bodySlug": "microtech",
+      "method": "ship",
+      "probabilityPercent": 4
+    },
+    {
+      "oreCode": "ICEW",
+      "systemCode": "STANTON",
+      "bodySlug": "calliope",
+      "method": "ship",
+      "probabilityPercent": 40
+    },
+    {
+      "oreCode": "BEXA",
+      "systemCode": "STANTON",
+      "bodySlug": "calliope",
+      "method": "ship",
+      "probabilityPercent": 10
+    },
+    {
+      "oreCode": "QUAN",
+      "systemCode": "STANTON",
+      "bodySlug": "calliope",
+      "method": "ship",
+      "probabilityPercent": 5
+    },
+    {
+      "oreCode": "ICEW",
+      "systemCode": "STANTON",
+      "bodySlug": "clio",
+      "method": "ship",
+      "probabilityPercent": 40
+    },
+    {
+      "oreCode": "BERY",
+      "systemCode": "STANTON",
+      "bodySlug": "clio",
+      "method": "ship",
+      "probabilityPercent": 20
+    },
+    {
+      "oreCode": "ICEW",
+      "systemCode": "STANTON",
+      "bodySlug": "euterpe",
+      "method": "ship",
+      "probabilityPercent": 45
+    },
+    {
+      "oreCode": "BEXA",
+      "systemCode": "STANTON",
+      "bodySlug": "euterpe",
+      "method": "ship",
+      "probabilityPercent": 8
+    },
+    {
+      "oreCode": "QUAN",
+      "systemCode": "STANTON",
+      "bodySlug": "hur-l1",
+      "method": "ship",
+      "probabilityPercent": 5
+    },
+    {
+      "oreCode": "BEXA",
+      "systemCode": "STANTON",
+      "bodySlug": "hur-l1",
+      "method": "ship",
+      "probabilityPercent": 12
+    },
+    {
+      "oreCode": "TARA",
+      "systemCode": "STANTON",
+      "bodySlug": "hur-l1",
+      "method": "ship",
+      "probabilityPercent": 12
+    },
+    {
+      "oreCode": "GOLD",
+      "systemCode": "STANTON",
+      "bodySlug": "hur-l1",
+      "method": "ship",
+      "probabilityPercent": 15
+    },
+    {
+      "oreCode": "LARA",
+      "systemCode": "STANTON",
+      "bodySlug": "hur-l1",
+      "method": "ship",
+      "probabilityPercent": 20
+    },
+    {
+      "oreCode": "OURA",
+      "systemCode": "STANTON",
+      "bodySlug": "hur-l2",
+      "method": "ship",
+      "probabilityPercent": 6
+    },
+    {
+      "oreCode": "LIND",
+      "systemCode": "STANTON",
+      "bodySlug": "hur-l2",
+      "method": "ship",
+      "probabilityPercent": 8
+    },
+    {
+      "oreCode": "QUAN",
+      "systemCode": "STANTON",
+      "bodySlug": "cru-l1",
+      "method": "ship",
+      "probabilityPercent": 4
+    },
+    {
+      "oreCode": "GOLD",
+      "systemCode": "STANTON",
+      "bodySlug": "cru-l1",
+      "method": "ship",
+      "probabilityPercent": 15
+    },
+    {
+      "oreCode": "BERY",
+      "systemCode": "STANTON",
+      "bodySlug": "cru-l1",
+      "method": "ship",
+      "probabilityPercent": 20
+    },
+    {
+      "oreCode": "BEXA",
+      "systemCode": "STANTON",
+      "bodySlug": "arc-l1",
+      "method": "ship",
+      "probabilityPercent": 10
+    },
+    {
+      "oreCode": "TARA",
+      "systemCode": "STANTON",
+      "bodySlug": "arc-l1",
+      "method": "ship",
+      "probabilityPercent": 12
+    },
+    {
+      "oreCode": "LARA",
+      "systemCode": "STANTON",
+      "bodySlug": "arc-l1",
+      "method": "ship",
+      "probabilityPercent": 20
+    },
+    {
+      "oreCode": "QUAN",
+      "systemCode": "STANTON",
+      "bodySlug": "mic-l1",
+      "method": "ship",
+      "probabilityPercent": 5
+    },
+    {
+      "oreCode": "BEXA",
+      "systemCode": "STANTON",
+      "bodySlug": "mic-l1",
+      "method": "ship",
+      "probabilityPercent": 12
+    },
+    {
+      "oreCode": "BERY",
+      "systemCode": "STANTON",
+      "bodySlug": "mic-l1",
+      "method": "ship",
+      "probabilityPercent": 18
+    },
+    {
+      "oreCode": "LIND",
+      "systemCode": "STANTON",
+      "bodySlug": "mic-l2",
+      "method": "ship",
+      "probabilityPercent": 8
+    },
+    {
+      "oreCode": "ASLA",
+      "systemCode": "STANTON",
+      "bodySlug": "mic-l2",
+      "method": "ship",
+      "probabilityPercent": 20
+    },
+    {
+      "oreCode": "QUAN",
+      "systemCode": "NYX",
+      "bodySlug": "delamar",
+      "method": "ship",
+      "probabilityPercent": 6
+    },
+    {
+      "oreCode": "BEXA",
+      "systemCode": "NYX",
+      "bodySlug": "delamar",
+      "method": "ship",
+      "probabilityPercent": 12
+    },
+    {
+      "oreCode": "GOLD",
+      "systemCode": "NYX",
+      "bodySlug": "delamar",
+      "method": "ship",
+      "probabilityPercent": 15
+    },
+    {
+      "oreCode": "STIL",
+      "systemCode": "PYRO",
+      "bodySlug": "pyro-i",
+      "method": "ship",
+      "probabilityPercent": 3
+    },
+    {
+      "oreCode": "RICC",
+      "systemCode": "PYRO",
+      "bodySlug": "pyro-i",
+      "method": "ship",
+      "probabilityPercent": 8
+    },
+    {
+      "oreCode": "QUAR",
+      "systemCode": "PYRO",
+      "bodySlug": "pyro-i",
+      "method": "ship",
+      "probabilityPercent": 35
+    },
+    {
+      "oreCode": "RICC",
+      "systemCode": "PYRO",
+      "bodySlug": "monox",
+      "method": "ship",
+      "probabilityPercent": 8
+    },
+    {
+      "oreCode": "TITA",
+      "systemCode": "PYRO",
+      "bodySlug": "monox",
+      "method": "ship",
+      "probabilityPercent": 25
+    },
+    {
+      "oreCode": "TORI",
+      "systemCode": "PYRO",
+      "bodySlug": "monox",
+      "method": "ship",
+      "probabilityPercent": 25
+    },
+    {
+      "oreCode": "ICEW",
+      "systemCode": "PYRO",
+      "bodySlug": "bloom",
+      "method": "ship",
+      "probabilityPercent": 35
+    },
+    {
+      "oreCode": "BERY",
+      "systemCode": "PYRO",
+      "bodySlug": "bloom",
+      "method": "ship",
+      "probabilityPercent": 18
+    },
+    {
+      "oreCode": "RICC",
+      "systemCode": "PYRO",
+      "bodySlug": "pyro-iv",
+      "method": "ship",
+      "probabilityPercent": 10
+    },
+    {
+      "oreCode": "STIL",
+      "systemCode": "PYRO",
+      "bodySlug": "pyro-iv",
+      "method": "ship",
+      "probabilityPercent": 4
+    },
+    {
+      "oreCode": "GOLD",
+      "systemCode": "PYRO",
+      "bodySlug": "pyro-iv",
+      "method": "ship",
+      "probabilityPercent": 12
+    },
+    {
+      "oreCode": "ASLA",
+      "systemCode": "PYRO",
+      "bodySlug": "pyro-iv",
+      "method": "ship",
+      "probabilityPercent": 20
+    },
+    {
+      "oreCode": "SAVR",
+      "systemCode": "PYRO",
+      "bodySlug": "adir",
+      "method": "ship",
+      "probabilityPercent": 3
+    },
+    {
+      "oreCode": "GOLD",
+      "systemCode": "PYRO",
+      "bodySlug": "adir",
+      "method": "ship",
+      "probabilityPercent": 12
+    },
+    {
+      "oreCode": "RICC",
+      "systemCode": "PYRO",
+      "bodySlug": "fairo",
+      "method": "ship",
+      "probabilityPercent": 8
+    },
+    {
+      "oreCode": "TUNG",
+      "systemCode": "PYRO",
+      "bodySlug": "fairo",
+      "method": "ship",
+      "probabilityPercent": 25
+    },
+    {
+      "oreCode": "GOLD",
+      "systemCode": "PYRO",
+      "bodySlug": "fuego",
+      "method": "ship",
+      "probabilityPercent": 12
+    },
+    {
+      "oreCode": "QUAR",
+      "systemCode": "PYRO",
+      "bodySlug": "fuego",
+      "method": "ship",
+      "probabilityPercent": 35
+    },
+    {
+      "oreCode": "STIL",
+      "systemCode": "PYRO",
+      "bodySlug": "ignis",
+      "method": "ship",
+      "probabilityPercent": 4
+    },
+    {
+      "oreCode": "TITA",
+      "systemCode": "PYRO",
+      "bodySlug": "ignis",
+      "method": "ship",
+      "probabilityPercent": 25
+    },
+    {
+      "oreCode": "RICC",
+      "systemCode": "PYRO",
+      "bodySlug": "vatra",
+      "method": "ship",
+      "probabilityPercent": 8
+    },
+    {
+      "oreCode": "CORU",
+      "systemCode": "PYRO",
+      "bodySlug": "vatra",
+      "method": "ship",
+      "probabilityPercent": 35
+    },
+    {
+      "oreCode": "SAVR",
+      "systemCode": "PYRO",
+      "bodySlug": "vuur",
+      "method": "ship",
+      "probabilityPercent": 3
+    },
+    {
+      "oreCode": "IRON",
+      "systemCode": "PYRO",
+      "bodySlug": "vuur",
+      "method": "ship",
+      "probabilityPercent": 35
+    },
+    {
+      "oreCode": "RICC",
+      "systemCode": "PYRO",
+      "bodySlug": "terminus",
+      "method": "ship",
+      "probabilityPercent": 10
+    },
+    {
+      "oreCode": "GOLD",
+      "systemCode": "PYRO",
+      "bodySlug": "terminus",
+      "method": "ship",
+      "probabilityPercent": 12
+    },
+    {
+      "oreCode": "TORI",
+      "systemCode": "PYRO",
+      "bodySlug": "terminus",
+      "method": "ship",
+      "probabilityPercent": 22
+    },
+    {
+      "oreCode": "QUAN",
+      "systemCode": "PYRO",
+      "bodySlug": "pyr1-l1",
+      "method": "ship",
+      "probabilityPercent": 5
+    },
+    {
+      "oreCode": "STIL",
+      "systemCode": "PYRO",
+      "bodySlug": "pyr1-l1",
+      "method": "ship",
+      "probabilityPercent": 3
+    },
+    {
+      "oreCode": "BEXA",
+      "systemCode": "PYRO",
+      "bodySlug": "pyr1-l1",
+      "method": "ship",
+      "probabilityPercent": 10
+    },
+    {
+      "oreCode": "SAVR",
+      "systemCode": "PYRO",
+      "bodySlug": "pyr5-l1",
+      "method": "ship",
+      "probabilityPercent": 3
+    },
+    {
+      "oreCode": "TARA",
+      "systemCode": "PYRO",
+      "bodySlug": "pyr5-l1",
+      "method": "ship",
+      "probabilityPercent": 12
+    },
+    {
+      "oreCode": "TORI",
+      "systemCode": "PYRO",
+      "bodySlug": "pyr6-l1",
+      "method": "ship",
+      "probabilityPercent": 25
+    },
+    {
+      "oreCode": "OURA",
+      "systemCode": "PYRO",
+      "bodySlug": "pyr6-l1",
+      "method": "ship",
+      "probabilityPercent": 5
+    }
+  ]
+}

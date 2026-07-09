@@ -1,0 +1,21 @@
+{
+  "occurrences": {
+    "whereToFind": "Fundorte",
+    "atLocation": "Vorkommen",
+    "empty": "Noch keine bekannten Vorkommen.",
+    "table": {
+      "location": "Location",
+      "ore": "Erz",
+      "system": "System",
+      "method": "Methode",
+      "probability": "Wahrscheinlichkeit",
+      "rarity": "Seltenheit",
+      "status": "Status"
+    },
+    "badge": {
+      "unverified": "unbestätigt",
+      "verified": "bestätigt"
+    },
+    "disclaimer": "Wahrscheinlichkeiten sind vorläufige kuratierte Schätzwerte und warten auf Community-Bestätigung."
+  }
+}

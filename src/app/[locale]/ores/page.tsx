@@ -10,17 +10,9 @@ import {
   type RarityTier,
 } from "@/features/ores/ores.schema";
 import { getDb } from "@/lib/db";
+import { parseEnumParam } from "@/lib/search-params";
 
 export const dynamic = "force-dynamic";
-
-function parseParam<T extends string>(
-  value: string | string[] | undefined,
-  allowed: readonly T[],
-): T | null {
-  return typeof value === "string" && allowed.includes(value as T)
-    ? (value as T)
-    : null;
-}
 
 export default async function OresPage({
   params,
@@ -33,8 +25,8 @@ export default async function OresPage({
   setRequestLocale(locale);
 
   const sp = await searchParams;
-  const rarity = parseParam<RarityTier>(sp.rarity, RARITY_TIERS);
-  const method = parseParam<MiningMethod>(sp.method, MINING_METHODS);
+  const rarity = parseEnumParam<RarityTier>(sp.rarity, RARITY_TIERS);
+  const method = parseEnumParam<MiningMethod>(sp.method, MINING_METHODS);
 
   const t = await getTranslations("ores");
   const ores = filterOres(await findAllOres(await getDb()), {

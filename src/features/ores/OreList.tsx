@@ -1,4 +1,5 @@
 import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import { MINING_METHODS, type Ore, type RarityTier } from "./ores.schema";
 
 const RARITY_TEXT_CLASS: Record<RarityTier, string> = {
@@ -34,7 +35,14 @@ export function OreList({ ores }: { ores: Ore[] }) {
               id={ore.code}
               className="scroll-mt-20 border-b border-bg-nebula-2 last:border-b-0 hover:bg-bg-nebula-2"
             >
-              <td className="px-4 py-3">{ore.name_en}</td>
+              <td className="px-4 py-3">
+                <Link
+                  href={`/ores/${ore.code.toLowerCase()}`}
+                  className="text-accent-primary hover:text-accent-glow hover:underline"
+                >
+                  {ore.name_en}
+                </Link>
+              </td>
               <td className="px-4 py-3 font-mono text-text-muted">
                 {ore.code}
               </td>

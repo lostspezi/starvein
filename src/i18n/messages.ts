@@ -11,6 +11,8 @@ import deSwitcher from "@/features/i18n-switcher/messages/de.json";
 import enSwitcher from "@/features/i18n-switcher/messages/en.json";
 import deLocations from "@/features/locations/messages/de.json";
 import enLocations from "@/features/locations/messages/en.json";
+import deOccurrences from "@/features/ore-occurrences/messages/de.json";
+import enOccurrences from "@/features/ore-occurrences/messages/en.json";
 import deOres from "@/features/ores/messages/de.json";
 import enOres from "@/features/ores/messages/en.json";
 import deSearch from "@/features/search/messages/de.json";
@@ -24,6 +26,7 @@ const messages = {
     ...deOres,
     ...deLocations,
     ...deSearch,
+    ...deOccurrences,
   },
   en: {
     ...enCommon,
@@ -32,6 +35,7 @@ const messages = {
     ...enOres,
     ...enLocations,
     ...enSearch,
+    ...enOccurrences,
   },
 };
 

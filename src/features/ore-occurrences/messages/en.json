@@ -1,0 +1,21 @@
+{
+  "occurrences": {
+    "whereToFind": "Where to find",
+    "atLocation": "Occurrences",
+    "empty": "No known occurrences yet.",
+    "table": {
+      "location": "Location",
+      "ore": "Ore",
+      "system": "System",
+      "method": "Method",
+      "probability": "Probability",
+      "rarity": "Rarity",
+      "status": "Status"
+    },
+    "badge": {
+      "unverified": "unverified",
+      "verified": "verified"
+    },
+    "disclaimer": "Probabilities are provisional curated estimates awaiting community verification."
+  }
+}

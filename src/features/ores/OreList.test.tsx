@@ -29,11 +29,15 @@ describe("OreList", () => {
     expect(screen.getByText("Hadanite")).toBeVisible();
   });
 
-  it("anchors each row by ore code for deep links (/ores#QUAN)", () => {
+  it("anchors each row by ore code and links to the ore detail page", () => {
     renderWithIntl(<OreList ores={ores} />, { locale: "en" });
     expect(screen.getByText("Quantainium").closest("tr")).toHaveAttribute(
       "id",
       "QUAN",
+    );
+    expect(screen.getByRole("link", { name: "Quantainium" })).toHaveAttribute(
+      "href",
+      "/ores/quan",
     );
   });
 

@@ -10,6 +10,8 @@ import {
   upsertCelestialBodies,
   upsertStarSystems,
 } from "@/features/locations/locations.repository";
+import { loadCuratedOccurrences } from "@/features/ore-occurrences/curated-occurrences";
+import { upsertOreOccurrences } from "@/features/ore-occurrences/ore-occurrences.repository";
 import { loadCuratedOres } from "@/features/ores/curated-ores";
 import { upsertOres } from "@/features/ores/ores.repository";
 import { closeMongo, getDb } from "@/lib/db";
@@ -28,6 +30,10 @@ async function main() {
   const bodies = loadCuratedCelestialBodies();
   await upsertCelestialBodies(db, bodies);
   console.log(`Seeded ${bodies.length} celestial bodies`);
+
+  const occurrences = loadCuratedOccurrences();
+  await upsertOreOccurrences(db, occurrences);
+  console.log(`Seeded ${occurrences.length} ore occurrences`);
 
   console.log(`Done (database '${db.databaseName}').`);
 }

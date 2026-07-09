@@ -20,14 +20,16 @@ test("finds a moon via the header search and navigates to it", async ({
   await expect(page.getByRole("heading", { name: "Yela" })).toBeVisible();
 });
 
-test("finds an ore and deep-links into the ore table", async ({ page }) => {
+test("finds an ore and navigates to its detail page", async ({ page }) => {
   await page.goto("/en");
 
   await page.getByRole("combobox", { name: "Search" }).fill("quanta");
   await page.getByRole("option", { name: /Quantainium/ }).click();
 
-  await expect(page).toHaveURL(/\/en\/ores#QUAN$/);
-  await expect(page.locator("tr#QUAN")).toBeVisible();
+  await expect(page).toHaveURL(/\/en\/ores\/quan$/);
+  await expect(
+    page.getByRole("heading", { name: /Quantainium/ }),
+  ).toBeVisible();
 });
 
 test("GET /api/search returns grouped results", async ({ request }) => {

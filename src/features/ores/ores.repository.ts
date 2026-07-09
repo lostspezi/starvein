@@ -13,6 +13,13 @@ export async function findAllOres(db: Db): Promise<Ore[]> {
   return docs.map((doc) => oreSchema.parse(doc));
 }
 
+export async function findOreByCode(db: Db, code: string): Promise<Ore | null> {
+  const doc = await db
+    .collection(COLLECTION)
+    .findOne({ code }, { projection: { _id: 0 } });
+  return doc ? oreSchema.parse(doc) : null;
+}
+
 export async function upsertOres(db: Db, ores: Ore[]): Promise<void> {
   if (ores.length === 0) return;
 

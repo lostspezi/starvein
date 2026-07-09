@@ -89,7 +89,7 @@ export async function searchAll(
         kind: "ore" as const,
         label: ore.name_en,
         detail: ore.rarityTier,
-        href: `/ores#${ore.code}`,
+        href: `/ores/${ore.code.toLowerCase()}`,
       };
     }),
   ];

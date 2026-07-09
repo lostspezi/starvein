@@ -1,5 +1,10 @@
 import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import { LocationOccurrencesTable } from "@/features/ore-occurrences/LocationOccurrencesTable";
+import { MethodFilter } from "@/features/ore-occurrences/MethodFilter";
+import { findOccurrencesByLocationWithOre } from "@/features/ore-occurrences/ore-occurrences.service";
+import { MINING_METHODS, type MiningMethod } from "@/features/ores/ores.schema";
+import { parseEnumParam } from "@/lib/search-params";
 import { BodyList } from "@/features/locations/BodyList";
 import {
   Breadcrumbs,
@@ -16,8 +21,10 @@ export const dynamic = "force-dynamic";
 
 export default async function BodyPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ locale: string; system: string; body: string }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
   const { locale, system: systemParam, body: bodySlug } = await params;
   setRequestLocale(locale);
@@ -33,7 +40,7 @@ export default async function BodyPage({
     notFound();
   }
 
-  const t = await getTranslations("locations");
+  const t = await getTranslations();
   const systemPath = `/locations/${system.code.toLowerCase()}`;
 
   // Ahnenkette hochlaufen (z. B. Outpost -> Mond -> Planet), Tiefe begrenzt
@@ -50,7 +57,7 @@ export default async function BodyPage({
   }
 
   const crumbs: BreadcrumbItem[] = [
-    { label: t("title"), href: "/locations" },
+    { label: t("locations.title"), href: "/locations" },
     { label: system.name, href: systemPath },
     ...ancestors,
     { label: body.name },
@@ -58,14 +65,36 @@ export default async function BodyPage({
 
   const children = await findChildBodies(db, system.code, body.slug);
 
+  const sp = await searchParams;
+  const method = parseEnumParam<MiningMethod>(sp.method, MINING_METHODS);
+  const occurrences = await findOccurrencesByLocationWithOre(
+    db,
+    system.code,
+    body.slug,
+    method,
+  );
+
   return (
     <section className="mx-auto flex w-full max-w-4xl flex-col gap-4 px-6 py-8">
       <Breadcrumbs items={crumbs} />
       <div>
         <h1 className="text-2xl font-semibold">{body.name}</h1>
-        <p className="text-sm text-text-muted">{t(`bodyType.${body.type}`)}</p>
+        <p className="text-sm text-text-muted">
+          {t(`locations.bodyType.${body.type}`)}
+        </p>
       </div>
-      <BodyList bodies={children} />
+
+      <h2 className="text-lg font-medium">{t("occurrences.atLocation")}</h2>
+      <MethodFilter />
+      <LocationOccurrencesTable occurrences={occurrences} />
+      <p className="text-xs text-text-muted">{t("occurrences.disclaimer")}</p>
+
+      {children.length > 0 && (
+        <>
+          <h2 className="text-lg font-medium">{t("locations.title")}</h2>
+          <BodyList bodies={children} />
+        </>
+      )}
     </section>
   );
 }
