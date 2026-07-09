@@ -22,6 +22,7 @@
     "*.{ts,tsx,json,css,md}": "prettier --write"
   },
   "dependencies": {
+    "better-auth": "^1.6.23",
     "ioredis": "^5.11.1",
     "mongodb": "^7.5.0",
     "next": "16.2.10",

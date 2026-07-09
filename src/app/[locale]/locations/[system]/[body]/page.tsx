@@ -1,5 +1,9 @@
+import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import { FavoriteButton } from "@/features/favorites/FavoriteButton";
+import { isFavorite } from "@/features/favorites/favorites.repository";
+import { getSessionUserId } from "@/lib/session";
 import { LocationOccurrencesTable } from "@/features/ore-occurrences/LocationOccurrencesTable";
 import { MethodFilter } from "@/features/ore-occurrences/MethodFilter";
 import { findOccurrencesByLocationWithOre } from "@/features/ore-occurrences/ore-occurrences.service";
@@ -74,11 +78,24 @@ export default async function BodyPage({
     method,
   );
 
+  const userId = await getSessionUserId(await headers());
+  const favorited = userId
+    ? await isFavorite(db, userId, system.code, body.slug)
+    : false;
+
   return (
     <section className="mx-auto flex w-full max-w-4xl flex-col gap-4 px-4 py-6 sm:px-6 sm:py-8">
       <Breadcrumbs items={crumbs} />
       <div>
-        <h1 className="text-2xl font-semibold">{body.name}</h1>
+        <div className="flex items-center gap-2">
+          <h1 className="text-2xl font-semibold">{body.name}</h1>
+          <FavoriteButton
+            systemCode={system.code}
+            bodySlug={body.slug}
+            initialIsFavorite={favorited}
+            isAuthenticated={userId !== null}
+          />
+        </div>
         <p className="text-sm text-text-muted">
           {t(`locations.bodyType.${body.type}`)}
         </p>

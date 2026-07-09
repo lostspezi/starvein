@@ -1,4 +1,5 @@
 import { useTranslations } from "next-intl";
+import { UserMenu } from "@/features/auth/UserMenu";
 import { LocaleSwitcher } from "@/features/i18n-switcher/LocaleSwitcher";
 import { SearchBox } from "@/features/search/SearchBox";
 import { Link } from "@/i18n/navigation";
@@ -20,7 +21,8 @@ export function Header() {
           {t("appName")}
         </Link>
 
-        <div className="ml-auto sm:order-4">
+        <div className="ml-auto flex items-center gap-3 sm:order-4">
+          <UserMenu />
           <LocaleSwitcher />
         </div>
 

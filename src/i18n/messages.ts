@@ -5,6 +5,10 @@
  */
 import deCommon from "@/lib/messages/de.json";
 import enCommon from "@/lib/messages/en.json";
+import deAuth from "@/features/auth/messages/de.json";
+import enAuth from "@/features/auth/messages/en.json";
+import deFavorites from "@/features/favorites/messages/de.json";
+import enFavorites from "@/features/favorites/messages/en.json";
 import deHome from "@/features/home/messages/de.json";
 import enHome from "@/features/home/messages/en.json";
 import deSwitcher from "@/features/i18n-switcher/messages/de.json";
@@ -33,6 +37,8 @@ const messages = {
     ...deOccurrences,
     ...deSignatures,
     ...dePrices,
+    ...deAuth,
+    ...deFavorites,
   },
   en: {
     ...enCommon,
@@ -44,6 +50,8 @@ const messages = {
     ...enOccurrences,
     ...enSignatures,
     ...enPrices,
+    ...enAuth,
+    ...enFavorites,
   },
 };
 

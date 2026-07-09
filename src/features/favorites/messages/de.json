@@ -1,0 +1,9 @@
+{
+  "favorites": {
+    "title": "Meine Favoriten",
+    "empty": "Noch keine Favoriten — speichere Locations über den Stern-Button.",
+    "loginRequired": "Melde dich mit Discord an, um Favoriten zu speichern.",
+    "add": "Als Favorit speichern",
+    "remove": "Favorit entfernen"
+  }
+}

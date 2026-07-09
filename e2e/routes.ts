@@ -24,4 +24,6 @@ export const ROUTES: string[] = [
   "/en/signatures",
   "/de/locations/stanton/aaron-halo",
   "/en/locations/stanton/aaron-halo",
+  "/de/favorites",
+  "/en/favorites",
 ];

@@ -1,0 +1,7 @@
+{
+  "auth": {
+    "signInDiscord": "Sign in with Discord",
+    "signOut": "Sign out",
+    "myFavorites": "My favorites"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "favorites": {
+    "title": "My favorites",
+    "empty": "No favorites yet — save locations via the star button.",
+    "loginRequired": "Sign in with Discord to save favorite locations.",
+    "add": "Save as favorite",
+    "remove": "Remove favorite"
+  }
+}
