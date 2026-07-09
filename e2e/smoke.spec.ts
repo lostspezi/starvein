@@ -27,6 +27,16 @@ test("locale switcher navigates from /de to /en", async ({ page }) => {
   ).toBeVisible();
 });
 
+test("clickable buttons show a pointer cursor", async ({ page }) => {
+  await page.goto("/en");
+
+  const cursor = await page
+    .getByRole("button", { name: "Deutsch" })
+    .evaluate((el) => getComputedStyle(el).cursor);
+
+  expect(cursor).toBe("pointer");
+});
+
 test("GET /api/health responds 200 with app up", async ({ request }) => {
   const response = await request.get("/api/health");
   expect(response.status()).toBe(200);

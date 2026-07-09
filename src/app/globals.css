@@ -25,3 +25,12 @@
 body {
   @apply bg-bg-void text-text-primary font-sans antialiased;
 }
+
+/* Tailwind v4 setzt Buttons per Preflight auf cursor:default —
+   klickbare Buttons sollen aber immer den Pointer zeigen. */
+@layer base {
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+}
