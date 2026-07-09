@@ -1,0 +1,27 @@
+@import "tailwindcss";
+
+/* Design-System "Tiefes All" — Tokens aus CLAUDE.md Abschnitt 7 */
+@theme {
+  --color-bg-void: #0a0e1a;
+  --color-bg-nebula: #131a2e;
+  --color-bg-nebula-2: #1c2540;
+  --color-accent-primary: #7c6cf0;
+  --color-accent-secondary: #4c9ef0;
+  --color-accent-glow: #a78bfa;
+  --color-rarity-common: #8b95b0;
+  --color-rarity-uncommon: #4c9ef0;
+  --color-rarity-rare: #a78bfa;
+  --color-rarity-epic: #e0a83c;
+  --color-rarity-legendary: #f06c9e;
+  --color-text-primary: #e8eaf5;
+  --color-text-muted: #8b95b0;
+  --color-success: #4ade80;
+  --color-warning: #fbbf24;
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
+}
+
+body {
+  @apply bg-bg-void text-text-primary font-sans antialiased;
+}
