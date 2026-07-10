@@ -1,6 +1,9 @@
-import { useFormatter, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
 import { MINING_METHODS } from "@/features/ores/ores.schema";
-import { Link } from "@/i18n/navigation";
+import { cn } from "@/lib/cn";
+import { AnimatedNumber } from "@/lib/components/ui/AnimatedNumber";
+import { GlowLink } from "@/lib/components/ui/GlowLink";
+import { panelClasses } from "@/lib/components/ui/Panel";
 import { RARITY_TEXT_CLASS } from "@/lib/rarity";
 import type { OreComparisonColumn } from "./compare.service";
 
@@ -22,7 +25,6 @@ function Row({
 /** Vergleichskarten: mobile gestapelt, ab sm nebeneinander. */
 export function CompareGrid({ columns }: { columns: OreComparisonColumn[] }) {
   const t = useTranslations();
-  const format = useFormatter();
 
   if (columns.length === 0) {
     return (
@@ -32,10 +34,11 @@ export function CompareGrid({ columns }: { columns: OreComparisonColumn[] }) {
 
   return (
     <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-      {columns.map((column) => (
+      {columns.map((column, index) => (
         <article
           key={column.ore.code}
-          className="flex flex-col rounded-lg border border-bg-nebula-2 bg-bg-nebula p-4"
+          className={cn(panelClasses(), "animate-reveal flex flex-col p-4")}
+          style={{ animationDelay: `${Math.min(index, 9) * 40}ms` }}
         >
           <h2 className="text-lg font-semibold">
             {column.ore.name_en}{" "}
@@ -87,17 +90,21 @@ export function CompareGrid({ columns }: { columns: OreComparisonColumn[] }) {
 
           <Row label={t("compare.bestRaw")}>
             <span className="font-mono">
-              {column.bestRawSell === null
-                ? t("compare.noData")
-                : format.number(column.bestRawSell)}
+              {column.bestRawSell === null ? (
+                t("compare.noData")
+              ) : (
+                <AnimatedNumber value={column.bestRawSell} />
+              )}
             </span>
           </Row>
 
           <Row label={t("compare.bestRefined")}>
             <span className="font-mono">
-              {column.bestRefinedSell === null
-                ? t("compare.noData")
-                : format.number(column.bestRefinedSell)}
+              {column.bestRefinedSell === null ? (
+                t("compare.noData")
+              ) : (
+                <AnimatedNumber value={column.bestRefinedSell} />
+              )}
             </span>
           </Row>
 
@@ -111,12 +118,11 @@ export function CompareGrid({ columns }: { columns: OreComparisonColumn[] }) {
                     key={`${location.systemCode}-${location.bodySlug}-${location.method}`}
                     className="flex items-baseline justify-between gap-2"
                   >
-                    <Link
+                    <GlowLink
                       href={`/locations/${location.systemCode.toLowerCase()}/${location.bodySlug}`}
-                      className="text-accent-primary hover:text-accent-glow hover:underline"
                     >
                       {location.bodyName}
-                    </Link>
+                    </GlowLink>
                     <span className="font-mono text-accent-secondary">
                       {location.probabilityPercent}%
                     </span>

@@ -6,6 +6,8 @@ import {
   getOreComparison,
 } from "@/features/ore-compare/compare.service";
 import { findAllOres } from "@/features/ores/ores.repository";
+import { PageHeader } from "@/lib/components/ui/PageHeader";
+import { PageShell } from "@/lib/components/ui/PageShell";
 import { getDb } from "@/lib/db";
 
 export const dynamic = "force-dynamic";
@@ -33,10 +35,10 @@ export default async function ComparePage({
   const columns = await getOreComparison(db, requested);
 
   return (
-    <section className="mx-auto flex w-full max-w-5xl flex-col gap-4 px-4 py-6 sm:px-6 sm:py-8">
-      <h1 className="text-2xl font-semibold">{t("title")}</h1>
+    <PageShell width="wide">
+      <PageHeader title={t("title")} />
       <CompareSelect ores={ores} />
       <CompareGrid columns={columns} />
-    </section>
+    </PageShell>
   );
 }
