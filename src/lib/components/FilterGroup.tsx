@@ -16,8 +16,8 @@ export function FilterGroup<T extends string>({
   optionLabel: (option: T) => string;
   allLabel: string;
 }) {
-  const baseClass = "rounded px-2 py-1 text-sm";
-  const activeClass = `${baseClass} bg-bg-nebula-2 font-medium text-accent-glow`;
+  const baseClass = "rounded px-2 py-1 text-sm transition-all duration-150";
+  const activeClass = `${baseClass} bg-bg-nebula-2 font-medium text-accent-cyan shadow-glow-sm`;
   const inactiveClass = `${baseClass} text-text-muted hover:bg-bg-nebula-2 hover:text-text-primary`;
 
   return (

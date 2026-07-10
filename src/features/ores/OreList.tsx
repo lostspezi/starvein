@@ -1,14 +1,7 @@
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
-import { MINING_METHODS, type Ore, type RarityTier } from "./ores.schema";
-
-const RARITY_TEXT_CLASS: Record<RarityTier, string> = {
-  common: "text-rarity-common",
-  uncommon: "text-rarity-uncommon",
-  rare: "text-rarity-rare",
-  epic: "text-rarity-epic",
-  legendary: "text-rarity-legendary",
-};
+import { RARITY_TEXT_CLASS } from "@/lib/rarity";
+import { MINING_METHODS, type Ore } from "./ores.schema";
 
 export function OreList({ ores }: { ores: Ore[] }) {
   const t = useTranslations("ores");

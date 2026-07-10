@@ -1,16 +1,8 @@
 import { useFormatter, useTranslations } from "next-intl";
 import { FavoriteButton } from "@/features/favorites/FavoriteButton";
-import type { RarityTier } from "@/features/ores/ores.schema";
 import { Link } from "@/i18n/navigation";
+import { RARITY_TEXT_CLASS } from "@/lib/rarity";
 import type { ExplorerRow } from "./explorer.service";
-
-const RARITY_TEXT_CLASS: Record<RarityTier, string> = {
-  common: "text-rarity-common",
-  uncommon: "text-rarity-uncommon",
-  rare: "text-rarity-rare",
-  epic: "text-rarity-epic",
-  legendary: "text-rarity-legendary",
-};
 
 /**
  * Explorer-Tabelle der Startseite: alle Vorkommen mit Erz, Location,

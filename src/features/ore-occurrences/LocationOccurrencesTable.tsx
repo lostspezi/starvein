@@ -1,16 +1,8 @@
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
-import type { RarityTier } from "@/features/ores/ores.schema";
+import { RARITY_TEXT_CLASS } from "@/lib/rarity";
 import { ConfidenceBadge, ProbabilityCell } from "./OccurrenceBadges";
 import type { OccurrenceWithOre } from "./ore-occurrences.service";
-
-const RARITY_TEXT_CLASS: Record<RarityTier, string> = {
-  common: "text-rarity-common",
-  uncommon: "text-rarity-uncommon",
-  rare: "text-rarity-rare",
-  epic: "text-rarity-epic",
-  legendary: "text-rarity-legendary",
-};
 
 /** "Location auswählen → alle Vorkommen dort". */
 export function LocationOccurrencesTable({

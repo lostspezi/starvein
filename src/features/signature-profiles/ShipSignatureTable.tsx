@@ -1,19 +1,12 @@
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import type { RarityTier } from "@/features/ores/ores.schema";
+import { RARITY_TEXT_CLASS } from "@/lib/rarity";
 import type { SignatureProfile } from "./signature-profiles.schema";
 
 export type ShipSignatureRow = SignatureProfile & {
   oreName: string;
   rarityTier: RarityTier;
-};
-
-const RARITY_TEXT_CLASS: Record<RarityTier, string> = {
-  common: "text-rarity-common",
-  uncommon: "text-rarity-uncommon",
-  rare: "text-rarity-rare",
-  epic: "text-rarity-epic",
-  legendary: "text-rarity-legendary",
 };
 
 function formatRange(range: { min: number; max: number } | undefined): string {

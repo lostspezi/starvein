@@ -1,15 +1,8 @@
 import { useFormatter, useTranslations } from "next-intl";
-import { MINING_METHODS, type RarityTier } from "@/features/ores/ores.schema";
+import { MINING_METHODS } from "@/features/ores/ores.schema";
 import { Link } from "@/i18n/navigation";
+import { RARITY_TEXT_CLASS } from "@/lib/rarity";
 import type { OreComparisonColumn } from "./compare.service";
-
-const RARITY_TEXT_CLASS: Record<RarityTier, string> = {
-  common: "text-rarity-common",
-  uncommon: "text-rarity-uncommon",
-  rare: "text-rarity-rare",
-  epic: "text-rarity-epic",
-  legendary: "text-rarity-legendary",
-};
 
 function Row({
   label,
