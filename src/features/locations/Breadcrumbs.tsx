@@ -22,7 +22,7 @@ export function Breadcrumbs({ items }: { items: BreadcrumbItem[] }) {
           {item.href ? (
             <Link
               href={item.href}
-              className="hover:text-text-primary hover:underline"
+              className="transition-colors duration-150 hover:text-text-primary hover:underline"
             >
               {item.label}
             </Link>

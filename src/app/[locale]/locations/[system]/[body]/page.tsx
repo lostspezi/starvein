@@ -23,6 +23,7 @@ import {
   findChildBodies,
   findStarSystemByCode,
 } from "@/features/locations/locations.repository";
+import { PageShell } from "@/lib/components/ui/PageShell";
 import { getDb } from "@/lib/db";
 
 export const dynamic = "force-dynamic";
@@ -94,9 +95,9 @@ export default async function BodyPage({
   const disputedKeys = findDisputedKeys(submissions);
 
   return (
-    <section className="mx-auto flex w-full max-w-4xl flex-col gap-4 px-4 py-6 sm:px-6 sm:py-8">
+    <PageShell>
       <Breadcrumbs items={crumbs} />
-      <div>
+      <div className="animate-reveal">
         <div className="flex items-center gap-2">
           <h1 className="text-2xl font-semibold">{body.name}</h1>
           <FavoriteButton
@@ -133,6 +134,6 @@ export default async function BodyPage({
           <BodyList bodies={children} />
         </>
       )}
-    </section>
+    </PageShell>
   );
 }

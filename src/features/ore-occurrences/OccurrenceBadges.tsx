@@ -1,4 +1,6 @@
 import { useTranslations } from "next-intl";
+import { AnimatedNumber } from "@/lib/components/ui/AnimatedNumber";
+import { Badge } from "@/lib/components/ui/Badge";
 import type { OreOccurrence } from "./ore-occurrences.schema";
 
 /** Status-Badge: unbestätigt (niedrige Konfidenz) vs. bestätigt. */
@@ -11,18 +13,18 @@ export function ConfidenceBadge({
   const verified = occurrence.confidenceScore >= 0.7;
 
   return (
-    <span
-      className={
-        verified
-          ? "rounded bg-bg-nebula-2 px-1.5 py-0.5 text-xs text-success"
-          : "rounded bg-bg-nebula-2 px-1.5 py-0.5 text-xs text-warning"
-      }
-    >
+    <Badge tone={verified ? "success" : "warning"}>
       {t(verified ? "badge.verified" : "badge.unverified")}
-    </span>
+    </Badge>
   );
 }
 
 export function ProbabilityCell({ percent }: { percent: number }) {
-  return <span className="font-mono text-accent-secondary">{percent}%</span>;
+  return (
+    <AnimatedNumber
+      value={percent}
+      suffix="%"
+      className="font-mono text-accent-secondary"
+    />
+  );
 }

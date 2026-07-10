@@ -7,6 +7,8 @@ import {
   findStarSystemByCode,
 } from "@/features/locations/locations.repository";
 import { BODY_TYPES } from "@/features/locations/locations.schema";
+import { PageHeader } from "@/lib/components/ui/PageHeader";
+import { PageShell } from "@/lib/components/ui/PageShell";
 import { getDb } from "@/lib/db";
 
 export const dynamic = "force-dynamic";
@@ -36,20 +38,20 @@ export default async function SystemPage({
   })).filter((group) => group.bodies.length > 0);
 
   return (
-    <section className="mx-auto flex w-full max-w-4xl flex-col gap-4 px-4 py-6 sm:px-6 sm:py-8">
+    <PageShell>
       <Breadcrumbs
         items={[
           { label: t("title"), href: "/locations" },
           { label: system.name },
         ]}
       />
-      <h1 className="text-2xl font-semibold">{system.name}</h1>
+      <PageHeader title={system.name} />
       {groups.map((group) => (
         <div key={group.type} className="flex flex-col gap-3">
           <h2 className="text-lg font-medium">{t(`groups.${group.type}`)}</h2>
           <BodyList bodies={group.bodies} />
         </div>
       ))}
-    </section>
+    </PageShell>
   );
 }
