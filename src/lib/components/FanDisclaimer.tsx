@@ -10,12 +10,12 @@ export function FanDisclaimer() {
   const t = useTranslations("common.disclaimer");
 
   return (
-    <footer className="border-t border-bg-nebula-2 bg-bg-nebula px-4 py-4 text-sm text-text-muted sm:px-6">
+    <footer className="border-t border-glass-border bg-glass px-4 py-4 text-sm text-text-muted backdrop-blur-md sm:px-6">
       <p>{t("text")}</p>
       <p className="mt-2">
         <a
           href="https://robertsspaceindustries.com"
-          className="text-accent-primary underline hover:text-accent-glow"
+          className="text-accent-primary underline transition-colors duration-150 hover:text-accent-glow"
           rel="noopener noreferrer"
         >
           {t("rsiLinkLabel")}
