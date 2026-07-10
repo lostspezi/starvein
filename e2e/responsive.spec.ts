@@ -42,3 +42,19 @@ test.describe("mobile header", () => {
     await expect(page.getByRole("button", { name: "English" })).toBeVisible();
   });
 });
+
+test.describe("sticky header", () => {
+  test("stays pinned and navigable after scrolling", async ({ page }) => {
+    await page.goto("/en/ores");
+
+    const position = await page
+      .locator("header")
+      .evaluate((el) => getComputedStyle(el).position);
+    expect(position).toBe("sticky");
+
+    await page.mouse.wheel(0, 1200);
+    await expect(page.getByRole("link", { name: "Locations" })).toBeVisible();
+    await page.getByRole("link", { name: "Locations" }).click();
+    await expect(page).toHaveURL(/\/en\/locations$/);
+  });
+});

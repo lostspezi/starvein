@@ -3,20 +3,22 @@ import { UserMenu } from "@/features/auth/UserMenu";
 import { LocaleSwitcher } from "@/features/i18n-switcher/LocaleSwitcher";
 import { SearchBox } from "@/features/search/SearchBox";
 import { Link } from "@/i18n/navigation";
+import { NavLinks } from "./NavLinks";
 
 /**
- * Mobile-first: Auf schmalen Screens bricht der Header in drei Zeilen um
- * (Brand + Sprache / Navigation / Suche), ab sm eine Zeile via order-Utilities.
+ * Sticky HUD-Header mit Glas-Optik. Mobile-first: Auf schmalen Screens bricht
+ * der Header in drei Zeilen um (Brand + Sprache / Navigation / Suche), ab sm
+ * eine Zeile via order-Utilities.
  */
 export function Header() {
   const t = useTranslations("common");
 
   return (
-    <header className="border-b border-bg-nebula-2 bg-bg-nebula px-4 py-3 sm:px-6">
+    <header className="sticky top-0 z-40 border-b border-glass-border bg-glass px-4 py-3 backdrop-blur-md sm:px-6">
       <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
         <Link
           href="/"
-          className="font-mono text-sm font-semibold tracking-widest text-text-primary"
+          className="font-mono text-sm font-semibold tracking-widest text-text-primary transition-colors duration-150 hover:text-accent-ice"
         >
           {t("appName")}
         </Link>
@@ -27,30 +29,7 @@ export function Header() {
         </div>
 
         <nav className="order-3 flex w-full gap-4 text-sm sm:order-2 sm:w-auto">
-          <Link
-            href="/ores"
-            className="text-text-muted hover:text-text-primary"
-          >
-            {t("nav.ores")}
-          </Link>
-          <Link
-            href="/locations"
-            className="text-text-muted hover:text-text-primary"
-          >
-            {t("nav.locations")}
-          </Link>
-          <Link
-            href="/signatures"
-            className="text-text-muted hover:text-text-primary"
-          >
-            {t("nav.signatures")}
-          </Link>
-          <Link
-            href="/compare"
-            className="text-text-muted hover:text-text-primary"
-          >
-            {t("nav.compare")}
-          </Link>
+          <NavLinks />
         </nav>
 
         <div className="order-4 w-full sm:order-3 sm:ml-auto sm:w-64">

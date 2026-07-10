@@ -28,7 +28,7 @@ export function OreList({ ores }: { ores: Ore[] }) {
             <tr
               key={ore.code}
               id={ore.code}
-              className="scroll-mt-20 border-b border-bg-nebula-2 last:border-b-0 hover:bg-bg-nebula-2"
+              className="scroll-mt-40 border-b border-bg-nebula-2 last:border-b-0 hover:bg-bg-nebula-2 sm:scroll-mt-24"
             >
               <td className="px-4 py-3">
                 <Link
