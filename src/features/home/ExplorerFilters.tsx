@@ -58,9 +58,12 @@ export function ExplorerFilters({ ores }: { ores: Ore[] }) {
           optionLabel={(tier) => t(`ores.rarity.${tier}`)}
           allLabel={t("ores.rarity.all")}
         />
-        <label className="flex items-center gap-2 text-sm text-text-muted">
-          {t("home.explorer.oreLabel")}
+        <div className="flex items-center gap-2 text-sm text-text-muted">
+          <label htmlFor="explorer-ore-select">
+            {t("home.explorer.oreLabel")}
+          </label>
           <select
+            id="explorer-ore-select"
             value={ore ?? ""}
             onChange={(event) => setOre(event.target.value || null)}
             className="rounded border border-bg-nebula-2 bg-bg-void px-2 py-1.5 text-text-primary"
@@ -72,7 +75,7 @@ export function ExplorerFilters({ ores }: { ores: Ore[] }) {
               </option>
             ))}
           </select>
-        </label>
+        </div>
       </div>
     </div>
   );

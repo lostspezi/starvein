@@ -34,7 +34,7 @@ test("ore select narrows to one ore", async ({ page }) => {
   // Retry gegen Hydration-Race: Select ist im SSR-HTML sichtbar, bevor
   // React die Change-Handler angehängt hat
   await expect(async () => {
-    await page.getByLabel("Ore").selectOption("QUAN");
+    await page.getByLabel("Ore", { exact: true }).selectOption("QUAN");
     await expect(page).toHaveURL(/ore=QUAN/, { timeout: 2000 });
   }).toPass();
   await expect

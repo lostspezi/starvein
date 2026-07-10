@@ -19,4 +19,17 @@ describe("HomePage", () => {
       ),
     ).toBeVisible();
   });
+
+  it("renders the hero search with its own accessible name", () => {
+    renderWithIntl(<HomePage />, { locale: "en" });
+    expect(
+      screen.getByRole("combobox", { name: "Find ores and locations" }),
+    ).toBeVisible();
+  });
+
+  it("staggers the hero reveal animation", () => {
+    renderWithIntl(<HomePage />, { locale: "en" });
+    const heading = screen.getByRole("heading", { level: 1 });
+    expect(heading).toHaveClass("animate-reveal");
+  });
 });

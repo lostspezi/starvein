@@ -3,11 +3,21 @@
 import { useTranslations } from "next-intl";
 import { useEffect, useId, useRef, useState } from "react";
 import { useRouter } from "@/i18n/navigation";
+import { cn } from "@/lib/cn";
 import type { SearchResult } from "./search.service";
 
 const MIN_QUERY_LENGTH = 2;
 
-export function SearchBox({ debounceMs = 200 }: { debounceMs?: number }) {
+export function SearchBox({
+  debounceMs = 200,
+  ariaLabel,
+  inputClassName,
+}: {
+  debounceMs?: number;
+  /** Überschreibt das Standard-Label — nötig bei mehreren Suchfeldern pro Seite. */
+  ariaLabel?: string;
+  inputClassName?: string;
+}) {
   const t = useTranslations();
   const router = useRouter();
   const listboxId = useId();
@@ -95,7 +105,7 @@ export function SearchBox({ debounceMs = 200 }: { debounceMs?: number }) {
         }}
         onKeyDown={onKeyDown}
         onBlur={() => setTimeout(() => setOpen(false), 150)}
-        aria-label={t("search.label")}
+        aria-label={ariaLabel ?? t("search.label")}
         aria-expanded={open}
         aria-controls={listboxId}
         aria-activedescendant={
@@ -103,7 +113,10 @@ export function SearchBox({ debounceMs = 200 }: { debounceMs?: number }) {
         }
         aria-autocomplete="list"
         placeholder={t("search.placeholder")}
-        className="w-full rounded border border-bg-nebula-2 bg-bg-void px-3 py-1.5 text-sm placeholder:text-text-muted focus:border-accent-primary focus:outline-none"
+        className={cn(
+          "w-full rounded border border-bg-nebula-2 bg-bg-void px-3 py-1.5 text-sm transition-all duration-150 placeholder:text-text-muted focus:border-accent-primary focus:outline-none",
+          inputClassName,
+        )}
       />
       {open && (
         <ul

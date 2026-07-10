@@ -13,6 +13,7 @@ import {
   type MiningMethod,
   type RarityTier,
 } from "@/features/ores/ores.schema";
+import { PageShell } from "@/lib/components/ui/PageShell";
 import { getDb } from "@/lib/db";
 import { parseEnumParam } from "@/lib/search-params";
 import { getSessionUserId } from "@/lib/session";
@@ -51,7 +52,7 @@ export default async function Home({
   );
 
   return (
-    <main className="mx-auto flex w-full max-w-5xl flex-col gap-4 px-4 py-6 sm:px-6 sm:py-8">
+    <PageShell width="wide">
       <HomePage />
       <ExplorerFilters ores={ores} />
       <ExplorerTable
@@ -59,6 +60,6 @@ export default async function Home({
         favoriteKeys={favoriteKeys}
         isAuthenticated={userId !== null}
       />
-    </main>
+    </PageShell>
   );
 }

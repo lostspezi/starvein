@@ -2,6 +2,7 @@
   "home": {
     "title": "STARVEIN",
     "tagline": "Community-Mining-Referenz für Star Citizen — Erze, Fundorte, Scan-Signaturen.",
+    "searchLabel": "Erze und Fundorte finden",
     "explorer": {
       "systemLabel": "Nach Sternsystem filtern",
       "systemAll": "Alle",

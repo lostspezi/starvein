@@ -2,6 +2,7 @@
   "home": {
     "title": "STARVEIN",
     "tagline": "Community mining reference for Star Citizen — ores, locations, scan signatures.",
+    "searchLabel": "Find ores and locations",
     "explorer": {
       "systemLabel": "Filter by star system",
       "systemAll": "All",

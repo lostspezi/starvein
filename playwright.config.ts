@@ -3,6 +3,9 @@ import { defineConfig, devices } from "@playwright/test";
 export default defineConfig({
   testDir: "e2e",
   fullyParallel: true,
+  // 12 Worker sättigen den einen next-start-Prozess und provozieren
+  // Klick-vor-Hydration-Races in den URL-State-Tests — 8 ist stabil.
+  workers: 8,
   use: {
     baseURL: "http://localhost:3100",
     // Headless-Chromium rendert WebGL per Software (SwiftShader) — der
