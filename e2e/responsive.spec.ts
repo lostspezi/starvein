@@ -48,7 +48,7 @@ test.describe("sticky header", () => {
     await page.goto("/en/ores");
 
     const position = await page
-      .locator("header")
+      .getByRole("banner")
       .evaluate((el) => getComputedStyle(el).position);
     expect(position).toBe("sticky");
 

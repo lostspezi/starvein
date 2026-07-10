@@ -1,6 +1,6 @@
 "use client";
 
-import { useFormatter } from "next-intl";
+import { useFormatter, type NumberFormatOptions } from "next-intl";
 import { useEffect, useRef, useState } from "react";
 
 function prefersReducedMotion(): boolean {
@@ -27,7 +27,7 @@ export function AnimatedNumber({
   value: number;
   /** Direkt angehängte Einheit, z. B. "%" */
   suffix?: string;
-  numberFormatOptions?: Intl.NumberFormatOptions;
+  numberFormatOptions?: NumberFormatOptions;
   durationMs?: number;
   className?: string;
 }) {
