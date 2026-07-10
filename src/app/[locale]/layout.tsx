@@ -4,6 +4,7 @@ import { setRequestLocale } from "next-intl/server";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import { notFound } from "next/navigation";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
+import { ChatAside } from "@/features/chat/ChatAside";
 import { routing } from "@/i18n/routing";
 import { FanDisclaimer } from "@/lib/components/FanDisclaimer";
 import { Header } from "@/lib/components/Header";
@@ -59,6 +60,7 @@ export default async function LocaleLayout({
             <Header />
             <div className="flex flex-1 flex-col">{children}</div>
             <FanDisclaimer />
+            <ChatAside />
           </NextIntlClientProvider>
         </NuqsAdapter>
       </body>

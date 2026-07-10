@@ -1,0 +1,22 @@
+{
+  "chat": {
+    "title": "Community chat",
+    "open": "Open chat",
+    "close": "Close chat",
+    "empty": "No messages yet — say hello!",
+    "loginToSend": "Sign in with Discord to join the chat.",
+    "placeholder": "Write a message",
+    "send": "Send",
+    "cooldown": "Wait {seconds}s",
+    "errors": {
+      "empty": "Message is empty.",
+      "tooLong": "Message is too long (max. 500 characters).",
+      "linkBlocked": "Links are not allowed in chat.",
+      "excessiveCaps": "Please don't shout — too many capital letters.",
+      "repeatedChars": "Too many repeated characters.",
+      "duplicate": "You just sent that — please wait before repeating it.",
+      "rateLimited": "Slow mode: one message every 30 seconds.",
+      "generic": "Message could not be sent."
+    }
+  }
+}

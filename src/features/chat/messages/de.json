@@ -1,0 +1,22 @@
+{
+  "chat": {
+    "title": "Community-Chat",
+    "open": "Chat öffnen",
+    "close": "Chat schließen",
+    "empty": "Noch keine Nachrichten — sag hallo!",
+    "loginToSend": "Melde dich mit Discord an, um mitzuchatten.",
+    "placeholder": "Nachricht schreiben",
+    "send": "Senden",
+    "cooldown": "Warte {seconds}s",
+    "errors": {
+      "empty": "Die Nachricht ist leer.",
+      "tooLong": "Die Nachricht ist zu lang (max. 500 Zeichen).",
+      "linkBlocked": "Links sind im Chat nicht erlaubt.",
+      "excessiveCaps": "Bitte nicht schreien — zu viele Großbuchstaben.",
+      "repeatedChars": "Zu viele wiederholte Zeichen.",
+      "duplicate": "Das hast du gerade schon geschrieben — bitte warte einen Moment.",
+      "rateLimited": "Slow-Mode: eine Nachricht alle 30 Sekunden.",
+      "generic": "Die Nachricht konnte nicht gesendet werden."
+    }
+  }
+}

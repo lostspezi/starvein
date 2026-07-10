@@ -10,3 +10,15 @@ export async function getSessionUserId(
   const session = await auth.api.getSession({ headers });
   return session?.user?.id ?? null;
 }
+
+/**
+ * Wie getSessionUserId, liefert aber zusätzlich den Anzeigenamen —
+ * z. B. für den Chat, der den Namen als Snapshot an der Nachricht speichert.
+ */
+export async function getSessionUser(
+  headers: Headers,
+): Promise<{ id: string; name: string } | null> {
+  const session = await auth.api.getSession({ headers });
+  if (!session?.user) return null;
+  return { id: session.user.id, name: session.user.name };
+}
