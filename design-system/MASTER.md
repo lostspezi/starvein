@@ -92,6 +92,11 @@ Regeln für Änderungen:
 - Performance-Leitplanken nicht lockern: DPR-Cap 1,5, Sternzahl `min(650, width*0.5)`,
   2 Nebel-Oktaven < 640 px, rAF-Pause bei `visibilitychange`.
 - Inhalte müssen ohne Starfield vollständig funktionieren (progressive enhancement).
+- **Drifting Ships** (`DriftingShips.tsx`): dekorative Mining-Schiff-Silhouetten,
+  nur ab `lg`, rein CSS-animiert, Basisposition offscreen (reduced-motion-sicher).
+  Es sind **eigene stilisierte SVGs (Fan-Art)** — niemals CIG-Render/PNGs aus dem
+  Netz oder Wiki einbinden (CLAUDE.md §2); Fankit-Assets nur nach bewusster
+  Entscheidung inkl. Logo-Pflicht.
 
 ## 7. Layout & Responsive
 

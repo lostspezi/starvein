@@ -102,6 +102,55 @@ body {
   }
 }
 
+/* Drift-Pfade der dekorativen Mining-Schiffe (DriftingShips): Basisposition
+   liegt offscreen links — endet die Animation (reduced-motion-Kill-Switch),
+   steht nichts im Viewport. Sehr lange Laufzeiten, negative Delays sorgen
+   dafür, dass beim Laden bereits ein Schiff unterwegs ist. */
+@layer components {
+  .ship-drift-prospector {
+    animation: ship-drift-ltr 180s linear -45s infinite;
+  }
+
+  .ship-drift-mole {
+    animation: ship-drift-rtl 260s linear -160s infinite;
+  }
+
+  .ship-bob {
+    animation: ship-bob 14s ease-in-out infinite alternate;
+  }
+
+  .ship-bob-slow {
+    animation: ship-bob 22s ease-in-out -8s infinite alternate;
+  }
+
+  @keyframes ship-drift-ltr {
+    from {
+      transform: translate3d(0, 0, 0);
+    }
+    to {
+      transform: translate3d(150vw, -6vh, 0);
+    }
+  }
+
+  @keyframes ship-drift-rtl {
+    from {
+      transform: translate3d(160vw, 0, 0);
+    }
+    to {
+      transform: translate3d(0, 5vh, 0);
+    }
+  }
+
+  @keyframes ship-bob {
+    from {
+      transform: translateY(-6px) rotate(-0.8deg);
+    }
+    to {
+      transform: translateY(6px) rotate(0.8deg);
+    }
+  }
+}
+
 /* Statischer Fallback des Sternenhintergrunds: dezente Nebel-Gradienten plus
    eine Handvoll Stern-Punkte — sichtbar bei reduced-motion, ohne WebGL oder
    bevor das Canvas eingeblendet ist. */
