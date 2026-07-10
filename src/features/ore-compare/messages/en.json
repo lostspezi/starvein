@@ -1,0 +1,17 @@
+{
+  "compare": {
+    "title": "Ore comparison",
+    "empty": "Pick up to three ores to compare.",
+    "slotLabel": "Ore {index}",
+    "none": "—",
+    "rarity": "Rarity",
+    "methods": "Methods",
+    "shipSignature": "Ship signature",
+    "groundSignature": "Ground signature",
+    "composition": "Dominant share",
+    "bestRaw": "Best sell (raw)",
+    "bestRefined": "Best sell (refined)",
+    "topLocations": "Top locations",
+    "noData": "–"
+  }
+}

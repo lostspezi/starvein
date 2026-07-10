@@ -45,6 +45,12 @@ export function Header() {
           >
             {t("nav.signatures")}
           </Link>
+          <Link
+            href="/compare"
+            className="text-text-muted hover:text-text-primary"
+          >
+            {t("nav.compare")}
+          </Link>
         </nav>
 
         <div className="order-4 w-full sm:order-3 sm:ml-auto sm:w-64">

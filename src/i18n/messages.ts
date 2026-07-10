@@ -19,6 +19,8 @@ import deOccurrences from "@/features/ore-occurrences/messages/de.json";
 import enOccurrences from "@/features/ore-occurrences/messages/en.json";
 import dePrices from "@/features/refinery-and-prices/messages/de.json";
 import enPrices from "@/features/refinery-and-prices/messages/en.json";
+import deCompare from "@/features/ore-compare/messages/de.json";
+import enCompare from "@/features/ore-compare/messages/en.json";
 import deOres from "@/features/ores/messages/de.json";
 import enOres from "@/features/ores/messages/en.json";
 import deSearch from "@/features/search/messages/de.json";
@@ -42,6 +44,7 @@ const messages = {
     ...deAuth,
     ...deFavorites,
     ...deSubmissions,
+    ...deCompare,
   },
   en: {
     ...enCommon,
@@ -56,6 +59,7 @@ const messages = {
     ...enAuth,
     ...enFavorites,
     ...enSubmissions,
+    ...enCompare,
   },
 };
 

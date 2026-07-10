@@ -31,9 +31,12 @@ test("method filter narrows rows via URL state", async ({ page }) => {
 test("ore select narrows to one ore", async ({ page }) => {
   await page.goto("/en");
 
-  await page.getByLabel("Ore").selectOption("QUAN");
-
-  await expect(page).toHaveURL(/ore=QUAN/);
+  // Retry gegen Hydration-Race: Select ist im SSR-HTML sichtbar, bevor
+  // React die Change-Handler angehängt hat
+  await expect(async () => {
+    await page.getByLabel("Ore").selectOption("QUAN");
+    await expect(page).toHaveURL(/ore=QUAN/, { timeout: 2000 });
+  }).toPass();
   await expect
     .poll(async () => {
       const hrefs = await page

@@ -1,0 +1,17 @@
+{
+  "compare": {
+    "title": "Erz-Vergleich",
+    "empty": "Wähle bis zu drei Erze für den Vergleich.",
+    "slotLabel": "Erz {index}",
+    "none": "—",
+    "rarity": "Seltenheit",
+    "methods": "Methoden",
+    "shipSignature": "Ship-Signatur",
+    "groundSignature": "Ground-Signatur",
+    "composition": "Dominanter Anteil",
+    "bestRaw": "Bester Verkauf (roh)",
+    "bestRefined": "Bester Verkauf (raffiniert)",
+    "topLocations": "Top-Fundorte",
+    "noData": "–"
+  }
+}

@@ -26,4 +26,6 @@ export const ROUTES: string[] = [
   "/en/locations/stanton/aaron-halo",
   "/de/favorites",
   "/en/favorites",
+  "/de/compare",
+  "/en/compare",
 ];
