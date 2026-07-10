@@ -1,5 +1,6 @@
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
+import { Panel } from "@/lib/components/ui/Panel";
 
 /**
  * Erklärt die ROC/FPS-Signatur-Semantik (Größe statt Mineral) — bewusst
@@ -14,7 +15,7 @@ export function GroundSignatureExplainer({
   const t = useTranslations("signatures");
 
   return (
-    <div className="flex flex-col gap-4 rounded-lg border border-bg-nebula-2 bg-bg-nebula p-4">
+    <Panel variant="glass" className="flex flex-col gap-4 p-4">
       <p className="text-sm text-text-muted">{t("groundExplainer")}</p>
 
       <div className="grid gap-3 sm:grid-cols-2">
@@ -43,7 +44,7 @@ export function GroundSignatureExplainer({
             <li key={mineral.code}>
               <Link
                 href={`/ores/${mineral.code.toLowerCase()}`}
-                className="rounded bg-bg-nebula-2 px-2 py-1 text-sm text-accent-primary hover:text-accent-glow"
+                className="rounded bg-bg-nebula-2 px-2 py-1 text-sm text-accent-primary transition-all duration-150 hover:text-accent-glow hover:shadow-glow-sm"
               >
                 {mineral.name}
               </Link>
@@ -53,6 +54,6 @@ export function GroundSignatureExplainer({
       </div>
 
       <p className="text-xs text-warning">{t("collisionNote")}</p>
-    </div>
+    </Panel>
   );
 }

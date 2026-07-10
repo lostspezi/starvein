@@ -6,6 +6,8 @@ import {
   type ShipSignatureRow,
 } from "@/features/signature-profiles/ShipSignatureTable";
 import { findAllSignatureProfiles } from "@/features/signature-profiles/signature-profiles.repository";
+import { PageHeader } from "@/lib/components/ui/PageHeader";
+import { PageShell } from "@/lib/components/ui/PageShell";
 import { getDb } from "@/lib/db";
 
 export const dynamic = "force-dynamic";
@@ -52,8 +54,8 @@ export default async function SignaturesPage({
     .sort((a, b) => a.name.localeCompare(b.name));
 
   return (
-    <section className="mx-auto flex w-full max-w-4xl flex-col gap-4 px-4 py-6 sm:px-6 sm:py-8">
-      <h1 className="text-2xl font-semibold">{t("title")}</h1>
+    <PageShell>
+      <PageHeader title={t("title")} />
 
       <h2 className="text-lg font-medium">{t("shipTitle")}</h2>
       <p className="text-sm text-text-muted">{t("shipExplainer")}</p>
@@ -61,6 +63,6 @@ export default async function SignaturesPage({
 
       <h2 className="mt-4 text-lg font-medium">{t("groundTitle")}</h2>
       <GroundSignatureExplainer minerals={groundMinerals} />
-    </section>
+    </PageShell>
   );
 }
