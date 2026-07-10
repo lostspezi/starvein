@@ -9,6 +9,8 @@ import {
   type MiningMethod,
   type RarityTier,
 } from "@/features/ores/ores.schema";
+import { PageHeader } from "@/lib/components/ui/PageHeader";
+import { PageShell } from "@/lib/components/ui/PageShell";
 import { getDb } from "@/lib/db";
 import { parseEnumParam } from "@/lib/search-params";
 
@@ -35,10 +37,10 @@ export default async function OresPage({
   });
 
   return (
-    <section className="mx-auto flex w-full max-w-4xl flex-col gap-4 px-4 py-6 sm:px-6 sm:py-8">
-      <h1 className="text-2xl font-semibold">{t("title")}</h1>
+    <PageShell>
+      <PageHeader title={t("title")} />
       <OreFilters />
       <OreList ores={ores} />
-    </section>
+    </PageShell>
   );
 }

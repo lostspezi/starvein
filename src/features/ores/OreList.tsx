@@ -1,5 +1,12 @@
 import { useTranslations } from "next-intl";
-import { Link } from "@/i18n/navigation";
+import {
+  DataTable,
+  DataTableHead,
+  DataTableRow,
+  DataTableTd,
+  DataTableTh,
+} from "@/lib/components/ui/DataTable";
+import { GlowLink } from "@/lib/components/ui/GlowLink";
 import { RARITY_TEXT_CLASS } from "@/lib/rarity";
 import { MINING_METHODS, type Ore } from "./ores.schema";
 
@@ -11,50 +18,43 @@ export function OreList({ ores }: { ores: Ore[] }) {
   }
 
   return (
-    <div className="overflow-x-auto rounded-lg border border-bg-nebula-2 bg-bg-nebula">
-      <table className="w-full text-left text-sm">
-        <thead>
-          <tr className="border-b border-bg-nebula-2 text-text-muted">
-            <th className="px-4 py-3 font-medium">{t("table.name")}</th>
-            <th className="hidden px-4 py-3 font-medium sm:table-cell">
-              {t("table.code")}
-            </th>
-            <th className="px-4 py-3 font-medium">{t("table.rarity")}</th>
-            <th className="px-4 py-3 font-medium">{t("table.methods")}</th>
-          </tr>
-        </thead>
-        <tbody>
-          {ores.map((ore) => (
-            <tr
-              key={ore.code}
-              id={ore.code}
-              className="scroll-mt-40 border-b border-bg-nebula-2 last:border-b-0 hover:bg-bg-nebula-2 sm:scroll-mt-24"
+    <DataTable>
+      <DataTableHead>
+        <DataTableTh>{t("table.name")}</DataTableTh>
+        <DataTableTh className="hidden sm:table-cell">
+          {t("table.code")}
+        </DataTableTh>
+        <DataTableTh>{t("table.rarity")}</DataTableTh>
+        <DataTableTh>{t("table.methods")}</DataTableTh>
+      </DataTableHead>
+      <tbody>
+        {ores.map((ore) => (
+          <DataTableRow
+            key={ore.code}
+            id={ore.code}
+            className="scroll-mt-40 sm:scroll-mt-24"
+          >
+            <DataTableTd>
+              <GlowLink href={`/ores/${ore.code.toLowerCase()}`}>
+                {ore.name_en}
+              </GlowLink>
+            </DataTableTd>
+            <DataTableTd className="hidden font-mono text-text-muted sm:table-cell">
+              {ore.code}
+            </DataTableTd>
+            <DataTableTd
+              className={`font-medium ${RARITY_TEXT_CLASS[ore.rarityTier]}`}
             >
-              <td className="px-4 py-3">
-                <Link
-                  href={`/ores/${ore.code.toLowerCase()}`}
-                  className="text-accent-primary hover:text-accent-glow hover:underline"
-                >
-                  {ore.name_en}
-                </Link>
-              </td>
-              <td className="hidden px-4 py-3 font-mono text-text-muted sm:table-cell">
-                {ore.code}
-              </td>
-              <td
-                className={`px-4 py-3 font-medium ${RARITY_TEXT_CLASS[ore.rarityTier]}`}
-              >
-                {t(`rarity.${ore.rarityTier}`)}
-              </td>
-              <td className="px-4 py-3 text-text-muted">
-                {MINING_METHODS.filter((method) => ore.mineableBy[method])
-                  .map((method) => t(`method.${method}`))
-                  .join(" · ")}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+              {t(`rarity.${ore.rarityTier}`)}
+            </DataTableTd>
+            <DataTableTd className="text-text-muted">
+              {MINING_METHODS.filter((method) => ore.mineableBy[method])
+                .map((method) => t(`method.${method}`))
+                .join(" · ")}
+            </DataTableTd>
+          </DataTableRow>
+        ))}
+      </tbody>
+    </DataTable>
   );
 }
