@@ -290,14 +290,16 @@ Wiki-Style, kein Admin-Gate:
 
 ---
 
-## 7. Design-System "Tiefes All"
+## 7. Design-System "Tiefes All 2.0"
 
-Richtung: dunkles Blau/Violett, Nebel-Optik, elegant und clean — kein Terminal-Retro-Look, kein
-Warnfarben-Industrial-Look.
+Richtung: dunkles Blau/Indigo mit holografischen Cyan/Eisblau-Akzenten (Star-Citizen-HUD-Gefühl),
+Nebel-Optik, WebGL-Sternenhintergrund, spürbare aber datenfreundliche Sci-Fi-Motion — kein
+Terminal-Retro-Look, kein Warnfarben-Industrial-Look.
 
 **Farb-Tokens** — Tailwind v4 ist CSS-first: die Tokens kommen als `@theme`-Block direkt in
 `app/globals.css` (kein `tailwind.config.js` für Farben mehr nötig), das generiert automatisch
-Utilities wie `bg-void`, `text-accent-primary` usw.:
+Utilities wie `bg-void`, `text-accent-primary`, `shadow-glow` usw. `src/app/globals.css` ist die
+Quelle der Wahrheit; Stand:
 
 ```css
 @import "tailwindcss";
@@ -308,7 +310,9 @@ Utilities wie `bg-void`, `text-accent-primary` usw.:
   --color-bg-nebula-2: #1c2540; /* erhöhte Panels, Hover */
   --color-accent-primary: #7c6cf0; /* Violett — Primäraktionen, Links */
   --color-accent-secondary: #4c9ef0; /* Blau — sekundäre Akzente, Signatur-Werte */
-  --color-accent-glow: #a78bfa; /* helles Violett für Glow-Effekte, aktive States */
+  --color-accent-glow: #9db4ff; /* Eisblau-Glow — Hover/aktive States */
+  --color-accent-cyan: #5ee6ff; /* holografischer HUD-Akzent (aktive Nav, Fokus) */
+  --color-accent-ice: #b8e8ff; /* helle Highlights, Hero-Headline */
   --color-rarity-common: #8b95b0;
   --color-rarity-uncommon: #4c9ef0;
   --color-rarity-rare: #a78bfa;
@@ -318,6 +322,21 @@ Utilities wie `bg-void`, `text-accent-primary` usw.:
   --color-text-muted: #8b95b0;
   --color-success: #4ade80; /* verified/confirmed */
   --color-warning: #fbbf24; /* unverified/disputed */
+
+  /* Glas-Oberflächen (HUD-Panels, sticky Header) */
+  --color-glass: rgb(19 26 46 / 0.7);
+  --color-glass-border: rgb(94 230 255 / 0.14);
+
+  /* Glow-Schatten → shadow-glow-* Utilities */
+  --shadow-glow-sm: 0 0 8px rgb(94 230 255 / 0.2);
+  --shadow-glow: 0 0 18px rgb(94 230 255 / 0.3);
+  --shadow-glow-primary: 0 0 14px rgb(124 108 240 / 0.4);
+
+  /* Motion: 150–300 ms, ease-out rein / ease-in raus; Keyframes in globals.css */
+  --ease-hud: cubic-bezier(0.16, 1, 0.3, 1);
+  --animate-reveal: reveal 250ms var(--ease-hud) both;
+  --animate-fade-in: fade-in 200ms ease-out both;
+  --animate-glow-pulse: glow-pulse 2.4s ease-in-out infinite;
 }
 ```
 
@@ -328,9 +347,12 @@ sind der Ausgangspunkt, `@theme` erzeugt daraus automatisch konsistente Utilitie
 für Zahlenwerte/Signaturen (z. B. JetBrains Mono) — vermittelt "Instrumenten-Ablesung" ohne in den
 Terminal-Retro-Look zu kippen.
 
-**Motive:** dezente Nebel-/Sternfeld-Hintergründe (SVG/Canvas, sehr subtil, niedrige Opacity,
-keine Ablenkung von Daten), abgerundete Panels mit leichtem Glow-Border bei Hover, keine harten
-Schatten. Datentabellen bekommen Priorität vor Dekoration — es ist ein Referenztool, keine Lore-Seite.
+**Motive:** WebGL-Sternenhintergrund hinter allen Seiten (`src/lib/components/starfield/`, mit
+statischem CSS-Fallback für reduced-motion/ohne WebGL), Glas-Panels mit Glow-Border bei Hover,
+keine harten Schatten. Motion-Regeln: globaler `prefers-reduced-motion`-Kill-Switch in
+`globals.css`; gestaffelte Reveals per inline `animationDelay` (max. ~10 Items); animierte Zahlen
+über `AnimatedNumber` (rendert bei SSR/reduced-motion sofort den Endwert). Datentabellen bekommen
+Priorität vor Dekoration — es ist ein Referenztool, keine Lore-Seite.
 
 ---
 
