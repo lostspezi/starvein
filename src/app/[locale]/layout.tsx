@@ -7,6 +7,8 @@ import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { routing } from "@/i18n/routing";
 import { FanDisclaimer } from "@/lib/components/FanDisclaimer";
 import { Header } from "@/lib/components/Header";
+import { Starfield } from "@/lib/components/starfield/Starfield";
+import { StarfieldRouteListener } from "@/lib/components/starfield/StarfieldRouteListener";
 import "../globals.css";
 
 const inter = Inter({
@@ -50,6 +52,8 @@ export default async function LocaleLayout({
       <body className="min-h-full flex flex-col">
         <NuqsAdapter>
           <NextIntlClientProvider>
+            <Starfield />
+            <StarfieldRouteListener />
             <Header />
             <div className="flex flex-1 flex-col">{children}</div>
             <FanDisclaimer />

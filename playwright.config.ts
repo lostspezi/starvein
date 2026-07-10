@@ -5,6 +5,11 @@ export default defineConfig({
   fullyParallel: true,
   use: {
     baseURL: "http://localhost:3100",
+    // Headless-Chromium rendert WebGL per Software (SwiftShader) — der
+    // Starfield-Render-Loop würde mit parallelen Workern den Main-Thread
+    // sättigen und Klick-/Hydration-Races verursachen. Mit emuliertem
+    // reduced-motion nimmt die App deterministisch den statischen Fallback.
+    contextOptions: { reducedMotion: "reduce" },
   },
   projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],
   webServer: {

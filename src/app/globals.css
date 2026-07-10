@@ -93,3 +93,36 @@ body {
     cursor: pointer;
   }
 }
+
+/* Statischer Fallback des Sternenhintergrunds: dezente Nebel-Gradienten plus
+   eine Handvoll Stern-Punkte — sichtbar bei reduced-motion, ohne WebGL oder
+   bevor das Canvas eingeblendet ist. */
+@layer components {
+  .starfield-fallback {
+    background-color: var(--color-bg-void);
+    background-image:
+      radial-gradient(1px 1px at 12% 22%, rgb(232 234 245 / 0.55), transparent),
+      radial-gradient(1px 1px at 31% 68%, rgb(232 234 245 / 0.35), transparent),
+      radial-gradient(2px 2px at 47% 15%, rgb(184 232 255 / 0.45), transparent),
+      radial-gradient(1px 1px at 58% 81%, rgb(232 234 245 / 0.4), transparent),
+      radial-gradient(1px 1px at 69% 38%, rgb(232 234 245 / 0.3), transparent),
+      radial-gradient(2px 2px at 78% 62%, rgb(157 180 255 / 0.4), transparent),
+      radial-gradient(1px 1px at 88% 12%, rgb(232 234 245 / 0.5), transparent),
+      radial-gradient(1px 1px at 94% 86%, rgb(232 234 245 / 0.35), transparent),
+      radial-gradient(
+        ellipse 60% 45% at 22% 28%,
+        rgb(28 37 64 / 0.55),
+        transparent
+      ),
+      radial-gradient(
+        ellipse 55% 40% at 76% 70%,
+        rgb(94 230 255 / 0.06),
+        transparent
+      ),
+      radial-gradient(
+        ellipse 70% 55% at 55% 45%,
+        rgb(124 108 240 / 0.08),
+        transparent
+      );
+  }
+}
