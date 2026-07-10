@@ -4,6 +4,8 @@ import { BodyList } from "@/features/locations/BodyList";
 import { listFavorites } from "@/features/favorites/favorites.repository";
 import type { CelestialBody } from "@/features/locations/locations.schema";
 import { celestialBodySchema } from "@/features/locations/locations.schema";
+import { PageHeader } from "@/lib/components/ui/PageHeader";
+import { PageShell } from "@/lib/components/ui/PageShell";
 import { getDb } from "@/lib/db";
 import { getSessionUserId } from "@/lib/session";
 
@@ -22,10 +24,10 @@ export default async function FavoritesPage({
 
   if (!userId) {
     return (
-      <section className="mx-auto flex w-full max-w-4xl flex-col gap-4 px-4 py-6 sm:px-6 sm:py-8">
-        <h1 className="text-2xl font-semibold">{t("title")}</h1>
+      <PageShell>
+        <PageHeader title={t("title")} />
         <p className="text-text-muted">{t("loginRequired")}</p>
-      </section>
+      </PageShell>
     );
   }
 
@@ -51,13 +53,13 @@ export default async function FavoritesPage({
   }
 
   return (
-    <section className="mx-auto flex w-full max-w-4xl flex-col gap-4 px-4 py-6 sm:px-6 sm:py-8">
-      <h1 className="text-2xl font-semibold">{t("title")}</h1>
+    <PageShell>
+      <PageHeader title={t("title")} />
       {bodies.length === 0 ? (
         <p className="text-text-muted">{t("empty")}</p>
       ) : (
         <BodyList bodies={bodies} />
       )}
-    </section>
+    </PageShell>
   );
 }

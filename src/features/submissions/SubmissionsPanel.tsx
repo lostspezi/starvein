@@ -1,5 +1,6 @@
 "use client";
 
+import { ChevronDown, ChevronUp } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import {
@@ -7,6 +8,9 @@ import {
   type MiningMethod,
   type Ore,
 } from "@/features/ores/ores.schema";
+import { Badge } from "@/lib/components/ui/Badge";
+import { Button } from "@/lib/components/ui/Button";
+import { Panel } from "@/lib/components/ui/Panel";
 import type { Submission } from "./submissions.schema";
 
 /**
@@ -90,7 +94,7 @@ export function SubmissionsPanel({
     : (availableMethods[0] ?? "ship");
 
   return (
-    <div className="flex flex-col gap-3 rounded-lg border border-bg-nebula-2 bg-bg-nebula p-4">
+    <Panel variant="glass" className="flex flex-col gap-3 p-4">
       <h2 className="text-lg font-medium">{t("title")}</h2>
 
       {submissions.length === 0 ? (
@@ -109,13 +113,13 @@ export function SubmissionsPanel({
               <span className="font-mono text-accent-secondary">
                 {submission.proposedChange.probabilityPercent}%
               </span>
-              <span className="rounded bg-bg-nebula-2 px-1.5 py-0.5 text-xs text-warning">
+              <Badge tone="warning">
                 {t(
                   submission.targetKey === null
                     ? "badge.new"
                     : "badge.correction",
                 )}
-              </span>
+              </Badge>
               <span className="text-xs text-text-muted">
                 {t("votes", {
                   up: submission.votes.up,
@@ -129,18 +133,18 @@ export function SubmissionsPanel({
                     aria-label={t("upvote")}
                     title={t("upvote")}
                     onClick={() => vote(submission.id, 1)}
-                    className="rounded px-2 py-0.5 text-success hover:bg-bg-nebula-2"
+                    className="rounded px-2 py-0.5 text-success transition-colors duration-150 hover:bg-bg-nebula-2"
                   >
-                    ▲
+                    <ChevronUp aria-hidden="true" className="size-4" />
                   </button>
                   <button
                     type="button"
                     aria-label={t("downvote")}
                     title={t("downvote")}
                     onClick={() => vote(submission.id, -1)}
-                    className="rounded px-2 py-0.5 text-warning hover:bg-bg-nebula-2"
+                    className="rounded px-2 py-0.5 text-warning transition-colors duration-150 hover:bg-bg-nebula-2"
                   >
-                    ▼
+                    <ChevronDown aria-hidden="true" className="size-4" />
                   </button>
                 </span>
               )}
@@ -195,17 +199,13 @@ export function SubmissionsPanel({
               className="w-24 rounded border border-bg-nebula-2 bg-bg-void px-2 py-1.5"
             />
           </label>
-          <button
-            type="submit"
-            disabled={busy}
-            className="rounded bg-accent-primary px-3 py-1.5 text-sm font-medium text-bg-void hover:bg-accent-glow disabled:opacity-50"
-          >
+          <Button type="submit" disabled={busy}>
             {t("form.submit")}
-          </button>
+          </Button>
         </form>
       ) : (
         <p className="text-sm text-text-muted">{t("loginHint")}</p>
       )}
-    </div>
+    </Panel>
   );
 }

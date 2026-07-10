@@ -1,5 +1,6 @@
 "use client";
 
+import { Star } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 
@@ -53,13 +54,17 @@ export function FavoriteButton({
       aria-pressed={isFavorite}
       aria-label={label}
       title={label}
-      className={`rounded px-2 py-1 text-xl leading-none ${
+      className={`rounded px-2 py-1 leading-none transition-colors duration-150 ${
         isFavorite
           ? "text-warning hover:text-text-muted"
           : "text-text-muted hover:text-warning"
       }`}
     >
-      {isFavorite ? "★" : "☆"}
+      <Star
+        aria-hidden="true"
+        className="size-5"
+        fill={isFavorite ? "currentColor" : "none"}
+      />
     </button>
   );
 }

@@ -3,6 +3,7 @@
 import { useTranslations } from "next-intl";
 import { signIn, signOut, useSession } from "@/lib/auth-client";
 import { Link } from "@/i18n/navigation";
+import { Button } from "@/lib/components/ui/Button";
 
 export function UserMenu() {
   const t = useTranslations("auth");
@@ -14,13 +15,11 @@ export function UserMenu() {
 
   if (!session) {
     return (
-      <button
-        type="button"
+      <Button
         onClick={() => signIn.social({ provider: "discord", callbackURL: "/" })}
-        className="rounded bg-accent-primary px-3 py-1.5 text-sm font-medium text-bg-void hover:bg-accent-glow"
       >
         {t("signInDiscord")}
-      </button>
+      </Button>
     );
   }
 
@@ -28,18 +27,14 @@ export function UserMenu() {
     <div className="flex items-center gap-3 text-sm">
       <Link
         href="/favorites"
-        className="text-text-muted hover:text-text-primary"
+        className="text-text-muted transition-colors duration-150 hover:text-text-primary"
       >
         {t("myFavorites")}
       </Link>
       <span className="hidden font-medium sm:inline">{session.user.name}</span>
-      <button
-        type="button"
-        onClick={() => signOut()}
-        className="rounded px-2 py-1 text-text-muted hover:bg-bg-nebula-2 hover:text-text-primary"
-      >
+      <Button variant="ghost" className="px-2 py-1" onClick={() => signOut()}>
         {t("signOut")}
-      </button>
+      </Button>
     </div>
   );
 }
