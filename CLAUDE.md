@@ -292,6 +292,10 @@ Wiki-Style, kein Admin-Gate:
 
 ## 7. Design-System "Tiefes All 2.0"
 
+> **Verbindliche Detail-Referenz: [`design-system/MASTER.md`](design-system/MASTER.md)** —
+> Token-Semantik, UI-Primitives, Motion-Regeln, Starfield- und A11y-/Test-Leitplanken.
+> Vor UI-Änderungen dort nachlesen; dieser Abschnitt fasst nur die Grundlagen zusammen.
+
 Richtung: dunkles Blau/Indigo mit holografischen Cyan/Eisblau-Akzenten (Star-Citizen-HUD-Gefühl),
 Nebel-Optik, WebGL-Sternenhintergrund, spürbare aber datenfreundliche Sci-Fi-Motion — kein
 Terminal-Retro-Look, kein Warnfarben-Industrial-Look.
