@@ -15,12 +15,23 @@ describe("chat messages API", () => {
     );
 
     expect(response.status).toBe(200);
-    await expect(response.json()).resolves.toEqual({ messages: [] });
+    await expect(response.json()).resolves.toEqual({
+      messages: [],
+      deletions: [],
+    });
   });
 
   it("rejects an invalid after cursor", async () => {
     const response = await GET(
       new Request("http://localhost/api/chat/messages?after=not-a-date"),
+    );
+
+    expect(response.status).toBe(400);
+  });
+
+  it("rejects an invalid deletedAfter cursor", async () => {
+    const response = await GET(
+      new Request("http://localhost/api/chat/messages?deletedAfter=nope"),
     );
 
     expect(response.status).toBe(400);

@@ -9,6 +9,8 @@ import deAuth from "@/features/auth/messages/de.json";
 import enAuth from "@/features/auth/messages/en.json";
 import deChat from "@/features/chat/messages/de.json";
 import enChat from "@/features/chat/messages/en.json";
+import deModeration from "@/features/moderation/messages/de.json";
+import enModeration from "@/features/moderation/messages/en.json";
 import deFavorites from "@/features/favorites/messages/de.json";
 import enFavorites from "@/features/favorites/messages/en.json";
 import deHome from "@/features/home/messages/de.json";
@@ -48,6 +50,7 @@ const messages = {
     ...deSubmissions,
     ...deCompare,
     ...deChat,
+    ...deModeration,
   },
   en: {
     ...enCommon,
@@ -64,6 +67,7 @@ const messages = {
     ...enSubmissions,
     ...enCompare,
     ...enChat,
+    ...enModeration,
   },
 };
 

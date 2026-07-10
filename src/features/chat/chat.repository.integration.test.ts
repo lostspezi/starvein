@@ -5,7 +5,9 @@ import { uniqueDbName } from "@/test/factories";
 import type { ChatMessage } from "./chat.schema";
 import {
   capChatHistory,
+  deleteChatMessage,
   insertChatMessage,
+  listDeletionsAfter,
   listLatestMessages,
   listMessagesAfter,
 } from "./chat.repository";
@@ -85,5 +87,90 @@ describe("chat repository", () => {
 
     const messages = await listLatestMessages(db, 50);
     expect(messages.map((m) => m.body)).toEqual(["msg-3", "msg-4"]);
+  });
+
+  it("tombstones a deleted message and removes its body", async () => {
+    const message = buildMessage({ body: "weg damit" });
+    await insertChatMessage(db, message);
+
+    await deleteChatMessage(db, message.id);
+
+    const doc = await db
+      .collection("chatMessages")
+      .findOne({ id: message.id }, { projection: { _id: 0 } });
+    expect(doc?.body).toBeUndefined();
+    expect(typeof doc?.deletedAt).toBe("string");
+  });
+
+  it("excludes tombstoned messages from both list queries", async () => {
+    const kept = buildMessage({
+      body: "bleibt",
+      createdAt: "2026-07-10T10:00:00.000Z",
+    });
+    const deleted = buildMessage({
+      body: "weg",
+      createdAt: "2026-07-10T10:01:00.000Z",
+    });
+    await insertChatMessage(db, kept);
+    await insertChatMessage(db, deleted);
+    await deleteChatMessage(db, deleted.id);
+
+    const latest = await listLatestMessages(db, 50);
+    expect(latest.map((m) => m.id)).toEqual([kept.id]);
+
+    const after = await listMessagesAfter(db, "2026-07-10T09:00:00.000Z", 50);
+    expect(after.map((m) => m.id)).toEqual([kept.id]);
+  });
+
+  it("keeps the original deletedAt on double delete", async () => {
+    const message = buildMessage();
+    await insertChatMessage(db, message);
+    await deleteChatMessage(db, message.id);
+    // deletedAt auf einen erkennbar alten Wert setzen — ein zweiter Delete
+    // darf ihn nicht überschreiben (sonst würde der Deletions-Cursor die
+    // Löschung erneut an alle Clients senden)
+    await db
+      .collection("chatMessages")
+      .updateOne(
+        { id: message.id },
+        { $set: { deletedAt: "2020-01-01T00:00:00.000Z" } },
+      );
+
+    await deleteChatMessage(db, message.id);
+
+    const doc = await db.collection("chatMessages").findOne({ id: message.id });
+    expect(doc?.deletedAt).toBe("2020-01-01T00:00:00.000Z");
+  });
+
+  it("lists deletions after the cursor ascending", async () => {
+    const first = buildMessage({ createdAt: "2026-07-10T10:00:00.000Z" });
+    const second = buildMessage({ createdAt: "2026-07-10T10:01:00.000Z" });
+    await insertChatMessage(db, first);
+    await insertChatMessage(db, second);
+    await deleteChatMessage(db, first.id);
+    await deleteChatMessage(db, second.id);
+
+    const all = await listDeletionsAfter(db, null);
+    expect(all.map((d) => d.id)).toEqual([first.id, second.id]);
+    expect(all.every((d) => typeof d.deletedAt === "string")).toBe(true);
+
+    const afterFirst = await listDeletionsAfter(db, all[0].deletedAt);
+    expect(afterFirst.map((d) => d.id)).toEqual([second.id]);
+  });
+
+  it("purges aged-out tombstones via capChatHistory", async () => {
+    const old = buildMessage({ createdAt: "2026-07-10T10:00:00.000Z" });
+    await insertChatMessage(db, old);
+    await deleteChatMessage(db, old.id);
+    for (let i = 1; i <= 2; i++) {
+      await insertChatMessage(
+        db,
+        buildMessage({ createdAt: `2026-07-10T10:0${i}:00.000Z` }),
+      );
+    }
+
+    await capChatHistory(db, 2);
+
+    await expect(listDeletionsAfter(db, null)).resolves.toEqual([]);
   });
 });

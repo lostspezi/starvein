@@ -6,12 +6,14 @@ import {
   capChatHistory,
   ensureChatIndexes,
   insertChatMessage,
+  listDeletionsAfter,
   listLatestMessages,
   listMessagesAfter,
 } from "./chat.repository";
 import {
   CHAT_MESSAGE_MAX_LENGTH,
   chatMessageSchema,
+  type ChatDeletion,
   type ChatMessage,
   type ChatRejectionCode,
 } from "./chat.schema";
@@ -75,11 +77,12 @@ export async function postChatMessage(
 
 export async function listChatMessages(
   db: Db,
-  after: string | null,
-  limit: number,
-): Promise<ChatMessage[]> {
+  opts: { after: string | null; deletedAfter: string | null; limit: number },
+): Promise<{ messages: ChatMessage[]; deletions: ChatDeletion[] }> {
   await ensureChatIndexes(db);
-  return after
-    ? listMessagesAfter(db, after, limit)
-    : listLatestMessages(db, limit);
+  const messages = opts.after
+    ? await listMessagesAfter(db, opts.after, opts.limit)
+    : await listLatestMessages(db, opts.limit);
+  const deletions = await listDeletionsAfter(db, opts.deletedAfter);
+  return { messages, deletions };
 }

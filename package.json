@@ -15,6 +15,7 @@
     "e2e:server": "next build && next start -p 3100",
     "seed": "tsx --env-file=.env.local scripts/seed.ts",
     "sync:uex": "tsx --env-file=.env.local scripts/sync-uex.ts",
+    "promote": "tsx --env-file=.env.local scripts/promote.ts",
     "prepare": "husky"
   },
   "lint-staged": {

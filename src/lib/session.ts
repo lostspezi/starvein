@@ -1,3 +1,4 @@
+import { toRole, type Role } from "@/features/moderation/roles";
 import { auth } from "@/lib/auth";
 
 /**
@@ -12,13 +13,18 @@ export async function getSessionUserId(
 }
 
 /**
- * Wie getSessionUserId, liefert aber zusätzlich den Anzeigenamen —
- * z. B. für den Chat, der den Namen als Snapshot an der Nachricht speichert.
+ * Wie getSessionUserId, liefert aber zusätzlich Anzeigename und Rolle —
+ * z. B. für den Chat (Name-Snapshot an der Nachricht) und die
+ * Moderations-/Admin-Routen (Rollen-Guards).
  */
 export async function getSessionUser(
   headers: Headers,
-): Promise<{ id: string; name: string } | null> {
+): Promise<{ id: string; name: string; role: Role } | null> {
   const session = await auth.api.getSession({ headers });
   if (!session?.user) return null;
-  return { id: session.user.id, name: session.user.name };
+  return {
+    id: session.user.id,
+    name: session.user.name,
+    role: toRole((session.user as { role?: unknown }).role),
+  };
 }

@@ -71,9 +71,13 @@ describe("chat service", () => {
     expect(message.userId).toBe("user-1");
     expect(message.id).toBeTruthy();
 
-    const stored = await listChatMessages(db, null, 50);
-    expect(stored).toHaveLength(1);
-    expect(stored[0].body).toBe("so ein *** hier");
+    const { messages } = await listChatMessages(db, {
+      after: null,
+      deletedAfter: null,
+      limit: 50,
+    });
+    expect(messages).toHaveLength(1);
+    expect(messages[0].body).toBe("so ein *** hier");
   });
 
   it("trims whitespace before storing", async () => {
@@ -86,10 +90,35 @@ describe("chat service", () => {
     const first = await postChatMessage(db, USER, "erste Nachricht");
     const second = await postChatMessage(db, USER, "zweite Nachricht");
 
-    const newer = await listChatMessages(db, first.createdAt, 50);
+    const { messages } = await listChatMessages(db, {
+      after: first.createdAt,
+      deletedAfter: null,
+      limit: 50,
+    });
 
-    expect(newer.map((m) => m.id)).toEqual(
+    expect(messages.map((m) => m.id)).toEqual(
       second.createdAt > first.createdAt ? [second.id] : [],
     );
+  });
+
+  it("returns deletions since the deletedAfter cursor", async () => {
+    const message = await postChatMessage(db, USER, "gleich weg");
+    const { deleteChatMessage } = await import("./chat.repository");
+    await deleteChatMessage(db, message.id);
+
+    const all = await listChatMessages(db, {
+      after: null,
+      deletedAfter: null,
+      limit: 50,
+    });
+    expect(all.messages).toEqual([]);
+    expect(all.deletions.map((d) => d.id)).toEqual([message.id]);
+
+    const afterCursor = await listChatMessages(db, {
+      after: null,
+      deletedAfter: all.deletions[0].deletedAt,
+      limit: 50,
+    });
+    expect(afterCursor.deletions).toEqual([]);
   });
 });

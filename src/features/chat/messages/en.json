@@ -16,7 +16,20 @@
       "repeatedChars": "Too many repeated characters.",
       "duplicate": "You just sent that — please wait before repeating it.",
       "rateLimited": "Slow mode: one message every 30 seconds.",
+      "timedOut": "You are muted for another {minutes} min.",
       "generic": "Message could not be sent."
+    },
+    "moderation": {
+      "delete": "Delete message",
+      "timeout": "Timeout user",
+      "durations": {
+        "m5": "5 min",
+        "h1": "1 h",
+        "h24": "24 h"
+      },
+      "applied": "User has been timed out.",
+      "cannotModerate": "This user cannot be moderated.",
+      "failed": "Action failed."
     }
   }
 }

@@ -14,6 +14,11 @@ const SLOW_MODE_SECONDS = 30;
 type ErrorKey =
   (typeof CHAT_REJECTION_CODES)[number] | "rateLimited" | "generic";
 
+/** Restzeit eines Timeouts in ganzen Minuten (mindestens 1). */
+function minutesUntil(until: string): number {
+  return Math.max(1, Math.ceil((Date.parse(until) - Date.now()) / 60_000));
+}
+
 function toErrorKey(code: unknown): ErrorKey {
   return CHAT_REJECTION_CODES.includes(code as never)
     ? (code as ErrorKey)
@@ -30,6 +35,7 @@ export function ChatComposer({
   const [value, setValue] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<ErrorKey | null>(null);
+  const [timedOutMinutes, setTimedOutMinutes] = useState<number | null>(null);
   const [cooldownSeconds, setCooldownSeconds] = useState(0);
 
   useEffect(() => {
@@ -49,6 +55,7 @@ export function ChatComposer({
 
     setBusy(true);
     setError(null);
+    setTimedOutMinutes(null);
     try {
       const response = await fetch("/api/chat/messages", {
         method: "POST",
@@ -60,6 +67,13 @@ export function ChatComposer({
         setValue("");
         onSent(message);
         setCooldownSeconds(SLOW_MODE_SECONDS);
+      } else if (response.status === 403) {
+        const data = (await response.json()) as { until?: string };
+        if (data.until) {
+          setTimedOutMinutes(minutesUntil(data.until));
+        } else {
+          setError("generic");
+        }
       } else if (response.status === 429) {
         const data = (await response.json()) as { retryAfterSeconds?: number };
         setError("rateLimited");
@@ -108,6 +122,11 @@ export function ChatComposer({
       {error && (
         <p role="status" className="text-xs text-warning">
           {t(`errors.${error}`)}
+        </p>
+      )}
+      {timedOutMinutes !== null && (
+        <p role="status" className="text-xs text-warning">
+          {t("errors.timedOut", { minutes: timedOutMinutes })}
         </p>
       )}
     </form>

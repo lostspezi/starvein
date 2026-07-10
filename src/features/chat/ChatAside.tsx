@@ -1,8 +1,20 @@
 "use client";
 
-import { MessagesSquare, X } from "lucide-react";
+import { MessagesSquare, Timer, Trash2, X } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
-import { useCallback, useEffect, useRef, useSyncExternalStore } from "react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from "react";
+import {
+  canModerateChat,
+  TIMEOUT_DURATIONS_MINUTES,
+  toRole,
+  type TimeoutDurationMinutes,
+} from "@/features/moderation/roles";
 import { useSession } from "@/lib/auth-client";
 import { Button } from "@/lib/components/ui/Button";
 import type { ChatMessage } from "./chat.schema";
@@ -30,8 +42,28 @@ function writeStoredOpen(next: boolean): void {
   openListeners.forEach((listener) => listener());
 }
 
-function MessageRow({ message }: { message: ChatMessage }) {
+const DURATION_LABEL_KEYS: Record<TimeoutDurationMinutes, string> = {
+  5: "m5",
+  60: "h1",
+  1440: "h24",
+};
+
+function MessageRow({
+  message,
+  canModerate,
+  isOwn,
+  onDelete,
+  onTimeout,
+}: {
+  message: ChatMessage;
+  canModerate: boolean;
+  isOwn: boolean;
+  onDelete: (id: string) => void;
+  onTimeout: (message: ChatMessage, minutes: TimeoutDurationMinutes) => void;
+}) {
+  const t = useTranslations("chat");
   const locale = useLocale();
+  const [pickerOpen, setPickerOpen] = useState(false);
   // Nachrichten werden ausschließlich clientseitig gerendert (fetch im
   // Effect), daher ist die lokale Zeitzone hier hydration-sicher.
   const time = new Date(message.createdAt).toLocaleTimeString(locale, {
@@ -46,8 +78,50 @@ function MessageRow({ message }: { message: ChatMessage }) {
           {message.userName}
         </span>
         <span className="font-mono text-[10px] text-text-muted">{time}</span>
+        {canModerate && (
+          <span className="ml-auto flex items-center gap-0.5">
+            <Button
+              variant="ghost"
+              onClick={() => onDelete(message.id)}
+              aria-label={t("moderation.delete")}
+              title={t("moderation.delete")}
+              className="px-1 py-1"
+            >
+              <Trash2 aria-hidden="true" className="size-4" />
+            </Button>
+            {!isOwn && (
+              <Button
+                variant="ghost"
+                onClick={() => setPickerOpen((open) => !open)}
+                aria-label={t("moderation.timeout")}
+                title={t("moderation.timeout")}
+                aria-expanded={pickerOpen}
+                className="px-1 py-1"
+              >
+                <Timer aria-hidden="true" className="size-4" />
+              </Button>
+            )}
+          </span>
+        )}
       </div>
       <p className="text-sm break-words text-text-primary">{message.body}</p>
+      {pickerOpen && (
+        <div className="mt-1 flex gap-1.5">
+          {TIMEOUT_DURATIONS_MINUTES.map((minutes) => (
+            <Button
+              key={minutes}
+              variant="ghost"
+              onClick={() => {
+                setPickerOpen(false);
+                onTimeout(message, minutes);
+              }}
+              className="border border-glass-border px-2 py-0.5 text-xs"
+            >
+              {t(`moderation.durations.${DURATION_LABEL_KEYS[minutes]}`)}
+            </Button>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
@@ -55,15 +129,21 @@ function MessageRow({ message }: { message: ChatMessage }) {
 /**
  * Einklappbarer Community-Chat, rechts über allen Seiten (fixed Overlay —
  * verändert nie die Content-Breite). Lesen ist öffentlich, Senden nur mit
- * Session. Der Auf-/Zu-Zustand lebt in localStorage (siehe Store oben);
+ * Session; Moderatoren/Admins bekommen Lösch- und Timeout-Aktionen.
+ * Der Auf-/Zu-Zustand lebt in localStorage (siehe Store oben);
  * SSR rendert immer den zugeklappten Zustand.
  */
 export function ChatAside() {
   const t = useTranslations("chat");
   const open = useSyncExternalStore(subscribeOpen, readStoredOpen, () => false);
   const { data: session } = useSession();
-  const { messages, appendMessage } = useChatPolling(open);
+  const { messages, appendMessage, removeMessage } = useChatPolling(open);
   const listRef = useRef<HTMLDivElement>(null);
+  const [moderationNote, setModerationNote] = useState<string | null>(null);
+
+  const sessionUser = session?.user as
+    { id: string; role?: unknown } | undefined;
+  const canModerate = canModerateChat(toRole(sessionUser?.role));
 
   const toggle = useCallback((next: boolean) => {
     writeStoredOpen(next);
@@ -86,6 +166,52 @@ export function ChatAside() {
       list.scrollHeight - list.scrollTop - list.clientHeight < 80;
     if (nearBottom) list.scrollTop = list.scrollHeight;
   }, [messages]);
+
+  const handleDelete = useCallback(
+    async (id: string) => {
+      setModerationNote(null);
+      try {
+        const response = await fetch(`/api/chat/messages/${id}`, {
+          method: "DELETE",
+        });
+        if (response.ok) {
+          removeMessage(id);
+        } else {
+          setModerationNote("failed");
+        }
+      } catch {
+        setModerationNote("failed");
+      }
+    },
+    [removeMessage],
+  );
+
+  const handleTimeout = useCallback(
+    async (message: ChatMessage, minutes: TimeoutDurationMinutes) => {
+      setModerationNote(null);
+      try {
+        const response = await fetch("/api/chat/timeouts", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({
+            userId: message.userId,
+            durationMinutes: minutes,
+          }),
+        });
+        if (response.ok) {
+          setModerationNote("applied");
+        } else {
+          const data = (await response.json()) as { error?: string };
+          setModerationNote(
+            data.error === "cannotModerate" ? "cannotModerate" : "failed",
+          );
+        }
+      } catch {
+        setModerationNote("failed");
+      }
+    },
+    [],
+  );
 
   if (!open) {
     return (
@@ -124,12 +250,24 @@ export function ChatAside() {
           <p className="text-sm text-text-muted">{t("empty")}</p>
         ) : (
           messages.map((message) => (
-            <MessageRow key={message.id} message={message} />
+            <MessageRow
+              key={message.id}
+              message={message}
+              canModerate={canModerate}
+              isOwn={message.userId === sessionUser?.id}
+              onDelete={handleDelete}
+              onTimeout={handleTimeout}
+            />
           ))
         )}
       </div>
 
-      <footer className="border-t border-glass-border px-4 py-3">
+      <footer className="space-y-1.5 border-t border-glass-border px-4 py-3">
+        {moderationNote && (
+          <p role="status" className="text-xs text-text-muted">
+            {t(`moderation.${moderationNote}`)}
+          </p>
+        )}
         {session?.user ? (
           <ChatComposer onSent={appendMessage} />
         ) : (

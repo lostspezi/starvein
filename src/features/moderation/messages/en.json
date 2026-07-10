@@ -1,0 +1,23 @@
+{
+  "admin": {
+    "title": "Administration",
+    "usersTitle": "Users",
+    "timeoutsTitle": "Active timeouts",
+    "columns": {
+      "name": "Name",
+      "role": "Role",
+      "actions": "Actions",
+      "until": "Until"
+    },
+    "roles": {
+      "user": "User",
+      "moderator": "Moderator",
+      "admin": "Admin"
+    },
+    "promote": "Promote to moderator",
+    "demote": "Demote to user",
+    "revoke": "Revoke",
+    "noTimeouts": "No active timeouts.",
+    "error": "Action failed."
+  }
+}

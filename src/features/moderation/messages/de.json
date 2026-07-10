@@ -1,0 +1,23 @@
+{
+  "admin": {
+    "title": "Verwaltung",
+    "usersTitle": "Nutzer",
+    "timeoutsTitle": "Aktive Stummschaltungen",
+    "columns": {
+      "name": "Name",
+      "role": "Rolle",
+      "actions": "Aktionen",
+      "until": "Bis"
+    },
+    "roles": {
+      "user": "Nutzer",
+      "moderator": "Moderator",
+      "admin": "Admin"
+    },
+    "promote": "Zum Moderator machen",
+    "demote": "Zum Nutzer machen",
+    "revoke": "Aufheben",
+    "noTimeouts": "Keine aktiven Stummschaltungen.",
+    "error": "Aktion fehlgeschlagen."
+  }
+}

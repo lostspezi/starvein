@@ -170,6 +170,148 @@ describe("ChatAside", () => {
     ).toBeVisible();
   });
 
+  it("shows no moderation actions for a regular user", async () => {
+    useSessionMock.mockReturnValue({
+      data: { user: { id: "u1", name: "MinerMarcell", role: "user" } },
+      isPending: false,
+    });
+    fetchMock.mockResolvedValue(
+      jsonResponse({ messages: [buildMessage()], deletions: [] }),
+    );
+    const user = userEvent.setup();
+    renderWithIntl(<ChatAside />, { locale: "en" });
+
+    await user.click(screen.getByRole("button", { name: "Open chat" }));
+    await screen.findByText("hallo zusammen");
+
+    expect(
+      screen.queryByRole("button", { name: "Delete message" }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: "Timeout user" }),
+    ).not.toBeInTheDocument();
+  });
+
+  it("lets a moderator delete a message", async () => {
+    useSessionMock.mockReturnValue({
+      data: { user: { id: "mod-1", name: "Mod Mia", role: "moderator" } },
+      isPending: false,
+    });
+    const message = buildMessage();
+    fetchMock.mockImplementation(async (_url, init?: RequestInit) =>
+      init?.method === "DELETE"
+        ? { ok: true, status: 204, json: async () => null }
+        : jsonResponse({ messages: [message], deletions: [] }),
+    );
+    const user = userEvent.setup();
+    renderWithIntl(<ChatAside />, { locale: "en" });
+
+    await user.click(screen.getByRole("button", { name: "Open chat" }));
+    await screen.findByText("hallo zusammen");
+    await user.click(screen.getByRole("button", { name: "Delete message" }));
+
+    await waitFor(() =>
+      expect(screen.queryByText("hallo zusammen")).not.toBeInTheDocument(),
+    );
+    expect(fetchMock).toHaveBeenCalledWith(
+      `/api/chat/messages/${message.id}`,
+      expect.objectContaining({ method: "DELETE" }),
+    );
+  });
+
+  it("lets a moderator timeout a user with a chosen duration", async () => {
+    useSessionMock.mockReturnValue({
+      data: { user: { id: "mod-1", name: "Mod Mia", role: "moderator" } },
+      isPending: false,
+    });
+    const message = buildMessage({ userId: "user-9" });
+    fetchMock.mockImplementation(async (_url, init?: RequestInit) =>
+      init?.method === "POST"
+        ? jsonResponse({ userId: "user-9", until: "x" }, 201)
+        : jsonResponse({ messages: [message], deletions: [] }),
+    );
+    const user = userEvent.setup();
+    renderWithIntl(<ChatAside />, { locale: "en" });
+
+    await user.click(screen.getByRole("button", { name: "Open chat" }));
+    await screen.findByText("hallo zusammen");
+    await user.click(screen.getByRole("button", { name: "Timeout user" }));
+    await user.click(screen.getByRole("button", { name: "1 h" }));
+
+    expect(fetchMock).toHaveBeenCalledWith(
+      "/api/chat/timeouts",
+      expect.objectContaining({
+        method: "POST",
+        body: JSON.stringify({ userId: "user-9", durationMinutes: 60 }),
+      }),
+    );
+  });
+
+  it("hides the timeout action on the moderator's own messages", async () => {
+    useSessionMock.mockReturnValue({
+      data: { user: { id: "mod-1", name: "Mod Mia", role: "moderator" } },
+      isPending: false,
+    });
+    fetchMock.mockResolvedValue(
+      jsonResponse({
+        messages: [buildMessage({ userId: "mod-1", userName: "Mod Mia" })],
+        deletions: [],
+      }),
+    );
+    const user = userEvent.setup();
+    renderWithIntl(<ChatAside />, { locale: "en" });
+
+    await user.click(screen.getByRole("button", { name: "Open chat" }));
+    await screen.findByText("hallo zusammen");
+
+    expect(
+      screen.getByRole("button", { name: "Delete message" }),
+    ).toBeVisible();
+    expect(
+      screen.queryByRole("button", { name: "Timeout user" }),
+    ).not.toBeInTheDocument();
+  });
+
+  it("removes messages listed in deletions from the poll response", async () => {
+    const gone = buildMessage({ body: "wird entfernt" });
+    const kept = buildMessage({ body: "bleibt stehen" });
+    fetchMock.mockResolvedValue(
+      jsonResponse({
+        messages: [gone, kept],
+        deletions: [{ id: gone.id, deletedAt: "2026-07-10T10:02:00.000Z" }],
+      }),
+    );
+    const user = userEvent.setup();
+    renderWithIntl(<ChatAside />, { locale: "en" });
+
+    await user.click(screen.getByRole("button", { name: "Open chat" }));
+
+    expect(await screen.findByText("bleibt stehen")).toBeVisible();
+    expect(screen.queryByText("wird entfernt")).not.toBeInTheDocument();
+  });
+
+  it("shows the timed-out error with remaining minutes after a 403", async () => {
+    useSessionMock.mockReturnValue({
+      data: { user: { id: "u1", name: "MinerMarcell", role: "user" } },
+      isPending: false,
+    });
+    const until = new Date(Date.now() + 5 * 60_000).toISOString();
+    fetchMock.mockImplementation(async (_url, init?: RequestInit) =>
+      init?.method === "POST"
+        ? jsonResponse({ error: "timedOut", until }, 403)
+        : jsonResponse({ messages: [], deletions: [] }),
+    );
+    const user = userEvent.setup();
+    renderWithIntl(<ChatAside />, { locale: "en" });
+
+    await user.click(screen.getByRole("button", { name: "Open chat" }));
+    await user.type(screen.getByRole("textbox"), "hallo");
+    await user.click(screen.getByRole("button", { name: "Send" }));
+
+    const status = await screen.findByRole("status");
+    expect(status).toHaveTextContent(/muted for another \d+ min/);
+  });
+
   it("shows a translated error for a 422 rejection code", async () => {
     useSessionMock.mockReturnValue({
       data: { user: { id: "u1", name: "MinerMarcell" } },

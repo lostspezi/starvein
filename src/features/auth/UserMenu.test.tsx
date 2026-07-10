@@ -38,6 +38,31 @@ describe("UserMenu", () => {
     );
   });
 
+  it("shows the admin link only for admin sessions", () => {
+    useSessionMock.mockReturnValue({
+      data: { user: { id: "u1", name: "Admin Anna", role: "admin" } },
+      isPending: false,
+    });
+    renderWithIntl(<UserMenu />, { locale: "en" });
+
+    expect(screen.getByRole("link", { name: "Admin" })).toHaveAttribute(
+      "href",
+      "/admin",
+    );
+  });
+
+  it("hides the admin link for regular users", () => {
+    useSessionMock.mockReturnValue({
+      data: { user: { id: "u1", name: "Miner Joe", role: "user" } },
+      isPending: false,
+    });
+    renderWithIntl(<UserMenu />, { locale: "en" });
+
+    expect(
+      screen.queryByRole("link", { name: "Admin" }),
+    ).not.toBeInTheDocument();
+  });
+
   it("shows name, favorites link and sign-out when logged in", async () => {
     useSessionMock.mockReturnValue({
       data: { user: { id: "u1", name: "MinerMarcell" } },

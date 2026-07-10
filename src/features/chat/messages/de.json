@@ -16,7 +16,20 @@
       "repeatedChars": "Zu viele wiederholte Zeichen.",
       "duplicate": "Das hast du gerade schon geschrieben — bitte warte einen Moment.",
       "rateLimited": "Slow-Mode: eine Nachricht alle 30 Sekunden.",
+      "timedOut": "Du bist noch {minutes} Min. stummgeschaltet.",
       "generic": "Die Nachricht konnte nicht gesendet werden."
+    },
+    "moderation": {
+      "delete": "Nachricht löschen",
+      "timeout": "Nutzer stummschalten",
+      "durations": {
+        "m5": "5 Min",
+        "h1": "1 Std",
+        "h24": "24 Std"
+      },
+      "applied": "Der Nutzer wurde stummgeschaltet.",
+      "cannotModerate": "Dieser Nutzer kann nicht moderiert werden.",
+      "failed": "Aktion fehlgeschlagen."
     }
   }
 }

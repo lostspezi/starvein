@@ -1,5 +1,9 @@
 import type { Db } from "mongodb";
-import { chatMessageSchema, type ChatMessage } from "./chat.schema";
+import {
+  chatMessageSchema,
+  type ChatDeletion,
+  type ChatMessage,
+} from "./chat.schema";
 
 const COLLECTION = "chatMessages";
 const NO_ID = { projection: { _id: 0 } } as const;
@@ -11,8 +15,12 @@ const indexedDbs = new Set<string>();
 export async function ensureChatIndexes(db: Db): Promise<void> {
   if (indexedDbs.has(db.databaseName)) return;
   await db.collection(COLLECTION).createIndex({ createdAt: 1 });
+  await db.collection(COLLECTION).createIndex({ deletedAt: 1 });
   indexedDbs.add(db.databaseName);
 }
+
+// Nicht gelöschte Nachrichten — Tombstones haben deletedAt (und keinen body)
+const NOT_DELETED = { deletedAt: { $exists: false } } as const;
 
 export async function insertChatMessage(
   db: Db,
@@ -28,7 +36,7 @@ export async function listLatestMessages(
 ): Promise<ChatMessage[]> {
   const docs = await db
     .collection(COLLECTION)
-    .find({}, NO_ID)
+    .find({ ...NOT_DELETED }, NO_ID)
     .sort({ createdAt: -1 })
     .limit(limit)
     .toArray();
@@ -47,11 +55,48 @@ export async function listMessagesAfter(
 ): Promise<ChatMessage[]> {
   const docs = await db
     .collection(COLLECTION)
-    .find({ createdAt: { $gt: after } }, NO_ID)
+    .find({ createdAt: { $gt: after }, ...NOT_DELETED }, NO_ID)
     .sort({ createdAt: 1 })
     .limit(limit)
     .toArray();
   return docs.map((doc) => chatMessageSchema.parse(doc));
+}
+
+/**
+ * Tombstone statt Hard-Delete: deletedAt markiert die Löschung fürs
+ * Poll-Protokoll, der body wird wirklich entfernt. Der Filter auf
+ * "noch nicht gelöscht" macht Double-Deletes idempotent — das
+ * Original-deletedAt bleibt stehen, sonst würde der Deletions-Cursor
+ * die Löschung erneut broadcasten.
+ */
+export async function deleteChatMessage(db: Db, id: string): Promise<void> {
+  await db
+    .collection(COLLECTION)
+    .updateOne(
+      { id, ...NOT_DELETED },
+      { $set: { deletedAt: new Date().toISOString() }, $unset: { body: "" } },
+    );
+}
+
+/** Löschungen nach dem deletedAt-Cursor, aufsteigend (null = alle). */
+export async function listDeletionsAfter(
+  db: Db,
+  deletedAfter: string | null,
+  limit = 100,
+): Promise<ChatDeletion[]> {
+  const filter = deletedAfter
+    ? { deletedAt: { $gt: deletedAfter } }
+    : { deletedAt: { $exists: true } };
+  const docs = await db
+    .collection(COLLECTION)
+    .find(filter, { projection: { _id: 0, id: 1, deletedAt: 1 } })
+    .sort({ deletedAt: 1 })
+    .limit(limit)
+    .toArray();
+  return docs.map((doc) => ({
+    id: String(doc.id),
+    deletedAt: String(doc.deletedAt),
+  }));
 }
 
 /** Hält die Historie klein: alles älter als die neuesten `max` fliegt raus. */

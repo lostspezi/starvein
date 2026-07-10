@@ -15,6 +15,13 @@ export const chatMessageSchema = z.object({
 
 export type ChatMessage = z.infer<typeof chatMessageSchema>;
 
+/** Gelöschte Nachricht im Poll-Protokoll — eigene Zeitachse (deletedAt),
+ *  der Client trackt dafür einen zweiten Cursor. */
+export type ChatDeletion = {
+  id: string;
+  deletedAt: string;
+};
+
 // Liegt hier statt im Service, damit Client-Komponenten die Codes ohne
 // Server-Abhängigkeiten (mongodb, node:crypto) importieren können.
 export const CHAT_REJECTION_CODES = [
