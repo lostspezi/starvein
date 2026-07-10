@@ -1,4 +1,6 @@
 import { useFormatter, useTranslations } from "next-intl";
+import { AnimatedNumber } from "@/lib/components/ui/AnimatedNumber";
+import { Panel } from "@/lib/components/ui/Panel";
 import type { OrePriceSummary, PriceSide } from "./price-summary";
 import type { RefineryYield } from "./refinery-and-prices.schema";
 
@@ -8,7 +10,6 @@ function formatBonus(bonusPercent: number): string {
 
 function PriceSideBlock({ label, side }: { label: string; side: PriceSide }) {
   const t = useTranslations("prices");
-  const format = useFormatter();
 
   return (
     <div className="rounded border border-bg-nebula-2 bg-bg-void px-4 py-3">
@@ -16,7 +17,11 @@ function PriceSideBlock({ label, side }: { label: string; side: PriceSide }) {
         {label} · {t("bestSell")}
       </span>
       <span className="block font-mono text-2xl text-accent-secondary">
-        {side.bestSell ? format.number(side.bestSell.priceSell) : "—"}
+        {side.bestSell ? (
+          <AnimatedNumber value={side.bestSell.priceSell} />
+        ) : (
+          "—"
+        )}
         <span className="ml-1 text-sm text-text-muted">{t("perScu")}</span>
       </span>
       {side.bestSell && (
@@ -39,7 +44,7 @@ export function PriceAndYieldPanel({
   const format = useFormatter();
 
   return (
-    <div className="flex flex-col gap-3 rounded-lg border border-bg-nebula-2 bg-bg-nebula p-4">
+    <Panel variant="glass" className="flex flex-col gap-3 p-4">
       <h2 className="text-lg font-medium">{t("title")}</h2>
 
       {summary.syncedAt === null ? (
@@ -97,6 +102,6 @@ export function PriceAndYieldPanel({
           </p>
         </>
       )}
-    </div>
+    </Panel>
   );
 }

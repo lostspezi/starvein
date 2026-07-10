@@ -12,6 +12,8 @@ import {
 } from "@/features/refinery-and-prices/price-summary";
 import { OreSignatureInfo } from "@/features/signature-profiles/OreSignatureInfo";
 import { findSignatureProfilesByOre } from "@/features/signature-profiles/signature-profiles.repository";
+import { PageHeader } from "@/lib/components/ui/PageHeader";
+import { PageShell } from "@/lib/components/ui/PageShell";
 import { getDb } from "@/lib/db";
 import { parseEnumParam } from "@/lib/search-params";
 
@@ -46,21 +48,25 @@ export default async function OreDetailPage({
     ]);
 
   return (
-    <section className="mx-auto flex w-full max-w-4xl flex-col gap-4 px-4 py-6 sm:px-6 sm:py-8">
-      <div>
-        <h1 className="text-2xl font-semibold">
-          {ore.name_en}{" "}
-          <span className="font-mono text-base text-text-muted">
-            {ore.code}
+    <PageShell>
+      <PageHeader
+        title={
+          <>
+            {ore.name_en}{" "}
+            <span className="font-mono text-base text-text-muted">
+              {ore.code}
+            </span>
+          </>
+        }
+        subtitle={
+          <span className="text-sm">
+            {t(`ores.rarity.${ore.rarityTier}`)} ·{" "}
+            {MINING_METHODS.filter((m) => ore.mineableBy[m])
+              .map((m) => t(`ores.method.${m}`))
+              .join(" · ")}
           </span>
-        </h1>
-        <p className="text-sm text-text-muted">
-          {t(`ores.rarity.${ore.rarityTier}`)} ·{" "}
-          {MINING_METHODS.filter((m) => ore.mineableBy[m])
-            .map((m) => t(`ores.method.${m}`))
-            .join(" · ")}
-        </p>
-      </div>
+        }
+      />
 
       <OreSignatureInfo profiles={signatureProfiles} />
 
@@ -70,6 +76,6 @@ export default async function OreDetailPage({
       <MethodFilter />
       <OreOccurrencesTable occurrences={occurrences} />
       <p className="text-xs text-text-muted">{t("occurrences.disclaimer")}</p>
-    </section>
+    </PageShell>
   );
 }

@@ -1,5 +1,6 @@
 "use client";
 
+import { useFormatter } from "next-intl";
 import { useEffect, useRef, useState } from "react";
 
 function prefersReducedMotion(): boolean {
@@ -13,19 +14,24 @@ function prefersReducedMotion(): boolean {
 /**
  * Zahlenwert mit rAF-Count-up bei Wertänderung. Der erste Render (inkl. SSR)
  * zeigt sofort den Endwert — animiert wird nur der Übergang zwischen Werten;
- * bei reduzierter Bewegung springt der Wert direkt.
+ * bei reduzierter Bewegung springt der Wert direkt. Formatiert locale-bewusst
+ * über next-intl (Format-Funktionen wären nicht RSC-serialisierbar).
  */
 export function AnimatedNumber({
   value,
-  format = (n) => String(Math.round(n)),
+  suffix,
+  numberFormatOptions,
   durationMs = 300,
   className,
 }: {
   value: number;
-  format?: (n: number) => string;
+  /** Direkt angehängte Einheit, z. B. "%" */
+  suffix?: string;
+  numberFormatOptions?: Intl.NumberFormatOptions;
   durationMs?: number;
   className?: string;
 }) {
+  const format = useFormatter();
   const [display, setDisplay] = useState(value);
   const previous = useRef(value);
 
@@ -53,5 +59,13 @@ export function AnimatedNumber({
     return () => cancelAnimationFrame(frame);
   }, [value, durationMs]);
 
-  return <span className={className}>{format(display)}</span>;
+  return (
+    <span className={className}>
+      {format.number(display, {
+        maximumFractionDigits: 0,
+        ...numberFormatOptions,
+      })}
+      {suffix}
+    </span>
+  );
 }

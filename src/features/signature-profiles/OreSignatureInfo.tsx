@@ -1,4 +1,5 @@
 import { useTranslations } from "next-intl";
+import { Panel } from "@/lib/components/ui/Panel";
 import type { SignatureProfile } from "./signature-profiles.schema";
 
 function formatSignature(profile: SignatureProfile): string {
@@ -29,7 +30,7 @@ export function OreSignatureInfo({
   const ground = profiles.filter((p) => p.method !== "ship");
 
   return (
-    <div className="flex flex-col gap-3 rounded-lg border border-bg-nebula-2 bg-bg-nebula p-4">
+    <Panel variant="glass" className="flex flex-col gap-3 p-4">
       <h2 className="text-lg font-medium">{t("signatures.oreInfoTitle")}</h2>
 
       {ship && (
@@ -78,6 +79,6 @@ export function OreSignatureInfo({
           </p>
         </div>
       )}
-    </div>
+    </Panel>
   );
 }
