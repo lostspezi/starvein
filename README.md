@@ -56,6 +56,11 @@ development — the reference data works without any credentials in `.env.local`
 | `pnpm seed`     | seed curated data into MongoDB                  |
 | `pnpm sync:uex` | pull prices/yields from the UEX API             |
 
+## Deployment
+
+Production is continuously deployed to a Docker VPS after every green CI run on
+`main` — see [docs/DEPLOY.md](docs/DEPLOY.md) for the architecture and runbook.
+
 ## Contributing
 
 Contributions are very welcome — bug reports, data corrections, translations and

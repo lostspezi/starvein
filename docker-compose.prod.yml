@@ -1,0 +1,65 @@
+# Produktions-Stack auf dem VPS (CLAUDE.md §13).
+# Erwartet eine .env-Datei im selben Verzeichnis (siehe docs/DEPLOY.md).
+services:
+  app:
+    image: ghcr.io/lostspezi/starvein:latest
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      MONGODB_URI: mongodb://mongo:27017/starvein
+      REDIS_URL: redis://redis:6379
+    depends_on:
+      - mongo
+      - redis
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "fetch('http://localhost:3000/api/health').then((r)=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))",
+        ]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+
+  # One-off-Jobs (Seed, UEX-Sync): docker compose run --rm jobs
+  jobs:
+    image: ghcr.io/lostspezi/starvein-jobs:latest
+    profiles: ["jobs"]
+    env_file: .env
+    environment:
+      MONGODB_URI: mongodb://mongo:27017/starvein
+      REDIS_URL: redis://redis:6379
+    depends_on:
+      - mongo
+      - redis
+
+  mongo:
+    image: mongo:7
+    restart: unless-stopped
+    volumes:
+      - mongo-data:/data/db
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    depends_on:
+      - app
+
+volumes:
+  mongo-data:
+  caddy-data:
+  caddy-config:

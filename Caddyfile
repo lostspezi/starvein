@@ -1,0 +1,10 @@
+# TLS besorgt Caddy automatisch per Let's Encrypt (HTTP-01),
+# sobald der DNS-A-Record von starvein.app auf den VPS zeigt.
+starvein.app {
+	reverse_proxy app:3000
+	encode gzip zstd
+}
+
+www.starvein.app {
+	redir https://starvein.app{uri} permanent
+}
