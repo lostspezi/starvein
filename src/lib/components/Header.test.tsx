@@ -26,7 +26,9 @@ describe("Header", () => {
       expect(screen.getByRole("link", { name })).toBeVisible();
     }
     expect(screen.getByRole("combobox", { name: "Search" })).toBeVisible();
-    expect(screen.getByRole("button", { name: "English" })).toBeVisible();
+    // Zwei Instanzen: Burger-Panel (mobil) + rechter Cluster (Desktop) —
+    // pro Breakpoint ist per CSS nur eine sichtbar.
+    expect(screen.getAllByRole("button", { name: "English" })).toHaveLength(2);
     expect(screen.getByTestId("user-menu")).toBeInTheDocument();
   });
 

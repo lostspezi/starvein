@@ -9,10 +9,11 @@ const ROUTES = [
   { href: "/locations", key: "locations" },
   { href: "/signatures", key: "signatures" },
   { href: "/compare", key: "compare" },
+  { href: "/loadouts", key: "loadouts" },
 ] as const;
 
 /** Primärnavigation mit Glow-Indikator auf der aktiven Route (HUD-Stil). */
-export function NavLinks() {
+export function NavLinks({ onNavigate }: { onNavigate?: () => void }) {
   const t = useTranslations("common");
   const pathname = usePathname();
 
@@ -25,6 +26,7 @@ export function NavLinks() {
             key={href}
             href={href}
             aria-current={isActive ? "page" : undefined}
+            onClick={onNavigate}
             className={cn(
               "relative py-0.5 transition-colors duration-150",
               "after:absolute after:inset-x-0 after:-bottom-0.5 after:h-px after:rounded-full after:transition-opacity after:duration-150",

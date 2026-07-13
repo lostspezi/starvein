@@ -1,8 +1,10 @@
 {
   "auth": {
     "signInDiscord": "Mit Discord anmelden",
+    "userMenu": "Benutzermenü von {name}",
     "signOut": "Abmelden",
     "myFavorites": "Meine Favoriten",
+    "myLoadouts": "Meine Loadouts",
     "adminLink": "Verwaltung"
   }
 }

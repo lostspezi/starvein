@@ -22,6 +22,10 @@ beforeEach(() => {
   signOutMock.mockClear();
 });
 
+function mockSession(user: Record<string, unknown>) {
+  useSessionMock.mockReturnValue({ data: { user }, isPending: false });
+}
+
 describe("UserMenu", () => {
   it("offers a Discord sign-in when logged out", async () => {
     useSessionMock.mockReturnValue({ data: null, isPending: false });
@@ -38,12 +42,65 @@ describe("UserMenu", () => {
     );
   });
 
-  it("shows the admin link only for admin sessions", () => {
-    useSessionMock.mockReturnValue({
-      data: { user: { id: "u1", name: "Admin Anna", role: "admin" } },
-      isPending: false,
+  it("renders an avatar trigger with the Discord image and a closed panel", () => {
+    mockSession({
+      id: "u1",
+      name: "MinerMarcell",
+      image: "https://cdn.discordapp.com/avatars/u1/abc.png",
     });
     renderWithIntl(<UserMenu />, { locale: "en" });
+
+    const trigger = screen.getByRole("button", {
+      name: "User menu for MinerMarcell",
+    });
+    expect(trigger).toHaveAttribute("aria-expanded", "false");
+    expect(trigger.querySelector("img")).toHaveAttribute(
+      "src",
+      "https://cdn.discordapp.com/avatars/u1/abc.png",
+    );
+    expect(screen.queryByRole("link")).not.toBeInTheDocument();
+  });
+
+  it("falls back to the name initial when no avatar image exists", () => {
+    mockSession({ id: "u1", name: "Miner Joe", image: null });
+    renderWithIntl(<UserMenu />, { locale: "en" });
+
+    const trigger = screen.getByRole("button", {
+      name: "User menu for Miner Joe",
+    });
+    expect(trigger.querySelector("img")).not.toBeInTheDocument();
+    expect(trigger).toHaveTextContent("M");
+  });
+
+  it("opens the panel with favorites and loadouts links on click", async () => {
+    mockSession({ id: "u1", name: "MinerMarcell", image: null });
+    const user = userEvent.setup();
+    renderWithIntl(<UserMenu />, { locale: "en" });
+
+    const trigger = screen.getByRole("button", {
+      name: "User menu for MinerMarcell",
+    });
+    await user.click(trigger);
+
+    expect(trigger).toHaveAttribute("aria-expanded", "true");
+    expect(screen.getByRole("link", { name: "My favorites" })).toHaveAttribute(
+      "href",
+      "/favorites",
+    );
+    expect(screen.getByRole("link", { name: "My loadouts" })).toHaveAttribute(
+      "href",
+      "/loadouts/mine",
+    );
+  });
+
+  it("shows the admin link only for admin sessions", async () => {
+    mockSession({ id: "u1", name: "Admin Anna", role: "admin", image: null });
+    const user = userEvent.setup();
+    renderWithIntl(<UserMenu />, { locale: "en" });
+
+    await user.click(
+      screen.getByRole("button", { name: "User menu for Admin Anna" }),
+    );
 
     expect(screen.getByRole("link", { name: "Admin" })).toHaveAttribute(
       "href",
@@ -51,33 +108,68 @@ describe("UserMenu", () => {
     );
   });
 
-  it("hides the admin link for regular users", () => {
-    useSessionMock.mockReturnValue({
-      data: { user: { id: "u1", name: "Miner Joe", role: "user" } },
-      isPending: false,
-    });
+  it("hides the admin link for regular users", async () => {
+    mockSession({ id: "u1", name: "Miner Joe", role: "user", image: null });
+    const user = userEvent.setup();
     renderWithIntl(<UserMenu />, { locale: "en" });
+
+    await user.click(
+      screen.getByRole("button", { name: "User menu for Miner Joe" }),
+    );
 
     expect(
       screen.queryByRole("link", { name: "Admin" }),
     ).not.toBeInTheDocument();
   });
 
-  it("shows name, favorites link and sign-out when logged in", async () => {
-    useSessionMock.mockReturnValue({
-      data: { user: { id: "u1", name: "MinerMarcell" } },
-      isPending: false,
-    });
+  it("signs out via the panel and closes it", async () => {
+    mockSession({ id: "u1", name: "MinerMarcell", image: null });
     const user = userEvent.setup();
     renderWithIntl(<UserMenu />, { locale: "en" });
 
-    expect(screen.getByText("MinerMarcell")).toBeVisible();
-    expect(screen.getByRole("link", { name: "My favorites" })).toHaveAttribute(
-      "href",
-      "/favorites",
+    const trigger = screen.getByRole("button", {
+      name: "User menu for MinerMarcell",
+    });
+    await user.click(trigger);
+    await user.click(screen.getByRole("button", { name: "Sign out" }));
+
+    expect(signOutMock).toHaveBeenCalled();
+    expect(screen.queryByRole("link")).not.toBeInTheDocument();
+  });
+
+  it("closes on Escape and restores focus to the trigger", async () => {
+    mockSession({ id: "u1", name: "MinerMarcell", image: null });
+    const user = userEvent.setup();
+    renderWithIntl(<UserMenu />, { locale: "en" });
+
+    const trigger = screen.getByRole("button", {
+      name: "User menu for MinerMarcell",
+    });
+    await user.click(trigger);
+    await user.keyboard("{Escape}");
+
+    expect(screen.queryByRole("link")).not.toBeInTheDocument();
+    expect(trigger).toHaveFocus();
+  });
+
+  it("closes when focus leaves the menu", async () => {
+    mockSession({ id: "u1", name: "MinerMarcell", image: null });
+    const user = userEvent.setup();
+    renderWithIntl(
+      <>
+        <UserMenu />
+        <button type="button">outside</button>
+      </>,
+      { locale: "en" },
     );
 
-    await user.click(screen.getByRole("button", { name: "Sign out" }));
-    expect(signOutMock).toHaveBeenCalled();
+    await user.click(
+      screen.getByRole("button", { name: "User menu for MinerMarcell" }),
+    );
+    expect(screen.getByRole("link", { name: "My favorites" })).toBeVisible();
+
+    await user.click(screen.getByRole("button", { name: "outside" }));
+
+    expect(screen.queryByRole("link")).not.toBeInTheDocument();
   });
 });
