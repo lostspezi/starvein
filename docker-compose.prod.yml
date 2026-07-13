@@ -1,9 +1,19 @@
 # Produktions-Stack auf dem VPS (CLAUDE.md §13).
 # Erwartet eine .env-Datei im selben Verzeichnis (siehe docs/DEPLOY.md).
+
+# Explizite Upstream-Resolver für Dockers eingebauten DNS: der Host nutzt
+# systemd-resolved (127.0.0.53), das aus Container-Sicht nicht erreichbar
+# ist — ohne dies scheitern Let's Encrypt (Caddy) und UEX-Sync (jobs).
+x-dns: &dns
+  dns:
+    - 1.1.1.1
+    - 8.8.8.8
+
 services:
   app:
     image: ghcr.io/lostspezi/starvein:latest
     restart: unless-stopped
+    <<: *dns
     env_file: .env
     environment:
       MONGODB_URI: mongodb://mongo:27017/starvein
@@ -28,6 +38,7 @@ services:
   jobs:
     image: ghcr.io/lostspezi/starvein-jobs:latest
     profiles: ["jobs"]
+    <<: *dns
     env_file: .env
     environment:
       MONGODB_URI: mongodb://mongo:27017/starvein
@@ -49,6 +60,7 @@ services:
   caddy:
     image: caddy:2-alpine
     restart: unless-stopped
+    <<: *dns
     ports:
       - "80:80"
       - "443:443"
