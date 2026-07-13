@@ -33,8 +33,10 @@ export function hasRepeatedRun(text: string): boolean {
   return REPEATED_RUN.test(text);
 }
 
-/** Normalform für die Duplikat-Erkennung: Groß-/Kleinschreibung,
- *  Interpunktion und Whitespace-Varianten zählen nicht als Unterschied. */
+/**
+ * Normalform für die Duplikat-Erkennung: Groß-/Kleinschreibung,
+ *  Interpunktion und Whitespace-Varianten zählen nicht als Unterschied.
+ */
 export function normalizeForDuplicate(text: string): string {
   return text.toLowerCase().replace(/\p{P}/gu, "").replace(/\s+/g, " ").trim();
 }

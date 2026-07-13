@@ -7,8 +7,10 @@ export const ROLES = ["user", "moderator", "admin"] as const;
 
 export type Role = (typeof ROLES)[number];
 
-/** Normalisiert einen unbekannten Wert (z. B. session.user.role) auf eine
- *  gültige Rolle — Fallback "user", auch für Accounts von vor dem Feld. */
+/**
+ * Normalisiert einen unbekannten Wert (z. B. session.user.role) auf eine
+ *  gültige Rolle — Fallback "user", auch für Accounts von vor dem Feld.
+ */
 export function toRole(value: unknown): Role {
   return ROLES.includes(value as Role) ? (value as Role) : "user";
 }

@@ -24,8 +24,10 @@ import {
   normalizeForDuplicate,
 } from "./spam-filter";
 
-/** Fachliche Ablehnung — der Code wird 1:1 als 422-Fehlercode ausgegeben
- *  und clientseitig auf einen i18n-Key gemappt. */
+/**
+ * Fachliche Ablehnung — der Code wird 1:1 als 422-Fehlercode ausgegeben
+ *  und clientseitig auf einen i18n-Key gemappt.
+ */
 export class ChatValidationError extends Error {
   constructor(public readonly code: ChatRejectionCode) {
     super(code);
