@@ -142,7 +142,7 @@ describe("chat repository", () => {
     expect(doc?.deletedAt).toBe("2020-01-01T00:00:00.000Z");
   });
 
-  it("lists deletions after the cursor ascending", async () => {
+  it("lists deletions from the cursor inclusively (at-least-once)", async () => {
     const first = buildMessage({ createdAt: "2026-07-10T10:00:00.000Z" });
     const second = buildMessage({ createdAt: "2026-07-10T10:01:00.000Z" });
     await insertChatMessage(db, first);
@@ -150,12 +150,22 @@ describe("chat repository", () => {
     await deleteChatMessage(db, first.id);
     await deleteChatMessage(db, second.id);
 
+    // Beide deleteChatMessage-Aufrufe können im selben Millisekunden-
+    // Zeitstempel landen; Reihenfolge und Cursor-Verhalten müssen dann
+    // trotzdem deterministisch sein → Mengen-Vergleich + $gte-Cursor.
     const all = await listDeletionsAfter(db, null);
-    expect(all.map((d) => d.id)).toEqual([first.id, second.id]);
+    expect(new Set(all.map((d) => d.id))).toEqual(
+      new Set([first.id, second.id]),
+    );
     expect(all.every((d) => typeof d.deletedAt === "string")).toBe(true);
 
-    const afterFirst = await listDeletionsAfter(db, all[0].deletedAt);
-    expect(afterFirst.map((d) => d.id)).toEqual([second.id]);
+    // At-least-once: die Löschung am Cursor wird erneut zugestellt,
+    // damit gleiche Timestamps keine Löschung verschlucken — der
+    // Client dedupliziert per id.
+    const fromFirst = await listDeletionsAfter(db, all[0].deletedAt);
+    expect(new Set(fromFirst.map((d) => d.id))).toEqual(
+      new Set([first.id, second.id]),
+    );
   });
 
   it("purges aged-out tombstones via capChatHistory", async () => {

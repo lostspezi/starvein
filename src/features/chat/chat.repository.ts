@@ -78,14 +78,20 @@ export async function deleteChatMessage(db: Db, id: string): Promise<void> {
     );
 }
 
-/** Löschungen nach dem deletedAt-Cursor, aufsteigend (null = alle). */
+/**
+ * Löschungen ab dem deletedAt-Cursor, aufsteigend (null = alle).
+ * $gte statt $gt (at-least-once): mehrere Löschungen können denselben
+ * Millisekunden-Zeitstempel tragen — ein strikter Cursor würde die
+ * späteren davon nie ausliefern. Die Löschung am Cursor kommt dadurch
+ * pro Poll erneut mit; der Client dedupliziert per id (no-op).
+ */
 export async function listDeletionsAfter(
   db: Db,
   deletedAfter: string | null,
   limit = 100,
 ): Promise<ChatDeletion[]> {
   const filter = deletedAfter
-    ? { deletedAt: { $gt: deletedAfter } }
+    ? { deletedAt: { $gte: deletedAfter } }
     : { deletedAt: { $exists: true } };
   const docs = await db
     .collection(COLLECTION)

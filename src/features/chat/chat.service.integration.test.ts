@@ -119,6 +119,9 @@ describe("chat service", () => {
       deletedAfter: all.deletions[0].deletedAt,
       limit: 50,
     });
-    expect(afterCursor.deletions).toEqual([]);
+    // At-least-once: die Löschung am Cursor kommt erneut mit (Client
+    // dedupliziert per id) — so gehen Löschungen im selben
+    // Millisekunden-Zeitstempel nicht verloren.
+    expect(afterCursor.deletions.map((d) => d.id)).toEqual([message.id]);
   });
 });
