@@ -89,8 +89,25 @@ PRs that violate these rules will not be merged, regardless of technical quality
 5. Open the PR against `main` and fill in the PR template. Screenshots are
    appreciated for UI changes.
 
-Husky + lint-staged will auto-format staged files on commit; CI-equivalent checks
-must pass before review.
+Husky + lint-staged will auto-format staged files on commit.
+
+### CI checks (required to merge)
+
+Every pull request runs through GitHub Actions; all checks must be green before
+a merge is possible:
+
+| Check               | Local equivalent    | What it verifies                                                |
+| ------------------- | ------------------- | --------------------------------------------------------------- |
+| `lint`              | `pnpm lint`         | ESLint (Next.js core-web-vitals + TypeScript rules)             |
+| `format`            | `pnpm format:check` | Prettier formatting                                             |
+| `typecheck`         | `pnpm typecheck`    | TypeScript compiles without errors                              |
+| `jsdoc`             | `pnpm lint:jsdoc`   | existing JSDoc comments are valid and match signatures          |
+| `test`              | `pnpm test`         | Vitest unit + integration suite                                 |
+| `e2e`               | `pnpm test:e2e`     | production build + Playwright suite (incl. branding compliance) |
+| `dependency-review` | —                   | no known-vulnerable or license-incompatible dependencies        |
+
+CodeQL security scanning runs alongside these and reports findings under the
+repository's Security tab.
 
 ## Code of conduct
 

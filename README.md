@@ -1,5 +1,7 @@
 # STARVEIN
 
+[![CI](https://github.com/lostspezi/starvein/actions/workflows/ci.yml/badge.svg)](https://github.com/lostspezi/starvein/actions/workflows/ci.yml)
+
 **Community mining reference for Star Citizen** — where each ore spawns, with what
 probability, and what scan signature to look for. Covers ship mining (Prospector/MOLE),
 ROC and FPS hand mining, plus refinery yields, sell prices and community-built
