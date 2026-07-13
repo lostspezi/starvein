@@ -1,36 +1,76 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# STARVEIN
 
-## Getting Started
+**Community mining reference for Star Citizen** — where each ore spawns, with what
+probability, and what scan signature to look for. Covers ship mining (Prospector/MOLE),
+ROC and FPS hand mining, plus refinery yields, sell prices and community-built
+mining loadouts.
 
-First, run the development server:
+**Live app: [starvein.app](https://starvein.app)**
+
+STARVEIN fills the gap left by [regolith.rocks](https://regolith.rocks/) (shut down
+June 2026) as an open-source project the community keeps up to date itself.
+
+## Features
+
+- **Ore reference** — all mineable ores with rarity, category and base values
+- **Location browser** — star systems → celestial bodies → mining locations
+- **Occurrences & probability** — per ore and mining method (ship / ROC / FPS)
+- **Scan signature reference** — method-aware: ship signatures identify the mineral,
+  ROC/FPS signatures only indicate deposit size
+- **Refinery yields & prices** — synced from the [UEX Corp API](https://uexcorp.space/)
+- **Community corrections** — wiki-style submissions with Wilson-score voting
+- **Mining loadouts** — build, share and vote on ship/vehicle loadouts with live
+  equipment prices
+- **Bilingual** — English and German, no account required for browsing
+
+## Tech stack
+
+Next.js 16 (App Router) · TypeScript · MongoDB · Redis · Tailwind CSS v4 ·
+next-intl · Better Auth · Vitest + Playwright · pnpm
+
+## Getting started
+
+Prerequisites: Node.js 24 LTS, pnpm 11, Docker (for MongoDB + Redis).
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+pnpm install
+docker compose up -d        # MongoDB + Redis
+cp .env.example .env.local  # fill in what you need (see below)
+pnpm seed                   # load curated reference data
+pnpm dev                    # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Sign-in (Discord/Twitch/Google OAuth) and UEX price sync are optional for local
+development — the reference data works without any credentials in `.env.local`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Command         | What it does                                    |
+| --------------- | ----------------------------------------------- |
+| `pnpm dev`      | dev server on :3000                             |
+| `pnpm test`     | unit + integration tests (Vitest)               |
+| `pnpm test:e2e` | Playwright e2e suite (builds + serves on :3100) |
+| `pnpm lint`     | ESLint                                          |
+| `pnpm seed`     | seed curated data into MongoDB                  |
+| `pnpm sync:uex` | pull prices/yields from the UEX API             |
 
-## Learn More
+## Contributing
 
-To learn more about Next.js, take a look at the following resources:
+Contributions are very welcome — bug reports, data corrections, translations and
+code. Please read [CONTRIBUTING.md](CONTRIBUTING.md) for the workflow (TDD,
+vertical slices, conventional commits) and the non-negotiable fansite-policy
+rules. Found a bug or have an idea? [Open an issue](https://github.com/lostspezi/starvein/issues/new/choose).
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Data sources and attributions are listed in [CREDITS.md](CREDITS.md).
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## License
 
-## Deploy on Vercel
+[MIT](LICENSE) © lostspezi — crafted with ♥ live on [twitch.tv/lostspezi](https://www.twitch.tv/lostspezi).
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+> This is an unofficial Star Citizen fansite, not affiliated with the Cloud Imperium
+> group of companies. All content on this site not authored by its host or users are
+> property of their respective owners.
+
+Official Star Citizen website: [robertsspaceindustries.com](https://robertsspaceindustries.com)
