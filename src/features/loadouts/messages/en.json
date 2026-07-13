@@ -1,0 +1,118 @@
+{
+  "loadouts": {
+    "title": "Mining Loadouts",
+    "subtitle": "Community loadouts for ship and ROC mining — build your own and share it.",
+    "browse": {
+      "searchLabel": "Find loadouts",
+      "searchPlaceholder": "Loadout name…",
+      "createCta": "Create loadout",
+      "empty": "No public loadouts yet. Be the first to share one!",
+      "noResults": "No loadouts match your filters."
+    },
+    "filter": {
+      "methodLabel": "Filter by mining method",
+      "vehicleLabel": "Filter by vehicle",
+      "vehicleAll": "All vehicles",
+      "sortLabel": "Sort loadouts"
+    },
+    "sort": {
+      "top": "Top voted",
+      "new": "Newest"
+    },
+    "method": {
+      "all": "All",
+      "ship": "Ship",
+      "roc": "ROC"
+    },
+    "card": {
+      "votes": "{count} votes",
+      "outdated": "Patch {patchVersion}",
+      "private": "Private",
+      "public": "Public"
+    },
+    "vote": {
+      "upvote": "Upvote loadout",
+      "removeVote": "Remove your vote",
+      "signInToVote": "Sign in to vote"
+    },
+    "builder": {
+      "createTitle": "Create loadout",
+      "editTitle": "Edit loadout",
+      "methodLabel": "Mining method",
+      "vehicleLabel": "Vehicle",
+      "hardpointHeading": "Hardpoint {index} (S{size})",
+      "laserLabel": "Laser for hardpoint {index}",
+      "laserNone": "— no laser —",
+      "moduleLabel": "Module slot {slot} on hardpoint {index}",
+      "moduleNone": "— empty slot —",
+      "gadgetsLegend": "Gadgets (placed on the rock)",
+      "nameLabel": "Loadout name",
+      "descriptionLabel": "Description (optional)",
+      "isPublicLabel": "Make this loadout public",
+      "submitCreate": "Save loadout",
+      "submitSave": "Save changes",
+      "statsHeading": "Combined stats",
+      "voteResetWarning": "Changing vehicle, lasers, modules or gadgets resets all votes.",
+      "loginRequired": "Sign in with Discord to build and save loadouts. Browsing stays free.",
+      "error": "The loadout could not be saved. Check your selection and try again."
+    },
+    "detail": {
+      "hardpointHeading": "Hardpoint {index}",
+      "modulesHeading": "Modules",
+      "noModules": "No modules fitted",
+      "gadgetsHeading": "Gadgets",
+      "totalsHeading": "Ship totals",
+      "statHeader": "Stat",
+      "valueHeader": "Value",
+      "charges": "{count} charges",
+      "moduleActive": "active",
+      "modulePassive": "passive",
+      "normalizedPower": "Vehicle-class laser — power values are not comparable to ship lasers.",
+      "byOwner": "Shared loadout",
+      "notFound": "Loadout not found"
+    },
+    "stats": {
+      "laserPower": "Laser power",
+      "extractionLaserPower": "Extraction power",
+      "optimalRange": "Optimal range",
+      "maxRange": "Max range",
+      "resistance": "Resistance",
+      "instability": "Instability",
+      "optimalChargeRate": "Optimal charge rate",
+      "optimalChargeWindow": "Optimal charge window",
+      "shatterDamage": "Shatter damage",
+      "inertMaterials": "Inert materials",
+      "overchargeRate": "Overcharge rate",
+      "clusterModifier": "Cluster size"
+    },
+    "purchase": {
+      "heading": "Where to buy",
+      "kind": {
+        "laser": "Laser",
+        "module": "Module",
+        "gadget": "Gadget"
+      },
+      "locationHeader": "Location",
+      "terminalHeader": "Terminal",
+      "priceHeader": "Buy price",
+      "cheapest": "Cheapest",
+      "aUEC": "aUEC",
+      "noData": "No purchase data for this item yet.",
+      "neverSynced": "Purchase prices have not been synced from UEX yet.",
+      "cheapestTotal": "Cheapest total",
+      "lastSynced": "Last synced {date}",
+      "source": "Data: UEX Corp"
+    },
+    "mine": {
+      "title": "My loadouts",
+      "subtitle": "Your private and published mining loadouts.",
+      "empty": "You have no loadouts yet.",
+      "loginRequired": "Sign in with Discord to see your loadouts.",
+      "edit": "Edit",
+      "delete": "Delete",
+      "confirmDelete": "Delete this loadout permanently?",
+      "publish": "Publish",
+      "unpublish": "Make private"
+    }
+  }
+}

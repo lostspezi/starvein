@@ -1,0 +1,76 @@
+{
+  "_meta": {
+    "patchVersion": "4.7",
+    "generatedAt": "2026-07-13",
+    "sources": [
+      "https://github.com/RegolithCo/RegolithCo-Common (MIT)",
+      "https://uexcorp.space/mining/components",
+      "https://starcitizen.tools"
+    ],
+    "notes": "Gadgets werden am Gestein platziert, nicht am Fahrzeug — keine Kompatibilitätsbeschränkung. Modifikatoren sind multiplikative Faktoren (1.0 = neutral).",
+    "defaults": { "patchVersion": "4.7" }
+  },
+  "gadgets": [
+    {
+      "code": "boremax",
+      "name": "BoreMax",
+      "manufacturer": "Thermyte Concern",
+      "modifiers": {
+        "instability": 0.3,
+        "resistance": 1.1,
+        "clusterModifier": 1.3
+      }
+    },
+    {
+      "code": "okunis",
+      "name": "Okunis",
+      "manufacturer": "Shubin Interstellar",
+      "modifiers": {
+        "optimalChargeWindow": 1.5,
+        "optimalChargeRate": 2.0,
+        "clusterModifier": 0.8
+      }
+    },
+    {
+      "code": "optimax",
+      "name": "OptiMax",
+      "manufacturer": "Greycat Industrial",
+      "modifiers": {
+        "optimalChargeWindow": 0.7,
+        "resistance": 0.7,
+        "clusterModifier": 1.6
+      }
+    },
+    {
+      "code": "sabir",
+      "name": "Sabir",
+      "manufacturer": "Shubin Interstellar",
+      "modifiers": {
+        "instability": 1.15,
+        "resistance": 0.5,
+        "optimalChargeWindow": 1.5
+      }
+    },
+    {
+      "code": "stalwart",
+      "name": "Stalwart",
+      "manufacturer": "Thermyte Concern",
+      "modifiers": {
+        "instability": 0.65,
+        "optimalChargeWindow": 0.7,
+        "optimalChargeRate": 1.5,
+        "clusterModifier": 1.3
+      }
+    },
+    {
+      "code": "waveshift",
+      "name": "WaveShift",
+      "manufacturer": "Greycat Industrial",
+      "modifiers": {
+        "instability": 0.65,
+        "optimalChargeWindow": 2.0,
+        "optimalChargeRate": 0.7
+      }
+    }
+  ]
+}

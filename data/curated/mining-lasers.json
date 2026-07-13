@@ -1,0 +1,331 @@
+{
+  "_meta": {
+    "patchVersion": "4.7",
+    "generatedAt": "2026-07-13",
+    "sources": [
+      "https://github.com/RegolithCo/RegolithCo-Common (MIT)",
+      "https://uexcorp.space/mining/components",
+      "https://starcitizen.tools",
+      "https://finder.cstone.space"
+    ],
+    "notes": "Modifikatoren sind multiplikative Faktoren (1.0 = neutral). Size-0-Laser (Fahrzeug-Laser) haben laserPower/extractionLaserPower null: in-game normalisiert (0-1), nicht mit Schiffs-Lasern vergleichbar; Ranges aus cstone-Live-Daten. Helix II inertMaterials 0.60 nach UEX (Regolith: 0.70).",
+    "defaults": { "patchVersion": "4.7" }
+  },
+  "lasers": [
+    {
+      "code": "arbor-mh1",
+      "name": "Arbor MH1",
+      "manufacturer": "Greycat Industrial",
+      "size": 1,
+      "moduleSlots": 1,
+      "stats": {
+        "laserPower": 1890,
+        "extractionLaserPower": 1850,
+        "optimalRange": 60,
+        "maxRange": 180
+      },
+      "modifiers": {
+        "resistance": 1.25,
+        "instability": 0.65,
+        "optimalChargeWindow": 1.4,
+        "inertMaterials": 0.7
+      }
+    },
+    {
+      "code": "arbor-mh2",
+      "name": "Arbor MH2",
+      "manufacturer": "Greycat Industrial",
+      "size": 2,
+      "moduleSlots": 2,
+      "stats": {
+        "laserPower": 2400,
+        "extractionLaserPower": 2590,
+        "optimalRange": 90,
+        "maxRange": 270
+      },
+      "modifiers": {
+        "resistance": 1.25,
+        "instability": 0.65,
+        "optimalChargeWindow": 1.4,
+        "inertMaterials": 0.6
+      }
+    },
+    {
+      "code": "hofstede-s1",
+      "name": "Hofstede-S1",
+      "manufacturer": "Shubin Interstellar",
+      "size": 1,
+      "moduleSlots": 1,
+      "stats": {
+        "laserPower": 2100,
+        "extractionLaserPower": 1295,
+        "optimalRange": 45,
+        "maxRange": 135
+      },
+      "modifiers": {
+        "resistance": 0.7,
+        "instability": 1.1,
+        "optimalChargeRate": 1.2,
+        "optimalChargeWindow": 1.6,
+        "inertMaterials": 0.7
+      }
+    },
+    {
+      "code": "hofstede-s2",
+      "name": "Hofstede-S2",
+      "manufacturer": "Shubin Interstellar",
+      "size": 2,
+      "moduleSlots": 2,
+      "stats": {
+        "laserPower": 3360,
+        "extractionLaserPower": 1295,
+        "optimalRange": 60,
+        "maxRange": 180
+      },
+      "modifiers": {
+        "resistance": 0.7,
+        "instability": 1.1,
+        "optimalChargeRate": 1.2,
+        "optimalChargeWindow": 1.6,
+        "inertMaterials": 0.6
+      }
+    },
+    {
+      "code": "helix-i",
+      "name": "Helix I",
+      "manufacturer": "Thermyte Concern",
+      "size": 1,
+      "moduleSlots": 2,
+      "stats": {
+        "laserPower": 3150,
+        "extractionLaserPower": 1850,
+        "optimalRange": 15,
+        "maxRange": 45
+      },
+      "modifiers": {
+        "resistance": 0.7,
+        "optimalChargeWindow": 0.6,
+        "inertMaterials": 0.7
+      }
+    },
+    {
+      "code": "helix-ii",
+      "name": "Helix II",
+      "manufacturer": "Thermyte Concern",
+      "size": 2,
+      "moduleSlots": 3,
+      "stats": {
+        "laserPower": 4080,
+        "extractionLaserPower": 2590,
+        "optimalRange": 30,
+        "maxRange": 90
+      },
+      "modifiers": {
+        "resistance": 0.7,
+        "optimalChargeWindow": 0.6,
+        "inertMaterials": 0.6
+      }
+    },
+    {
+      "code": "klein-s1",
+      "name": "Klein-S1",
+      "manufacturer": "Shubin Interstellar",
+      "size": 1,
+      "moduleSlots": 0,
+      "stats": {
+        "laserPower": 2220,
+        "extractionLaserPower": 2220,
+        "optimalRange": 45,
+        "maxRange": 135
+      },
+      "modifiers": {
+        "resistance": 0.55,
+        "instability": 1.35,
+        "optimalChargeWindow": 1.2,
+        "inertMaterials": 0.7
+      }
+    },
+    {
+      "code": "klein-s2",
+      "name": "Klein-S2",
+      "manufacturer": "Shubin Interstellar",
+      "size": 2,
+      "moduleSlots": 1,
+      "stats": {
+        "laserPower": 3600,
+        "extractionLaserPower": 2775,
+        "optimalRange": 60,
+        "maxRange": 180
+      },
+      "modifiers": {
+        "resistance": 0.55,
+        "instability": 1.35,
+        "optimalChargeWindow": 1.2,
+        "inertMaterials": 0.6
+      }
+    },
+    {
+      "code": "lancet-mh1",
+      "name": "Lancet MH1",
+      "manufacturer": "Greycat Industrial",
+      "size": 1,
+      "moduleSlots": 1,
+      "stats": {
+        "laserPower": 2520,
+        "extractionLaserPower": 1850,
+        "optimalRange": 30,
+        "maxRange": 90
+      },
+      "modifiers": {
+        "instability": 0.9,
+        "optimalChargeRate": 1.4,
+        "optimalChargeWindow": 0.4,
+        "inertMaterials": 0.7
+      }
+    },
+    {
+      "code": "lancet-mh2",
+      "name": "Lancet MH2",
+      "manufacturer": "Greycat Industrial",
+      "size": 2,
+      "moduleSlots": 2,
+      "stats": {
+        "laserPower": 3600,
+        "extractionLaserPower": 2590,
+        "optimalRange": 45,
+        "maxRange": 135
+      },
+      "modifiers": {
+        "instability": 0.9,
+        "optimalChargeRate": 1.4,
+        "optimalChargeWindow": 0.4,
+        "inertMaterials": 0.6
+      }
+    },
+    {
+      "code": "impact-i",
+      "name": "Impact I",
+      "manufacturer": "Thermyte Concern",
+      "size": 1,
+      "moduleSlots": 2,
+      "stats": {
+        "laserPower": 2100,
+        "extractionLaserPower": 2775,
+        "optimalRange": 45,
+        "maxRange": 135
+      },
+      "modifiers": {
+        "resistance": 1.1,
+        "instability": 0.9,
+        "optimalChargeRate": 0.6,
+        "optimalChargeWindow": 1.2,
+        "inertMaterials": 0.7
+      }
+    },
+    {
+      "code": "impact-ii",
+      "name": "Impact II",
+      "manufacturer": "Thermyte Concern",
+      "size": 2,
+      "moduleSlots": 3,
+      "stats": {
+        "laserPower": 3360,
+        "extractionLaserPower": 3145,
+        "optimalRange": 60,
+        "maxRange": 180
+      },
+      "modifiers": {
+        "resistance": 1.1,
+        "instability": 0.9,
+        "optimalChargeRate": 0.6,
+        "optimalChargeWindow": 1.2,
+        "inertMaterials": 0.6
+      }
+    },
+    {
+      "code": "pitman",
+      "name": "Pitman",
+      "manufacturer": "Drake Interplanetary",
+      "size": 1,
+      "moduleSlots": 2,
+      "stats": {
+        "laserPower": 3150,
+        "extractionLaserPower": 1295,
+        "optimalRange": 40,
+        "maxRange": 45
+      },
+      "modifiers": {
+        "resistance": 1.25,
+        "instability": 1.35,
+        "optimalChargeRate": 0.6,
+        "optimalChargeWindow": 1.4,
+        "inertMaterials": 0.6
+      }
+    },
+    {
+      "code": "arbor-mhv",
+      "name": "Arbor MHV",
+      "manufacturer": "Greycat Industrial",
+      "size": 0,
+      "moduleSlots": 2,
+      "stats": {
+        "laserPower": null,
+        "extractionLaserPower": null,
+        "optimalRange": 5,
+        "maxRange": 15
+      },
+      "modifiers": { "instability": 0.6 }
+    },
+    {
+      "code": "s0-helix",
+      "name": "S0 Helix",
+      "manufacturer": "Thermyte Concern",
+      "size": 0,
+      "moduleSlots": 2,
+      "stats": {
+        "laserPower": null,
+        "extractionLaserPower": null,
+        "optimalRange": 8,
+        "maxRange": 18
+      },
+      "modifiers": { "optimalChargeRate": 1.2, "optimalChargeWindow": 0.6 }
+    },
+    {
+      "code": "s00-hofstede",
+      "name": "S00 Hofstede",
+      "manufacturer": "Shubin Interstellar",
+      "size": 0,
+      "moduleSlots": 2,
+      "stats": {
+        "laserPower": null,
+        "extractionLaserPower": null,
+        "optimalRange": 8,
+        "maxRange": 18
+      },
+      "modifiers": {
+        "resistance": 0.6,
+        "instability": 1.3,
+        "optimalChargeRate": 1.2,
+        "optimalChargeWindow": 1.4
+      }
+    },
+    {
+      "code": "lawson",
+      "name": "Lawson",
+      "manufacturer": "Shubin Interstellar",
+      "size": 0,
+      "moduleSlots": 2,
+      "stats": {
+        "laserPower": null,
+        "extractionLaserPower": null,
+        "optimalRange": 5,
+        "maxRange": 15
+      },
+      "modifiers": {
+        "resistance": 0.6,
+        "instability": 1.3,
+        "optimalChargeWindow": 1.4
+      }
+    }
+  ]
+}

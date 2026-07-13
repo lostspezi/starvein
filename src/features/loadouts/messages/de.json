@@ -1,0 +1,118 @@
+{
+  "loadouts": {
+    "title": "Mining-Loadouts",
+    "subtitle": "Community-Loadouts für Ship- und ROC-Mining — bau dein eigenes und teile es.",
+    "browse": {
+      "searchLabel": "Loadouts finden",
+      "searchPlaceholder": "Loadout-Name…",
+      "createCta": "Loadout erstellen",
+      "empty": "Noch keine öffentlichen Loadouts. Teile das erste!",
+      "noResults": "Keine Loadouts passen zu deinen Filtern."
+    },
+    "filter": {
+      "methodLabel": "Nach Mining-Methode filtern",
+      "vehicleLabel": "Nach Fahrzeug filtern",
+      "vehicleAll": "Alle Fahrzeuge",
+      "sortLabel": "Loadouts sortieren"
+    },
+    "sort": {
+      "top": "Top bewertet",
+      "new": "Neueste"
+    },
+    "method": {
+      "all": "Alle",
+      "ship": "Schiff",
+      "roc": "ROC"
+    },
+    "card": {
+      "votes": "{count} Stimmen",
+      "outdated": "Patch {patchVersion}",
+      "private": "Privat",
+      "public": "Öffentlich"
+    },
+    "vote": {
+      "upvote": "Loadout upvoten",
+      "removeVote": "Stimme zurücknehmen",
+      "signInToVote": "Zum Abstimmen anmelden"
+    },
+    "builder": {
+      "createTitle": "Loadout erstellen",
+      "editTitle": "Loadout bearbeiten",
+      "methodLabel": "Mining-Methode",
+      "vehicleLabel": "Fahrzeug",
+      "hardpointHeading": "Hardpoint {index} (S{size})",
+      "laserLabel": "Laser für Hardpoint {index}",
+      "laserNone": "— kein Laser —",
+      "moduleLabel": "Modul-Slot {slot} an Hardpoint {index}",
+      "moduleNone": "— leerer Slot —",
+      "gadgetsLegend": "Gadgets (werden am Gestein platziert)",
+      "nameLabel": "Loadout-Name",
+      "descriptionLabel": "Beschreibung (optional)",
+      "isPublicLabel": "Loadout öffentlich machen",
+      "submitCreate": "Loadout speichern",
+      "submitSave": "Änderungen speichern",
+      "statsHeading": "Kombinierte Werte",
+      "voteResetWarning": "Änderungen an Fahrzeug, Lasern, Modulen oder Gadgets setzen alle Stimmen zurück.",
+      "loginRequired": "Melde dich mit Discord an, um Loadouts zu bauen und zu speichern. Stöbern bleibt frei.",
+      "error": "Das Loadout konnte nicht gespeichert werden. Prüfe deine Auswahl und versuch es erneut."
+    },
+    "detail": {
+      "hardpointHeading": "Hardpoint {index}",
+      "modulesHeading": "Module",
+      "noModules": "Keine Module verbaut",
+      "gadgetsHeading": "Gadgets",
+      "totalsHeading": "Schiffs-Gesamtwerte",
+      "statHeader": "Wert",
+      "valueHeader": "Ausprägung",
+      "charges": "{count} Ladungen",
+      "moduleActive": "aktiv",
+      "modulePassive": "passiv",
+      "normalizedPower": "Fahrzeug-Laser — Power-Werte sind nicht mit Schiffs-Lasern vergleichbar.",
+      "byOwner": "Geteiltes Loadout",
+      "notFound": "Loadout nicht gefunden"
+    },
+    "stats": {
+      "laserPower": "Laserleistung",
+      "extractionLaserPower": "Extraktionsleistung",
+      "optimalRange": "Optimale Reichweite",
+      "maxRange": "Max. Reichweite",
+      "resistance": "Widerstand",
+      "instability": "Instabilität",
+      "optimalChargeRate": "Optimale Ladungsrate",
+      "optimalChargeWindow": "Optimales Ladefenster",
+      "shatterDamage": "Bruchschaden",
+      "inertMaterials": "Inertmaterial",
+      "overchargeRate": "Überladungsrate",
+      "clusterModifier": "Cluster-Größe"
+    },
+    "purchase": {
+      "heading": "Wo kaufen",
+      "kind": {
+        "laser": "Laser",
+        "module": "Modul",
+        "gadget": "Gadget"
+      },
+      "locationHeader": "Ort",
+      "terminalHeader": "Terminal",
+      "priceHeader": "Kaufpreis",
+      "cheapest": "Günstigster",
+      "aUEC": "aUEC",
+      "noData": "Für dieses Item liegen noch keine Kaufdaten vor.",
+      "neverSynced": "Kaufpreise wurden noch nicht von UEX synchronisiert.",
+      "cheapestTotal": "Günstigste Summe",
+      "lastSynced": "Zuletzt synchronisiert {date}",
+      "source": "Daten: UEX Corp"
+    },
+    "mine": {
+      "title": "Meine Loadouts",
+      "subtitle": "Deine privaten und veröffentlichten Mining-Loadouts.",
+      "empty": "Du hast noch keine Loadouts.",
+      "loginRequired": "Melde dich mit Discord an, um deine Loadouts zu sehen.",
+      "edit": "Bearbeiten",
+      "delete": "Löschen",
+      "confirmDelete": "Dieses Loadout endgültig löschen?",
+      "publish": "Veröffentlichen",
+      "unpublish": "Privat schalten"
+    }
+  }
+}

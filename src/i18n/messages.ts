@@ -17,6 +17,8 @@ import deHome from "@/features/home/messages/de.json";
 import enHome from "@/features/home/messages/en.json";
 import deSwitcher from "@/features/i18n-switcher/messages/de.json";
 import enSwitcher from "@/features/i18n-switcher/messages/en.json";
+import deLoadouts from "@/features/loadouts/messages/de.json";
+import enLoadouts from "@/features/loadouts/messages/en.json";
 import deLocations from "@/features/locations/messages/de.json";
 import enLocations from "@/features/locations/messages/en.json";
 import deOccurrences from "@/features/ore-occurrences/messages/de.json";
@@ -51,6 +53,7 @@ const messages = {
     ...deCompare,
     ...deChat,
     ...deModeration,
+    ...deLoadouts,
   },
   en: {
     ...enCommon,
@@ -68,6 +71,7 @@ const messages = {
     ...enCompare,
     ...enChat,
     ...enModeration,
+    ...enLoadouts,
   },
 };
 

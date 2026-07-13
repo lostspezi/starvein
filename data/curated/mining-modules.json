@@ -1,0 +1,299 @@
+{
+  "_meta": {
+    "patchVersion": "4.7",
+    "generatedAt": "2026-07-13",
+    "sources": [
+      "https://github.com/RegolithCo/RegolithCo-Common (MIT)",
+      "https://uexcorp.space/mining/components",
+      "https://starcitizen.tools"
+    ],
+    "notes": "Modifikatoren sind multiplikative Faktoren (1.0 = neutral). Brandt: shatterDamage 0.70 nach UEX/Wiki (Regolith: overchargeRate). roc-module (Alpha 4.8) hat noch keine publizierten Werte.",
+    "defaults": { "patchVersion": "4.7" }
+  },
+  "modules": [
+    {
+      "code": "brandt",
+      "name": "Brandt",
+      "manufacturer": "MISC",
+      "type": "active",
+      "charges": 5,
+      "durationSeconds": 60,
+      "modifiers": {
+        "laserPower": 1.35,
+        "resistance": 1.15,
+        "shatterDamage": 0.7
+      }
+    },
+    {
+      "code": "forel",
+      "name": "Forel",
+      "manufacturer": "Shubin Interstellar",
+      "type": "active",
+      "charges": 6,
+      "durationSeconds": 60,
+      "modifiers": {
+        "extractionLaserPower": 1.5,
+        "resistance": 1.15,
+        "overchargeRate": 0.4
+      }
+    },
+    {
+      "code": "lifeline",
+      "name": "Lifeline",
+      "manufacturer": "Greycat Industrial",
+      "type": "active",
+      "charges": 3,
+      "durationSeconds": 15,
+      "modifiers": {
+        "instability": 0.8,
+        "resistance": 0.85,
+        "overchargeRate": 1.6
+      }
+    },
+    {
+      "code": "optimum",
+      "name": "Optimum",
+      "manufacturer": "Greycat Industrial",
+      "type": "active",
+      "charges": 5,
+      "durationSeconds": 60,
+      "modifiers": {
+        "laserPower": 0.85,
+        "instability": 0.9,
+        "overchargeRate": 0.2
+      }
+    },
+    {
+      "code": "rime",
+      "name": "Rime",
+      "manufacturer": "Greycat Industrial",
+      "type": "active",
+      "charges": 10,
+      "durationSeconds": 20,
+      "modifiers": {
+        "laserPower": 0.85,
+        "resistance": 0.75,
+        "shatterDamage": 0.9
+      }
+    },
+    {
+      "code": "stampede",
+      "name": "Stampede",
+      "manufacturer": "Thermyte Concern",
+      "type": "active",
+      "charges": 6,
+      "durationSeconds": 30,
+      "modifiers": {
+        "laserPower": 1.35,
+        "instability": 0.9,
+        "shatterDamage": 0.9,
+        "extractionLaserPower": 0.85
+      }
+    },
+    {
+      "code": "surge",
+      "name": "Surge",
+      "manufacturer": "Thermyte Concern",
+      "type": "active",
+      "charges": 7,
+      "durationSeconds": 15,
+      "modifiers": { "laserPower": 1.5, "instability": 1.1, "resistance": 0.85 }
+    },
+    {
+      "code": "torpid",
+      "name": "Torpid",
+      "manufacturer": "Greycat Industrial",
+      "type": "active",
+      "charges": 5,
+      "durationSeconds": 60,
+      "modifiers": {
+        "optimalChargeRate": 1.6,
+        "overchargeRate": 0.4,
+        "shatterDamage": 1.4
+      }
+    },
+    {
+      "code": "fltr",
+      "name": "FLTR",
+      "manufacturer": "Greycat Industrial",
+      "type": "passive",
+      "charges": null,
+      "durationSeconds": null,
+      "modifiers": { "extractionLaserPower": 0.85, "inertMaterials": 0.8 }
+    },
+    {
+      "code": "fltr-l",
+      "name": "FLTR-L",
+      "manufacturer": "Greycat Industrial",
+      "type": "passive",
+      "charges": null,
+      "durationSeconds": null,
+      "modifiers": { "extractionLaserPower": 0.9, "inertMaterials": 0.77 }
+    },
+    {
+      "code": "fltr-xl",
+      "name": "FLTR-XL",
+      "manufacturer": "Greycat Industrial",
+      "type": "passive",
+      "charges": null,
+      "durationSeconds": null,
+      "modifiers": { "extractionLaserPower": 0.95, "inertMaterials": 0.76 }
+    },
+    {
+      "code": "focus",
+      "name": "Focus",
+      "manufacturer": "Thermyte Concern",
+      "type": "passive",
+      "charges": null,
+      "durationSeconds": null,
+      "modifiers": { "laserPower": 0.85, "optimalChargeWindow": 1.3 }
+    },
+    {
+      "code": "focus-ii",
+      "name": "Focus II",
+      "manufacturer": "Thermyte Concern",
+      "type": "passive",
+      "charges": null,
+      "durationSeconds": null,
+      "modifiers": { "laserPower": 0.9, "optimalChargeWindow": 1.37 }
+    },
+    {
+      "code": "focus-iii",
+      "name": "Focus III",
+      "manufacturer": "Thermyte Concern",
+      "type": "passive",
+      "charges": null,
+      "durationSeconds": null,
+      "modifiers": { "laserPower": 0.95, "optimalChargeWindow": 1.4 }
+    },
+    {
+      "code": "rieger",
+      "name": "Rieger",
+      "manufacturer": "Shubin Interstellar",
+      "type": "passive",
+      "charges": null,
+      "durationSeconds": null,
+      "modifiers": { "laserPower": 1.15, "optimalChargeWindow": 0.9 }
+    },
+    {
+      "code": "rieger-c2",
+      "name": "Rieger-C2",
+      "manufacturer": "Shubin Interstellar",
+      "type": "passive",
+      "charges": null,
+      "durationSeconds": null,
+      "modifiers": { "laserPower": 1.2, "optimalChargeWindow": 0.97 }
+    },
+    {
+      "code": "rieger-c3",
+      "name": "Rieger-C3",
+      "manufacturer": "Shubin Interstellar",
+      "type": "passive",
+      "charges": null,
+      "durationSeconds": null,
+      "modifiers": { "laserPower": 1.25, "optimalChargeWindow": 0.99 }
+    },
+    {
+      "code": "torrent",
+      "name": "Torrent",
+      "manufacturer": "Thermyte Concern",
+      "type": "passive",
+      "charges": null,
+      "durationSeconds": null,
+      "modifiers": { "optimalChargeWindow": 0.9, "optimalChargeRate": 1.3 }
+    },
+    {
+      "code": "torrent-ii",
+      "name": "Torrent II",
+      "manufacturer": "Thermyte Concern",
+      "type": "passive",
+      "charges": null,
+      "durationSeconds": null,
+      "modifiers": { "optimalChargeWindow": 0.97, "optimalChargeRate": 1.35 }
+    },
+    {
+      "code": "torrent-iii",
+      "name": "Torrent III",
+      "manufacturer": "Thermyte Concern",
+      "type": "passive",
+      "charges": null,
+      "durationSeconds": null,
+      "modifiers": { "optimalChargeWindow": 0.99, "optimalChargeRate": 1.4 }
+    },
+    {
+      "code": "vaux",
+      "name": "Vaux",
+      "manufacturer": "Shubin Interstellar",
+      "type": "passive",
+      "charges": null,
+      "durationSeconds": null,
+      "modifiers": { "extractionLaserPower": 1.15, "optimalChargeRate": 0.8 }
+    },
+    {
+      "code": "vaux-c2",
+      "name": "Vaux-C2",
+      "manufacturer": "Shubin Interstellar",
+      "type": "passive",
+      "charges": null,
+      "durationSeconds": null,
+      "modifiers": { "extractionLaserPower": 1.2, "optimalChargeRate": 0.85 }
+    },
+    {
+      "code": "vaux-c3",
+      "name": "Vaux-C3",
+      "manufacturer": "Shubin Interstellar",
+      "type": "passive",
+      "charges": null,
+      "durationSeconds": null,
+      "modifiers": { "extractionLaserPower": 1.25, "optimalChargeRate": 0.95 }
+    },
+    {
+      "code": "xtr",
+      "name": "XTR",
+      "manufacturer": "Greycat Industrial",
+      "type": "passive",
+      "charges": null,
+      "durationSeconds": null,
+      "modifiers": {
+        "extractionLaserPower": 0.85,
+        "optimalChargeWindow": 1.15,
+        "inertMaterials": 0.95
+      }
+    },
+    {
+      "code": "xtr-l",
+      "name": "XTR-L",
+      "manufacturer": "Greycat Industrial",
+      "type": "passive",
+      "charges": null,
+      "durationSeconds": null,
+      "modifiers": {
+        "extractionLaserPower": 0.9,
+        "optimalChargeWindow": 1.22,
+        "inertMaterials": 0.94
+      }
+    },
+    {
+      "code": "xtr-xl",
+      "name": "XTR-XL",
+      "manufacturer": "Greycat Industrial",
+      "type": "passive",
+      "charges": null,
+      "durationSeconds": null,
+      "modifiers": {
+        "extractionLaserPower": 0.95,
+        "optimalChargeWindow": 1.25,
+        "inertMaterials": 0.94
+      }
+    },
+    {
+      "code": "roc-module",
+      "name": "ROC Module",
+      "manufacturer": "Thermyte Concern",
+      "type": "passive",
+      "charges": null,
+      "durationSeconds": null,
+      "modifiers": {}
+    }
+  ]
+}

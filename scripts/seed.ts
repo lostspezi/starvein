@@ -14,6 +14,18 @@ import { loadCuratedOccurrences } from "@/features/ore-occurrences/curated-occur
 import { upsertOreOccurrences } from "@/features/ore-occurrences/ore-occurrences.repository";
 import { loadCuratedOres } from "@/features/ores/curated-ores";
 import { upsertOres } from "@/features/ores/ores.repository";
+import {
+  loadCuratedMiningGadgets,
+  loadCuratedMiningLasers,
+  loadCuratedMiningModules,
+  loadCuratedMiningVehicles,
+} from "@/features/loadouts/curated-equipment";
+import {
+  upsertMiningGadgets,
+  upsertMiningLasers,
+  upsertMiningModules,
+  upsertMiningVehicles,
+} from "@/features/loadouts/equipment.repository";
 import { loadCuratedSignatureProfiles } from "@/features/signature-profiles/curated-signatures";
 import { upsertSignatureProfiles } from "@/features/signature-profiles/signature-profiles.repository";
 import { closeMongo, getDb } from "@/lib/db";
@@ -40,6 +52,22 @@ async function main() {
   const signatureProfiles = loadCuratedSignatureProfiles();
   await upsertSignatureProfiles(db, signatureProfiles);
   console.log(`Seeded ${signatureProfiles.length} signature profiles`);
+
+  const vehicles = loadCuratedMiningVehicles();
+  await upsertMiningVehicles(db, vehicles);
+  console.log(`Seeded ${vehicles.length} mining vehicles`);
+
+  const lasers = loadCuratedMiningLasers();
+  await upsertMiningLasers(db, lasers);
+  console.log(`Seeded ${lasers.length} mining lasers`);
+
+  const modules = loadCuratedMiningModules();
+  await upsertMiningModules(db, modules);
+  console.log(`Seeded ${modules.length} mining modules`);
+
+  const gadgets = loadCuratedMiningGadgets();
+  await upsertMiningGadgets(db, gadgets);
+  console.log(`Seeded ${gadgets.length} mining gadgets`);
 
   console.log(`Done (database '${db.databaseName}').`);
 }

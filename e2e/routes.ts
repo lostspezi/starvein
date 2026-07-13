@@ -28,4 +28,10 @@ export const ROUTES: string[] = [
   "/en/favorites",
   "/de/compare",
   "/en/compare",
+  "/de/loadouts",
+  "/en/loadouts",
+  "/de/loadouts/new",
+  "/en/loadouts/new",
+  "/de/loadouts/mine",
+  "/en/loadouts/mine",
 ];

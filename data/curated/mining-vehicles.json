@@ -1,0 +1,69 @@
+{
+  "_meta": {
+    "patchVersion": "4.7",
+    "generatedAt": "2026-07-13",
+    "sources": [
+      "https://github.com/RegolithCo/RegolithCo-Common (MIT)",
+      "https://uexcorp.space/mining/components",
+      "https://starcitizen.tools"
+    ],
+    "notes": "Size-0-Hardpoints = tauschbare Fahrzeug-Laser (ROC/ROC-DS/ATLS GEO, seit Alpha 4.1.x). ATLS GEO ist ein Exosuit, wird aber als roc-Klasse geführt (mint ROC-Deposits). FPS-Handmining ist bewusst kein Loadout-Typ (Multitool hat keine austauschbaren Komponenten). gadgetCapable bezieht sich auf die Deposit-Klasse, nicht das Fahrzeug.",
+    "defaults": { "patchVersion": "4.7" }
+  },
+  "vehicles": [
+    {
+      "code": "prospector",
+      "name": "Prospector",
+      "manufacturer": "MISC",
+      "method": "ship",
+      "hardpoints": [{ "size": 1 }],
+      "gadgetCapable": true,
+      "stockLaserCode": "arbor-mh1"
+    },
+    {
+      "code": "mole",
+      "name": "MOLE",
+      "manufacturer": "Argo Astronautics",
+      "method": "ship",
+      "hardpoints": [{ "size": 2 }, { "size": 2 }, { "size": 2 }],
+      "gadgetCapable": true,
+      "stockLaserCode": "arbor-mh2"
+    },
+    {
+      "code": "golem",
+      "name": "Golem",
+      "manufacturer": "Drake Interplanetary",
+      "method": "ship",
+      "hardpoints": [{ "size": 1 }],
+      "gadgetCapable": true,
+      "stockLaserCode": "pitman"
+    },
+    {
+      "code": "roc",
+      "name": "ROC",
+      "manufacturer": "Greycat Industrial",
+      "method": "roc",
+      "hardpoints": [{ "size": 0 }],
+      "gadgetCapable": true,
+      "stockLaserCode": "arbor-mhv"
+    },
+    {
+      "code": "roc-ds",
+      "name": "ROC-DS",
+      "manufacturer": "Greycat Industrial",
+      "method": "roc",
+      "hardpoints": [{ "size": 0 }],
+      "gadgetCapable": true,
+      "stockLaserCode": "s00-hofstede"
+    },
+    {
+      "code": "atls-geo",
+      "name": "ATLS GEO",
+      "manufacturer": "Argo Astronautics",
+      "method": "roc",
+      "hardpoints": [{ "size": 0 }],
+      "gadgetCapable": true,
+      "stockLaserCode": "lawson"
+    }
+  ]
+}

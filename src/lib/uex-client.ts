@@ -54,9 +54,35 @@ export type UexCommodityRecord = {
   is_raw: number;
 };
 
+export type UexItemRecord = {
+  id: number;
+  id_category: number;
+  name: string;
+  slug: string;
+};
+
+export type UexItemPriceRecord = {
+  id_item: number;
+  id_terminal: number;
+  terminal_name: string;
+  price_buy: number;
+  star_system_name: string | null;
+  planet_name: string | null;
+  orbit_name: string | null;
+  moon_name: string | null;
+  space_station_name: string | null;
+  outpost_name: string | null;
+  city_name: string | null;
+  terminal_is_player_owned: number;
+};
+
 export const uexClient = {
   commodities: () => fetchUex<UexCommodityRecord>("commodities"),
   commodityPricesAll: () => fetchUex<UexPriceRecord>("commodities_prices_all"),
   refineryYields: () => fetchUex<UexYieldRecord>("refineries_yields"),
   refineryMethods: () => fetchUex<UexMethodRecord>("refineries_methods"),
+  items: (categoryId: number) =>
+    fetchUex<UexItemRecord>(`items?id_category=${categoryId}`),
+  itemPrices: (categoryId: number) =>
+    fetchUex<UexItemPriceRecord>(`items_prices?id_category=${categoryId}`),
 };

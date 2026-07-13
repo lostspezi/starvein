@@ -10,6 +10,10 @@ STARVEIN baut auf Daten und Vorarbeiten der Star-Citizen-Community auf:
   die UEX API 2.0.
 - **[RainbowRamen/sc-mining-hud](https://github.com/RainbowRamen/sc-mining-hud)** —
   Referenz für RS-Wert-Tabellen.
+- **[RegolithCo/RegolithCo-Common](https://github.com/RegolithCo/RegolithCo-Common)** (MIT-Lizenz) —
+  Grundlage für die Stat-Tabellen der Mining-Laser, -Module und -Gadgets im
+  Loadout-Katalog (`data/curated/mining-*.json`), gegengeprüft mit UEX und
+  dem [Star Citizen Wiki](https://starcitizen.tools) (CC BY-SA 4.0).
 
 This is an unofficial Star Citizen fansite, not affiliated with the Cloud
 Imperium group of companies. All content on this site not authored by its host
