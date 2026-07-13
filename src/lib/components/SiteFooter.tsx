@@ -29,10 +29,27 @@ export function SiteFooter() {
 
   return (
     <footer className="border-t border-glass-border bg-glass px-4 py-6 text-sm text-text-muted backdrop-blur-md sm:px-6">
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-6 md:grid md:grid-cols-[minmax(0,1fr)_auto_auto] md:items-center md:gap-10">
+        <div className="flex items-center gap-4">
+          {/* Offizielles Fankit-Logo — laut RSI-Vorgabe mind. 50 % Deckkraft */}
+          <Image
+            src="/made-by-the-community.png"
+            alt={t("footer.communityLogoAlt")}
+            width={64}
+            height={64}
+            className="size-16 shrink-0 opacity-80"
+          />
+          <p className="max-w-prose">{t("disclaimer.text")}</p>
+        </div>
+        <p className="md:text-center">
+          {t("footer.craftedBy")}{" "}
+          <a href={TWITCH_URL} className={linkClasses} {...externalProps}>
+            lostspezi
+          </a>
+        </p>
         <nav
           aria-label={t("footer.linksLabel")}
-          className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-6"
+          className="flex flex-col gap-2 md:items-end md:text-right"
         >
           <a href={GITHUB_REPO_URL} className={linkClasses} {...externalProps}>
             {t("footer.github")}
@@ -51,23 +68,6 @@ export function SiteFooter() {
             {t("disclaimer.rsiLinkLabel")}
           </a>
         </nav>
-        <div className="flex items-center gap-4">
-          {/* Offizielles Fankit-Logo — laut RSI-Vorgabe mind. 50 % Deckkraft */}
-          <Image
-            src="/made-by-the-community.png"
-            alt={t("footer.communityLogoAlt")}
-            width={64}
-            height={64}
-            className="size-16 shrink-0 opacity-80"
-          />
-          <p>{t("disclaimer.text")}</p>
-        </div>
-        <p>
-          {t("footer.craftedBy")}{" "}
-          <a href={TWITCH_URL} className={linkClasses} {...externalProps}>
-            lostspezi
-          </a>
-        </p>
       </div>
     </footer>
   );
