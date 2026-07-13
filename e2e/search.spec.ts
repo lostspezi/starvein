@@ -2,15 +2,30 @@
  * Slice-2c-Happy-Path: Suche mit Autocomplete.
  * Voraussetzung: docker compose up -d && pnpm seed (befüllte 'starvein'-DB).
  */
-import { expect, test } from "@playwright/test";
+import { expect, test, type Page } from "@playwright/test";
+
+/**
+ * Tippt die Suchanfrage und wartet auf die Vorschlagsliste. fill() vor
+ * abgeschlossener React-Hydration verpufft (onChange hängt noch nicht am
+ * Input) — auf langsamen CI-Runnern passiert genau das. Deshalb wird die
+ * Eingabe per toPass() wiederholt, bis die Liste tatsächlich aufgeht;
+ * die eigentlichen Assertions der Tests bleiben unverändert.
+ */
+async function searchFor(page: Page, query: string) {
+  const input = page.getByRole("combobox", { name: "Search" });
+  await expect(async () => {
+    await input.fill("");
+    await input.fill(query);
+    await expect(page.getByRole("listbox")).toBeVisible({ timeout: 2_000 });
+  }).toPass();
+}
 
 test("finds a moon via the header search and navigates to it", async ({
   page,
 }) => {
   await page.goto("/en");
 
-  const input = page.getByRole("combobox", { name: "Search" });
-  await input.fill("yela");
+  await searchFor(page, "yela");
 
   const option = page
     .getByRole("listbox")
@@ -25,7 +40,7 @@ test("finds a moon via the header search and navigates to it", async ({
 test("finds an ore and navigates to its detail page", async ({ page }) => {
   await page.goto("/en");
 
-  await page.getByRole("combobox", { name: "Search" }).fill("quanta");
+  await searchFor(page, "quanta");
   await page
     .getByRole("listbox")
     .getByRole("option", { name: /Quantainium/ })
