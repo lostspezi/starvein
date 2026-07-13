@@ -1,4 +1,42 @@
 {
+  "meta": {
+    "defaultTitle": "STARVEIN — Star-Citizen-Mining-Referenz",
+    "description": "Community-gepflegte Mining-Referenz für Star Citizen: wo welches Erz mit welcher Wahrscheinlichkeit vorkommt und auf welche Scan-Signatur man achten muss — für Ship-, ROC- und FPS-Mining.",
+    "ores": {
+      "title": "Erze",
+      "description": "Alle minebaren Star-Citizen-Erze im Überblick: Seltenheit, Mining-Methoden, Verkaufspreise und Refinery-Yields."
+    },
+    "oreDetail": {
+      "description": "Wo {ore} in Star Citizen zu finden ist: Fundorte mit Wahrscheinlichkeit, Scan-Signaturen, Verkaufspreise und Refinery-Yields."
+    },
+    "locations": {
+      "title": "Locations",
+      "description": "Sternsysteme, Planeten, Monde und Asteroidenfelder in Star Citizen durchstöbern — mit allen bekannten Erzvorkommen pro Location."
+    },
+    "system": {
+      "description": "Mining-Locations im {system}-System: Planeten, Monde und Asteroidenfelder mit ihren Erzvorkommen."
+    },
+    "body": {
+      "description": "Erzvorkommen bei {body} ({system}) in Star Citizen — Fundwahrscheinlichkeiten je Mining-Methode (Ship, ROC, FPS)."
+    },
+    "signatures": {
+      "title": "Scan-Signaturen",
+      "description": "Scan-Signatur-Referenz fürs Star-Citizen-Mining: Ship-Signaturen pro Mineral plus Vorkommensgrößen für ROC- und FPS-Mining."
+    },
+    "compare": {
+      "title": "Erz-Vergleich",
+      "description": "Star-Citizen-Erze im direkten Vergleich: Preise, Refinery-Yields und die besten Fundorte."
+    },
+    "loadouts": {
+      "title": "Mining-Loadouts",
+      "description": "Community-Mining-Loadouts für Star Citizen: Laser, Module und Gadgets für Prospector, MOLE und mehr."
+    },
+    "favorites": { "title": "Favoriten" },
+    "myLoadouts": { "title": "Meine Loadouts" },
+    "newLoadout": { "title": "Neues Loadout" },
+    "editLoadout": { "title": "Loadout bearbeiten" },
+    "admin": { "title": "Admin" }
+  },
   "common": {
     "appName": "STARVEIN",
     "nav": {

@@ -1,4 +1,42 @@
 {
+  "meta": {
+    "defaultTitle": "STARVEIN — Star Citizen Mining Reference",
+    "description": "Community-maintained mining reference for Star Citizen: where every ore spawns, with what probability, and which scan signature to look for — for ship, ROC and FPS mining.",
+    "ores": {
+      "title": "Ores",
+      "description": "All mineable Star Citizen ores at a glance: rarity, mining methods, sell prices and refinery yields."
+    },
+    "oreDetail": {
+      "description": "Where to find {ore} in Star Citizen: locations with spawn probability, scan signatures, sell prices and refinery yields."
+    },
+    "locations": {
+      "title": "Locations",
+      "description": "Browse star systems, planets, moons and asteroid fields in Star Citizen — with all known ore occurrences per location."
+    },
+    "system": {
+      "description": "Mining locations in the {system} system: planets, moons and asteroid fields with their ore occurrences."
+    },
+    "body": {
+      "description": "Ore occurrences at {body} ({system}) in Star Citizen — spawn probabilities per mining method (ship, ROC, FPS)."
+    },
+    "signatures": {
+      "title": "Scan Signatures",
+      "description": "Scan signature reference for Star Citizen mining: ship signatures per mineral plus deposit sizes for ROC and FPS mining."
+    },
+    "compare": {
+      "title": "Compare Ores",
+      "description": "Compare Star Citizen ores side by side: prices, refinery yields and the best mining locations."
+    },
+    "loadouts": {
+      "title": "Mining Loadouts",
+      "description": "Community mining loadouts for Star Citizen: lasers, modules and gadgets for Prospector, MOLE and more."
+    },
+    "favorites": { "title": "Favorites" },
+    "myLoadouts": { "title": "My Loadouts" },
+    "newLoadout": { "title": "New Loadout" },
+    "editLoadout": { "title": "Edit Loadout" },
+    "admin": { "title": "Admin" }
+  },
   "common": {
     "appName": "STARVEIN",
     "nav": {

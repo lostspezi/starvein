@@ -20,8 +20,29 @@ import { Panel } from "@/lib/components/ui/Panel";
 import { getDb } from "@/lib/db";
 import { CURRENT_PATCH_VERSION } from "@/lib/patch";
 import { getSessionUserId } from "@/lib/session";
+import { pageMetadata } from "@/lib/seo";
+import type { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string; id: string }>;
+}): Promise<Metadata> {
+  const { locale, id } = await params;
+  // Nur öffentlich sichtbare Loadouts bekommen Metadata (viewer = anonym);
+  // private Loadouts rendern ohnehin nur für den Owner.
+  const loadout = await getLoadoutForViewer(await getDb(), id, null);
+  if (!loadout) {
+    return {};
+  }
+  return pageMetadata({
+    locale,
+    path: `/loadouts/${id}`,
+    title: loadout.name,
+  });
+}
 
 export default async function LoadoutDetailPage({
   params,

@@ -10,8 +10,32 @@ import { BODY_TYPES } from "@/features/locations/locations.schema";
 import { PageHeader } from "@/lib/components/ui/PageHeader";
 import { PageShell } from "@/lib/components/ui/PageShell";
 import { getDb } from "@/lib/db";
+import { pageMetadata } from "@/lib/seo";
+import type { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string; system: string }>;
+}): Promise<Metadata> {
+  const { locale, system: systemParam } = await params;
+  const system = await findStarSystemByCode(
+    await getDb(),
+    systemParam.toUpperCase(),
+  );
+  if (!system) {
+    return {};
+  }
+  const t = await getTranslations({ locale, namespace: "meta" });
+  return pageMetadata({
+    locale,
+    path: `/locations/${system.code.toLowerCase()}`,
+    title: system.name,
+    description: t("system.description", { system: system.name }),
+  });
+}
 
 export default async function SystemPage({
   params,

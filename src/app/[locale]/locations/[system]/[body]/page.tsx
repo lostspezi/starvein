@@ -25,8 +25,37 @@ import {
 } from "@/features/locations/locations.repository";
 import { PageShell } from "@/lib/components/ui/PageShell";
 import { getDb } from "@/lib/db";
+import { pageMetadata } from "@/lib/seo";
+import type { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string; system: string; body: string }>;
+}): Promise<Metadata> {
+  const { locale, system: systemParam, body: bodySlug } = await params;
+  const db = await getDb();
+  const system = await findStarSystemByCode(db, systemParam.toUpperCase());
+  if (!system) {
+    return {};
+  }
+  const body = await findBodyBySlug(db, system.code, bodySlug);
+  if (!body) {
+    return {};
+  }
+  const t = await getTranslations({ locale, namespace: "meta" });
+  return pageMetadata({
+    locale,
+    path: `/locations/${system.code.toLowerCase()}/${body.slug}`,
+    title: body.name,
+    description: t("body.description", {
+      body: body.name,
+      system: system.name,
+    }),
+  });
+}
 
 export default async function BodyPage({
   params,

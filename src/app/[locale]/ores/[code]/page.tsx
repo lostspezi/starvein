@@ -16,8 +16,29 @@ import { PageHeader } from "@/lib/components/ui/PageHeader";
 import { PageShell } from "@/lib/components/ui/PageShell";
 import { getDb } from "@/lib/db";
 import { parseEnumParam } from "@/lib/search-params";
+import { pageMetadata } from "@/lib/seo";
+import type { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string; code: string }>;
+}): Promise<Metadata> {
+  const { locale, code } = await params;
+  const ore = await findOreByCode(await getDb(), code.toUpperCase());
+  if (!ore) {
+    return {};
+  }
+  const t = await getTranslations({ locale, namespace: "meta" });
+  return pageMetadata({
+    locale,
+    path: `/ores/${ore.code.toLowerCase()}`,
+    title: ore.name_en,
+    description: t("oreDetail.description", { ore: ore.name_en }),
+  });
+}
 
 export default async function OreDetailPage({
   params,

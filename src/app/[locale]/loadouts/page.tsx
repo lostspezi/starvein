@@ -24,8 +24,25 @@ import { getDb } from "@/lib/db";
 import { CURRENT_PATCH_VERSION } from "@/lib/patch";
 import { parseEnumParam } from "@/lib/search-params";
 import { getSessionUserId } from "@/lib/session";
+import { pageMetadata } from "@/lib/seo";
+import type { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "meta" });
+  return pageMetadata({
+    locale,
+    path: "/loadouts",
+    title: t("loadouts.title"),
+    description: t("loadouts.description"),
+  });
+}
 
 export default async function LoadoutsPage({
   params,
