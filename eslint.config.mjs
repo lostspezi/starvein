@@ -18,6 +18,8 @@ const eslintConfig = defineConfig([
     "playwright-report/**",
     "test-results/**",
     "coverage/**",
+    // Claude-Code-Worktrees (enthalten eigene .next-Builds):
+    ".claude/**",
   ]),
 ]);
 

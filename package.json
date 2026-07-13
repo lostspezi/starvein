@@ -2,6 +2,15 @@
   "name": "starvein",
   "version": "0.1.0",
   "private": true,
+  "license": "MIT",
+  "homepage": "https://starvein.app",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lostspezi/starvein.git"
+  },
+  "bugs": {
+    "url": "https://github.com/lostspezi/starvein/issues"
+  },
   "packageManager": "pnpm@11.3.0",
   "scripts": {
     "dev": "next dev",
