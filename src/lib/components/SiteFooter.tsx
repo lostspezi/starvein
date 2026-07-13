@@ -29,7 +29,7 @@ export function SiteFooter() {
 
   return (
     <footer className="border-t border-glass-border bg-glass px-4 py-6 text-sm text-text-muted backdrop-blur-md sm:px-6">
-      <div className="flex flex-col gap-6 md:grid md:grid-cols-[minmax(0,1fr)_auto_auto] md:items-center md:gap-10">
+      <div className="flex flex-col gap-6 md:grid md:grid-cols-3 md:items-center md:gap-8">
         <div className="flex items-center gap-4">
           {/* Offizielles Fankit-Logo — laut RSI-Vorgabe mind. 50 % Deckkraft */}
           <Image
@@ -49,7 +49,8 @@ export function SiteFooter() {
         </p>
         <nav
           aria-label={t("footer.linksLabel")}
-          className="flex flex-col gap-2 md:items-end md:text-right"
+          // pr-16 hält das Menü frei von der fixed Chat-Bubble (right-4 bottom-4)
+          className="flex flex-col gap-2 md:items-end md:pr-16 md:text-right"
         >
           <a href={GITHUB_REPO_URL} className={linkClasses} {...externalProps}>
             {t("footer.github")}
