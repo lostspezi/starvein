@@ -71,6 +71,20 @@ test("system filter narrows to Pyro", async ({ page }) => {
     .toBe(true);
 });
 
+test("home shows the loadout bento with stats and CTA", async ({ page }) => {
+  await page.goto("/en");
+
+  await expect(
+    page.getByRole("heading", { name: "Community loadouts" }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("link", { name: "Create loadout" }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("link", { name: "Browse all loadouts" }),
+  ).toHaveAttribute("href", "/en/loadouts");
+});
+
 test("anonymous users see no favorite stars in the table", async ({ page }) => {
   await page.goto("/en");
   await expect(page.locator("tbody tr").first()).toBeVisible();

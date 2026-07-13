@@ -3,6 +3,7 @@ import type { Db } from "mongodb";
 import { closeMongo, getDb } from "@/lib/db";
 import { uniqueDbName } from "@/test/factories";
 import {
+  countCelestialBodies,
   findAllStarSystems,
   findBodiesBySystem,
   findBodyBySlug,
@@ -95,6 +96,10 @@ describe("locations repository", () => {
   it("returns children of a body sorted by name", async () => {
     const children = await findChildBodies(db, "STANTON", "crusader");
     expect(children.map((b) => b.slug)).toEqual(["cru-l1", "yela"]);
+  });
+
+  it("counts all celestial bodies", async () => {
+    await expect(countCelestialBodies(db)).resolves.toBe(4);
   });
 
   it("upserts systems and bodies idempotently", async () => {

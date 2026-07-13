@@ -3,6 +3,24 @@
     "title": "STARVEIN",
     "tagline": "Community mining reference for Star Citizen — ores, locations, scan signatures.",
     "searchLabel": "Find ores and locations",
+    "bento": {
+      "heading": "Community loadouts",
+      "featured": "Top voted",
+      "topHeading": "Top rated",
+      "newestHeading": "Newest",
+      "stats": {
+        "heading": "The database",
+        "ores": "Ores",
+        "locations": "Locations",
+        "loadouts": "Public loadouts"
+      },
+      "cta": {
+        "heading": "Build your own",
+        "text": "Put together a loadout for your ship or ROC and share it with the community.",
+        "create": "Create loadout",
+        "browse": "Browse all loadouts"
+      }
+    },
     "explorer": {
       "systemLabel": "Filter by star system",
       "systemAll": "All",

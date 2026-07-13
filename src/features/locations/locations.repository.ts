@@ -62,6 +62,10 @@ export async function findChildBodies(
   return docs.map((doc) => celestialBodySchema.parse(doc));
 }
 
+export async function countCelestialBodies(db: Db): Promise<number> {
+  return db.collection(BODIES).countDocuments();
+}
+
 export async function upsertStarSystems(
   db: Db,
   systems: StarSystem[],

@@ -3,6 +3,24 @@
     "title": "STARVEIN",
     "tagline": "Community-Mining-Referenz für Star Citizen — Erze, Fundorte, Scan-Signaturen.",
     "searchLabel": "Erze und Fundorte finden",
+    "bento": {
+      "heading": "Community-Loadouts",
+      "featured": "Top bewertet",
+      "topHeading": "Top bewertet",
+      "newestHeading": "Neueste",
+      "stats": {
+        "heading": "Die Datenbank",
+        "ores": "Erze",
+        "locations": "Fundorte",
+        "loadouts": "Öffentliche Loadouts"
+      },
+      "cta": {
+        "heading": "Bau dein eigenes",
+        "text": "Stell ein Loadout für dein Schiff oder deinen ROC zusammen und teile es mit der Community.",
+        "create": "Loadout erstellen",
+        "browse": "Alle Loadouts ansehen"
+      }
+    },
     "explorer": {
       "systemLabel": "Nach Sternsystem filtern",
       "systemAll": "Alle",
