@@ -121,7 +121,7 @@ Regeln für Änderungen:
   (Playwright matcht Namen per Substring). Formularfelder mit explizitem
   `htmlFor`/`id` verknüpfen, nicht per wrappendem `<label>` um ein `<select>`.
 - Geschützte Assertions: `ExplorerTable`-Methodenspalte exakt `hidden sm:table-cell`;
-  `OreList`-Zeilen behalten `id`-Anker; `FanDisclaimer` (Text + RSI-Link) nie anfassen.
+  `OreList`-Zeilen behalten `id`-Anker; `SiteFooter`-Disclaimer (Text + RSI-Link) nie anfassen.
 - E2E läuft mit `reducedMotion: "reduce"`-Emulation und 8 Workern
   (`playwright.config.ts`) — beides nie entfernen (Starfield sättigt sonst den
   Headless-Renderer und URL-State-Tests werden flaky).

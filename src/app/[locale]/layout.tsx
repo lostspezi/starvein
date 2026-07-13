@@ -6,7 +6,7 @@ import { notFound } from "next/navigation";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { ChatAside } from "@/features/chat/ChatAside";
 import { routing } from "@/i18n/routing";
-import { FanDisclaimer } from "@/lib/components/FanDisclaimer";
+import { SiteFooter } from "@/lib/components/SiteFooter";
 import { Header } from "@/lib/components/Header";
 import { DriftingShips } from "@/lib/components/starfield/DriftingShips";
 import { Starfield } from "@/lib/components/starfield/Starfield";
@@ -59,7 +59,7 @@ export default async function LocaleLayout({
             <StarfieldRouteListener />
             <Header />
             <div className="flex flex-1 flex-col">{children}</div>
-            <FanDisclaimer />
+            <SiteFooter />
             <ChatAside />
           </NextIntlClientProvider>
         </NuqsAdapter>

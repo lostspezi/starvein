@@ -100,7 +100,7 @@ immer mitgeführt werden, da er die von RSI vorgegebene Formulierung ist.
   Datenmodellierung ok, keine Daten wörtlich übernehmen.
 
 **Durchsetzung:** Der Disclaimer-Block wird als eigene, gemeinsam genutzte Komponente
-(`src/lib/components/FanDisclaimer.tsx` o. ä.) im Root-Layout eingebunden, nicht pro Seite manuell
+(`src/lib/components/SiteFooter.tsx`) im Root-Layout eingebunden, nicht pro Seite manuell
 kopiert — so kann er nicht versehentlich auf einer neuen Route vergessen werden. Slice 0 sichert
 das zusätzlich mit einem dauerhaften Playwright-Test ab (siehe Abschnitt 11).
 
@@ -440,7 +440,7 @@ starvein/
 │   │   ├── uex-client.ts           # UEX-API-Client
 │   │   ├── confidence-score.ts     # Wilson-Score-Berechnung
 │   │   └── components/
-│   │       └── FanDisclaimer.tsx   # Pflicht-Disclaimer + Link, siehe Abschnitt 2 — im Root-Layout eingebunden
+│   │       └── SiteFooter.tsx      # Footer mit Pflicht-Disclaimer + Links, siehe Abschnitt 2 — im Root-Layout eingebunden
 │   └── test/
 │       ├── setup.ts
 │       └── factories/              # Test-Datenbuilder pro Domänenobjekt
@@ -467,7 +467,7 @@ Jede Slice endet lauffähig, getestet, mit einem grünen Playwright-Happy-Path.
 Next.js-App bootet, verbindet sich mit Mongo + Redis (aus `docker-compose.yml`), ein
 Health-Check-Route-Handler (`/api/health`), next-intl-Routing mit de/en aktiv (`proxy.ts`),
 Tailwind-Theme aus Abschnitt 7 eingebunden, eine leere Startseite mit Locale-Switcher. Die
-`FanDisclaimer`-Komponente aus Abschnitt 2 wird im Root-Layout eingebunden. CI-Skripte (`lint`,
+Disclaimer-Komponente aus Abschnitt 2 (heute `SiteFooter`) wird im Root-Layout eingebunden. CI-Skripte (`lint`,
 `test`, `test:e2e`) laufen durch. Ziel: die gesamte Kette ist bewiesen lauffähig und testbar,
 bevor Fachlogik entsteht.
 Zusätzlich: ein **permanenter Playwright-Test** (`e2e/branding-compliance.spec.ts`), der auf
