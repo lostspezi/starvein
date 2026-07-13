@@ -34,6 +34,16 @@ describe.each<AppLocale>(["de", "en"])("SiteFooter (%s)", (locale) => {
     expect(hrefs).toContain(GITHUB_FEATURE_URL);
   });
 
+  it("shows the Made by the Community logo next to the disclaimer", () => {
+    renderWithIntl(<SiteFooter />, { locale });
+    const logo = screen.getByRole("img", { name: /Made by the Community/i });
+    expect(logo).toBeVisible();
+    expect(logo).toHaveAttribute(
+      "src",
+      expect.stringContaining("made-by-the-community"),
+    );
+  });
+
   it("credits lostspezi with a link to the Twitch channel", () => {
     renderWithIntl(<SiteFooter />, { locale });
     const twitchLink = screen.getByRole("link", { name: "lostspezi" });

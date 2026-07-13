@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { useTranslations } from "next-intl";
 import {
   GITHUB_BUG_URL,
@@ -50,7 +51,17 @@ export function SiteFooter() {
             {t("disclaimer.rsiLinkLabel")}
           </a>
         </nav>
-        <p>{t("disclaimer.text")}</p>
+        <div className="flex items-center gap-4">
+          {/* Offizielles Fankit-Logo — laut RSI-Vorgabe mind. 50 % Deckkraft */}
+          <Image
+            src="/made-by-the-community.png"
+            alt={t("footer.communityLogoAlt")}
+            width={64}
+            height={64}
+            className="size-16 shrink-0 opacity-80"
+          />
+          <p>{t("disclaimer.text")}</p>
+        </div>
         <p>
           {t("footer.craftedBy")}{" "}
           <a href={TWITCH_URL} className={linkClasses} {...externalProps}>
