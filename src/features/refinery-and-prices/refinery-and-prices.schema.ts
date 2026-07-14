@@ -24,15 +24,12 @@ export const refineryYieldSchema = z.object({
   syncedAt: z.string().min(1),
 });
 
-export const refineryMethodSchema = z.object({
-  code: z.string().min(1),
-  name: z.string().min(1),
-  ratingYield: z.number().int().min(1).max(3),
-  ratingCost: z.number().int().min(1).max(3),
-  ratingSpeed: z.number().int().min(1).max(3),
-  syncedAt: z.string().min(1),
-});
+// Methoden-Contract lebt in packages/shared (Desktop-App nutzt ihn ebenfalls);
+// hier re-exportiert, damit bestehende Web-Imports gültig bleiben.
+export {
+  refineryMethodSchema,
+  type RefineryMethod,
+} from "@starvein/shared/refinery-catalog";
 
 export type PriceSnapshot = z.infer<typeof priceSnapshotSchema>;
 export type RefineryYield = z.infer<typeof refineryYieldSchema>;
-export type RefineryMethod = z.infer<typeof refineryMethodSchema>;

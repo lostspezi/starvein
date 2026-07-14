@@ -1,0 +1,12 @@
+{
+  "common": {
+    "footer": {
+      "rsiLinkLabel": "Offizielle Star-Citizen-Website"
+    }
+  },
+  "shell": {
+    "skeleton": {
+      "placeholder": "Companion-Grundgerüst — Login und Job-Erfassung folgen in den nächsten Slices."
+    }
+  }
+}

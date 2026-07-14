@@ -1,0 +1,12 @@
+{
+  "common": {
+    "footer": {
+      "rsiLinkLabel": "Official Star Citizen website"
+    }
+  },
+  "shell": {
+    "skeleton": {
+      "placeholder": "Companion walking skeleton — login and job capture arrive in the next slices."
+    }
+  }
+}

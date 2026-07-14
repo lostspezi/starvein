@@ -1,5 +1,8 @@
 import type { Db } from "mongodb";
-import { z } from "zod";
+import {
+  refineryTerminalSchema,
+  type RefineryTerminal,
+} from "@starvein/shared/refinery-catalog";
 import {
   refineryMethodSchema,
   type RefineryMethod,
@@ -10,13 +13,7 @@ const METHODS = "refineryMethods";
 
 const NO_ID = { projection: { _id: 0 } } as const;
 
-const refineryTerminalSchema = z.object({
-  terminalId: z.number().int(),
-  terminalName: z.string().min(1),
-  starSystemName: z.string().nullable(),
-});
-
-export type RefineryTerminal = z.infer<typeof refineryTerminalSchema>;
+export type { RefineryTerminal };
 
 /**
  * Distinct-Liste aller Refinery-Terminals aus den gesyncten Yields —

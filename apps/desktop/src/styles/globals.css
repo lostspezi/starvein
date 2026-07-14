@@ -1,0 +1,27 @@
+@import "tailwindcss";
+
+/* Design-System "Tiefes All 2.0" — geteilte Tokens aus packages/shared,
+   identisch mit der Web-App (CLAUDE.md §7). */
+@import "@starvein/shared/design-tokens.css";
+
+body {
+  @apply bg-bg-void text-text-primary font-sans antialiased;
+  /* Desktop-App fühlt sich nativ an: kein Textcursor auf UI-Flächen,
+     kein Overscroll-Gummiband. */
+  user-select: none;
+  overscroll-behavior: none;
+}
+
+@layer base {
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+
+  /* HUD-Fokusring wie in der Web-App: nur bei Tastatur-Fokus. */
+  :focus-visible {
+    outline: 2px solid var(--color-accent-cyan);
+    outline-offset: 2px;
+    box-shadow: var(--shadow-glow-sm);
+  }
+}

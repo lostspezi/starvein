@@ -420,7 +420,11 @@ export const auth = betterAuth({
 ## 10. Projektstruktur
 
 ```
-starvein/
+starvein/                            # pnpm-Workspace; die Web-App liegt im Repo-Root
+├── apps/
+│   └── desktop/                     # "STARVEIN Companion" (Tauri 2) — siehe apps/desktop/README.md
+├── packages/
+│   └── shared/                      # @starvein/shared: geteilte Zod-Contracts, job-time, branding, design-tokens.css
 ├── src/
 │   ├── app/                        # Next.js App Router: Layouts, Pages, i18n-Routing
 │   │   └── [locale]/...
