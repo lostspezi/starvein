@@ -6,9 +6,6 @@
   },
   "shell": {
     "loading": "Connecting …",
-    "skeleton": {
-      "placeholder": "Job capture arrives in the next slices."
-    },
     "session": {
       "signedInAs": "Signed in as {name}",
       "signOut": "Sign out"
@@ -26,5 +23,13 @@
       "expired": "The code expired — please try again.",
       "protocol": "Could not reach the server — please try again."
     }
+  },
+  "jobs": {
+    "title": "My refinery jobs",
+    "refresh": "Refresh",
+    "refreshFailed": "Refresh failed — the list may be stale.",
+    "empty": "No refinery jobs tracked yet.",
+    "ready": "Ready to collect",
+    "collected": "Collected"
   }
 }

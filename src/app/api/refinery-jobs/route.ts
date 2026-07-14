@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { listRefineryJobsByOwner } from "@/features/refinery-jobs/refinery-jobs.repository";
 import { refineryJobInputSchema } from "@/features/refinery-jobs/refinery-jobs.schema";
 import {
   createRefineryJob,
@@ -9,6 +10,16 @@ import { checkRateLimit } from "@/lib/rate-limit";
 import { getSessionUserId } from "@/lib/session";
 
 export const dynamic = "force-dynamic";
+
+export async function GET(request: Request) {
+  const userId = await getSessionUserId(request.headers);
+  if (!userId) {
+    return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+  }
+
+  const db = await getDb();
+  return NextResponse.json(await listRefineryJobsByOwner(db, userId));
+}
 
 export async function POST(request: Request) {
   const userId = await getSessionUserId(request.headers);

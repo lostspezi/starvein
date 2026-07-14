@@ -144,6 +144,9 @@ importers:
       use-intl:
         specifier: ^4.13.1
         version: 4.13.1(react@19.2.4)
+      zod:
+        specifier: ^4.4.3
+        version: 4.4.3
     devDependencies:
       '@tailwindcss/vite':
         specifier: ^4
