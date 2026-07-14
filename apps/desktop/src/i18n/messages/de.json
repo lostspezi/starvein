@@ -35,5 +35,13 @@
       "title": "Refinery-Job fertig",
       "body": "Dein Auftrag bei {terminal} ist bereit zur Abholung."
     }
+  },
+  "capture": {
+    "debugTitle": "OCR-Debug (rohe Erfassung)",
+    "hotkeyHint": "Hotkey im Spiel: Strg+Alt+R am Refinery-Terminal — oder hier manuell testen.",
+    "trigger": "Jetzt testweise erfassen",
+    "meta": "Quelle: {source} · {size}",
+    "noText": "Kein Text erkannt.",
+    "error": "Erfassung fehlgeschlagen: {message}"
   }
 }

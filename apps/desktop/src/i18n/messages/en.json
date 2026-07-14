@@ -35,5 +35,13 @@
       "title": "Refinery job ready",
       "body": "Your work order at {terminal} is ready to collect."
     }
+  },
+  "capture": {
+    "debugTitle": "OCR debug (raw capture)",
+    "hotkeyHint": "In-game hotkey: Ctrl+Alt+R at the refinery terminal — or test manually here.",
+    "trigger": "Test capture now",
+    "meta": "Source: {source} · {size}",
+    "noText": "No text recognized.",
+    "error": "Capture failed: {message}"
   }
 }

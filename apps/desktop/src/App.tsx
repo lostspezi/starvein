@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useTranslations } from "use-intl";
 import { AppFooter } from "./components/AppFooter";
+import { CaptureDebugPanel } from "./features/capture/CaptureDebugPanel";
 import { JobsPanel } from "./features/jobs/JobsPanel";
 import { LoginScreen } from "./features/login/LoginScreen";
 import { clearSessionToken, getSessionToken } from "./lib/secrets";
@@ -79,8 +80,9 @@ export function App() {
         <LoginScreen onAuthenticated={(token) => void adoptToken(token)} />
       )}
       {auth.phase === "loggedIn" && (
-        <main className="flex flex-1 justify-center overflow-y-auto p-6">
+        <main className="flex flex-1 flex-col items-center gap-4 overflow-y-auto p-6">
           <JobsPanel token={auth.token} onUnauthorized={() => void signOut()} />
+          <CaptureDebugPanel />
         </main>
       )}
 
