@@ -1,11 +1,6 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useTranslations } from "use-intl";
-import {
-  captureAndOcr,
-  onCaptureError,
-  onCaptureResult,
-  type OcrCapture,
-} from "../../lib/tauri";
+import { captureAndOcr, type OcrCapture } from "../../lib/tauri";
 
 type PanelState =
   | { kind: "idle" }
@@ -21,19 +16,6 @@ type PanelState =
 export function CaptureDebugPanel() {
   const t = useTranslations("capture");
   const [state, setState] = useState<PanelState>({ kind: "idle" });
-
-  useEffect(() => {
-    const unlistenResult = onCaptureResult((capture) =>
-      setState({ kind: "result", capture }),
-    );
-    const unlistenError = onCaptureError((message) =>
-      setState({ kind: "error", message }),
-    );
-    return () => {
-      void unlistenResult.then((unlisten) => unlisten());
-      void unlistenError.then((unlisten) => unlisten());
-    };
-  }, []);
 
   async function runManualCapture() {
     setState({ kind: "busy" });

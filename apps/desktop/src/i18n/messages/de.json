@@ -42,6 +42,31 @@
     "trigger": "Jetzt testweise erfassen",
     "meta": "Quelle: {source} · {size}",
     "noText": "Kein Text erkannt.",
-    "error": "Erfassung fehlgeschlagen: {message}"
+    "error": "Erfassung fehlgeschlagen: {message}",
+    "loadingCatalogs": "Lade Kataloge …",
+    "catalogsFailed": "Kataloge konnten nicht geladen werden — Server erreichbar?",
+    "confirm": {
+      "title": "Erfassten Refinery-Job bestätigen",
+      "terminalLabel": "Refinery-Terminal",
+      "terminalPlaceholder": "Terminal wählen …",
+      "methodLabel": "Refinery-Methode",
+      "methodPlaceholder": "Methode wählen …",
+      "itemsLabel": "Erze",
+      "oreLabel": "Erz",
+      "orePlaceholder": "Erz wählen …",
+      "quantityLabel": "Menge (SCU)",
+      "addItem": "+ Erz hinzufügen",
+      "removeItem": "Zeile entfernen",
+      "durationLabel": "Dauer (Minuten)",
+      "unmatched": "Nicht zugeordnet: {lines}",
+      "submit": "Job anlegen",
+      "cancel": "Verwerfen",
+      "errors": {
+        "missingTerminal": "Wähle das Refinery-Terminal, an dem du gerade stehst.",
+        "invalid": "Bitte prüfe Erze, Mengen, Methode und Dauer.",
+        "rateLimited": "Rate-Limit erreicht — bitte kurz warten und erneut versuchen.",
+        "protocol": "Job konnte nicht angelegt werden — Server erreichbar?"
+      }
+    }
   }
 }

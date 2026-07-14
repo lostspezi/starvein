@@ -42,6 +42,31 @@
     "trigger": "Test capture now",
     "meta": "Source: {source} · {size}",
     "noText": "No text recognized.",
-    "error": "Capture failed: {message}"
+    "error": "Capture failed: {message}",
+    "loadingCatalogs": "Loading catalogs …",
+    "catalogsFailed": "Could not load the catalogs — is the server reachable?",
+    "confirm": {
+      "title": "Confirm captured refinery job",
+      "terminalLabel": "Refinery terminal",
+      "terminalPlaceholder": "Pick a terminal …",
+      "methodLabel": "Refinery method",
+      "methodPlaceholder": "Pick a method …",
+      "itemsLabel": "Ores",
+      "oreLabel": "Ore",
+      "orePlaceholder": "Pick an ore …",
+      "quantityLabel": "Quantity (SCU)",
+      "addItem": "+ Add ore",
+      "removeItem": "Remove row",
+      "durationLabel": "Duration (minutes)",
+      "unmatched": "Not matched: {lines}",
+      "submit": "Create job",
+      "cancel": "Discard",
+      "errors": {
+        "missingTerminal": "Pick the refinery terminal you are docked at.",
+        "invalid": "Please check ores, quantities, method and duration.",
+        "rateLimited": "Rate limit reached — please wait a moment and try again.",
+        "protocol": "Could not create the job — is the server reachable?"
+      }
+    }
   }
 }

@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useTranslations } from "use-intl";
 import { AppFooter } from "./components/AppFooter";
 import { CaptureDebugPanel } from "./features/capture/CaptureDebugPanel";
+import { CaptureFlow } from "./features/capture/CaptureFlow";
 import { JobsPanel } from "./features/jobs/JobsPanel";
 import { LoginScreen } from "./features/login/LoginScreen";
 import { clearSessionToken, getSessionToken } from "./lib/secrets";
@@ -10,6 +11,7 @@ import {
   revokeSession,
   type SessionUser,
 } from "./lib/session";
+import { onCaptureError, onCaptureResult, type OcrCapture } from "./lib/tauri";
 
 type AuthState =
   | { phase: "loading" }
@@ -18,7 +20,11 @@ type AuthState =
 
 export function App() {
   const t = useTranslations("shell");
+  const tCapture = useTranslations("capture");
   const [auth, setAuth] = useState<AuthState>({ phase: "loading" });
+  const [pendingCapture, setPendingCapture] = useState<OcrCapture | null>(null);
+  const [captureError, setCaptureError] = useState<string | null>(null);
+  const [jobsVersion, setJobsVersion] = useState(0);
 
   const adoptToken = useCallback(async (token: string) => {
     const user = await fetchSessionUser(token);
@@ -41,11 +47,27 @@ export function App() {
     })();
   }, [adoptToken]);
 
+  // Hotkey-Erfassungen aus Rust: Ergebnis öffnet das Bestätigungsformular.
+  useEffect(() => {
+    const unlistenResult = onCaptureResult((capture) => {
+      setCaptureError(null);
+      setPendingCapture(capture);
+    });
+    const unlistenError = onCaptureError((message) => {
+      setCaptureError(message);
+    });
+    return () => {
+      void unlistenResult.then((unlisten) => unlisten());
+      void unlistenError.then((unlisten) => unlisten());
+    };
+  }, []);
+
   async function signOut() {
     if (auth.phase === "loggedIn") {
       await revokeSession(auth.token);
     }
     await clearSessionToken();
+    setPendingCapture(null);
     setAuth({ phase: "loggedOut" });
   }
 
@@ -81,8 +103,31 @@ export function App() {
       )}
       {auth.phase === "loggedIn" && (
         <main className="flex flex-1 flex-col items-center gap-4 overflow-y-auto p-6">
-          <JobsPanel token={auth.token} onUnauthorized={() => void signOut()} />
-          <CaptureDebugPanel />
+          {captureError && (
+            <p className="text-warning text-sm" role="alert">
+              {tCapture("error", { message: captureError })}
+            </p>
+          )}
+          {pendingCapture ? (
+            <CaptureFlow
+              token={auth.token}
+              capture={pendingCapture}
+              onCreated={() => {
+                setPendingCapture(null);
+                setJobsVersion((version) => version + 1);
+              }}
+              onCancel={() => setPendingCapture(null)}
+            />
+          ) : (
+            <>
+              <JobsPanel
+                key={jobsVersion}
+                token={auth.token}
+                onUnauthorized={() => void signOut()}
+              />
+              <CaptureDebugPanel />
+            </>
+          )}
         </main>
       )}
 
