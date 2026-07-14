@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { POST } from "@/app/api/auth/[...all]/route";
+import { GET, POST } from "@/app/api/auth/[...all]/route";
 
 const CLIENT_ID = "starvein-companion";
 
@@ -54,6 +54,29 @@ describe("device authorization flow", () => {
     expect(tokenResponse.status).toBe(400);
     const json = await tokenResponse.json();
     expect(json.error).toBe("authorization_pending");
+  });
+
+  it("verifies a user code via the claim endpoint", async () => {
+    const codeResponse = await POST(
+      deviceRequest("/device/code", { client_id: CLIENT_ID }),
+    );
+    const { user_code } = await codeResponse.json();
+
+    const verifyResponse = await GET(
+      new Request(
+        `http://localhost:3000/api/auth/device?user_code=${user_code}`,
+      ),
+    );
+    expect(verifyResponse.status).toBe(200);
+    const json = await verifyResponse.json();
+    expect(json.status).toBe("pending");
+  });
+
+  it("rejects unknown user codes on the claim endpoint", async () => {
+    const response = await GET(
+      new Request("http://localhost:3000/api/auth/device?user_code=NOPE1234"),
+    );
+    expect(response.status).toBe(400);
   });
 
   it("requires a session to approve a device", async () => {

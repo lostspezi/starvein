@@ -26,6 +26,17 @@ export function DeviceApprovePanel({
 
   async function submit(action: "approve" | "deny") {
     setState("busy");
+
+    // Claim-Schritt (GET /device): bindet den Code an die laufende Session —
+    // ohne ihn lehnt Better Auth approve/deny mit DEVICE_CODE_NOT_CLAIMED ab.
+    const claim = await authClient.device({
+      query: { user_code: trimmedCode },
+    });
+    if (claim.error) {
+      setState("error");
+      return;
+    }
+
     const { error } =
       action === "approve"
         ? await authClient.device.approve({ userCode: trimmedCode })
