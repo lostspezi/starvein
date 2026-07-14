@@ -37,6 +37,8 @@ import deSignatures from "@/features/signature-profiles/messages/de.json";
 import enSignatures from "@/features/signature-profiles/messages/en.json";
 import deWarehouse from "@/features/warehouse/messages/de.json";
 import enWarehouse from "@/features/warehouse/messages/en.json";
+import deRefineryJobs from "@/features/refinery-jobs/messages/de.json";
+import enRefineryJobs from "@/features/refinery-jobs/messages/en.json";
 
 const messages = {
   de: {
@@ -57,6 +59,7 @@ const messages = {
     ...deModeration,
     ...deLoadouts,
     ...deWarehouse,
+    ...deRefineryJobs,
   },
   en: {
     ...enCommon,
@@ -76,6 +79,7 @@ const messages = {
     ...enModeration,
     ...enLoadouts,
     ...enWarehouse,
+    ...enRefineryJobs,
   },
 };
 

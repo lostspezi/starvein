@@ -35,6 +35,8 @@
     "myLoadouts": { "title": "Meine Loadouts" },
     "newLoadout": { "title": "Neues Loadout" },
     "myWarehouse": { "title": "Mein Lager" },
+    "myRefineryJobs": { "title": "Meine Raffinerie-Jobs" },
+    "newRefineryJob": { "title": "Neuer Raffinerie-Job" },
     "editLoadout": { "title": "Loadout bearbeiten" },
     "admin": { "title": "Admin" }
   },
