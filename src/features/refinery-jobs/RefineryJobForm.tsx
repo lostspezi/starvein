@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import { useId, useState } from "react";
 import { useRouter } from "@/i18n/navigation";
 import { Button } from "@/lib/components/ui/Button";
+import { Combobox } from "@/lib/components/ui/Combobox";
 import { Panel } from "@/lib/components/ui/Panel";
 import { JOB_MAX_ITEMS } from "./refinery-jobs.schema";
 
@@ -31,9 +32,9 @@ type OreOption = { code: string; name: string };
 type ItemRow = { oreCode: string; quantity: string };
 
 /**
- * Formular zum Tracken eines neuen Raffinerie-Jobs: Terminal, Methode,
- * mehrere Erz-Positionen, Dauer als Stunden+Minuten (wie im Spiel
- * angezeigt), optional rückdatierter Start.
+ * Formular zum Tracken eines neuen Raffinerie-Jobs: Terminal und Erze
+ * per Autocomplete (Combobox), Methode als kurzes Dropdown, Dauer als
+ * Stunden+Minuten (wie im Spiel angezeigt), optional rückdatierter Start.
  */
 export function RefineryJobForm({
   terminals,
@@ -48,12 +49,10 @@ export function RefineryJobForm({
   const router = useRouter();
   const formId = useId();
 
-  const [terminalId, setTerminalId] = useState(
-    terminals[0] ? String(terminals[0].terminalId) : "",
-  );
+  const [terminalId, setTerminalId] = useState("");
   const [methodCode, setMethodCode] = useState(methods[0]?.code ?? "");
   const [items, setItems] = useState<ItemRow[]>([
-    { oreCode: ores[0]?.code ?? "", quantity: "1" },
+    { oreCode: "", quantity: "1" },
   ]);
   const [hours, setHours] = useState("0");
   const [minutes, setMinutes] = useState("0");
@@ -62,6 +61,12 @@ export function RefineryJobForm({
   const [failed, setFailed] = useState(false);
 
   const method = methods.find((m) => m.code === methodCode);
+  const terminalOptions = terminals.map((terminal) => ({
+    value: String(terminal.terminalId),
+    label: terminal.terminalName,
+    detail: terminal.starSystemName ?? undefined,
+  }));
+  const oreOptions = ores.map((ore) => ({ value: ore.code, label: ore.name }));
 
   function setItem(index: number, patch: Partial<ItemRow>) {
     setItems((current) =>
@@ -129,21 +134,15 @@ export function RefineryJobForm({
             >
               {t("terminalLabel")}
             </label>
-            <select
+            <Combobox
               id={`${formId}-terminal`}
+              ariaLabel={t("terminalLabel")}
+              options={terminalOptions}
               value={terminalId}
-              onChange={(event) => setTerminalId(event.target.value)}
-              className={selectClass}
-            >
-              {terminals.map((terminal) => (
-                <option key={terminal.terminalId} value={terminal.terminalId}>
-                  {terminal.terminalName}
-                  {terminal.starSystemName
-                    ? ` — ${terminal.starSystemName}`
-                    : ""}
-                </option>
-              ))}
-            </select>
+              onChange={setTerminalId}
+              placeholder={t("searchPlaceholder")}
+              noResultsLabel={t("noMatches")}
+            />
           </div>
 
           <div className="flex flex-col gap-1">
@@ -183,27 +182,22 @@ export function RefineryJobForm({
           </legend>
           {items.map((item, index) => (
             <div key={index} className="flex flex-wrap items-end gap-2">
-              <div className="flex flex-col gap-1">
+              <div className="flex w-full max-w-xs flex-col gap-1">
                 <label
                   htmlFor={`${formId}-ore-${index}`}
                   className="text-xs text-text-muted"
                 >
                   {t("oreLabel", { index: index + 1 })}
                 </label>
-                <select
+                <Combobox
                   id={`${formId}-ore-${index}`}
+                  ariaLabel={t("oreLabel", { index: index + 1 })}
+                  options={oreOptions}
                   value={item.oreCode}
-                  onChange={(event) =>
-                    setItem(index, { oreCode: event.target.value })
-                  }
-                  className={selectClass}
-                >
-                  {ores.map((ore) => (
-                    <option key={ore.code} value={ore.code}>
-                      {ore.name}
-                    </option>
-                  ))}
-                </select>
+                  onChange={(value) => setItem(index, { oreCode: value })}
+                  placeholder={t("searchPlaceholder")}
+                  noResultsLabel={t("noMatches")}
+                />
               </div>
               <div className="flex flex-col gap-1">
                 <label
@@ -247,7 +241,7 @@ export function RefineryJobForm({
                 onClick={() =>
                   setItems((current) => [
                     ...current,
-                    { oreCode: ores[0]?.code ?? "", quantity: "1" },
+                    { oreCode: "", quantity: "1" },
                   ])
                 }
               >

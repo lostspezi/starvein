@@ -13,6 +13,8 @@
     "form": {
       "title": "Neuer Raffinerie-Job",
       "terminalLabel": "Refinery-Terminal",
+      "searchPlaceholder": "Tippen zum Suchen …",
+      "noMatches": "Keine Treffer",
       "terminalEmpty": "Noch keine Refinery-Terminals verfügbar — die Preisdaten wurden noch nicht gesynct. Bitte später erneut versuchen.",
       "methodLabel": "Raffinationsmethode",
       "methodRatings": "Ausbeute {yield}/3 · Kosten {cost}/3 · Tempo {speed}/3",

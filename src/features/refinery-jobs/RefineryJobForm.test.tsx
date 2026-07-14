@@ -49,13 +49,18 @@ function renderForm() {
 }
 
 describe("RefineryJobForm", () => {
-  it("tracks a job with one ore and a duration in hours and minutes", async () => {
+  it("tracks a job via autocomplete with a duration in hours and minutes", async () => {
     const user = userEvent.setup();
     renderForm();
 
-    await user.selectOptions(screen.getByLabelText("Refinery terminal"), "32");
+    await user.type(
+      screen.getByRole("combobox", { name: "Refinery terminal" }),
+      "wide",
+    );
+    await user.click(screen.getByRole("option", { name: /Wide Forest/ }));
     await user.selectOptions(screen.getByLabelText("Refining method"), "DINYX");
-    await user.selectOptions(screen.getByLabelText("Ore 1"), "QUAN");
+    await user.type(screen.getByRole("combobox", { name: "Ore 1" }), "quan");
+    await user.click(screen.getByRole("option", { name: /Quantainium/ }));
     await user.clear(screen.getByLabelText("Quantity (SCU) 1"));
     await user.type(screen.getByLabelText("Quantity (SCU) 1"), "32");
     await user.clear(screen.getByLabelText("Hours"));
@@ -79,16 +84,35 @@ describe("RefineryJobForm", () => {
     });
   });
 
+  it("shows the terminal's star system as autocomplete detail", async () => {
+    const user = userEvent.setup();
+    renderForm();
+
+    await user.click(
+      screen.getByRole("combobox", { name: "Refinery terminal" }),
+    );
+
+    expect(
+      screen.getByRole("option", { name: /Checkmate Station\s*Pyro/ }),
+    ).toBeVisible();
+  });
+
   it("supports multiple ore rows", async () => {
     const user = userEvent.setup();
     renderForm();
 
-    await user.selectOptions(screen.getByLabelText("Refinery terminal"), "32");
-    await user.selectOptions(screen.getByLabelText("Refining method"), "DINYX");
+    await user.type(
+      screen.getByRole("combobox", { name: "Refinery terminal" }),
+      "wide",
+    );
+    await user.click(screen.getByRole("option", { name: /Wide Forest/ }));
+    await user.type(screen.getByRole("combobox", { name: "Ore 1" }), "quan");
+    await user.click(screen.getByRole("option", { name: /Quantainium/ }));
     await user.clear(screen.getByLabelText("Quantity (SCU) 1"));
     await user.type(screen.getByLabelText("Quantity (SCU) 1"), "10");
     await user.click(screen.getByRole("button", { name: "Add ore" }));
-    await user.selectOptions(screen.getByLabelText("Ore 2"), "GOLD");
+    await user.type(screen.getByRole("combobox", { name: "Ore 2" }), "gold");
+    await user.click(screen.getByRole("option", { name: /Gold/ }));
     await user.clear(screen.getByLabelText("Quantity (SCU) 2"));
     await user.type(screen.getByLabelText("Quantity (SCU) 2"), "5");
     await user.clear(screen.getByLabelText("Minutes"));
@@ -110,10 +134,35 @@ describe("RefineryJobForm", () => {
     renderForm();
 
     await user.click(screen.getByRole("button", { name: "Add ore" }));
-    expect(screen.getByLabelText("Ore 2")).toBeVisible();
+    expect(screen.getByRole("combobox", { name: "Ore 2" })).toBeVisible();
 
     await user.click(screen.getByRole("button", { name: "Remove ore 2" }));
 
-    expect(screen.queryByLabelText("Ore 2")).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("combobox", { name: "Ore 2" }),
+    ).not.toBeInTheDocument();
+  });
+
+  it("keeps the submit disabled until terminal and ores are picked", async () => {
+    const user = userEvent.setup();
+    renderForm();
+
+    await user.clear(screen.getByLabelText("Minutes"));
+    await user.type(screen.getByLabelText("Minutes"), "45");
+
+    expect(screen.getByRole("button", { name: "Track job" })).toBeDisabled();
+
+    await user.type(
+      screen.getByRole("combobox", { name: "Refinery terminal" }),
+      "wide",
+    );
+    await user.click(screen.getByRole("option", { name: /Wide Forest/ }));
+
+    expect(screen.getByRole("button", { name: "Track job" })).toBeDisabled();
+
+    await user.type(screen.getByRole("combobox", { name: "Ore 1" }), "quan");
+    await user.click(screen.getByRole("option", { name: /Quantainium/ }));
+
+    expect(screen.getByRole("button", { name: "Track job" })).toBeEnabled();
   });
 });

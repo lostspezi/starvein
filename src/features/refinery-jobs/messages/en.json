@@ -13,6 +13,8 @@
     "form": {
       "title": "New refinery job",
       "terminalLabel": "Refinery terminal",
+      "searchPlaceholder": "Type to search…",
+      "noMatches": "No matches",
       "terminalEmpty": "No refinery terminals available yet — price data has not been synced. Please try again later.",
       "methodLabel": "Refining method",
       "methodRatings": "Yield {yield}/3 · Cost {cost}/3 · Speed {speed}/3",
