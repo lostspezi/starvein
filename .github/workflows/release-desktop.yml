@@ -1,0 +1,42 @@
+name: Release Desktop
+
+# Beta-Releases des STARVEIN Companions: Tag "desktop-v*" pushen
+# (z. B. desktop-v0.1.0) → NSIS-Installer wird gebaut und als
+# GitHub-Prerelease veröffentlicht.
+on:
+  push:
+    tags: ["desktop-v*"]
+
+jobs:
+  build:
+    runs-on: windows-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: apps/desktop/src-tauri
+      - run: pnpm install --frozen-lockfile
+      - uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          projectPath: apps/desktop
+          tagName: ${{ github.ref_name }}
+          releaseName: "STARVEIN Companion ${{ github.ref_name }}"
+          releaseBody: |
+            Beta release of the STARVEIN Companion for Windows.
+
+            Install the `.exe` (NSIS) below. Unsigned beta build — Windows
+            SmartScreen will ask on first launch ("More info" → "Run anyway").
+
+            Guide: https://starvein.app/en/companion
+          releaseDraft: false
+          prerelease: true

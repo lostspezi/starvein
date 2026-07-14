@@ -1,0 +1,39 @@
+{
+  "companion": {
+    "title": "STARVEIN Companion",
+    "betaBadge": "Beta {version}",
+    "platform": "Windows-Desktop-App für Star Citizen",
+    "intro": "Der Companion läuft neben Star Citizen und erfasst deine Refinery-Work-Orders fast automatisch: Hotkey am Terminal drücken, erkannte Werte kurz prüfen, fertig — der Job landet mit Countdown in deiner STARVEIN-Übersicht und meldet sich, wenn er abholbereit ist.",
+    "download": "Für Windows herunterladen",
+    "smartscreenHint": "Beta ohne Code-Signatur — Windows SmartScreen fragt beim ersten Start nach („Weitere Informationen“ → „Trotzdem ausführen“).",
+    "howTitle": "So funktioniert es",
+    "steps": {
+      "login": {
+        "title": "Mit Discord verbinden",
+        "body": "Die App zeigt einen kurzen Code und öffnet den Browser. Dort meldest du dich wie gewohnt mit Discord an und bestätigst den Code — kein Passwort in der App, das Token bleibt im Windows Credential Manager."
+      },
+      "hotkey": {
+        "title": "Hotkey am Terminal drücken",
+        "body": "Steh im Spiel vor dem Refinery-Terminal mit deiner Work Order und drück Strg+Alt+R (in den Einstellungen änderbar). Die App macht einen Screenshot und liest Erze, Mengen und Dauer per Texterkennung aus."
+      },
+      "confirm": {
+        "title": "Prüfen und bestätigen",
+        "body": "Alle erkannten Werte landen in einem editierbaren Formular — Terminal auswählen, bei Bedarf korrigieren, Job anlegen. Auch komplett manuelle Eingabe funktioniert, falls die Erkennung mal danebenliegt."
+      },
+      "track": {
+        "title": "Jobs verfolgen und benachrichtigt werden",
+        "body": "Deine Jobs laufen mit Countdown in der App (und auf starvein.app) mit. Sobald ein Auftrag fertig ist, kommt eine Windows-Benachrichtigung — auch wenn die App im Tray schlummert."
+      }
+    },
+    "safetyTitle": "Anti-Cheat-sicher",
+    "safetyBody": "Der Companion macht ausschließlich normale Bildschirmfotos auf Betriebssystem-Ebene und liest niemals den Spielspeicher, hookt nichts und injiziert nichts in den Spielprozess — dieselbe Technik, die auch andere etablierte Community-Tools nutzen.",
+    "requirementsTitle": "Voraussetzungen",
+    "requirements": {
+      "windows": "Windows 10/11 (64-bit) mit WebView2 (auf Windows 11 vorinstalliert)",
+      "discord": "Kostenloses STARVEIN-Konto per Discord-Login",
+      "game": "Star Citizen im Fenster- oder Borderless-Modus für die Texterkennung"
+    },
+    "feedbackPrefix": "Beta-Feedback oder Fehler gefunden?",
+    "feedbackLink": "Auf GitHub melden"
+  }
+}

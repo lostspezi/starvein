@@ -39,7 +39,11 @@
     "newRefineryJob": { "title": "Neuer Raffinerie-Job" },
     "editLoadout": { "title": "Loadout bearbeiten" },
     "admin": { "title": "Admin" },
-    "device": { "title": "Gerät verbinden" }
+    "device": { "title": "Gerät verbinden" },
+    "companion": {
+      "title": "Companion-App",
+      "description": "STARVEIN Companion für Windows: Refinery-Work-Orders in Star Citizen per Hotkey und Texterkennung erfassen — mit Countdown und Benachrichtigung, wenn der Auftrag fertig ist."
+    }
   },
   "common": {
     "appName": "STARVEIN",
@@ -49,7 +53,8 @@
       "locations": "Locations",
       "signatures": "Signaturen",
       "compare": "Vergleich",
-      "loadouts": "Loadouts"
+      "loadouts": "Loadouts",
+      "companion": "Companion"
     },
     "disclaimer": {
       "text": "This is an unofficial Star Citizen fansite, not affiliated with the Cloud Imperium group of companies. All content on this site not authored by its host or users are property of their respective owners.",

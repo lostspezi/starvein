@@ -34,6 +34,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "/signatures",
     "/compare",
     "/loadouts",
+    "/companion",
   ];
 
   const dynamicPaths: string[] = [];

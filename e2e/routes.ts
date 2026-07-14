@@ -42,4 +42,6 @@ export const ROUTES: string[] = [
   "/en/refinery-jobs/new",
   "/de/device",
   "/en/device",
+  "/de/companion",
+  "/en/companion",
 ];
