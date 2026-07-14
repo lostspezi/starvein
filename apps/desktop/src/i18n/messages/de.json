@@ -5,8 +5,26 @@
     }
   },
   "shell": {
+    "loading": "Verbinde …",
     "skeleton": {
-      "placeholder": "Companion-Grundgerüst — Login und Job-Erfassung folgen in den nächsten Slices."
+      "placeholder": "Job-Erfassung folgt in den nächsten Slices."
+    },
+    "session": {
+      "signedInAs": "Angemeldet als {name}",
+      "signOut": "Abmelden"
+    }
+  },
+  "login": {
+    "title": "Mit STARVEIN verbinden",
+    "intro": "Melde dich mit deinem Discord-Konto an, um Refinery-Jobs direkt aus dem Spiel heraus zu erfassen.",
+    "connect": "Mit Discord verbinden",
+    "codeHint": "Bestätige diesen Code im Browser:",
+    "waiting": "Warte auf Bestätigung im Browser …",
+    "reopenBrowser": "Browser erneut öffnen",
+    "errors": {
+      "denied": "Der Zugriff wurde im Browser abgelehnt.",
+      "expired": "Der Code ist abgelaufen — bitte erneut versuchen.",
+      "protocol": "Verbindung zum Server fehlgeschlagen — bitte erneut versuchen."
     }
   }
 }

@@ -38,7 +38,8 @@
     "myRefineryJobs": { "title": "Meine Raffinerie-Jobs" },
     "newRefineryJob": { "title": "Neuer Raffinerie-Job" },
     "editLoadout": { "title": "Loadout bearbeiten" },
-    "admin": { "title": "Admin" }
+    "admin": { "title": "Admin" },
+    "device": { "title": "Gerät verbinden" }
   },
   "common": {
     "appName": "STARVEIN",

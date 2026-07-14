@@ -5,8 +5,26 @@
     }
   },
   "shell": {
+    "loading": "Connecting …",
     "skeleton": {
-      "placeholder": "Companion walking skeleton — login and job capture arrive in the next slices."
+      "placeholder": "Job capture arrives in the next slices."
+    },
+    "session": {
+      "signedInAs": "Signed in as {name}",
+      "signOut": "Sign out"
+    }
+  },
+  "login": {
+    "title": "Connect to STARVEIN",
+    "intro": "Sign in with your Discord account to capture refinery jobs straight from the game.",
+    "connect": "Connect with Discord",
+    "codeHint": "Confirm this code in your browser:",
+    "waiting": "Waiting for confirmation in the browser …",
+    "reopenBrowser": "Open browser again",
+    "errors": {
+      "denied": "Access was denied in the browser.",
+      "expired": "The code expired — please try again.",
+      "protocol": "Could not reach the server — please try again."
     }
   }
 }

@@ -1,0 +1,13 @@
+{
+  "deviceAuth": {
+    "title": "Gerät verbinden",
+    "intro": "Die STARVEIN-Companion-App möchte sich mit deinem Konto verbinden. Prüfe, ob der Code mit dem in der App angezeigten übereinstimmt.",
+    "codeLabel": "Geräte-Code",
+    "approve": "Gerät verbinden",
+    "deny": "Ablehnen",
+    "approvedMessage": "Gerät verbunden — du kannst zur Companion-App zurückkehren.",
+    "deniedMessage": "Gerätezugriff abgelehnt.",
+    "errorMessage": "Der Code konnte nicht bestätigt werden. Er ist eventuell abgelaufen — fordere in der App einen neuen an.",
+    "loginRequired": "Melde dich mit Discord an, um die Companion-App zu verbinden."
+  }
+}
