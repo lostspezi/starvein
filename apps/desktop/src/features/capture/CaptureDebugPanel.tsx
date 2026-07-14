@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useTranslations } from "use-intl";
 import { captureAndOcr, type OcrCapture } from "../../lib/tauri";
+import { useSettings } from "../../SettingsContext";
+import { DEFAULT_HOTKEY, formatCombo } from "../settings/hotkey";
 
 type PanelState =
   | { kind: "idle" }
@@ -15,7 +17,9 @@ type PanelState =
  */
 export function CaptureDebugPanel() {
   const t = useTranslations("capture");
+  const { settings } = useSettings();
   const [state, setState] = useState<PanelState>({ kind: "idle" });
+  const activeHotkey = formatCombo(settings.hotkey ?? DEFAULT_HOTKEY);
 
   async function runManualCapture() {
     setState({ kind: "busy" });
@@ -32,7 +36,9 @@ export function CaptureDebugPanel() {
         {t("debugTitle")}
       </summary>
       <div className="mt-3 flex flex-col gap-3">
-        <p className="text-text-muted text-xs">{t("hotkeyHint")}</p>
+        <p className="text-text-muted text-xs">
+          {t("hotkeyHint", { hotkey: activeHotkey })}
+        </p>
         <button
           type="button"
           disabled={state.kind === "busy"}

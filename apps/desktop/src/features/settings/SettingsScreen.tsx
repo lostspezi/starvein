@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import {
   disable as disableAutostart,
@@ -8,26 +8,62 @@ import { open as openFileDialog } from "@tauri-apps/plugin-dialog";
 import { useTranslations } from "use-intl";
 import { getServerUrl, isServerUrlLocked } from "../../lib/config";
 import { useSettings } from "../../SettingsContext";
+import { HotkeyRecorder } from "./HotkeyRecorder";
+import { DEFAULT_HOTKEY, formatCombo } from "./hotkey";
 
-const DEFAULT_HOTKEY = "ctrl+alt+r";
+/** Spiegelt CaptureShortcutStatus in src-tauri/src/shortcuts.rs. */
+type CaptureShortcutStatus = {
+  shortcut: string;
+  registered: boolean;
+};
+
+type HotkeyFeedback = "applied" | "taken" | "invalid" | "failed";
 
 /** Einstellungen (Slice D6): Hotkey, Sprache, Server, Game.log, Autostart. */
 export function SettingsScreen({ onClose }: { onClose: () => void }) {
   const t = useTranslations("settings");
   const { settings, update } = useSettings();
-  const [hotkeyDraft, setHotkeyDraft] = useState(
-    settings.hotkey ?? DEFAULT_HOTKEY,
+  const [hotkeyFeedback, setHotkeyFeedback] = useState<HotkeyFeedback | null>(
+    null,
   );
-  const [hotkeyError, setHotkeyError] = useState(false);
+  const [hotkeyRegistered, setHotkeyRegistered] = useState(true);
   const [serverDraft, setServerDraft] = useState(settings.serverUrl ?? "");
+  const activeHotkey = settings.hotkey ?? DEFAULT_HOTKEY;
 
-  async function applyHotkey() {
-    setHotkeyError(false);
+  // Registrierungsstatus aus Rust: schlägt die Registrierung fehl (z. B.
+  // weil eine andere Anwendung die Kombination hält), passiert das sonst
+  // unsichtbar im Hintergrund.
+  useEffect(() => {
+    let cancelled = false;
+    invoke<CaptureShortcutStatus>("get_capture_shortcut")
+      .then((status) => {
+        if (!cancelled) {
+          setHotkeyRegistered(status.registered);
+        }
+      })
+      .catch(() => {
+        // Status nicht abfragbar — keine falsche Warnung anzeigen.
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  async function applyHotkey(combo: string) {
+    setHotkeyFeedback(null);
     try {
-      await invoke("set_capture_shortcut", { shortcut: hotkeyDraft.trim() });
-      await update("hotkey", hotkeyDraft.trim());
-    } catch {
-      setHotkeyError(true);
+      await invoke("set_capture_shortcut", { shortcut: combo });
+      await update("hotkey", combo);
+      setHotkeyRegistered(true);
+      setHotkeyFeedback("applied");
+    } catch (error) {
+      setHotkeyFeedback(
+        error === "unavailable"
+          ? "taken"
+          : error === "invalid"
+            ? "invalid"
+            : "failed",
+      );
     }
   }
 
@@ -74,30 +110,39 @@ export function SettingsScreen({ onClose }: { onClose: () => void }) {
       </div>
 
       <div className="flex flex-col gap-4">
-        <div className="flex items-end gap-2">
-          <label className={labelClasses}>
-            {t("hotkeyLabel")}
-            <input
-              aria-label={t("hotkeyLabel")}
-              value={hotkeyDraft}
-              onChange={(event) => setHotkeyDraft(event.target.value)}
-              spellCheck={false}
-              className={`${inputClasses} w-48 font-mono`}
-            />
-          </label>
-          <button
-            type="button"
-            onClick={() => void applyHotkey()}
-            className="bg-bg-nebula-2 text-text-primary hover:shadow-glow-sm rounded px-3 py-1.5 text-xs transition-all duration-200"
-          >
-            {t("applyHotkey")}
-          </button>
+        <div className="flex flex-col gap-1">
+          <span className="text-text-muted text-xs">{t("hotkeyLabel")}</span>
+          <HotkeyRecorder
+            value={activeHotkey}
+            label={t("hotkeyLabel")}
+            onRecord={(combo) => void applyHotkey(combo)}
+          />
+          {!hotkeyRegistered && (
+            <p className="text-warning text-xs" role="alert">
+              {t("hotkeyInactive", { hotkey: formatCombo(activeHotkey) })}
+            </p>
+          )}
+          {hotkeyFeedback === "applied" && (
+            <p className="text-success text-xs" role="status">
+              {t("hotkeyApplied", { hotkey: formatCombo(activeHotkey) })}
+            </p>
+          )}
+          {hotkeyFeedback === "taken" && (
+            <p className="text-warning text-xs" role="alert">
+              {t("hotkeyTaken")}
+            </p>
+          )}
+          {hotkeyFeedback === "invalid" && (
+            <p className="text-warning text-xs" role="alert">
+              {t("hotkeyInvalid")}
+            </p>
+          )}
+          {hotkeyFeedback === "failed" && (
+            <p className="text-warning text-xs" role="alert">
+              {t("hotkeyError")}
+            </p>
+          )}
         </div>
-        {hotkeyError && (
-          <p className="text-warning text-xs" role="alert">
-            {t("hotkeyError")}
-          </p>
-        )}
 
         <label className={labelClasses}>
           {t("localeLabel")}

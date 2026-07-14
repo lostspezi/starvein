@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { IntlProvider } from "use-intl";
 import { beforeEach, describe, expect, it, vi } from "vitest";
@@ -54,38 +54,83 @@ function renderScreen() {
 
 beforeEach(() => {
   invoke.mockReset();
+  invoke.mockImplementation((command: unknown) =>
+    command === "get_capture_shortcut"
+      ? Promise.resolve({ shortcut: "ctrl+alt+r", registered: true })
+      : Promise.resolve(undefined),
+  );
   saveSetting.mockClear();
   enableAutostart.mockClear();
   openDialog.mockReset();
   serverLocked = false;
 });
 
+async function recordHotkey(code: string) {
+  const recorder = screen.getByRole("button", { name: "Capture hotkey" });
+  await userEvent.click(recorder);
+  fireEvent.keyDown(recorder, { code, ctrlKey: true, altKey: true });
+}
+
 describe("SettingsScreen", () => {
-  it("applies a new capture hotkey via the Rust command", async () => {
-    invoke.mockResolvedValue(undefined);
+  it("applies a recorded capture hotkey via the Rust command", async () => {
     renderScreen();
 
-    const input = screen.getByLabelText("Capture hotkey");
-    await userEvent.clear(input);
-    await userEvent.type(input, "ctrl+alt+j");
-    await userEvent.click(screen.getByRole("button", { name: "Apply hotkey" }));
+    await recordHotkey("KeyJ");
 
     expect(invoke).toHaveBeenCalledWith("set_capture_shortcut", {
       shortcut: "ctrl+alt+j",
     });
+    expect(await screen.findByText("Hotkey active: Ctrl+Alt+J")).toBeVisible();
     expect(saveSetting).toHaveBeenCalledWith("hotkey", "ctrl+alt+j");
   });
 
-  it("shows an error for invalid hotkeys and keeps the old one", async () => {
-    invoke.mockRejectedValue("invalid shortcut");
+  it("reports a combination taken by another application and keeps the old one", async () => {
+    invoke.mockImplementation((command: unknown) =>
+      command === "get_capture_shortcut"
+        ? Promise.resolve({ shortcut: "ctrl+alt+r", registered: true })
+        : Promise.reject("unavailable"),
+    );
     renderScreen();
 
-    await userEvent.click(screen.getByRole("button", { name: "Apply hotkey" }));
+    await recordHotkey("KeyJ");
 
     expect(
-      await screen.findByText("This hotkey could not be registered."),
+      await screen.findByText(
+        "This combination is already in use by another application.",
+      ),
     ).toBeVisible();
     expect(saveSetting).not.toHaveBeenCalledWith("hotkey", expect.anything());
+  });
+
+  it("reports an unsupported combination", async () => {
+    invoke.mockImplementation((command: unknown) =>
+      command === "get_capture_shortcut"
+        ? Promise.resolve({ shortcut: "ctrl+alt+r", registered: true })
+        : Promise.reject("invalid"),
+    );
+    renderScreen();
+
+    await recordHotkey("KeyJ");
+
+    expect(
+      await screen.findByText("This combination is not supported."),
+    ).toBeVisible();
+    expect(saveSetting).not.toHaveBeenCalledWith("hotkey", expect.anything());
+  });
+
+  it("warns when the active hotkey is not registered in the system", async () => {
+    invoke.mockImplementation((command: unknown) =>
+      command === "get_capture_shortcut"
+        ? Promise.resolve({ shortcut: "ctrl+alt+r", registered: false })
+        : Promise.resolve(undefined),
+    );
+    renderScreen();
+
+    expect(
+      await screen.findByText(
+        "The hotkey Ctrl+Alt+R could not be registered — another application is probably using it. Record a different one.",
+      ),
+    ).toBeVisible();
   });
 
   it("toggles autostart", async () => {
