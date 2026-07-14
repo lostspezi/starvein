@@ -30,6 +30,10 @@
     "refreshFailed": "Refresh failed — the list may be stale.",
     "empty": "No refinery jobs tracked yet.",
     "ready": "Ready to collect",
-    "collected": "Collected"
+    "collected": "Collected",
+    "notification": {
+      "title": "Refinery job ready",
+      "body": "Your work order at {terminal} is ready to collect."
+    }
   }
 }

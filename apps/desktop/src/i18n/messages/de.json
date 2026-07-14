@@ -30,6 +30,10 @@
     "refreshFailed": "Aktualisierung fehlgeschlagen — Anzeige kann veraltet sein.",
     "empty": "Noch keine Refinery-Jobs erfasst.",
     "ready": "Bereit zur Abholung",
-    "collected": "Abgeholt"
+    "collected": "Abgeholt",
+    "notification": {
+      "title": "Refinery-Job fertig",
+      "body": "Dein Auftrag bei {terminal} ist bereit zur Abholung."
+    }
   }
 }
