@@ -150,3 +150,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/dependency-review-action@v4
+        with:
+          # GHSA-wrw7-89jp-8q8g (glib 0.18, VariantStrIter-Unsoundness):
+          # Linux-only transitive Dependency des Tauri-GTK-Stacks — steht im
+          # Cargo.lock, wird für unser Windows-Target aber nie kompiliert.
+          # gtk-rs 0.18 pinnt glib 0.18; Bump erst mit Tauris GTK-Update
+          # möglich. Bei Linux-Support vor dem Update neu bewerten.
+          allow-ghsas: GHSA-wrw7-89jp-8q8g
