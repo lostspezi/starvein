@@ -4,6 +4,8 @@ import { IntlProvider } from "use-intl";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { messages } from "../../i18n/messages";
 import type { OcrCapture } from "../../lib/tauri";
+import type { AppSettings } from "../../lib/settings";
+import { SettingsProvider } from "../../SettingsContext";
 import { CaptureDebugPanel } from "./CaptureDebugPanel";
 
 const captureAndOcr = vi.fn();
@@ -24,10 +26,20 @@ const CAPTURE: OcrCapture = {
   ],
 };
 
-function renderPanel() {
+const SETTINGS: AppSettings = {
+  locale: "en",
+  serverUrl: null,
+  hotkey: null,
+  scLogPath: null,
+  autostart: false,
+};
+
+function renderPanel(settings: AppSettings = SETTINGS) {
   return render(
     <IntlProvider locale="en" messages={messages.en}>
-      <CaptureDebugPanel />
+      <SettingsProvider initial={settings}>
+        <CaptureDebugPanel />
+      </SettingsProvider>
     </IntlProvider>,
   );
 }
@@ -53,6 +65,20 @@ describe("CaptureDebugPanel", () => {
     expect(await screen.findByText("QUANTAINIUM 32 SCU")).toBeVisible();
     expect(screen.getByText("PROCESSING TIME 2H 5M")).toBeVisible();
     expect(screen.getByText(/1920\s?×\s?1080/)).toBeVisible();
+  });
+
+  it("shows the configured hotkey in the hint", async () => {
+    renderPanel({ ...SETTINGS, hotkey: "ctrl+alt+j" });
+    await expandPanel();
+
+    expect(screen.getByText(/Ctrl\+Alt\+J/)).toBeVisible();
+  });
+
+  it("falls back to the default hotkey in the hint", async () => {
+    renderPanel();
+    await expandPanel();
+
+    expect(screen.getByText(/Ctrl\+Alt\+R/)).toBeVisible();
   });
 
   it("shows an error when the capture fails", async () => {

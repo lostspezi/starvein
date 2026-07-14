@@ -42,11 +42,23 @@ ausführen — `tauri::generate_context!` braucht das `dist/`-Verzeichnis.
   Branding-Compliance-Test** (CLAUDE.md §2) — nie löschen, skippen oder
   abschwächen.
 
+## Bekannte Stolperfalle: Spiel läuft als Administrator
+
+Läuft der RSI Launcher (und damit Star Citizen) mit Admin-Rechten, blockiert
+Windows (UIPI) globale Hotkeys **aller** nicht-erhöhten Programme, solange das
+Spiel den Fokus hat — das betrifft auch Discord/OBS und den Companion-Hotkey.
+Abhilfe: Launcher ohne Admin-Rechte starten, oder den Companion ebenfalls
+als Administrator ausführen. Der Hotkey feuert dann wieder im Spiel.
+
 ## Manuelle Test-Checkliste (nicht automatisierbar)
 
 Nach relevanten Änderungen von Hand prüfen:
 
 - [ ] Globaler Hotkey feuert, während Star Citizen im Borderless-Fullscreen läuft
+- [ ] Hotkey-Rebind in den Einstellungen per Tastendruck (Aufnahme-Feld); belegte
+      Kombination zeigt Warnung und der alte Hotkey bleibt aktiv
+- [ ] Einstellungen zeigen eine Warnung, wenn der aktive Hotkey vom System nicht
+      registriert werden konnte (z. B. weil eine andere Anwendung ihn hält)
 - [ ] OCR-Genauigkeit am Refinery-Terminal bei 1080p / 1440p / 4K
 - [ ] Native Benachrichtigung erscheint, wenn ein Job fertig wird
 - [ ] Tray-Verhalten: Close-to-Tray, Wiederherstellen, Single-Instance

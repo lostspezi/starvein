@@ -65,7 +65,7 @@ pub fn run() {
         .plugin(tauri_plugin_global_shortcut::Builder::new().build())
         .setup(|app| {
             tray::setup(app.handle())?;
-            shortcuts::register_from_settings(app.handle()).map_err(std::io::Error::other)?;
+            shortcuts::register_from_settings(app.handle());
             Ok(())
         })
         // Close-to-Tray: Fenster verstecken, App läuft für Countdown-
@@ -81,7 +81,8 @@ pub fn run() {
             secrets::secret_get,
             secrets::secret_set,
             secrets::secret_delete,
-            shortcuts::set_capture_shortcut
+            shortcuts::set_capture_shortcut,
+            shortcuts::get_capture_shortcut
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
