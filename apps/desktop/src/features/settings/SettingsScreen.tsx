@@ -6,6 +6,7 @@ import {
 } from "@tauri-apps/plugin-autostart";
 import { open as openFileDialog } from "@tauri-apps/plugin-dialog";
 import { useTranslations } from "use-intl";
+import { getServerUrl, isServerUrlLocked } from "../../lib/config";
 import { useSettings } from "../../SettingsContext";
 
 const DEFAULT_HOTKEY = "ctrl+alt+r";
@@ -119,31 +120,41 @@ export function SettingsScreen({ onClose }: { onClose: () => void }) {
           </select>
         </label>
 
-        <div className="flex items-end gap-2">
-          <label className={labelClasses}>
-            {t("serverLabel")}
-            <input
-              aria-label={t("serverLabel")}
-              value={serverDraft}
-              onChange={(event) => setServerDraft(event.target.value)}
-              placeholder="https://starvein.app"
-              spellCheck={false}
-              className={`${inputClasses} w-72`}
-            />
-          </label>
-          <button
-            type="button"
-            onClick={() =>
-              void update(
-                "serverUrl",
-                serverDraft.trim() === "" ? null : serverDraft.trim(),
-              )
-            }
-            className="bg-bg-nebula-2 text-text-primary hover:shadow-glow-sm rounded px-3 py-1.5 text-xs transition-all duration-200"
-          >
-            {t("applyServer")}
-          </button>
-        </div>
+        {isServerUrlLocked() ? (
+          // Release-Build: Server fest auf die offizielle Instanz gepinnt.
+          <div className="flex flex-col gap-1">
+            <span className="text-text-muted text-xs">{t("serverLabel")}</span>
+            <span className="text-text-muted font-mono text-xs">
+              {getServerUrl()}
+            </span>
+          </div>
+        ) : (
+          <div className="flex items-end gap-2">
+            <label className={labelClasses}>
+              {t("serverLabel")}
+              <input
+                aria-label={t("serverLabel")}
+                value={serverDraft}
+                onChange={(event) => setServerDraft(event.target.value)}
+                placeholder="https://starvein.app"
+                spellCheck={false}
+                className={`${inputClasses} w-72`}
+              />
+            </label>
+            <button
+              type="button"
+              onClick={() =>
+                void update(
+                  "serverUrl",
+                  serverDraft.trim() === "" ? null : serverDraft.trim(),
+                )
+              }
+              className="bg-bg-nebula-2 text-text-primary hover:shadow-glow-sm rounded px-3 py-1.5 text-xs transition-all duration-200"
+            >
+              {t("applyServer")}
+            </button>
+          </div>
+        )}
 
         <div className="flex flex-col gap-1">
           <span className="text-text-muted text-xs">{t("logPathLabel")}</span>

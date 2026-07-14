@@ -28,6 +28,12 @@ vi.mock("@tauri-apps/plugin-dialog", () => ({
   open: (...args: unknown[]) => openDialog(...args),
 }));
 
+let serverLocked = false;
+vi.mock("../../lib/config", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("../../lib/config")>()),
+  isServerUrlLocked: () => serverLocked,
+}));
+
 const SETTINGS: AppSettings = {
   locale: "en",
   serverUrl: null,
@@ -51,6 +57,7 @@ beforeEach(() => {
   saveSetting.mockClear();
   enableAutostart.mockClear();
   openDialog.mockReset();
+  serverLocked = false;
 });
 
 describe("SettingsScreen", () => {
@@ -88,6 +95,22 @@ describe("SettingsScreen", () => {
 
     expect(enableAutostart).toHaveBeenCalled();
     expect(saveSetting).toHaveBeenCalledWith("autostart", true);
+  });
+
+  it("offers an editable server URL in dev builds", () => {
+    renderScreen();
+    expect(screen.getByLabelText("Server URL")).toBeInTheDocument();
+  });
+
+  it("pins the server URL in release builds", () => {
+    serverLocked = true;
+    renderScreen();
+
+    expect(screen.queryByLabelText("Server URL")).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: "Apply server" }),
+    ).not.toBeInTheDocument();
+    expect(screen.getByText("https://starvein.app")).toBeVisible();
   });
 
   it("stores the picked Game.log path", async () => {
