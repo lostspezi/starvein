@@ -1,4 +1,4 @@
-import { SERVER_URL } from "./config";
+import { getServerUrl } from "./config";
 import { fetch } from "./http";
 
 export type SessionUser = {
@@ -11,7 +11,7 @@ export type SessionUser = {
 export async function fetchSessionUser(
   token: string,
 ): Promise<SessionUser | null> {
-  const response = await fetch(`${SERVER_URL}/api/auth/get-session`, {
+  const response = await fetch(`${getServerUrl()}/api/auth/get-session`, {
     headers: { authorization: `Bearer ${token}` },
   });
   if (!response.ok) {
@@ -27,7 +27,7 @@ export async function fetchSessionUser(
  */
 export async function revokeSession(token: string): Promise<void> {
   try {
-    await fetch(`${SERVER_URL}/api/auth/sign-out`, {
+    await fetch(`${getServerUrl()}/api/auth/sign-out`, {
       method: "POST",
       headers: {
         authorization: `Bearer ${token}`,

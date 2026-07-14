@@ -6,10 +6,26 @@
   },
   "shell": {
     "loading": "Connecting …",
+    "settings": "Settings",
     "session": {
       "signedInAs": "Signed in as {name}",
       "signOut": "Sign out"
     }
+  },
+  "settings": {
+    "title": "Settings",
+    "close": "Close",
+    "hotkeyLabel": "Capture hotkey",
+    "applyHotkey": "Apply hotkey",
+    "hotkeyError": "This hotkey could not be registered.",
+    "localeLabel": "Language",
+    "localeSystem": "System language",
+    "serverLabel": "Server URL",
+    "applyServer": "Apply server",
+    "logPathLabel": "Star Citizen Game.log (for location suggestions)",
+    "pickLogFile": "Pick Game.log …",
+    "logPathUnset": "Not set",
+    "autostartLabel": "Start with Windows"
   },
   "login": {
     "title": "Connect to STARVEIN",

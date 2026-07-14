@@ -1,4 +1,4 @@
-import { z } from "zod";
+﻿import { z } from "zod";
 import { oreSchema, type Ore } from "@starvein/shared/ores";
 import {
   refineryMethodSchema,
@@ -11,7 +11,7 @@ import {
   type RefineryJob,
   type RefineryJobInput,
 } from "@starvein/shared/refinery-jobs";
-import { SERVER_URL } from "./config";
+import { getServerUrl } from "./config";
 import { fetch } from "./http";
 
 export class ApiError extends Error {
@@ -26,7 +26,7 @@ async function getJson<T>(
   token: string,
   schema: z.ZodType<T>,
 ): Promise<T> {
-  const response = await fetch(`${SERVER_URL}${path}`, {
+  const response = await fetch(`${getServerUrl()}${path}`, {
     headers: { authorization: `Bearer ${token}` },
   });
   if (!response.ok) {
@@ -43,7 +43,7 @@ async function getPublicJson<T>(
   path: string,
   schema: z.ZodType<T>,
 ): Promise<T> {
-  const response = await fetch(`${SERVER_URL}${path}`);
+  const response = await fetch(`${getServerUrl()}${path}`);
   if (!response.ok) {
     throw new ApiError(response.status);
   }
@@ -69,7 +69,7 @@ export async function createRefineryJob(
   token: string,
   input: RefineryJobInput,
 ): Promise<RefineryJob> {
-  const response = await fetch(`${SERVER_URL}/api/refinery-jobs`, {
+  const response = await fetch(`${getServerUrl()}/api/refinery-jobs`, {
     method: "POST",
     headers: {
       authorization: `Bearer ${token}`,

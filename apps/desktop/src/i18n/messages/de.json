@@ -6,10 +6,26 @@
   },
   "shell": {
     "loading": "Verbinde …",
+    "settings": "Einstellungen",
     "session": {
       "signedInAs": "Angemeldet als {name}",
       "signOut": "Abmelden"
     }
+  },
+  "settings": {
+    "title": "Einstellungen",
+    "close": "Schließen",
+    "hotkeyLabel": "Erfassungs-Hotkey",
+    "applyHotkey": "Hotkey übernehmen",
+    "hotkeyError": "Dieser Hotkey konnte nicht registriert werden.",
+    "localeLabel": "Sprache",
+    "localeSystem": "Systemsprache",
+    "serverLabel": "Server-URL",
+    "applyServer": "Server übernehmen",
+    "logPathLabel": "Star-Citizen-Game.log (für Standort-Vorschläge)",
+    "pickLogFile": "Game.log wählen …",
+    "logPathUnset": "Nicht gesetzt",
+    "autostartLabel": "Mit Windows starten"
   },
   "login": {
     "title": "Mit STARVEIN verbinden",

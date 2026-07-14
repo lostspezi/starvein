@@ -1,13 +1,11 @@
 mod capture;
 mod ocr;
 mod secrets;
+mod shortcuts;
 mod tray;
 
 use tauri::{AppHandle, Emitter};
-use tauri_plugin_global_shortcut::{Shortcut, ShortcutState};
-
-/// Default-Hotkey für die Job-Erfassung; Rebind kommt mit Slice D6.
-const CAPTURE_SHORTCUT: &str = "ctrl+alt+r";
+use tauri_plugin_autostart::MacosLauncher;
 
 fn run_capture_pipeline() -> Result<ocr::OcrCapture, String> {
     let captured = capture::capture_game_or_screen()?;
@@ -31,7 +29,7 @@ async fn capture_and_ocr() -> Result<ocr::OcrCapture, String> {
         .map_err(|e| e.to_string())?
 }
 
-fn on_capture_hotkey(app: &AppHandle) {
+pub(crate) fn on_capture_hotkey(app: &AppHandle) {
     let app = app.clone();
     tauri::async_runtime::spawn_blocking(move || {
         // Erst capturen (solange SC im Vordergrund ist), dann Fenster zeigen.
@@ -58,21 +56,16 @@ pub fn run() {
         .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_http::init())
         .plugin(tauri_plugin_notification::init())
-        .plugin(
-            tauri_plugin_global_shortcut::Builder::new()
-                .with_shortcuts([CAPTURE_SHORTCUT])
-                .expect("capture shortcut must parse")
-                .with_handler(|app, shortcut, event| {
-                    if event.state() == ShortcutState::Pressed
-                        && shortcut == &CAPTURE_SHORTCUT.parse::<Shortcut>().expect("parsed above")
-                    {
-                        on_capture_hotkey(app);
-                    }
-                })
-                .build(),
-        )
+        .plugin(tauri_plugin_store::Builder::default().build())
+        .plugin(tauri_plugin_dialog::init())
+        .plugin(tauri_plugin_autostart::init(
+            MacosLauncher::LaunchAgent,
+            None,
+        ))
+        .plugin(tauri_plugin_global_shortcut::Builder::new().build())
         .setup(|app| {
             tray::setup(app.handle())?;
+            shortcuts::register_from_settings(app.handle()).map_err(std::io::Error::other)?;
             Ok(())
         })
         // Close-to-Tray: Fenster verstecken, App läuft für Countdown-
@@ -87,7 +80,8 @@ pub fn run() {
             capture_and_ocr,
             secrets::secret_get,
             secrets::secret_set,
-            secrets::secret_delete
+            secrets::secret_delete,
+            shortcuts::set_capture_shortcut
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

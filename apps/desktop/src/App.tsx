@@ -5,6 +5,7 @@ import { CaptureDebugPanel } from "./features/capture/CaptureDebugPanel";
 import { CaptureFlow } from "./features/capture/CaptureFlow";
 import { JobsPanel } from "./features/jobs/JobsPanel";
 import { LoginScreen } from "./features/login/LoginScreen";
+import { SettingsScreen } from "./features/settings/SettingsScreen";
 import { clearSessionToken, getSessionToken } from "./lib/secrets";
 import {
   fetchSessionUser,
@@ -25,6 +26,7 @@ export function App() {
   const [pendingCapture, setPendingCapture] = useState<OcrCapture | null>(null);
   const [captureError, setCaptureError] = useState<string | null>(null);
   const [jobsVersion, setJobsVersion] = useState(0);
+  const [showSettings, setShowSettings] = useState(false);
 
   const adoptToken = useCallback(async (token: string) => {
     const user = await fetchSessionUser(token);
@@ -77,20 +79,30 @@ export function App() {
         <h1 className="text-accent-cyan font-mono text-sm tracking-[0.3em]">
           STARVEIN <span className="text-text-muted">COMPANION</span>
         </h1>
-        {auth.phase === "loggedIn" && (
-          <div className="flex items-center gap-3 text-sm">
-            <span className="text-text-muted">
-              {t("session.signedInAs", { name: auth.user.name })}
-            </span>
-            <button
-              type="button"
-              onClick={() => void signOut()}
-              className="text-text-muted hover:bg-bg-nebula-2 hover:text-text-primary rounded px-2 py-1 transition-colors duration-150"
-            >
-              {t("session.signOut")}
-            </button>
-          </div>
-        )}
+        <div className="flex items-center gap-3 text-sm">
+          {auth.phase === "loggedIn" && (
+            <>
+              <span className="text-text-muted">
+                {t("session.signedInAs", { name: auth.user.name })}
+              </span>
+              <button
+                type="button"
+                onClick={() => void signOut()}
+                className="text-text-muted hover:bg-bg-nebula-2 hover:text-text-primary rounded px-2 py-1 transition-colors duration-150"
+              >
+                {t("session.signOut")}
+              </button>
+            </>
+          )}
+          <button
+            type="button"
+            aria-label={t("settings")}
+            onClick={() => setShowSettings((current) => !current)}
+            className="text-text-muted hover:bg-bg-nebula-2 hover:text-text-primary rounded px-2 py-1 transition-colors duration-150"
+          >
+            ⚙
+          </button>
+        </div>
       </header>
 
       {auth.phase === "loading" && (
@@ -98,10 +110,15 @@ export function App() {
           <p className="text-text-muted text-sm">{t("loading")}</p>
         </main>
       )}
-      {auth.phase === "loggedOut" && (
+      {auth.phase !== "loading" && showSettings && (
+        <main className="flex flex-1 flex-col items-center gap-4 overflow-y-auto p-6">
+          <SettingsScreen onClose={() => setShowSettings(false)} />
+        </main>
+      )}
+      {auth.phase === "loggedOut" && !showSettings && (
         <LoginScreen onAuthenticated={(token) => void adoptToken(token)} />
       )}
-      {auth.phase === "loggedIn" && (
+      {auth.phase === "loggedIn" && !showSettings && (
         <main className="flex flex-1 flex-col items-center gap-4 overflow-y-auto p-6">
           {captureError && (
             <p className="text-warning text-sm" role="alert">

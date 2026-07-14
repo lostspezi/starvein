@@ -7,6 +7,9 @@
     "core:default",
     "opener:default",
     "notification:default",
+    "store:default",
+    "dialog:default",
+    "autostart:default",
     {
       "identifier": "http:default",
       "allow": [

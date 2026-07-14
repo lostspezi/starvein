@@ -1,7 +1,7 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { openUrl } from "@tauri-apps/plugin-opener";
 import { useTranslations } from "use-intl";
-import { SERVER_URL } from "../../lib/config";
+import { getServerUrl } from "../../lib/config";
 import { fetch } from "../../lib/http";
 import { setSessionToken } from "../../lib/secrets";
 import {
@@ -34,14 +34,14 @@ export function LoginScreen({
   async function startFlow() {
     try {
       const code = await requestDeviceCode({
-        baseUrl: SERVER_URL,
+        baseUrl: getServerUrl(),
         fetchFn: fetch,
       });
       setState({ phase: "waiting", code });
       void openUrl(code.verificationUriComplete);
 
       const token = await pollForToken({
-        baseUrl: SERVER_URL,
+        baseUrl: getServerUrl(),
         deviceCode: code.deviceCode,
         intervalSeconds: code.intervalSeconds,
         fetchFn: fetch,
