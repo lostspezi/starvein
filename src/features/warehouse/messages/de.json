@@ -1,0 +1,41 @@
+{
+  "warehouse": {
+    "title": "Mein Lager",
+    "subtitle": "Behalte im Blick, wo dein Roherz und raffiniertes Material lagert.",
+    "loginRequired": "Melde dich an, um dein Lager zu verwalten.",
+    "empty": "Noch kein Material eingelagert — lege unten deinen ersten Eintrag an.",
+    "form": {
+      "heading": "Eintrag anlegen",
+      "oreLabel": "Erz",
+      "kindLabel": "Material",
+      "kindRaw": "Roh",
+      "kindRefined": "Raffiniert",
+      "quantityLabel": "Menge (SCU)",
+      "locationKindLabel": "Art des Lagerorts",
+      "locationBody": "Himmelskörper",
+      "locationTerminal": "Refinery-Terminal",
+      "locationCustom": "Eigener Ort",
+      "bodyLabel": "Lagerort",
+      "terminalLabel": "Terminal",
+      "customLabel": "Ort",
+      "customPlaceholder": "z. B. im Schiff",
+      "noteLabel": "Notiz",
+      "submit": "Eintrag anlegen",
+      "error": "Speichern fehlgeschlagen — bitte erneut versuchen."
+    },
+    "entry": {
+      "edit": "Bearbeiten",
+      "save": "Speichern",
+      "cancel": "Abbrechen",
+      "delete": "Löschen",
+      "confirmDelete": "Diesen Eintrag löschen?",
+      "quantityLabel": "Menge (SCU)",
+      "noteLabel": "Notiz",
+      "raw": "Roh",
+      "refined": "Raffiniert"
+    },
+    "group": {
+      "totalScu": "{count} SCU gesamt"
+    }
+  }
+}

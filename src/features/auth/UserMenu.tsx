@@ -127,6 +127,13 @@ export function UserMenu() {
           >
             {t("myLoadouts")}
           </Link>
+          <Link
+            href="/warehouse"
+            className={itemClasses}
+            onClick={() => setOpen(false)}
+          >
+            {t("myWarehouse")}
+          </Link>
           <button
             type="button"
             className={itemClasses}

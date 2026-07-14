@@ -34,6 +34,7 @@
     "favorites": { "title": "Favorites" },
     "myLoadouts": { "title": "My Loadouts" },
     "newLoadout": { "title": "New Loadout" },
+    "myWarehouse": { "title": "My Warehouse" },
     "editLoadout": { "title": "Edit Loadout" },
     "admin": { "title": "Admin" }
   },

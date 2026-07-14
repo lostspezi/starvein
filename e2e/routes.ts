@@ -34,4 +34,6 @@ export const ROUTES: string[] = [
   "/en/loadouts/new",
   "/de/loadouts/mine",
   "/en/loadouts/mine",
+  "/de/warehouse",
+  "/en/warehouse",
 ];

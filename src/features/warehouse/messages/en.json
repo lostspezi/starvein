@@ -1,0 +1,41 @@
+{
+  "warehouse": {
+    "title": "My warehouse",
+    "subtitle": "Track where your raw ore and refined material is stored.",
+    "loginRequired": "Sign in to manage your warehouse.",
+    "empty": "No stored material yet — add your first entry below.",
+    "form": {
+      "heading": "Add entry",
+      "oreLabel": "Ore",
+      "kindLabel": "Material",
+      "kindRaw": "Raw",
+      "kindRefined": "Refined",
+      "quantityLabel": "Quantity (SCU)",
+      "locationKindLabel": "Location type",
+      "locationBody": "Celestial body",
+      "locationTerminal": "Refinery terminal",
+      "locationCustom": "Custom place",
+      "bodyLabel": "Location",
+      "terminalLabel": "Terminal",
+      "customLabel": "Place",
+      "customPlaceholder": "e.g. in my ship",
+      "noteLabel": "Note",
+      "submit": "Add entry",
+      "error": "Saving failed — please try again."
+    },
+    "entry": {
+      "edit": "Edit",
+      "save": "Save",
+      "cancel": "Cancel",
+      "delete": "Delete",
+      "confirmDelete": "Delete this entry?",
+      "quantityLabel": "Quantity (SCU)",
+      "noteLabel": "Note",
+      "raw": "Raw",
+      "refined": "Refined"
+    },
+    "group": {
+      "totalScu": "{count} SCU total"
+    }
+  }
+}
