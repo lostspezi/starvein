@@ -1,0 +1,83 @@
+/* Design-System "Tiefes All 2.0" — Tokens aus CLAUDE.md Abschnitt 7.
+   Geteilt zwischen Web-App (globals.css) und Desktop-App (Tauri).
+   Die --font-*-Variablen (next/font bzw. lokale Fonts) setzt jede App selbst;
+   die Fallback-Ketten hier greifen, wenn sie fehlen. */
+@theme {
+  --color-bg-void: #0a0e1a;
+  --color-bg-nebula: #131a2e;
+  --color-bg-nebula-2: #1c2540;
+  --color-accent-primary: #7c6cf0;
+  --color-accent-secondary: #4c9ef0;
+  --color-accent-glow: #9db4ff; /* Eisblau-Glow (Hybrid-Palette) */
+  --color-accent-cyan: #5ee6ff; /* holografischer HUD-Akzent */
+  --color-accent-ice: #b8e8ff; /* helle Highlights, Hero */
+  --color-rarity-common: #8b95b0;
+  --color-rarity-uncommon: #4c9ef0;
+  --color-rarity-rare: #a78bfa;
+  --color-rarity-epic: #e0a83c;
+  --color-rarity-legendary: #f06c9e;
+  --color-text-primary: #e8eaf5;
+  --color-text-muted: #8b95b0;
+  --color-success: #4ade80;
+  --color-warning: #fbbf24;
+
+  /* Glas-Oberflächen (HUD-Panels, Header) */
+  --color-glass: rgb(19 26 46 / 0.7);
+  --color-glass-border: rgb(94 230 255 / 0.14);
+
+  /* Glow-Schatten → shadow-glow-* Utilities */
+  --shadow-glow-sm: 0 0 8px rgb(94 230 255 / 0.2);
+  --shadow-glow: 0 0 18px rgb(94 230 255 / 0.3);
+  --shadow-glow-primary: 0 0 14px rgb(124 108 240 / 0.4);
+
+  /* Motion-System: 150–300 ms, ease-out rein / ease-in raus */
+  --ease-hud: cubic-bezier(0.16, 1, 0.3, 1);
+  --animate-reveal: reveal 250ms var(--ease-hud) both;
+  --animate-fade-in: fade-in 200ms ease-out both;
+  --animate-glow-pulse: glow-pulse 2.4s ease-in-out infinite;
+
+  @keyframes reveal {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes glow-pulse {
+    0%,
+    100% {
+      box-shadow: 0 0 6px rgb(94 230 255 / 0.15);
+    }
+    50% {
+      box-shadow: 0 0 16px rgb(94 230 255 / 0.35);
+    }
+  }
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
+}
+
+/* Motion-Kill-Switch: bei reduzierter Bewegung enden alle Animationen und
+   Transitions sofort — Inhalte sind ohne Verzögerung sichtbar. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

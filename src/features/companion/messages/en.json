@@ -1,0 +1,39 @@
+{
+  "companion": {
+    "title": "STARVEIN Companion",
+    "betaBadge": "Beta {version}",
+    "platform": "Windows desktop app for Star Citizen",
+    "intro": "The companion runs alongside Star Citizen and captures your refinery work orders almost automatically: press a hotkey at the terminal, quickly review the recognized values, done — the job shows up with a countdown in your STARVEIN overview and pings you when it is ready to collect.",
+    "download": "Download for Windows",
+    "smartscreenHint": "Unsigned beta — Windows SmartScreen will ask on first launch (“More info” → “Run anyway”).",
+    "howTitle": "How it works",
+    "steps": {
+      "login": {
+        "title": "Connect with Discord",
+        "body": "The app shows a short code and opens your browser. Sign in with Discord as usual and confirm the code — no password ever touches the app, the token lives in the Windows Credential Manager."
+      },
+      "hotkey": {
+        "title": "Press the hotkey at the terminal",
+        "body": "Stand at the refinery terminal with your work order on screen and press Ctrl+Alt+R (rebindable in settings). The app takes a screenshot and reads ores, quantities and duration via text recognition."
+      },
+      "confirm": {
+        "title": "Review and confirm",
+        "body": "Everything recognized lands in an editable form — pick the terminal, correct anything if needed, create the job. Fully manual entry works too whenever recognition misses."
+      },
+      "track": {
+        "title": "Track jobs and get notified",
+        "body": "Your jobs tick down inside the app (and on starvein.app). The moment an order finishes you get a Windows notification — even while the app naps in the tray."
+      }
+    },
+    "safetyTitle": "Anti-cheat safe",
+    "safetyBody": "The companion only takes regular OS-level screenshots and never reads game memory, hooks nothing and injects nothing into the game process — the same technique other established community tools rely on.",
+    "requirementsTitle": "Requirements",
+    "requirements": {
+      "windows": "Windows 10/11 (64-bit) with WebView2 (preinstalled on Windows 11)",
+      "discord": "Free STARVEIN account via Discord login",
+      "game": "Star Citizen in windowed or borderless mode for text recognition"
+    },
+    "feedbackPrefix": "Beta feedback or found a bug?",
+    "feedbackLink": "Report it on GitHub"
+  }
+}

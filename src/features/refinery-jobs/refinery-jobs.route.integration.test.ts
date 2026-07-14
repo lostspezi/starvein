@@ -1,5 +1,5 @@
 import { afterAll, describe, expect, it } from "vitest";
-import { POST as CREATE } from "@/app/api/refinery-jobs/route";
+import { GET as LIST, POST as CREATE } from "@/app/api/refinery-jobs/route";
 import { DELETE, PATCH } from "@/app/api/refinery-jobs/[id]/route";
 import { POST as COLLECT } from "@/app/api/refinery-jobs/[id]/collect/route";
 import { closeMongo } from "@/lib/db";
@@ -11,6 +11,13 @@ const params = { params: Promise.resolve({ id: "job-1" }) };
 describe("refinery jobs API without a session", () => {
   afterAll(async () => {
     await closeMongo();
+  });
+
+  it("rejects anonymous listing", async () => {
+    const response = await LIST(
+      new Request("http://localhost/api/refinery-jobs"),
+    );
+    expect(response.status).toBe(401);
   });
 
   it("rejects anonymous creation", async () => {

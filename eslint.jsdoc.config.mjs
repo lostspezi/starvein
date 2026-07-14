@@ -11,7 +11,12 @@ import tseslint from "typescript-eslint";
  */
 const jsdocConfig = defineConfig([
   {
-    files: ["src/**/*.{ts,tsx}", "scripts/**/*.ts", "e2e/**/*.ts"],
+    files: [
+      "src/**/*.{ts,tsx}",
+      "scripts/**/*.ts",
+      "e2e/**/*.ts",
+      "packages/*/src/**/*.ts",
+    ],
     languageOptions: {
       parser: tseslint.parser,
       ecmaVersion: "latest",

@@ -1,0 +1,88 @@
+{
+  "common": {
+    "footer": {
+      "rsiLinkLabel": "Offizielle Star-Citizen-Website"
+    }
+  },
+  "shell": {
+    "loading": "Verbinde …",
+    "settings": "Einstellungen",
+    "session": {
+      "signedInAs": "Angemeldet als {name}",
+      "signOut": "Abmelden"
+    }
+  },
+  "settings": {
+    "title": "Einstellungen",
+    "close": "Schließen",
+    "hotkeyLabel": "Erfassungs-Hotkey",
+    "applyHotkey": "Hotkey übernehmen",
+    "hotkeyError": "Dieser Hotkey konnte nicht registriert werden.",
+    "localeLabel": "Sprache",
+    "localeSystem": "Systemsprache",
+    "serverLabel": "Server-URL",
+    "applyServer": "Server übernehmen",
+    "logPathLabel": "Star-Citizen-Game.log (für Standort-Vorschläge)",
+    "pickLogFile": "Game.log wählen …",
+    "logPathUnset": "Nicht gesetzt",
+    "autostartLabel": "Mit Windows starten"
+  },
+  "login": {
+    "title": "Mit STARVEIN verbinden",
+    "intro": "Melde dich mit deinem Discord-Konto an, um Refinery-Jobs direkt aus dem Spiel heraus zu erfassen.",
+    "connect": "Mit Discord verbinden",
+    "codeHint": "Bestätige diesen Code im Browser:",
+    "waiting": "Warte auf Bestätigung im Browser …",
+    "reopenBrowser": "Browser erneut öffnen",
+    "errors": {
+      "denied": "Der Zugriff wurde im Browser abgelehnt.",
+      "expired": "Der Code ist abgelaufen — bitte erneut versuchen.",
+      "protocol": "Verbindung zum Server fehlgeschlagen — bitte erneut versuchen."
+    }
+  },
+  "jobs": {
+    "title": "Meine Refinery-Jobs",
+    "refresh": "Aktualisieren",
+    "refreshFailed": "Aktualisierung fehlgeschlagen — Anzeige kann veraltet sein.",
+    "empty": "Noch keine Refinery-Jobs erfasst.",
+    "ready": "Bereit zur Abholung",
+    "collected": "Abgeholt",
+    "notification": {
+      "title": "Refinery-Job fertig",
+      "body": "Dein Auftrag bei {terminal} ist bereit zur Abholung."
+    }
+  },
+  "capture": {
+    "debugTitle": "OCR-Debug (rohe Erfassung)",
+    "hotkeyHint": "Hotkey im Spiel: Strg+Alt+R am Refinery-Terminal — oder hier manuell testen.",
+    "trigger": "Jetzt testweise erfassen",
+    "meta": "Quelle: {source} · {size}",
+    "noText": "Kein Text erkannt.",
+    "error": "Erfassung fehlgeschlagen: {message}",
+    "loadingCatalogs": "Lade Kataloge …",
+    "catalogsFailed": "Kataloge konnten nicht geladen werden — Server erreichbar?",
+    "confirm": {
+      "title": "Erfassten Refinery-Job bestätigen",
+      "terminalLabel": "Refinery-Terminal",
+      "terminalPlaceholder": "Terminal wählen …",
+      "methodLabel": "Refinery-Methode",
+      "methodPlaceholder": "Methode wählen …",
+      "itemsLabel": "Erze",
+      "oreLabel": "Erz",
+      "orePlaceholder": "Erz wählen …",
+      "quantityLabel": "Menge (SCU)",
+      "addItem": "+ Erz hinzufügen",
+      "removeItem": "Zeile entfernen",
+      "durationLabel": "Dauer (Minuten)",
+      "unmatched": "Nicht zugeordnet: {lines}",
+      "submit": "Job anlegen",
+      "cancel": "Verwerfen",
+      "errors": {
+        "missingTerminal": "Wähle das Refinery-Terminal, an dem du gerade stehst.",
+        "invalid": "Bitte prüfe Erze, Mengen, Methode und Dauer.",
+        "rateLimited": "Rate-Limit erreicht — bitte kurz warten und erneut versuchen.",
+        "protocol": "Job konnte nicht angelegt werden — Server erreichbar?"
+      }
+    }
+  }
+}

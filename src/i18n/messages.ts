@@ -9,6 +9,10 @@ import deAuth from "@/features/auth/messages/de.json";
 import enAuth from "@/features/auth/messages/en.json";
 import deChat from "@/features/chat/messages/de.json";
 import enChat from "@/features/chat/messages/en.json";
+import deCompanion from "@/features/companion/messages/de.json";
+import enCompanion from "@/features/companion/messages/en.json";
+import deDeviceAuth from "@/features/device-auth/messages/de.json";
+import enDeviceAuth from "@/features/device-auth/messages/en.json";
 import deModeration from "@/features/moderation/messages/de.json";
 import enModeration from "@/features/moderation/messages/en.json";
 import deFavorites from "@/features/favorites/messages/de.json";
@@ -52,6 +56,8 @@ const messages = {
     ...deSignatures,
     ...dePrices,
     ...deAuth,
+    ...deCompanion,
+    ...deDeviceAuth,
     ...deFavorites,
     ...deSubmissions,
     ...deCompare,
@@ -72,6 +78,8 @@ const messages = {
     ...enSignatures,
     ...enPrices,
     ...enAuth,
+    ...enCompanion,
+    ...enDeviceAuth,
     ...enFavorites,
     ...enSubmissions,
     ...enCompare,

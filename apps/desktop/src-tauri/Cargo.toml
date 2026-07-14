@@ -1,0 +1,32 @@
+[package]
+name = "starvein-companion"
+version = "0.1.0"
+description = "STARVEIN Companion — desktop helper for tracking Star Citizen refinery jobs"
+authors = ["lostspezi"]
+license = "MIT"
+edition = "2021"
+
+[lib]
+# The `_lib` suffix is necessary so the lib name doesn't conflict with the
+# bin name on Windows, see https://github.com/rust-lang/cargo/issues/8519
+name = "starvein_companion_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = ["tray-icon"] }
+tauri-plugin-opener = "2"
+tauri-plugin-http = "2"
+tauri-plugin-notification = "2"
+tauri-plugin-single-instance = "2"
+keyring = { version = "3", features = ["windows-native"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+xcap = "0.9"
+tauri-plugin-global-shortcut = "2"
+windows = { version = "0.62.2", features = ["Globalization", "Graphics_Imaging", "Media_Ocr", "Foundation", "Foundation_Collections", "Storage_Streams"] }
+tauri-plugin-store = "2"
+tauri-plugin-autostart = "2"
+tauri-plugin-dialog = "2"

@@ -1,7 +1,11 @@
 import { betterAuth } from "better-auth";
 import { mongodbAdapter } from "better-auth/adapters/mongodb";
 import { nextCookies } from "better-auth/next-js";
+import { bearer, deviceAuthorization } from "better-auth/plugins";
 import { MongoClient } from "mongodb";
+
+/** Einzige Client-ID, die den Device-Flow nutzen darf (Desktop-Companion). */
+export const DEVICE_CLIENT_ID = "starvein-companion";
 
 /**
  * Better-Auth-Konfiguration (CLAUDE.md §8). V1: nur Discord —
@@ -31,5 +35,18 @@ export const auth = betterAuth({
       },
     },
   },
-  plugins: [nextCookies()],
+  plugins: [
+    // RFC-8628-Device-Flow für die Desktop-App: Code anzeigen, im Browser
+    // per Discord-Session bestätigen (/[locale]/device), Token abholen.
+    deviceAuthorization({
+      expiresIn: "30m",
+      interval: "5s",
+      validateClient: (clientId) => clientId === DEVICE_CLIENT_ID,
+    }),
+    // Erlaubt `Authorization: Bearer <session-token>` — damit funktionieren
+    // alle bestehenden Route-Handler unverändert auch für die Desktop-App.
+    bearer(),
+    // nextCookies muss laut Better-Auth-Doku das letzte Plugin sein.
+    nextCookies(),
+  ],
 });

@@ -1,0 +1,13 @@
+{
+  "deviceAuth": {
+    "title": "Connect device",
+    "intro": "The STARVEIN companion app wants to connect to your account. Check that the code matches the one shown in the app.",
+    "codeLabel": "Device code",
+    "approve": "Connect device",
+    "deny": "Deny",
+    "approvedMessage": "Device connected — you can return to the companion app.",
+    "deniedMessage": "Device access denied.",
+    "errorMessage": "The code could not be confirmed. It may have expired — request a new one in the app.",
+    "loginRequired": "Sign in with Discord to connect the companion app."
+  }
+}

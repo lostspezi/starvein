@@ -10,6 +10,7 @@ const ROUTES = [
   { href: "/signatures", key: "signatures" },
   { href: "/compare", key: "compare" },
   { href: "/loadouts", key: "loadouts" },
+  { href: "/companion", key: "companion" },
 ] as const;
 
 /** Primärnavigation mit Glow-Indikator auf der aktiven Route (HUD-Stil). */

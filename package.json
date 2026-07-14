@@ -35,6 +35,7 @@
     "*.{ts,tsx,json,css,md}": "prettier --write"
   },
   "dependencies": {
+    "@starvein/shared": "workspace:*",
     "better-auth": "^1.6.23",
     "clsx": "^2.1.1",
     "ioredis": "^5.11.1",

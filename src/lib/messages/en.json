@@ -38,7 +38,12 @@
     "myRefineryJobs": { "title": "My Refinery Jobs" },
     "newRefineryJob": { "title": "New Refinery Job" },
     "editLoadout": { "title": "Edit Loadout" },
-    "admin": { "title": "Admin" }
+    "admin": { "title": "Admin" },
+    "device": { "title": "Connect device" },
+    "companion": {
+      "title": "Companion App",
+      "description": "STARVEIN Companion for Windows: capture Star Citizen refinery work orders via hotkey and text recognition — with countdown and a notification when the order is done."
+    }
   },
   "common": {
     "appName": "STARVEIN",
@@ -48,7 +53,8 @@
       "locations": "Locations",
       "signatures": "Signatures",
       "compare": "Compare",
-      "loadouts": "Loadouts"
+      "loadouts": "Loadouts",
+      "companion": "Companion"
     },
     "disclaimer": {
       "text": "This is an unofficial Star Citizen fansite, not affiliated with the Cloud Imperium group of companies. All content on this site not authored by its host or users are property of their respective owners.",

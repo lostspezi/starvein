@@ -1,0 +1,88 @@
+{
+  "common": {
+    "footer": {
+      "rsiLinkLabel": "Official Star Citizen website"
+    }
+  },
+  "shell": {
+    "loading": "Connecting …",
+    "settings": "Settings",
+    "session": {
+      "signedInAs": "Signed in as {name}",
+      "signOut": "Sign out"
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "close": "Close",
+    "hotkeyLabel": "Capture hotkey",
+    "applyHotkey": "Apply hotkey",
+    "hotkeyError": "This hotkey could not be registered.",
+    "localeLabel": "Language",
+    "localeSystem": "System language",
+    "serverLabel": "Server URL",
+    "applyServer": "Apply server",
+    "logPathLabel": "Star Citizen Game.log (for location suggestions)",
+    "pickLogFile": "Pick Game.log …",
+    "logPathUnset": "Not set",
+    "autostartLabel": "Start with Windows"
+  },
+  "login": {
+    "title": "Connect to STARVEIN",
+    "intro": "Sign in with your Discord account to capture refinery jobs straight from the game.",
+    "connect": "Connect with Discord",
+    "codeHint": "Confirm this code in your browser:",
+    "waiting": "Waiting for confirmation in the browser …",
+    "reopenBrowser": "Open browser again",
+    "errors": {
+      "denied": "Access was denied in the browser.",
+      "expired": "The code expired — please try again.",
+      "protocol": "Could not reach the server — please try again."
+    }
+  },
+  "jobs": {
+    "title": "My refinery jobs",
+    "refresh": "Refresh",
+    "refreshFailed": "Refresh failed — the list may be stale.",
+    "empty": "No refinery jobs tracked yet.",
+    "ready": "Ready to collect",
+    "collected": "Collected",
+    "notification": {
+      "title": "Refinery job ready",
+      "body": "Your work order at {terminal} is ready to collect."
+    }
+  },
+  "capture": {
+    "debugTitle": "OCR debug (raw capture)",
+    "hotkeyHint": "In-game hotkey: Ctrl+Alt+R at the refinery terminal — or test manually here.",
+    "trigger": "Test capture now",
+    "meta": "Source: {source} · {size}",
+    "noText": "No text recognized.",
+    "error": "Capture failed: {message}",
+    "loadingCatalogs": "Loading catalogs …",
+    "catalogsFailed": "Could not load the catalogs — is the server reachable?",
+    "confirm": {
+      "title": "Confirm captured refinery job",
+      "terminalLabel": "Refinery terminal",
+      "terminalPlaceholder": "Pick a terminal …",
+      "methodLabel": "Refinery method",
+      "methodPlaceholder": "Pick a method …",
+      "itemsLabel": "Ores",
+      "oreLabel": "Ore",
+      "orePlaceholder": "Pick an ore …",
+      "quantityLabel": "Quantity (SCU)",
+      "addItem": "+ Add ore",
+      "removeItem": "Remove row",
+      "durationLabel": "Duration (minutes)",
+      "unmatched": "Not matched: {lines}",
+      "submit": "Create job",
+      "cancel": "Discard",
+      "errors": {
+        "missingTerminal": "Pick the refinery terminal you are docked at.",
+        "invalid": "Please check ores, quantities, method and duration.",
+        "rateLimited": "Rate limit reached — please wait a moment and try again.",
+        "protocol": "Could not create the job — is the server reachable?"
+      }
+    }
+  }
+}

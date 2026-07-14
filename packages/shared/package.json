@@ -1,0 +1,18 @@
+{
+  "name": "@starvein/shared",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Geteilter API-Contract (Zod-Schemas, job-time) und Design-Tokens für Web- und Desktop-App. Wird als TS-Source konsumiert (kein Build-Step): Web via transpilePackages, Desktop via Vite.",
+  "type": "module",
+  "exports": {
+    "./branding": "./src/branding.ts",
+    "./refinery-jobs": "./src/refinery-jobs.schema.ts",
+    "./refinery-catalog": "./src/refinery-catalog.schema.ts",
+    "./ores": "./src/ores.schema.ts",
+    "./job-time": "./src/job-time.ts",
+    "./design-tokens.css": "./design-tokens.css"
+  },
+  "dependencies": {
+    "zod": "^4.4.3"
+  }
+}

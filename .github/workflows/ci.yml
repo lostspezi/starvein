@@ -114,6 +114,35 @@ jobs:
           path: playwright-report/
           retention-days: 7
 
+  desktop:
+    name: desktop
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter "@starvein/desktop" test
+      - run: pnpm --filter "@starvein/desktop" typecheck
+      # Frontend-Build vor den Rust-Checks: tauri::generate_context! bettet
+      # die Assets aus ../dist ein und braucht das Verzeichnis zur Compile-Zeit.
+      - run: pnpm --filter "@starvein/desktop" build
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: apps/desktop/src-tauri
+      - run: cargo fmt --check
+        working-directory: apps/desktop/src-tauri
+      - run: cargo clippy --all-targets -- -D warnings
+        working-directory: apps/desktop/src-tauri
+      - run: cargo test
+        working-directory: apps/desktop/src-tauri
+
   dependency-review:
     name: dependency-review
     runs-on: ubuntu-latest
@@ -121,3 +150,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/dependency-review-action@v4
+        with:
+          # GHSA-wrw7-89jp-8q8g (glib 0.18, VariantStrIter-Unsoundness):
+          # Linux-only transitive Dependency des Tauri-GTK-Stacks — steht im
+          # Cargo.lock, wird für unser Windows-Target aber nie kompiliert.
+          # gtk-rs 0.18 pinnt glib 0.18; Bump erst mit Tauris GTK-Update
+          # möglich. Bei Linux-Support vor dem Update neu bewerten.
+          allow-ghsas: GHSA-wrw7-89jp-8q8g

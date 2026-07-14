@@ -20,6 +20,8 @@ const eslintConfig = defineConfig([
     "coverage/**",
     // Claude-Code-Worktrees (enthalten eigene .next-Builds):
     ".claude/**",
+    // Desktop-App hat eigene Lint-Konfiguration (apps/desktop):
+    "apps/**",
   ]),
 ]);
 
