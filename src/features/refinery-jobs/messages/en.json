@@ -1,0 +1,57 @@
+{
+  "refineryJobs": {
+    "title": "My refinery jobs",
+    "subtitle": "Track what you handed in at which refinery and when it is done.",
+    "loginRequired": "Sign in to track your refinery jobs.",
+    "emptyActive": "No jobs in progress.",
+    "emptyHistory": "No collected jobs yet.",
+    "newJobCta": "New job",
+    "sections": {
+      "active": "In progress",
+      "history": "Collected"
+    },
+    "form": {
+      "title": "New refinery job",
+      "terminalLabel": "Refinery terminal",
+      "searchPlaceholder": "Type to search…",
+      "noMatches": "No matches",
+      "terminalEmpty": "No refinery terminals available yet — price data has not been synced. Please try again later.",
+      "methodLabel": "Refining method",
+      "methodRatings": "Yield {yield}/3 · Cost {cost}/3 · Speed {speed}/3",
+      "itemsLegend": "Ores",
+      "oreLabel": "Ore {index}",
+      "quantityLabel": "Quantity (SCU) {index}",
+      "addItem": "Add ore",
+      "removeItem": "Remove ore {index}",
+      "durationLegend": "Processing time",
+      "hoursLabel": "Hours",
+      "minutesLabel": "Minutes",
+      "startedAtLabel": "Started at (leave empty for now)",
+      "submit": "Track job",
+      "error": "Saving failed — please try again."
+    },
+    "card": {
+      "processing": "Processing",
+      "ready": "Ready",
+      "collected": "Collected",
+      "readyAt": "Ready: {time}",
+      "remaining": "{hours}h {minutes}m remaining",
+      "collectedAt": "Collected: {time}",
+      "method": "Method: {method}"
+    },
+    "collect": {
+      "cta": "Collect",
+      "heading": "Collect job",
+      "transferLabel": "Add refined output to my warehouse",
+      "quantityLabel": "Refined {ore} (SCU)",
+      "hint": "Adjust the quantities to the actual refined output.",
+      "confirm": "Confirm collection",
+      "cancel": "Cancel",
+      "error": "Collecting failed — please try again."
+    },
+    "actions": {
+      "delete": "Delete",
+      "confirmDelete": "Delete this job?"
+    }
+  }
+}

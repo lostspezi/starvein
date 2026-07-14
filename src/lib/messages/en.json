@@ -34,6 +34,9 @@
     "favorites": { "title": "Favorites" },
     "myLoadouts": { "title": "My Loadouts" },
     "newLoadout": { "title": "New Loadout" },
+    "myWarehouse": { "title": "My Warehouse" },
+    "myRefineryJobs": { "title": "My Refinery Jobs" },
+    "newRefineryJob": { "title": "New Refinery Job" },
     "editLoadout": { "title": "Edit Loadout" },
     "admin": { "title": "Admin" }
   },

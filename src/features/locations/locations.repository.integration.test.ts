@@ -4,6 +4,7 @@ import { closeMongo, getDb } from "@/lib/db";
 import { uniqueDbName } from "@/test/factories";
 import {
   countCelestialBodies,
+  findAllCelestialBodies,
   findAllStarSystems,
   findBodiesBySystem,
   findBodyBySlug,
@@ -96,6 +97,16 @@ describe("locations repository", () => {
   it("returns children of a body sorted by name", async () => {
     const children = await findChildBodies(db, "STANTON", "crusader");
     expect(children.map((b) => b.slug)).toEqual(["cru-l1", "yela"]);
+  });
+
+  it("returns all bodies across systems sorted by name", async () => {
+    const bodies = await findAllCelestialBodies(db);
+    expect(bodies.map((b) => b.slug)).toEqual([
+      "crusader",
+      "cru-l1",
+      "monox",
+      "yela",
+    ]);
   });
 
   it("counts all celestial bodies", async () => {

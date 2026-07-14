@@ -40,6 +40,15 @@ export async function findBodiesBySystem(
   return docs.map((doc) => celestialBodySchema.parse(doc));
 }
 
+export async function findAllCelestialBodies(db: Db): Promise<CelestialBody[]> {
+  const docs = await db
+    .collection(BODIES)
+    .find({}, NO_ID)
+    .sort({ name: 1 })
+    .toArray();
+  return docs.map((doc) => celestialBodySchema.parse(doc));
+}
+
 export async function findBodyBySlug(
   db: Db,
   systemCode: string,

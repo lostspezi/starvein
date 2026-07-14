@@ -1,0 +1,57 @@
+{
+  "refineryJobs": {
+    "title": "Meine Raffinerie-Jobs",
+    "subtitle": "Behalte im Blick, was du bei welcher Raffinerie abgegeben hast und wann es fertig ist.",
+    "loginRequired": "Melde dich an, um deine Raffinerie-Jobs zu tracken.",
+    "emptyActive": "Keine laufenden Jobs.",
+    "emptyHistory": "Noch keine abgeholten Jobs.",
+    "newJobCta": "Neuer Job",
+    "sections": {
+      "active": "In Arbeit",
+      "history": "Abgeholt"
+    },
+    "form": {
+      "title": "Neuer Raffinerie-Job",
+      "terminalLabel": "Refinery-Terminal",
+      "searchPlaceholder": "Tippen zum Suchen …",
+      "noMatches": "Keine Treffer",
+      "terminalEmpty": "Noch keine Refinery-Terminals verfügbar — die Preisdaten wurden noch nicht gesynct. Bitte später erneut versuchen.",
+      "methodLabel": "Raffinationsmethode",
+      "methodRatings": "Ausbeute {yield}/3 · Kosten {cost}/3 · Tempo {speed}/3",
+      "itemsLegend": "Erze",
+      "oreLabel": "Erz {index}",
+      "quantityLabel": "Menge (SCU) {index}",
+      "addItem": "Erz hinzufügen",
+      "removeItem": "Erz {index} entfernen",
+      "durationLegend": "Verarbeitungsdauer",
+      "hoursLabel": "Stunden",
+      "minutesLabel": "Minuten",
+      "startedAtLabel": "Gestartet am (leer = jetzt)",
+      "submit": "Job tracken",
+      "error": "Speichern fehlgeschlagen — bitte erneut versuchen."
+    },
+    "card": {
+      "processing": "In Arbeit",
+      "ready": "Fertig",
+      "collected": "Abgeholt",
+      "readyAt": "Fertig: {time}",
+      "remaining": "{hours} h {minutes} min verbleibend",
+      "collectedAt": "Abgeholt: {time}",
+      "method": "Methode: {method}"
+    },
+    "collect": {
+      "cta": "Abholen",
+      "heading": "Job abholen",
+      "transferLabel": "Raffinierten Ertrag ins Lager übernehmen",
+      "quantityLabel": "Raffiniertes {ore} (SCU)",
+      "hint": "Passe die Mengen an den tatsächlichen raffinierten Ertrag an.",
+      "confirm": "Abholung bestätigen",
+      "cancel": "Abbrechen",
+      "error": "Abholen fehlgeschlagen — bitte erneut versuchen."
+    },
+    "actions": {
+      "delete": "Löschen",
+      "confirmDelete": "Diesen Job löschen?"
+    }
+  }
+}
