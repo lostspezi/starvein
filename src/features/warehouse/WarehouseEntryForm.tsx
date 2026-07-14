@@ -4,13 +4,11 @@ import { useTranslations } from "next-intl";
 import { useId, useState } from "react";
 import { useRouter } from "@/i18n/navigation";
 import { Button } from "@/lib/components/ui/Button";
+import { Combobox } from "@/lib/components/ui/Combobox";
 import { Panel } from "@/lib/components/ui/Panel";
 
 const inputClass =
   "w-full rounded border border-bg-nebula-2 bg-bg-void px-3 py-1.5 text-sm transition-all duration-150 placeholder:text-text-muted focus:border-accent-primary focus:outline-none";
-
-const selectClass =
-  "rounded border border-bg-nebula-2 bg-bg-void px-2 py-1 text-sm focus:border-accent-primary focus:outline-none";
 
 type OreOption = { code: string; name: string };
 type SystemOption = { code: string; name: string };
@@ -20,9 +18,10 @@ type TerminalOption = { terminalId: number; terminalName: string };
 type LocationKind = "celestialBody" | "terminal" | "custom";
 
 /**
- * Inline-Formular zum Anlegen eines Lager-Eintrags. Die Lagerort-Auswahl
- * wechselt per Radio zwischen Himmelskörper, Refinery-Terminal (nur wenn
- * gesynct) und Freitext.
+ * Inline-Formular zum Anlegen eines Lager-Eintrags. Erz, Himmelskörper
+ * und Terminal werden per Autocomplete (Combobox) gewählt; die
+ * Lagerort-Art wechselt per Radio zwischen Himmelskörper,
+ * Refinery-Terminal (nur wenn gesynct) und Freitext.
  */
 export function WarehouseEntryForm({
   ores,
@@ -39,23 +38,29 @@ export function WarehouseEntryForm({
   const router = useRouter();
   const formId = useId();
 
-  const [oreCode, setOreCode] = useState(ores[0]?.code ?? "");
+  const [oreCode, setOreCode] = useState("");
   const [kind, setKind] = useState<"raw" | "refined">("raw");
   const [quantity, setQuantity] = useState("1");
   const [locationKind, setLocationKind] =
     useState<LocationKind>("celestialBody");
-  const [bodyValue, setBodyValue] = useState(
-    bodies[0] ? `${bodies[0].systemCode}:${bodies[0].slug}` : "",
-  );
-  const [terminalId, setTerminalId] = useState(
-    terminals[0] ? String(terminals[0].terminalId) : "",
-  );
+  const [bodyValue, setBodyValue] = useState("");
+  const [terminalId, setTerminalId] = useState("");
   const [customLabel, setCustomLabel] = useState("");
   const [note, setNote] = useState("");
   const [busy, setBusy] = useState(false);
   const [failed, setFailed] = useState(false);
 
   const systemNames = new Map(systems.map((s) => [s.code, s.name]));
+  const oreOptions = ores.map((ore) => ({ value: ore.code, label: ore.name }));
+  const bodyOptions = bodies.map((body) => ({
+    value: `${body.systemCode}:${body.slug}`,
+    label: body.name,
+    detail: systemNames.get(body.systemCode) ?? body.systemCode,
+  }));
+  const terminalOptions = terminals.map((terminal) => ({
+    value: String(terminal.terminalId),
+    label: terminal.terminalName,
+  }));
 
   function buildLocation() {
     switch (locationKind) {
@@ -136,18 +141,15 @@ export function WarehouseEntryForm({
             >
               {t("oreLabel")}
             </label>
-            <select
+            <Combobox
               id={`${formId}-ore`}
+              ariaLabel={t("oreLabel")}
+              options={oreOptions}
               value={oreCode}
-              onChange={(event) => setOreCode(event.target.value)}
-              className={selectClass}
-            >
-              {ores.map((ore) => (
-                <option key={ore.code} value={ore.code}>
-                  {ore.name}
-                </option>
-              ))}
-            </select>
+              onChange={setOreCode}
+              placeholder={t("searchPlaceholder")}
+              noResultsLabel={t("noMatches")}
+            />
           </div>
 
           <fieldset className="flex flex-col gap-1">
@@ -214,30 +216,15 @@ export function WarehouseEntryForm({
               >
                 {t("bodyLabel")}
               </label>
-              <select
+              <Combobox
                 id={`${formId}-body`}
+                ariaLabel={t("bodyLabel")}
+                options={bodyOptions}
                 value={bodyValue}
-                onChange={(event) => setBodyValue(event.target.value)}
-                className={selectClass}
-              >
-                {systems.map((system) => (
-                  <optgroup
-                    key={system.code}
-                    label={systemNames.get(system.code) ?? system.code}
-                  >
-                    {bodies
-                      .filter((body) => body.systemCode === system.code)
-                      .map((body) => (
-                        <option
-                          key={`${body.systemCode}:${body.slug}`}
-                          value={`${body.systemCode}:${body.slug}`}
-                        >
-                          {body.name}
-                        </option>
-                      ))}
-                  </optgroup>
-                ))}
-              </select>
+                onChange={setBodyValue}
+                placeholder={t("searchPlaceholder")}
+                noResultsLabel={t("noMatches")}
+              />
             </div>
           )}
 
@@ -249,18 +236,15 @@ export function WarehouseEntryForm({
               >
                 {t("terminalLabel")}
               </label>
-              <select
+              <Combobox
                 id={`${formId}-terminal`}
+                ariaLabel={t("terminalLabel")}
+                options={terminalOptions}
                 value={terminalId}
-                onChange={(event) => setTerminalId(event.target.value)}
-                className={selectClass}
-              >
-                {terminals.map((terminal) => (
-                  <option key={terminal.terminalId} value={terminal.terminalId}>
-                    {terminal.terminalName}
-                  </option>
-                ))}
-              </select>
+                onChange={setTerminalId}
+                placeholder={t("searchPlaceholder")}
+                noResultsLabel={t("noMatches")}
+              />
             </div>
           )}
 

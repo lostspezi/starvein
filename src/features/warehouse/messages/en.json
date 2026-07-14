@@ -19,6 +19,8 @@
       "terminalLabel": "Terminal",
       "customLabel": "Place",
       "customPlaceholder": "e.g. in my ship",
+      "searchPlaceholder": "Type to search…",
+      "noMatches": "No matches",
       "noteLabel": "Note",
       "submit": "Add entry",
       "error": "Saving failed — please try again."

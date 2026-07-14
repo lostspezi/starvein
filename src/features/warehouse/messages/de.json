@@ -19,6 +19,8 @@
       "terminalLabel": "Terminal",
       "customLabel": "Ort",
       "customPlaceholder": "z. B. im Schiff",
+      "searchPlaceholder": "Tippen zum Suchen …",
+      "noMatches": "Keine Treffer",
       "noteLabel": "Notiz",
       "submit": "Eintrag anlegen",
       "error": "Speichern fehlgeschlagen — bitte erneut versuchen."

@@ -41,17 +41,16 @@ function renderForm(terminals = TERMINALS) {
 }
 
 describe("WarehouseEntryForm", () => {
-  it("creates an entry at a celestial body", async () => {
+  it("creates an entry at a celestial body via autocomplete", async () => {
     const user = userEvent.setup();
     renderForm();
 
-    await user.selectOptions(screen.getByLabelText("Ore"), "QUAN");
+    await user.type(screen.getByRole("combobox", { name: "Ore" }), "quan");
+    await user.click(screen.getByRole("option", { name: /Quantainium/ }));
     await user.clear(screen.getByLabelText("Quantity (SCU)"));
     await user.type(screen.getByLabelText("Quantity (SCU)"), "32");
-    await user.selectOptions(
-      screen.getByLabelText("Location"),
-      "STANTON:daymar",
-    );
+    await user.type(screen.getByRole("combobox", { name: "Location" }), "day");
+    await user.click(screen.getByRole("option", { name: /Daymar/ }));
     await user.click(screen.getByRole("button", { name: "Add entry" }));
 
     expect(fetch).toHaveBeenCalledWith(
@@ -73,11 +72,23 @@ describe("WarehouseEntryForm", () => {
     });
   });
 
+  it("shows the body's system as autocomplete detail", async () => {
+    const user = userEvent.setup();
+    renderForm();
+
+    await user.click(screen.getByRole("combobox", { name: "Location" }));
+
+    expect(
+      screen.getByRole("option", { name: /Daymar\s*Stanton/ }),
+    ).toBeVisible();
+  });
+
   it("creates a refined entry at a custom location with a note", async () => {
     const user = userEvent.setup();
     renderForm();
 
-    await user.selectOptions(screen.getByLabelText("Ore"), "GOLD");
+    await user.type(screen.getByRole("combobox", { name: "Ore" }), "gold");
+    await user.click(screen.getByRole("option", { name: /Gold/ }));
     await user.click(screen.getByRole("radio", { name: "Refined" }));
     await user.clear(screen.getByLabelText("Quantity (SCU)"));
     await user.type(screen.getByLabelText("Quantity (SCU)"), "4.5");
@@ -96,6 +107,40 @@ describe("WarehouseEntryForm", () => {
       location: { kind: "custom", label: "in my ship" },
       note: "aft cargo grid",
     });
+  });
+
+  it("selects a refinery terminal via autocomplete", async () => {
+    const user = userEvent.setup();
+    renderForm();
+
+    await user.type(screen.getByRole("combobox", { name: "Ore" }), "quan");
+    await user.click(screen.getByRole("option", { name: /Quantainium/ }));
+    await user.click(screen.getByRole("radio", { name: "Refinery terminal" }));
+    await user.type(screen.getByRole("combobox", { name: "Terminal" }), "wide");
+    await user.click(screen.getByRole("option", { name: /Wide Forest/ }));
+    await user.click(screen.getByRole("button", { name: "Add entry" }));
+
+    const body = JSON.parse(
+      (vi.mocked(fetch).mock.calls[0][1] as RequestInit).body as string,
+    );
+    expect(body.location).toEqual({ kind: "terminal", terminalId: 32 });
+  });
+
+  it("keeps the submit disabled until ore and location are picked", async () => {
+    const user = userEvent.setup();
+    renderForm();
+
+    expect(screen.getByRole("button", { name: "Add entry" })).toBeDisabled();
+
+    await user.type(screen.getByRole("combobox", { name: "Ore" }), "quan");
+    await user.click(screen.getByRole("option", { name: /Quantainium/ }));
+
+    expect(screen.getByRole("button", { name: "Add entry" })).toBeDisabled();
+
+    await user.type(screen.getByRole("combobox", { name: "Location" }), "day");
+    await user.click(screen.getByRole("option", { name: /Daymar/ }));
+
+    expect(screen.getByRole("button", { name: "Add entry" })).toBeEnabled();
   });
 
   it("hides the terminal option when no terminals are synced", () => {
