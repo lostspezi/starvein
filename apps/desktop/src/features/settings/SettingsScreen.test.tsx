@@ -34,6 +34,14 @@ vi.mock("../../lib/config", async (importOriginal) => ({
   isServerUrlLocked: () => serverLocked,
 }));
 
+const checkForUpdate = vi.fn();
+vi.mock("../../lib/updater", () => ({
+  checkForUpdate: () => checkForUpdate(),
+}));
+vi.mock("@tauri-apps/api/app", () => ({
+  getVersion: () => Promise.resolve("0.2.0"),
+}));
+
 const SETTINGS: AppSettings = {
   locale: "en",
   serverUrl: null,
@@ -72,6 +80,7 @@ function mockCommands(overrides: Record<string, unknown> = {}) {
 beforeEach(() => {
   invoke.mockReset();
   mockCommands();
+  checkForUpdate.mockReset();
   saveSetting.mockClear();
   enableAutostart.mockClear();
   openDialog.mockReset();
@@ -159,6 +168,49 @@ describe("SettingsScreen", () => {
     expect(
       screen.queryByText(/running as administrator/),
     ).not.toBeInTheDocument();
+  });
+
+  it("shows the installed version and reports being up to date", async () => {
+    checkForUpdate.mockResolvedValue(null);
+    renderScreen();
+
+    expect(await screen.findByText("0.2.0")).toBeVisible();
+
+    await userEvent.click(
+      screen.getByRole("button", { name: "Check for updates" }),
+    );
+
+    expect(await screen.findByText("Companion is up to date.")).toBeVisible();
+  });
+
+  it("offers installing an available update", async () => {
+    const install = vi.fn().mockResolvedValue(undefined);
+    checkForUpdate.mockResolvedValue({ version: "0.3.0", install });
+    renderScreen();
+
+    await userEvent.click(
+      screen.getByRole("button", { name: "Check for updates" }),
+    );
+
+    const installButton = await screen.findByRole("button", {
+      name: "Update to 0.3.0",
+    });
+    await userEvent.click(installButton);
+
+    expect(install).toHaveBeenCalled();
+  });
+
+  it("reports a failed update check", async () => {
+    checkForUpdate.mockRejectedValue(new Error("offline"));
+    renderScreen();
+
+    await userEvent.click(
+      screen.getByRole("button", { name: "Check for updates" }),
+    );
+
+    expect(
+      await screen.findByText("Update check failed — try again later."),
+    ).toBeVisible();
   });
 
   it("toggles autostart", async () => {

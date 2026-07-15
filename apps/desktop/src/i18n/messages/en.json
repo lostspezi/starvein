@@ -30,7 +30,20 @@
     "logPathLabel": "Star Citizen Game.log (for location suggestions)",
     "pickLogFile": "Pick Game.log …",
     "logPathUnset": "Not set",
-    "autostartLabel": "Start with Windows"
+    "autostartLabel": "Start with Windows",
+    "versionLabel": "Version",
+    "checkUpdates": "Check for updates",
+    "upToDate": "Companion is up to date.",
+    "installUpdate": "Update to {version}",
+    "updateInstalling": "Installing update …",
+    "updateFailed": "Update check failed — try again later."
+  },
+  "update": {
+    "title": "Update available",
+    "available": "Version {version} is available — install now?",
+    "install": "Update now",
+    "later": "Later",
+    "installing": "Installing update …"
   },
   "login": {
     "title": "Connect to STARVEIN",

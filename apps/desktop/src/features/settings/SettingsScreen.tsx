@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { getVersion } from "@tauri-apps/api/app";
 import { invoke } from "@tauri-apps/api/core";
 import {
   disable as disableAutostart,
@@ -8,6 +9,7 @@ import { open as openFileDialog } from "@tauri-apps/plugin-dialog";
 import { useTranslations } from "use-intl";
 import { getServerUrl, isServerUrlLocked } from "../../lib/config";
 import { useSettings } from "../../SettingsContext";
+import { checkForUpdate, type AvailableUpdate } from "../../lib/updater";
 import { HotkeyRecorder } from "./HotkeyRecorder";
 import { DEFAULT_HOTKEY, formatCombo } from "./hotkey";
 
@@ -25,6 +27,13 @@ type GameElevationStatus = {
 
 type HotkeyFeedback = "applied" | "taken" | "invalid" | "failed";
 
+type UpdateState =
+  | { kind: "idle" }
+  | { kind: "checking" }
+  | { kind: "latest" }
+  | { kind: "failed" }
+  | { kind: "available"; update: AvailableUpdate; installing: boolean };
+
 /** Einstellungen (Slice D6): Hotkey, Sprache, Server, Game.log, Autostart. */
 export function SettingsScreen({ onClose }: { onClose: () => void }) {
   const t = useTranslations("settings");
@@ -35,7 +44,25 @@ export function SettingsScreen({ onClose }: { onClose: () => void }) {
   const [hotkeyRegistered, setHotkeyRegistered] = useState(true);
   const [hotkeyBlockedByGame, setHotkeyBlockedByGame] = useState(false);
   const [serverDraft, setServerDraft] = useState(settings.serverUrl ?? "");
+  const [appVersion, setAppVersion] = useState("");
+  const [updateState, setUpdateState] = useState<UpdateState>({ kind: "idle" });
   const activeHotkey = settings.hotkey ?? DEFAULT_HOTKEY;
+
+  useEffect(() => {
+    let cancelled = false;
+    getVersion()
+      .then((version) => {
+        if (!cancelled) {
+          setAppVersion(version);
+        }
+      })
+      .catch(() => {
+        // Version nicht abfragbar — Feld bleibt leer.
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   // Status aus Rust: schlägt die Hotkey-Registrierung fehl (z. B. weil
   // eine andere Anwendung die Kombination hält) oder läuft Star Citizen
@@ -81,6 +108,33 @@ export function SettingsScreen({ onClose }: { onClose: () => void }) {
             ? "invalid"
             : "failed",
       );
+    }
+  }
+
+  async function runUpdateCheck() {
+    setUpdateState({ kind: "checking" });
+    try {
+      const update = await checkForUpdate();
+      setUpdateState(
+        update === null
+          ? { kind: "latest" }
+          : { kind: "available", update, installing: false },
+      );
+    } catch {
+      setUpdateState({ kind: "failed" });
+    }
+  }
+
+  async function installUpdate() {
+    if (updateState.kind !== "available") {
+      return;
+    }
+    setUpdateState({ ...updateState, installing: true });
+    try {
+      // Erfolgreiche Installation startet die App neu (relaunch).
+      await updateState.update.install();
+    } catch {
+      setUpdateState({ kind: "failed" });
     }
   }
 
@@ -248,6 +302,45 @@ export function SettingsScreen({ onClose }: { onClose: () => void }) {
           />
           {t("autostartLabel")}
         </label>
+
+        <div className="flex flex-col gap-1">
+          <span className="text-text-muted text-xs">{t("versionLabel")}</span>
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="text-text-primary font-mono text-xs">
+              {appVersion}
+            </span>
+            <button
+              type="button"
+              onClick={() => void runUpdateCheck()}
+              disabled={updateState.kind === "checking"}
+              className="bg-bg-nebula-2 text-text-primary hover:shadow-glow-sm rounded px-3 py-1.5 text-xs transition-all duration-200 disabled:opacity-50"
+            >
+              {t("checkUpdates")}
+            </button>
+            {updateState.kind === "available" && (
+              <button
+                type="button"
+                onClick={() => void installUpdate()}
+                disabled={updateState.installing}
+                className="bg-accent-primary text-bg-void hover:shadow-glow-primary rounded px-3 py-1.5 text-xs font-medium transition-all duration-200 disabled:opacity-50"
+              >
+                {updateState.installing
+                  ? t("updateInstalling")
+                  : t("installUpdate", { version: updateState.update.version })}
+              </button>
+            )}
+          </div>
+          {updateState.kind === "latest" && (
+            <p className="text-success text-xs" role="status">
+              {t("upToDate")}
+            </p>
+          )}
+          {updateState.kind === "failed" && (
+            <p className="text-warning text-xs" role="alert">
+              {t("updateFailed")}
+            </p>
+          )}
+        </div>
       </div>
     </section>
   );

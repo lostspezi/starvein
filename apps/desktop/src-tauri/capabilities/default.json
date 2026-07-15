@@ -10,6 +10,8 @@
     "store:default",
     "dialog:default",
     "autostart:default",
+    "updater:default",
+    "process:allow-restart",
     {
       "identifier": "http:default",
       "allow": [
