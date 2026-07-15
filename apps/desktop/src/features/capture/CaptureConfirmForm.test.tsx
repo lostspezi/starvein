@@ -104,6 +104,11 @@ describe("CaptureConfirmForm", () => {
   it("prefills ores, quantities, method and duration from the capture", () => {
     renderForm();
 
+    // Einheiten-/Spalten-Labels hinter den Feldern: SCU (Menge) und
+    // QUALITY (0-1000, wie die Terminal-Spalte heisst).
+    expect(screen.getAllByText("SCU").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("QUALITY").length).toBeGreaterThan(0);
+
     expect(screen.getByDisplayValue("QUAN — Quantainium")).toBeInTheDocument();
     expect(screen.getByDisplayValue("32")).toBeInTheDocument();
     expect(screen.getByDisplayValue("12.5")).toBeInTheDocument();

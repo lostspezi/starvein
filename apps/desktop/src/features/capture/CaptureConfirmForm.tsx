@@ -270,6 +270,9 @@ export function CaptureConfirmForm({
                 }
                 className={`${inputClasses} w-20`}
               />
+              {/* Label wie die Terminal-Spalte, damit die Zuordnung
+                  Screen → Formular auf einen Blick klar ist. */}
+              <span className="text-text-muted text-xs">QUALITY</span>
               <button
                 type="button"
                 aria-label={t("removeItem")}
