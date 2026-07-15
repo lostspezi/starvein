@@ -22,9 +22,11 @@ type SubmitError = "missingTerminal" | "invalid" | "rateLimited" | "protocol";
 function prefill(
   capture: OcrCapture,
   ores: Ore[],
+  terminals: RefineryTerminal[],
   methods: RefineryMethod[],
 ): {
   rows: ItemRow[];
+  terminalId: string;
   methodCode: string;
   duration: string;
   leftovers: string[];
@@ -67,11 +69,29 @@ function prefill(
     }
   }
 
+  // Terminal-Vorauswahl: der Stationsname steht als eigene Kopfzeile im
+  // Capture (z. B. "ARC-L1 WIDE FOREST STATION", von der OCR gern leicht
+  // verlesen) — bester Fuzzy-Treffer über alle nicht zugeordneten Zeilen.
+  const terminalCandidates = terminals.map((terminal) => ({
+    key: String(terminal.terminalId),
+    aliases: [terminal.terminalName],
+  }));
+  let terminalId = "";
+  let bestTerminalScore = Number.POSITIVE_INFINITY;
+  for (const line of parsed.unmatched) {
+    const match = fuzzyBestMatch(line, terminalCandidates);
+    if (match && match.score < bestTerminalScore) {
+      terminalId = match.key;
+      bestTerminalScore = match.score;
+    }
+  }
+
   return {
     rows:
       rows.length > 0
         ? rows
         : [{ oreCode: "", quantity: "", quality: "", rawName: null }],
+    terminalId,
     methodCode,
     duration:
       parsed.durationMinutes === null ? "" : String(parsed.durationMinutes),
@@ -104,12 +124,12 @@ export function CaptureConfirmForm({
 }) {
   const t = useTranslations("capture.confirm");
   const initial = useMemo(
-    () => prefill(capture, ores, methods),
-    [capture, ores, methods],
+    () => prefill(capture, ores, terminals, methods),
+    [capture, ores, terminals, methods],
   );
 
   const [rows, setRows] = useState<ItemRow[]>(initial.rows);
-  const [terminalId, setTerminalId] = useState<string>("");
+  const [terminalId, setTerminalId] = useState<string>(initial.terminalId);
   const [methodCode, setMethodCode] = useState<string>(initial.methodCode);
   const [duration, setDuration] = useState<string>(initial.duration);
   const [error, setError] = useState<SubmitError | null>(null);

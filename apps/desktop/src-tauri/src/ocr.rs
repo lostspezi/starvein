@@ -38,13 +38,18 @@ pub fn rgba_to_bgra(rgba: &[u8]) -> Vec<u8> {
 }
 
 fn create_engine() -> Result<OcrEngine, String> {
-    // Bevorzugt die Sprachen des Nutzerprofils; Fallback Englisch (Erznamen
-    // sind ohnehin englisch, Zahlen locale-neutral).
-    if let Ok(engine) = OcrEngine::TryCreateFromUserProfileLanguages() {
-        return Ok(engine);
+    // Die Spieltexte sind englisch — eine installierte EN-Engine liest sie
+    // deutlich sauberer als z. B. die de-DE-Engine (typische Verleser:
+    // QUALITY→OUALITY, 575→S7S). Fallback: Profilsprachen, damit die
+    // Erfassung auch ohne englisches OCR-Sprachpaket funktioniert.
+    for tag in ["en-US", "en"] {
+        if let Ok(language) = Language::CreateLanguage(&HSTRING::from(tag)) {
+            if let Ok(engine) = OcrEngine::TryCreateFromLanguage(&language) {
+                return Ok(engine);
+            }
+        }
     }
-    let english = Language::CreateLanguage(&HSTRING::from("en")).map_err(|e| e.to_string())?;
-    OcrEngine::TryCreateFromLanguage(&english).map_err(|e| e.to_string())
+    OcrEngine::TryCreateFromUserProfileLanguages().map_err(|e| e.to_string())
 }
 
 pub fn max_image_dimension() -> u32 {

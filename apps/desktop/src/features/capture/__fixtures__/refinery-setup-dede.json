@@ -1,0 +1,622 @@
+[
+  {
+    "text": "GPU",
+    "words": [{ "text": "GPU", "x": 2230, "y": 18, "width": 37, "height": 13 }]
+  },
+  {
+    "text": "// REFINERY SYSTEM ca7_02",
+    "words": [
+      { "text": "//", "x": 329, "y": 177, "width": 13, "height": 11 },
+      { "text": "REFINERY", "x": 347, "y": 176, "width": 62, "height": 12 },
+      { "text": "SYSTEM", "x": 414, "y": 176, "width": 51, "height": 11 },
+      { "text": "ca7_02", "x": 469, "y": 175, "width": 46, "height": 12 }
+    ]
+  },
+  {
+    "text": "ARC-LI WIDE FOREST STATION",
+    "words": [
+      { "text": "ARC-LI", "x": 320, "y": 202, "width": 115, "height": 26 },
+      { "text": "WIDE", "x": 447, "y": 202, "width": 77, "height": 25 },
+      { "text": "FOREST", "x": 537, "y": 201, "width": 124, "height": 25 },
+      { "text": "STATION", "x": 673, "y": 200, "width": 136, "height": 26 }
+    ]
+  },
+  {
+    "text": "// MODULE-FD67",
+    "words": [
+      { "text": "//", "x": 1294, "y": 173, "width": 14, "height": 11 },
+      { "text": "MODULE-FD67", "x": 1313, "y": 172, "width": 96, "height": 12 }
+    ]
+  },
+  {
+    "text": "REFINEMENT CENTER",
+    "words": [
+      { "text": "REFINEMENT", "x": 1170, "y": 196, "width": 141, "height": 18 },
+      { "text": "CENTER", "x": 1320, "y": 195, "width": 87, "height": 18 }
+    ]
+  },
+  {
+    "text": "// USER",
+    "words": [
+      { "text": "//", "x": 1745, "y": 165, "width": 14, "height": 11 },
+      { "text": "USER", "x": 1764, "y": 164, "width": 36, "height": 12 }
+    ]
+  },
+  {
+    "text": "LOSTSPEZI",
+    "words": [
+      { "text": "LOSTSPEZI", "x": 1741, "y": 185, "width": 91, "height": 14 }
+    ]
+  },
+  {
+    "text": "SETUP",
+    "words": [
+      { "text": "SETUP", "x": 1007, "y": 278, "width": 105, "height": 26 }
+    ]
+  },
+  {
+    "text": "WORK ORDER",
+    "words": [
+      { "text": "WORK", "x": 678, "y": 323, "width": 39, "height": 11 },
+      { "text": "ORDER", "x": 722, "y": 323, "width": 44, "height": 11 }
+    ]
+  },
+  {
+    "text": "RAW MATERIALS",
+    "words": [
+      { "text": "RAW", "x": 696, "y": 353, "width": 30, "height": 12 },
+      { "text": "MATERIALS", "x": 730, "y": 353, "width": 74, "height": 12 }
+    ]
+  },
+  {
+    "text": "// IN MANIFEST",
+    "words": [
+      { "text": "//", "x": 700, "y": 389, "width": 14, "height": 12 },
+      { "text": "IN", "x": 718, "y": 389, "width": 12, "height": 12 },
+      { "text": "MANIFEST", "x": 735, "y": 389, "width": 66, "height": 12 }
+    ]
+  },
+  {
+    "text": "374",
+    "words": [{ "text": "374", "x": 767, "y": 417, "width": 42, "height": 18 }]
+  },
+  {
+    "text": "FPS 76",
+    "words": [
+      { "text": "FPS", "x": 2124, "y": 18, "width": 33, "height": 13 },
+      { "text": "76", "x": 2170, "y": 18, "width": 22, "height": 13 }
+    ]
+  },
+  {
+    "text": "FUNC.04",
+    "words": [
+      { "text": "FUNC.04", "x": 2167, "y": 1264, "width": 44, "height": 11 }
+    ]
+  },
+  {
+    "text": "CPU 84",
+    "words": [
+      { "text": "CPU", "x": 2344, "y": 18, "width": 37, "height": 14 },
+      { "text": "84", "x": 2389, "y": 18, "width": 23, "height": 13 }
+    ]
+  },
+  {
+    "text": "LAT Oms",
+    "words": [
+      { "text": "LAT", "x": 2458, "y": 18, "width": 31, "height": 13 },
+      { "text": "Oms", "x": 2497, "y": 18, "width": 38, "height": 13 }
+    ]
+  },
+  {
+    "text": "// FUNDS",
+    "words": [
+      { "text": "//", "x": 1975, "y": 163, "width": 14, "height": 11 },
+      { "text": "FUNDS", "x": 1994, "y": 162, "width": 46, "height": 12 }
+    ]
+  },
+  {
+    "text": "7.129.553 aUEC",
+    "words": [
+      { "text": "7.129.553", "x": 1971, "y": 183, "width": 85, "height": 16 },
+      { "text": "aUEC", "x": 2062, "y": 183, "width": 42, "height": 13 }
+    ]
+  },
+  {
+    "text": "STATION PROFILE",
+    "words": [
+      { "text": "STATION", "x": 319, "y": 284, "width": 67, "height": 13 },
+      { "text": "PROFILE", "x": 392, "y": 283, "width": 65, "height": 13 }
+    ]
+  },
+  {
+    "text": "// MATERIAL SPECIALIZATIONS",
+    "words": [
+      { "text": "//", "x": 317, "y": 307, "width": 15, "height": 12 },
+      { "text": "MATERIAL", "x": 336, "y": 307, "width": 64, "height": 12 },
+      {
+        "text": "SPECIALIZATIONS",
+        "x": 404,
+        "y": 306,
+        "width": 114,
+        "height": 13
+      }
+    ]
+  },
+  {
+    "text": "MATERIAL",
+    "words": [
+      { "text": "MATERIAL", "x": 346, "y": 335, "width": 64, "height": 12 }
+    ]
+  },
+  {
+    "text": "Iron (Ore)",
+    "words": [
+      { "text": "Iron", "x": 369, "y": 375, "width": 25, "height": 11 },
+      { "text": "(Ore)", "x": 399, "y": 373, "width": 34, "height": 13 }
+    ]
+  },
+  {
+    "text": "Corundum (Raw)",
+    "words": [
+      { "text": "Corundum", "x": 368, "y": 404, "width": 66, "height": 11 },
+      { "text": "(Raw)", "x": 439, "y": 402, "width": 38, "height": 13 }
+    ]
+  },
+  {
+    "text": "Ouantainium (Raw)",
+    "words": [
+      { "text": "Ouantainium", "x": 367, "y": 432, "width": 80, "height": 13 },
+      { "text": "(Raw)", "x": 452, "y": 431, "width": 39, "height": 13 }
+    ]
+  },
+  {
+    "text": "Titanium (Ore)",
+    "words": [
+      { "text": "Titanium", "x": 366, "y": 461, "width": 56, "height": 12 },
+      { "text": "(Ore)", "x": 426, "y": 461, "width": 35, "height": 12 }
+    ]
+  },
+  {
+    "text": "Laranite (Raw)",
+    "words": [
+      { "text": "Laranite", "x": 366, "y": 490, "width": 54, "height": 12 },
+      { "text": "(Raw)", "x": 425, "y": 490, "width": 38, "height": 12 }
+    ]
+  },
+  {
+    "text": "Quartz (Raw)",
+    "words": [
+      { "text": "Quartz", "x": 365, "y": 520, "width": 44, "height": 13 },
+      { "text": "(Raw)", "x": 414, "y": 519, "width": 38, "height": 13 }
+    ]
+  },
+  {
+    "text": "@REFINERY CAPACITY",
+    "words": [
+      { "text": "@REFINERY", "x": 310, "y": 559, "width": 82, "height": 23 },
+      { "text": "CAPACITY", "x": 396, "y": 565, "width": 63, "height": 11 }
+    ]
+  },
+  {
+    "text": "YIELD",
+    "words": [
+      { "text": "YIELD", "x": 587, "y": 334, "width": 36, "height": 12 }
+    ]
+  },
+  {
+    "text": "-2%",
+    "words": [{ "text": "-2%", "x": 591, "y": 487, "width": 25, "height": 11 }]
+  },
+  {
+    "text": "// TO REFINE",
+    "words": [
+      { "text": "//", "x": 912, "y": 389, "width": 14, "height": 11 },
+      { "text": "TO", "x": 930, "y": 388, "width": 17, "height": 12 },
+      { "text": "REFINE", "x": 952, "y": 388, "width": 46, "height": 12 }
+    ]
+  },
+  {
+    "text": "374",
+    "words": [{ "text": "374", "x": 980, "y": 416, "width": 42, "height": 18 }]
+  },
+  {
+    "text": "PROCESSING SELECTION, YIELO AND COSTS",
+    "words": [
+      { "text": "PROCESSING", "x": 694, "y": 466, "width": 85, "height": 13 },
+      { "text": "SELECTION,", "x": 784, "y": 466, "width": 75, "height": 13 },
+      { "text": "YIELO", "x": 864, "y": 466, "width": 36, "height": 12 },
+      { "text": "AND", "x": 904, "y": 466, "width": 28, "height": 12 },
+      { "text": "COSTS", "x": 937, "y": 466, "width": 44, "height": 12 }
+    ]
+  },
+  {
+    "text": "Dinyx Solventation",
+    "words": [
+      { "text": "Dinyx", "x": 688, "y": 517, "width": 34, "height": 14 },
+      { "text": "Solventation", "x": 727, "y": 517, "width": 81, "height": 12 }
+    ]
+  },
+  {
+    "text": "LOW SPEED // HIGH COST // HIGH YIELO",
+    "words": [
+      { "text": "LOW", "x": 758, "y": 574, "width": 30, "height": 12 },
+      { "text": "SPEED", "x": 792, "y": 574, "width": 43, "height": 12 },
+      { "text": "//", "x": 840, "y": 574, "width": 14, "height": 11 },
+      { "text": "HIGH", "x": 858, "y": 574, "width": 31, "height": 12 },
+      { "text": "COST", "x": 894, "y": 574, "width": 36, "height": 12 },
+      { "text": "//", "x": 934, "y": 574, "width": 14, "height": 11 },
+      { "text": "HIGH", "x": 952, "y": 574, "width": 32, "height": 12 },
+      { "text": "YIELO", "x": 989, "y": 574, "width": 36, "height": 12 }
+    ]
+  },
+  {
+    "text": "REFINERY CURRENTLY HAS AN EXTREME",
+    "words": [
+      { "text": "REFINERY", "x": 343, "y": 600, "width": 63, "height": 11 },
+      { "text": "CURRENTLY", "x": 410, "y": 600, "width": 77, "height": 11 },
+      { "text": "HAS", "x": 491, "y": 600, "width": 27, "height": 11 },
+      { "text": "AN", "x": 522, "y": 600, "width": 17, "height": 11 },
+      { "text": "EXTREME", "x": 544, "y": 600, "width": 61, "height": 11 }
+    ]
+  },
+  {
+    "text": "WORKLOAD A LARGE SURCHARGE WILL BE",
+    "words": [
+      { "text": "WORKLOAD", "x": 333, "y": 618, "width": 77, "height": 12 },
+      { "text": "A", "x": 415, "y": 618, "width": 9, "height": 12 },
+      { "text": "LARGE", "x": 428, "y": 618, "width": 43, "height": 12 },
+      { "text": "SURCHARGE", "x": 476, "y": 618, "width": 81, "height": 12 },
+      { "text": "WILL", "x": 562, "y": 618, "width": 31, "height": 12 },
+      { "text": "BE", "x": 597, "y": 618, "width": 16, "height": 12 }
+    ]
+  },
+  {
+    "text": "AOOED.",
+    "words": [
+      { "text": "AOOED.", "x": 448, "y": 637, "width": 48, "height": 11 }
+    ]
+  },
+  {
+    "text": "01",
+    "words": [{ "text": "01", "x": 1097, "y": 350, "width": 19, "height": 14 }]
+  },
+  {
+    "text": "REFINE",
+    "words": [
+      { "text": "REFINE", "x": 1052, "y": 616, "width": 46, "height": 12 }
+    ]
+  },
+  {
+    "text": "CURRENT CAPACITY",
+    "words": [
+      { "text": "CURRENT", "x": 308, "y": 669, "width": 62, "height": 12 },
+      { "text": "CAPACITY", "x": 374, "y": 669, "width": 63, "height": 12 }
+    ]
+  },
+  {
+    "text": "USER DETAILS",
+    "words": [
+      { "text": "USER", "x": 305, "y": 803, "width": 42, "height": 13 },
+      { "text": "DETAILS", "x": 352, "y": 804, "width": 67, "height": 13 }
+    ]
+  },
+  {
+    "text": "k/ MATERIAL SELECTION",
+    "words": [
+      { "text": "k/", "x": 303, "y": 823, "width": 15, "height": 23 },
+      { "text": "MATERIAL", "x": 322, "y": 829, "width": 65, "height": 11 },
+      { "text": "SELECTION", "x": 392, "y": 829, "width": 72, "height": 12 }
+    ]
+  },
+  {
+    "text": "MISC Prospector",
+    "words": [
+      { "text": "MISC", "x": 316, "y": 872, "width": 32, "height": 11 },
+      { "text": "Prospector", "x": 352, "y": 872, "width": 76, "height": 14 }
+    ]
+  },
+  {
+    "text": "374 CSCU REFINABLE",
+    "words": [
+      { "text": "374", "x": 348, "y": 988, "width": 24, "height": 12 },
+      { "text": "CSCU", "x": 377, "y": 988, "width": 35, "height": 12 },
+      { "text": "REFINABLE", "x": 417, "y": 988, "width": 72, "height": 13 }
+    ]
+  },
+  {
+    "text": "925 CSCU INERT",
+    "words": [
+      { "text": "925", "x": 359, "y": 1010, "width": 24, "height": 12 },
+      { "text": "CSCU", "x": 388, "y": 1010, "width": 35, "height": 13 },
+      { "text": "INERT", "x": 428, "y": 1011, "width": 38, "height": 12 }
+    ]
+  },
+  {
+    "text": "3200 CSCU FREE SPACE",
+    "words": [
+      { "text": "3200", "x": 376, "y": 1032, "width": 33, "height": 12 },
+      { "text": "CSCU", "x": 414, "y": 1032, "width": 35, "height": 12 },
+      { "text": "FREE", "x": 454, "y": 1033, "width": 33, "height": 12 },
+      { "text": "SPACE", "x": 492, "y": 1033, "width": 43, "height": 12 }
+    ]
+  },
+  {
+    "text": "SETUP WORK ORDER",
+    "words": [
+      { "text": "SETUP", "x": 373, "y": 1132, "width": 53, "height": 14 },
+      { "text": "WORK", "x": 431, "y": 1132, "width": 48, "height": 14 },
+      { "text": "ORDER", "x": 485, "y": 1133, "width": 54, "height": 14 }
+    ]
+  },
+  {
+    "text": "8798%",
+    "words": [
+      { "text": "8798%", "x": 545, "y": 670, "width": 87, "height": 21 }
+    ]
+  },
+  {
+    "text": "\u003e",
+    "words": [
+      { "text": "\u003e", "x": 610, "y": 869, "width": 11, "height": 19 }
+    ]
+  },
+  {
+    "text": "MATERIALS SELECTED",
+    "words": [
+      { "text": "MATERIALS", "x": 673, "y": 616, "width": 74, "height": 12 },
+      { "text": "SELECTED", "x": 752, "y": 616, "width": 67, "height": 12 }
+    ]
+  },
+  {
+    "text": "TITANIUM (ORE)",
+    "words": [
+      { "text": "TITANIUM", "x": 712, "y": 652, "width": 75, "height": 14 },
+      { "text": "(ORE)", "x": 793, "y": 651, "width": 47, "height": 15 }
+    ]
+  },
+  {
+    "text": "TITANIUM (ORE)",
+    "words": [
+      { "text": "TITANIUM", "x": 711, "y": 705, "width": 76, "height": 13 },
+      { "text": "(ORE)", "x": 792, "y": 704, "width": 47, "height": 15 }
+    ]
+  },
+  {
+    "text": "e INERT MATERIALS",
+    "words": [
+      { "text": "e", "x": 677, "y": 756, "width": 24, "height": 17 },
+      { "text": "INERT", "x": 710, "y": 758, "width": 47, "height": 13 },
+      { "text": "MATERIALS", "x": 763, "y": 758, "width": 91, "height": 14 }
+    ]
+  },
+  {
+    "text": "ASLARITE (RAW)",
+    "words": [
+      { "text": "ASLARITE", "x": 709, "y": 811, "width": 80, "height": 13 },
+      { "text": "(RAW)", "x": 794, "y": 811, "width": 51, "height": 15 }
+    ]
+  },
+  {
+    "text": "AGRICIUM (ORE)",
+    "words": [
+      { "text": "AGRICIUM", "x": 708, "y": 864, "width": 79, "height": 14 },
+      { "text": "(ORE)", "x": 793, "y": 864, "width": 46, "height": 15 }
+    ]
+  },
+  {
+    "text": "TOTAL COST",
+    "words": [
+      { "text": "TOTAL", "x": 666, "y": 957, "width": 52, "height": 14 },
+      { "text": "COST", "x": 724, "y": 957, "width": 44, "height": 14 }
+    ]
+  },
+  {
+    "text": "R/ PROCESSING",
+    "words": [
+      { "text": "R/", "x": 665, "y": 993, "width": 15, "height": 24 },
+      { "text": "PROCESSING", "x": 684, "y": 999, "width": 86, "height": 12 }
+    ]
+  },
+  {
+    "text": "PROCESSING TIME",
+    "words": [
+      { "text": "PROCESSING", "x": 666, "y": 1027, "width": 104, "height": 14 },
+      { "text": "TIME", "x": 776, "y": 1028, "width": 38, "height": 14 }
+    ]
+  },
+  {
+    "text": "CANCEL",
+    "words": [
+      { "text": "CANCEL", "x": 739, "y": 1095, "width": 64, "height": 14 }
+    ]
+  },
+  {
+    "text": "OUALITY",
+    "words": [
+      { "text": "OUALITY", "x": 866, "y": 616, "width": 54, "height": 13 }
+    ]
+  },
+  {
+    "text": "295",
+    "words": [{ "text": "295", "x": 880, "y": 653, "width": 25, "height": 12 }]
+  },
+  {
+    "text": "516",
+    "words": [{ "text": "516", "x": 879, "y": 706, "width": 25, "height": 12 }]
+  },
+  {
+    "text": "o",
+    "words": [{ "text": "o", "x": 887, "y": 759, "width": 8, "height": 12 }]
+  },
+  {
+    "text": "S7S",
+    "words": [{ "text": "S7S", "x": 878, "y": 812, "width": 25, "height": 12 }]
+  },
+  {
+    "text": "588",
+    "words": [{ "text": "588", "x": 877, "y": 866, "width": 25, "height": 12 }]
+  },
+  {
+    "text": "OTY",
+    "words": [{ "text": "OTY", "x": 941, "y": 616, "width": 25, "height": 13 }]
+  },
+  {
+    "text": "133",
+    "words": [{ "text": "133", "x": 941, "y": 653, "width": 25, "height": 12 }]
+  },
+  {
+    "text": "162",
+    "words": [{ "text": "162", "x": 940, "y": 706, "width": 25, "height": 12 }]
+  },
+  {
+    "text": "925",
+    "words": [{ "text": "925", "x": 940, "y": 759, "width": 25, "height": 12 }]
+  },
+  {
+    "text": "30",
+    "words": [{ "text": "30", "x": 943, "y": 812, "width": 16, "height": 12 }]
+  },
+  {
+    "text": "47",
+    "words": [{ "text": "47", "x": 942, "y": 866, "width": 17, "height": 12 }]
+  },
+  {
+    "text": "YIELD",
+    "words": [
+      { "text": "YIELD", "x": 996, "y": 616, "width": 36, "height": 12 }
+    ]
+  },
+  {
+    "text": "63",
+    "words": [{ "text": "63", "x": 1006, "y": 653, "width": 16, "height": 12 }]
+  },
+  {
+    "text": "76",
+    "words": [{ "text": "76", "x": 1006, "y": 706, "width": 16, "height": 12 }]
+  },
+  {
+    "text": "13",
+    "words": [{ "text": "13", "x": 1005, "y": 813, "width": 16, "height": 11 }]
+  },
+  {
+    "text": "21",
+    "words": [{ "text": "21", "x": 1004, "y": 866, "width": 16, "height": 12 }]
+  },
+  {
+    "text": "B7-S6",
+    "words": [
+      { "text": "B7-S6", "x": 684, "y": 1241, "width": 40, "height": 12 }
+    ]
+  },
+  {
+    "text": "13-4F",
+    "words": [
+      { "text": "13-4F", "x": 795, "y": 1216, "width": 39, "height": 12 }
+    ]
+  },
+  {
+    "text": "FF-E9",
+    "words": [
+      { "text": "FF-E9", "x": 794, "y": 1242, "width": 39, "height": 12 }
+    ]
+  },
+  {
+    "text": "47.00",
+    "words": [
+      { "text": "47.00", "x": 983, "y": 959, "width": 75, "height": 22 }
+    ]
+  },
+  {
+    "text": "aUEC",
+    "words": [
+      { "text": "aUEC", "x": 1068, "y": 959, "width": 34, "height": 12 }
+    ]
+  },
+  {
+    "text": "03",
+    "words": [{ "text": "03", "x": 1091, "y": 1001, "width": 20, "height": 14 }]
+  },
+  {
+    "text": "50m 27s",
+    "words": [
+      { "text": "50m", "x": 966, "y": 1029, "width": 68, "height": 27 },
+      { "text": "27s", "x": 1047, "y": 1030, "width": 58, "height": 27 }
+    ]
+  },
+  {
+    "text": "CONFIRM",
+    "words": [
+      { "text": "CONFIRM", "x": 962, "y": 1097, "width": 73, "height": 14 }
+    ]
+  },
+  {
+    "text": "37",
+    "words": [{ "text": "37", "x": 928, "y": 1218, "width": 16, "height": 11 }]
+  },
+  {
+    "text": "F3-EC",
+    "words": [
+      { "text": "F3-EC", "x": 1014, "y": 1219, "width": 40, "height": 12 }
+    ]
+  },
+  {
+    "text": "C4-90",
+    "words": [
+      { "text": "C4-90", "x": 1124, "y": 1220, "width": 41, "height": 12 }
+    ]
+  },
+  {
+    "text": "A9-HS",
+    "words": [
+      { "text": "A9-HS", "x": 1346, "y": 1222, "width": 44, "height": 12 }
+    ]
+  },
+  {
+    "text": "2B-22",
+    "words": [
+      { "text": "2B-22", "x": 903, "y": 1243, "width": 41, "height": 12 }
+    ]
+  },
+  {
+    "text": "so-ge",
+    "words": [
+      { "text": "so-ge", "x": 1014, "y": 1245, "width": 41, "height": 11 }
+    ]
+  },
+  {
+    "text": "SO-NH",
+    "words": [
+      { "text": "SO-NH", "x": 1124, "y": 1246, "width": 42, "height": 12 }
+    ]
+  },
+  {
+    "text": "OB-OB",
+    "words": [
+      { "text": "OB-OB", "x": 1235, "y": 1247, "width": 42, "height": 12 }
+    ]
+  },
+  {
+    "text": "AO-CE",
+    "words": [
+      { "text": "AO-CE", "x": 1346, "y": 1248, "width": 43, "height": 12 }
+    ]
+  },
+  {
+    "text": "CONFIGURATION",
+    "words": [
+      {
+        "text": "CONFIGURATION",
+        "x": 1557,
+        "y": 1221,
+        "width": 83,
+        "height": 12
+      }
+    ]
+  },
+  {
+    "text": "FUNC.03",
+    "words": [
+      { "text": "FUNC.03", "x": 1906, "y": 1261, "width": 44, "height": 11 }
+    ]
+  }
+]
