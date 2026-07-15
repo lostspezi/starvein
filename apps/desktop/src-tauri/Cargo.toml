@@ -1,6 +1,6 @@
 [package]
 name = "starvein-companion"
-version = "0.2.0"
+version = "0.2.1"
 description = "STARVEIN Companion — desktop helper for tracking Star Citizen refinery jobs"
 authors = ["lostspezi"]
 license = "MIT"
@@ -25,8 +25,7 @@ keyring = { version = "3", features = ["windows-native"] }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 xcap = "0.9"
-tauri-plugin-global-shortcut = "2"
-windows = { version = "0.62.2", features = ["Globalization", "Graphics_Imaging", "Media_Ocr", "Foundation", "Foundation_Collections", "Storage_Streams", "Win32_Foundation", "Win32_Security", "Win32_System_Threading"] }
+windows = { version = "0.62.2", features = ["Globalization", "Graphics_Imaging", "Media_Ocr", "Foundation", "Foundation_Collections", "Storage_Streams", "Win32_Foundation", "Win32_Security", "Win32_System_Threading", "Win32_UI_WindowsAndMessaging", "Win32_UI_Input_KeyboardAndMouse"] }
 tauri-plugin-store = "2"
 tauri-plugin-autostart = "2"
 tauri-plugin-dialog = "2"

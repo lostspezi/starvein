@@ -1,14 +1,15 @@
 use serde::Serialize;
 use tauri::AppHandle;
-use tauri_plugin_global_shortcut::{GlobalShortcutExt, Shortcut, ShortcutState};
 use tauri_plugin_store::StoreExt;
+
+use crate::keyboard_hook;
 
 pub const DEFAULT_CAPTURE_SHORTCUT: &str = "ctrl+alt+r";
 const SETTINGS_FILE: &str = "settings.json";
 const HOTKEY_KEY: &str = "hotkey";
 
 /// Fehlerarten beim Rebind — der Renderer unterscheidet danach die Meldung
-/// ("nicht unterstützt" vs. "von anderer Anwendung belegt").
+/// ("nicht unterstützt" vs. "nicht aktivierbar").
 #[derive(Serialize)]
 #[serde(rename_all = "lowercase")]
 pub enum HotkeyError {
@@ -16,9 +17,9 @@ pub enum HotkeyError {
     Unavailable,
 }
 
-/// Status des konfigurierten Hotkeys für die Settings-UI: `registered` ist
-/// false, wenn die OS-Registrierung fehlschlug (typisch: eine andere
-/// Anwendung hält dieselbe Kombination).
+/// Status des konfigurierten Hotkeys für die Settings-UI: `registered`
+/// ist false, wenn der Keyboard-Hook nicht installiert werden konnte
+/// oder der gespeicherte Wert nicht parsebar ist.
 #[derive(Serialize)]
 pub struct CaptureShortcutStatus {
     pub shortcut: String,
@@ -33,99 +34,61 @@ fn stored_shortcut(app: &AppHandle) -> String {
         .unwrap_or_else(|| DEFAULT_CAPTURE_SHORTCUT.to_string())
 }
 
-/// Registriert den Capture-Hotkey aus den Settings (Fallback: Default).
-/// Fehler brechen den App-Start nicht ab, werden aber geloggt und sind
-/// über `get_capture_shortcut` für die UI sichtbar.
+/// Startet den Low-Level-Keyboard-Hook (siehe keyboard_hook.rs — der
+/// frühere RegisterHotKey-Weg feuert nicht, solange Star Citizen den
+/// Fokus hat) und aktiviert den Hotkey aus den Settings (Fallback:
+/// Default). Fehler brechen den App-Start nicht ab, werden aber geloggt
+/// und sind über `get_capture_shortcut` für die UI sichtbar.
 pub fn register_from_settings(app: &AppHandle) {
+    keyboard_hook::start(app.clone());
     let stored = stored_shortcut(app);
-    if let Err(error) = register(app, &stored) {
-        eprintln!("capture hotkey '{stored}' not registered: {error}");
-        if stored != DEFAULT_CAPTURE_SHORTCUT {
-            if let Err(error) = register(app, DEFAULT_CAPTURE_SHORTCUT) {
-                eprintln!(
-                    "default capture hotkey '{DEFAULT_CAPTURE_SHORTCUT}' not registered: {error}"
-                );
+    match keyboard_hook::parse_hotkey(&stored) {
+        Ok(hotkey) => keyboard_hook::set_hotkey(hotkey),
+        Err(error) => {
+            eprintln!("stored capture hotkey '{stored}' is invalid: {error}");
+            match keyboard_hook::parse_hotkey(DEFAULT_CAPTURE_SHORTCUT) {
+                Ok(hotkey) => keyboard_hook::set_hotkey(hotkey),
+                Err(error) => eprintln!("default capture hotkey is invalid: {error}"),
             }
         }
     }
 }
 
-fn register(app: &AppHandle, shortcut: &str) -> Result<(), String> {
-    let parsed: Shortcut = shortcut
-        .parse()
-        .map_err(|e| format!("invalid shortcut '{shortcut}': {e}"))?;
-    register_parsed(app, parsed)
-}
-
-fn register_parsed(app: &AppHandle, shortcut: Shortcut) -> Result<(), String> {
-    app.global_shortcut()
-        .on_shortcut(shortcut, |app, _shortcut, event| {
-            if event.state() == ShortcutState::Pressed {
-                crate::on_capture_hotkey(app);
-            }
-        })
-        .map_err(|e| e.to_string())
-}
-
-/// Aktueller Hotkey + ob er wirklich im System registriert ist.
+/// Aktueller Hotkey + ob er wirklich aktiv ist (Hook installiert und
+/// gespeicherter Wert entspricht dem aktiven Hotkey).
 #[tauri::command]
 pub fn get_capture_shortcut(app: AppHandle) -> CaptureShortcutStatus {
     let shortcut = stored_shortcut(&app);
-    let registered = shortcut
-        .parse::<Shortcut>()
-        .map(|parsed| app.global_shortcut().is_registered(parsed))
-        .unwrap_or(false);
+    let registered = keyboard_hook::hook_installed()
+        && keyboard_hook::parse_hotkey(&shortcut)
+            .map(|hotkey| keyboard_hook::active_hotkey() == Some(hotkey))
+            .unwrap_or(false);
     CaptureShortcutStatus {
         shortcut,
         registered,
     }
 }
 
-/// Rebind aus den Settings (Slice D6): erst parsen, dann alten Hotkey
-/// lösen und den neuen registrieren. Schlägt die Registrierung fehl
-/// (Kombination anderweitig belegt), wird der alte wiederhergestellt,
-/// damit ein fehlgeschlagener Versuch keinen funktionierenden Hotkey
-/// zerstört. Der Renderer persistiert den Wert im Settings-Store.
+/// Rebind aus den Settings: erst parsen, dann den aktiven Hotkey im Hook
+/// tauschen. Ein fehlgeschlagener Versuch lässt den alten Hotkey
+/// unangetastet. Der Renderer persistiert den Wert im Settings-Store.
 #[tauri::command]
-pub fn set_capture_shortcut(app: AppHandle, shortcut: String) -> Result<(), HotkeyError> {
-    let parsed: Shortcut = shortcut.trim().parse().map_err(|_| HotkeyError::Invalid)?;
-    let previous = stored_shortcut(&app);
-    let _ = app.global_shortcut().unregister_all();
-    if register_parsed(&app, parsed).is_err() {
-        let _ = register(&app, &previous);
+pub fn set_capture_shortcut(shortcut: String) -> Result<(), HotkeyError> {
+    let hotkey = keyboard_hook::parse_hotkey(&shortcut).map_err(|_| HotkeyError::Invalid)?;
+    if !keyboard_hook::hook_installed() {
         return Err(HotkeyError::Unavailable);
     }
+    keyboard_hook::set_hotkey(hotkey);
     Ok(())
 }
 
 #[cfg(test)]
 mod tests {
-    use tauri_plugin_global_shortcut::Shortcut;
+    use crate::keyboard_hook::parse_hotkey;
 
     #[test]
     fn default_shortcut_parses() {
-        assert!(super::DEFAULT_CAPTURE_SHORTCUT.parse::<Shortcut>().is_ok());
-    }
-
-    /// Der HotkeyRecorder im Frontend erzeugt Kombinationen aus
-    /// ctrl/alt/shift/super + Buchstabe/Ziffer/F-Taste — dieser Ausschnitt
-    /// des Wertebereichs muss vom Rust-Parser akzeptiert werden.
-    #[test]
-    fn recorder_output_space_parses() {
-        for combo in [
-            "ctrl+alt+m",
-            "ctrl+shift+3",
-            "super+k",
-            "f5",
-            "ctrl+alt+shift+f13",
-        ] {
-            assert!(combo.parse::<Shortcut>().is_ok(), "combo: {combo}");
-        }
-    }
-
-    #[test]
-    fn garbage_shortcut_fails_to_parse() {
-        assert!("strg+ö".parse::<Shortcut>().is_err());
+        assert!(parse_hotkey(super::DEFAULT_CAPTURE_SHORTCUT).is_ok());
     }
 
     #[test]
