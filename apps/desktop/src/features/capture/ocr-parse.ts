@@ -162,8 +162,49 @@ function numericWordValue(text: string): number | null {
   return /^\d{1,5}$/.test(mapped) ? Number(mapped) : null;
 }
 
-function headerLike(word: string, label: string, maxDistance: number): boolean {
-  return levenshtein(word.trim().toUpperCase(), label) <= maxDistance;
+/**
+ * Terminal-Spaltenkopf in einer Sprache. `maxDistance` toleriert
+ * OCR-Verleser (z. B. "OUALITY" statt "QUALITY").
+ *
+ * Deutsche Clients: sobald echte SETUP+PROCESSING-Screenshots eines
+ * deutschen Terminals vorliegen (Fixtures refinery-*-dede-client.json),
+ * hier je Spalte die deutsche Beschriftung ergänzen — der restliche Parser
+ * bleibt unverändert. Bis dahin nur die (bestätigten) englischen Labels;
+ * "QUALITY"@maxDistance 2 matcht das deutsche "QUALITÄT" bereits mit.
+ */
+type HeaderAlias = { label: string; maxDistance: number };
+
+const MATERIALS_HEADERS: HeaderAlias[] = [
+  { label: "MATERIALS", maxDistance: 2 },
+  // TODO(de-client): { label: "MATERIALIEN", maxDistance: 2 } — verifizieren.
+];
+const YIELD_HEADERS: HeaderAlias[] = [
+  { label: "YIELD", maxDistance: 1 },
+  // TODO(de-client): { label: "ERTRAG"/"AUSBEUTE", maxDistance: 1 }.
+];
+const QUALITY_HEADERS: HeaderAlias[] = [
+  { label: "QUALITY", maxDistance: 2 }, // deckt "QUALITÄT" (Distanz 2) mit ab
+];
+/** Ausgefilterte Nicht-Erz-Zeile ("INERT MATERIALS"). */
+const INERT_LABELS: HeaderAlias[] = [
+  { label: "INERT", maxDistance: 1 },
+  // TODO(de-client): { label: "TRÄGE"/"INERT", maxDistance: 1 }.
+];
+
+/** Passt das Wort auf eine der Spaltenkopf-Varianten (fuzzy)? */
+function matchesHeader(word: string, aliases: HeaderAlias[]): boolean {
+  const upper = word.trim().toUpperCase();
+  return aliases.some(
+    (alias) => levenshtein(upper, alias.label) <= alias.maxDistance,
+  );
+}
+
+/** Enthält der Zeilentext eine INERT-Variante (irgendwo)? */
+function isInertLabel(name: string): boolean {
+  return name
+    .toUpperCase()
+    .split(/\s+/)
+    .some((token) => matchesHeader(token, INERT_LABELS));
 }
 
 type MaterialTable = {
@@ -183,7 +224,7 @@ function findMaterialTable(lines: OcrLine[]): MaterialTable | null {
   let quality: OcrWord | null = null;
   for (const line of lines) {
     for (const word of line.words) {
-      if (headerLike(word.text, "QUALITY", 2)) {
+      if (matchesHeader(word.text, QUALITY_HEADERS)) {
         quality = word;
         break;
       }
@@ -200,9 +241,9 @@ function findMaterialTable(lines: OcrLine[]): MaterialTable | null {
       if (Math.abs(word.y - quality.y) > rowTolerance) {
         continue;
       }
-      if (headerLike(word.text, "MATERIALS", 2)) {
+      if (matchesHeader(word.text, MATERIALS_HEADERS)) {
         materials = word;
-      } else if (headerLike(word.text, "YIELD", 1)) {
+      } else if (matchesHeader(word.text, YIELD_HEADERS)) {
         yieldHeader = word;
       }
     }
@@ -241,7 +282,7 @@ function tableItems(lines: OcrLine[], table: MaterialTable): ParsedItem[] {
       continue;
     }
     const name = line.text.replace(/^[^A-Za-z]+/, "").trim();
-    if (/INERT/i.test(name)) {
+    if (isInertLabel(name)) {
       continue;
     }
 

@@ -234,6 +234,26 @@ describe("parseWorkOrder keeps partial rows", () => {
   });
 });
 
+/**
+ * Deutscher Spielclient: die Terminal-Header sind übersetzt (MATERIALS →
+ * MATERIALIEN, YIELD → ERTRAG/AUSBEUTE, …). Der Alias-Mechanismus in
+ * ocr-parse.ts (MATERIALS_HEADERS/YIELD_HEADERS/…) ist vorbereitet; die
+ * exakten deutschen Strings sind erst mit echten Screenshots eines
+ * deutschen Terminals bekannt.
+ *
+ * Aktivierung (sobald refinery-*-dede-client.json vorliegt):
+ *   1. deutsche Labels in die *_HEADERS-Tabellen eintragen,
+ *   2. hier die echten Fixtures laden und this `it.skip` → `it` machen.
+ * Bis dahin bewusst geskippt — keine geratenen deutschen Strings.
+ */
+describe("parseWorkOrder on a German client (pending real fixtures)", () => {
+  it.skip("reconstructs the material table with German column headers", () => {
+    // Platzhalter: mit den Ist-Werten aus dem deutschen SETUP-Screenshot
+    // befüllen (Erze, Menge, Qualität), analog zu den EN-Fixtures.
+    expect(true).toBe(true);
+  });
+});
+
 describe("parseWorkOrder sourceY", () => {
   it("tags each table row with the y of its name line (cross-frame merge key)", () => {
     const lines: OcrLine[] = [
