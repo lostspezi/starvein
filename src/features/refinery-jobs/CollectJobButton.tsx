@@ -10,7 +10,12 @@ import { Panel } from "@/lib/components/ui/Panel";
 const inputClass =
   "w-full rounded border border-bg-nebula-2 bg-bg-void px-3 py-1.5 text-sm transition-all duration-150 placeholder:text-text-muted focus:border-accent-primary focus:outline-none";
 
-type CollectItem = { oreCode: string; oreName: string; quantityScu: number };
+type CollectItem = {
+  oreCode: string;
+  oreName: string;
+  quantityScu: number;
+  qualityRating?: number;
+};
 
 /**
  * "Abholen"-Flow: expandiert ein Inline-Panel mit editierbaren
@@ -31,6 +36,11 @@ export function CollectJobButton({
   const [transfer, setTransfer] = useState(true);
   const [quantities, setQuantities] = useState<string[]>(
     items.map((item) => String(item.quantityScu)),
+  );
+  const [qualities, setQualities] = useState<string[]>(
+    items.map((item) =>
+      item.qualityRating != null ? String(item.qualityRating) : "",
+    ),
   );
   const [busy, setBusy] = useState(false);
   const [failed, setFailed] = useState(false);
@@ -53,6 +63,9 @@ export function CollectJobButton({
                 transfer: items.map((item, index) => ({
                   oreCode: item.oreCode,
                   quantityScu: parsed[index],
+                  ...(qualities[index].trim() !== ""
+                    ? { qualityRating: Number(qualities[index]) }
+                    : {}),
                 })),
               }
             : {},
@@ -111,6 +124,28 @@ export function CollectJobButton({
                   value={quantities[index]}
                   onChange={(event) =>
                     setQuantities((current) =>
+                      current.map((q, i) =>
+                        i === index ? event.target.value : q,
+                      ),
+                    )
+                  }
+                  className={`${inputClass} w-32`}
+                />
+                <label
+                  htmlFor={`${formId}-${item.oreCode}-quality`}
+                  className="text-xs text-text-muted"
+                >
+                  {t("qualityLabel", { ore: item.oreName })}
+                </label>
+                <input
+                  id={`${formId}-${item.oreCode}-quality`}
+                  type="number"
+                  min={0}
+                  max={1000}
+                  step={1}
+                  value={qualities[index]}
+                  onChange={(event) =>
+                    setQualities((current) =>
                       current.map((q, i) =>
                         i === index ? event.target.value : q,
                       ),

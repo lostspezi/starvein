@@ -21,6 +21,7 @@
       "itemsLegend": "Ores",
       "oreLabel": "Ore {index}",
       "quantityLabel": "Quantity (SCU) {index}",
+      "qualityLabel": "Quality {index} (0–1000)",
       "addItem": "Add ore",
       "removeItem": "Remove ore {index}",
       "durationLegend": "Processing time",
@@ -37,13 +38,15 @@
       "readyAt": "Ready: {time}",
       "remaining": "{hours}h {minutes}m remaining",
       "collectedAt": "Collected: {time}",
-      "method": "Method: {method}"
+      "method": "Method: {method}",
+      "quality": "Q {value}"
     },
     "collect": {
       "cta": "Collect",
       "heading": "Collect job",
       "transferLabel": "Add refined output to my warehouse",
       "quantityLabel": "Refined {ore} (SCU)",
+      "qualityLabel": "Quality {ore} (0–1000)",
       "hint": "Adjust the quantities to the actual refined output.",
       "confirm": "Confirm collection",
       "cancel": "Cancel",

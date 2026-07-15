@@ -41,6 +41,7 @@ export function WarehouseEntryForm({
   const [oreCode, setOreCode] = useState("");
   const [kind, setKind] = useState<"raw" | "refined">("raw");
   const [quantity, setQuantity] = useState("1");
+  const [quality, setQuality] = useState("");
   const [locationKind, setLocationKind] =
     useState<LocationKind>("celestialBody");
   const [bodyValue, setBodyValue] = useState("");
@@ -98,6 +99,7 @@ export function WarehouseEntryForm({
           oreCode,
           kind,
           quantityScu,
+          ...(quality.trim() !== "" ? { qualityRating: Number(quality) } : {}),
           location: buildLocation(),
           ...(note.trim() !== "" ? { note: note.trim() } : {}),
         }),
@@ -107,6 +109,7 @@ export function WarehouseEntryForm({
         return;
       }
       setQuantity("1");
+      setQuality("");
       setNote("");
       setCustomLabel("");
       router.refresh();
@@ -185,6 +188,25 @@ export function WarehouseEntryForm({
               step="any"
               value={quantity}
               onChange={(event) => setQuantity(event.target.value)}
+              className={inputClass}
+            />
+          </div>
+
+          <div className="flex flex-col gap-1">
+            <label
+              htmlFor={`${formId}-quality`}
+              className="text-xs text-text-muted"
+            >
+              {t("qualityLabel")}
+            </label>
+            <input
+              id={`${formId}-quality`}
+              type="number"
+              min={0}
+              max={1000}
+              step={1}
+              value={quality}
+              onChange={(event) => setQuality(event.target.value)}
               className={inputClass}
             />
           </div>

@@ -131,6 +131,69 @@ describe("CaptureConfirmForm", () => {
     await vi.waitFor(() => expect(onCreated).toHaveBeenCalled());
   });
 
+  it("prefills and submits an OCR-detected quality value", async () => {
+    createRefineryJob.mockResolvedValue({ id: "job-1" });
+    const w = (text: string, x: number) => ({
+      text,
+      x,
+      y: 0,
+      width: text.length * 10,
+      height: 18,
+    });
+    const captureWithQuality: OcrCapture = {
+      source: "window",
+      width: 1920,
+      height: 1080,
+      lines: [
+        {
+          text: "MATERIAL QUANTITY QUALITY",
+          words: [w("MATERIAL", 10), w("QUANTITY", 200), w("QUALITY", 400)],
+        },
+        {
+          text: "Quantainium 32 SCU 850",
+          words: [
+            w("Quantainium", 10),
+            w("32", 205),
+            w("SCU", 240),
+            w("850", 405),
+          ],
+        },
+        { text: "PROCESSING TIME 1H 30M", words: [] },
+        { text: "Dinyx Solventation", words: [] },
+      ],
+    };
+    const onCreated = vi.fn();
+    render(
+      <IntlProvider locale="en" messages={messages.en}>
+        <CaptureConfirmForm
+          token="tok-1"
+          capture={captureWithQuality}
+          ores={ORES}
+          terminals={TERMINALS}
+          methods={METHODS}
+          onCreated={onCreated}
+          onCancel={vi.fn()}
+        />
+      </IntlProvider>,
+    );
+
+    expect(screen.getByLabelText("Quality (0–1000)")).toHaveValue(850);
+
+    await userEvent.selectOptions(
+      screen.getByLabelText("Refinery terminal"),
+      "32",
+    );
+    await userEvent.click(screen.getByRole("button", { name: "Create job" }));
+
+    expect(createRefineryJob).toHaveBeenCalledWith("tok-1", {
+      terminalId: 32,
+      methodCode: "DINYX",
+      items: [{ oreCode: "QUAN", quantityScu: 32, qualityRating: 850 }],
+      durationMinutes: 90,
+    });
+    await vi.waitFor(() => expect(onCreated).toHaveBeenCalled());
+  });
+
   it("requires a terminal before submitting", async () => {
     renderForm();
 

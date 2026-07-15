@@ -143,6 +143,30 @@ describe("RefineryJobForm", () => {
     ).not.toBeInTheDocument();
   });
 
+  it("includes qualityRating on an item when a quality is entered", async () => {
+    const user = userEvent.setup();
+    renderForm();
+
+    await user.type(
+      screen.getByRole("combobox", { name: "Refinery terminal" }),
+      "wide",
+    );
+    await user.click(screen.getByRole("option", { name: /Wide Forest/ }));
+    await user.type(screen.getByRole("combobox", { name: "Ore 1" }), "quan");
+    await user.click(screen.getByRole("option", { name: /Quantainium/ }));
+    await user.type(screen.getByLabelText("Quality 1 (0–1000)"), "850");
+    await user.clear(screen.getByLabelText("Minutes"));
+    await user.type(screen.getByLabelText("Minutes"), "45");
+    await user.click(screen.getByRole("button", { name: "Track job" }));
+
+    const body = JSON.parse(
+      (vi.mocked(fetch).mock.calls[0][1] as RequestInit).body as string,
+    );
+    expect(body.items).toEqual([
+      { oreCode: "QUAN", quantityScu: 1, qualityRating: 850 },
+    ]);
+  });
+
   it("keeps the submit disabled until terminal and ores are picked", async () => {
     const user = userEvent.setup();
     renderForm();

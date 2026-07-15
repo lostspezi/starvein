@@ -177,6 +177,40 @@ describe("refinery jobs service", () => {
     expect(stored.find((e) => e.oreCode === "QUAN")?.quantityScu).toBe(28.5);
   });
 
+  it("persists a qualityRating on job items", async () => {
+    await createRefineryJob(
+      db,
+      USER,
+      makeInput({
+        items: [
+          { oreCode: "QUAN", quantityScu: 32, qualityRating: 850 },
+          { oreCode: "GOLD", quantityScu: 10 },
+        ],
+      }),
+    );
+
+    const [stored] = await listRefineryJobsByOwner(db, USER);
+    expect(stored.items[0].qualityRating).toBe(850);
+    expect(stored.items[1].qualityRating).toBeUndefined();
+  });
+
+  it("carries the transfer qualityRating into the warehouse entry", async () => {
+    const job = await createRefineryJob(db, USER, makeInput());
+
+    await collectRefineryJob(db, USER, job.id, {
+      transfer: [
+        { oreCode: "QUAN", quantityScu: 28.5, qualityRating: 640 },
+        { oreCode: "GOLD", quantityScu: 9 },
+      ],
+    });
+
+    const stored = await listWarehouseEntriesByOwner(db, USER);
+    expect(stored.find((e) => e.oreCode === "QUAN")?.qualityRating).toBe(640);
+    expect(
+      stored.find((e) => e.oreCode === "GOLD")?.qualityRating,
+    ).toBeUndefined();
+  });
+
   it("rejects double collection", async () => {
     const job = await createRefineryJob(db, USER, makeInput());
     await collectRefineryJob(db, USER, job.id, {});

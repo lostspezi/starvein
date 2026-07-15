@@ -11,6 +11,7 @@
       "kindRaw": "Raw",
       "kindRefined": "Refined",
       "quantityLabel": "Quantity (SCU)",
+      "qualityLabel": "Quality (0–1000)",
       "locationKindLabel": "Location type",
       "locationBody": "Celestial body",
       "locationTerminal": "Refinery terminal",
@@ -32,6 +33,8 @@
       "delete": "Delete",
       "confirmDelete": "Delete this entry?",
       "quantityLabel": "Quantity (SCU)",
+      "qualityLabel": "Quality (0–1000)",
+      "qualityValue": "Q {value}",
       "noteLabel": "Note",
       "raw": "Raw",
       "refined": "Refined"

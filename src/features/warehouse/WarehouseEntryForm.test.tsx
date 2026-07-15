@@ -150,4 +150,21 @@ describe("WarehouseEntryForm", () => {
       screen.queryByRole("radio", { name: "Refinery terminal" }),
     ).not.toBeInTheDocument();
   });
+
+  it("includes qualityRating when a quality is entered", async () => {
+    const user = userEvent.setup();
+    renderForm();
+
+    await user.type(screen.getByRole("combobox", { name: "Ore" }), "quan");
+    await user.click(screen.getByRole("option", { name: /Quantainium/ }));
+    await user.type(screen.getByLabelText("Quality (0–1000)"), "850");
+    await user.type(screen.getByRole("combobox", { name: "Location" }), "day");
+    await user.click(screen.getByRole("option", { name: /Daymar/ }));
+    await user.click(screen.getByRole("button", { name: "Add entry" }));
+
+    const body = JSON.parse(
+      (vi.mocked(fetch).mock.calls[0][1] as RequestInit).body as string,
+    );
+    expect(body.qualityRating).toBe(850);
+  });
 });

@@ -21,6 +21,7 @@
       "itemsLegend": "Erze",
       "oreLabel": "Erz {index}",
       "quantityLabel": "Menge (SCU) {index}",
+      "qualityLabel": "Qualität {index} (0–1000)",
       "addItem": "Erz hinzufügen",
       "removeItem": "Erz {index} entfernen",
       "durationLegend": "Verarbeitungsdauer",
@@ -37,13 +38,15 @@
       "readyAt": "Fertig: {time}",
       "remaining": "{hours} h {minutes} min verbleibend",
       "collectedAt": "Abgeholt: {time}",
-      "method": "Methode: {method}"
+      "method": "Methode: {method}",
+      "quality": "Q {value}"
     },
     "collect": {
       "cta": "Abholen",
       "heading": "Job abholen",
       "transferLabel": "Raffinierten Ertrag ins Lager übernehmen",
       "quantityLabel": "Raffiniertes {ore} (SCU)",
+      "qualityLabel": "Qualität {ore} (0–1000)",
       "hint": "Passe die Mengen an den tatsächlichen raffinierten Ertrag an.",
       "confirm": "Abholung bestätigen",
       "cancel": "Abbrechen",

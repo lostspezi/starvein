@@ -40,6 +40,31 @@ describe("WarehouseEntryActions", () => {
     expect(body).toEqual({ quantityScu: 5, note: "rest" });
   });
 
+  it("saves an edited qualityRating via PATCH", async () => {
+    const user = userEvent.setup();
+    renderWithIntl(
+      <WarehouseEntryActions
+        entryId="entry-1"
+        quantityScu={32}
+        qualityRating={640}
+        note=""
+      />,
+      { locale: "en" },
+    );
+
+    await user.click(screen.getByRole("button", { name: "Edit" }));
+    const quality = screen.getByLabelText("Quality (0–1000)");
+    expect(quality).toHaveValue(640);
+    await user.clear(quality);
+    await user.type(quality, "900");
+    await user.click(screen.getByRole("button", { name: "Save" }));
+
+    const body = JSON.parse(
+      (vi.mocked(fetch).mock.calls[0][1] as RequestInit).body as string,
+    );
+    expect(body.qualityRating).toBe(900);
+  });
+
   it("cancels editing without a request", async () => {
     const user = userEvent.setup();
     renderWithIntl(
