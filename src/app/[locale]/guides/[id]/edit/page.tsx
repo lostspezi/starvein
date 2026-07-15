@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { GuideEditor } from "@/features/guides/GuideEditor";
 import { findGuideById } from "@/features/guides/guides.repository";
+import type { GuideLanguage } from "@/features/guides/guides.languages";
 import { PageHeader } from "@/lib/components/ui/PageHeader";
 import { PageShell } from "@/lib/components/ui/PageShell";
 import { getDb } from "@/lib/db";
@@ -45,12 +46,16 @@ export default async function EditGuidePage({
       <PageHeader title={t("editTitle")} />
       <GuideEditor
         guideId={guide.id}
+        defaultLanguage={locale as GuideLanguage}
         initialValue={{
-          title: guide.title,
-          description: guide.description,
           tags: guide.tags,
           isPublic: guide.isPublic,
-          content: guide.content,
+          translations: guide.translations.map((translation) => ({
+            language: translation.language,
+            title: translation.title,
+            description: translation.description,
+            content: translation.content,
+          })),
         }}
       />
     </PageShell>

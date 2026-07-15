@@ -1,11 +1,41 @@
-import type { Db, Filter, Document, Sort } from "mongodb";
-import { guideSchema, type Guide } from "./guides.schema";
+import type { Db, Document, Filter } from "mongodb";
+import {
+  GUIDE_FALLBACK_LANGUAGE,
+  GUIDE_LANGUAGES,
+  type GuideLanguage,
+} from "./guides.languages";
+import { guideSchema, pickGuideTranslation, type Guide } from "./guides.schema";
 
 const COLLECTION = "guides";
 const NO_ID = { projection: { _id: 0 } } as const;
 
 function escapeRegex(value: string): string {
   return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+/**
+ * Wickelt Alt-Dokumente (flaches title/description/content vor der i18n-
+ * Umstellung) in die translations-Form, damit Reads nie brechen. Das
+ * Dokument heilt sich beim nächsten Speichern selbst.
+ */
+function normalizeGuideDoc(doc: Document): Document {
+  if (Array.isArray(doc.translations)) return doc;
+  return {
+    ...doc,
+    translations: [
+      {
+        language: GUIDE_FALLBACK_LANGUAGE,
+        title: doc.title,
+        description: doc.description,
+        content: doc.content,
+        searchText: doc.searchText ?? "",
+      },
+    ],
+  };
+}
+
+function parseGuide(doc: Document): Guide {
+  return guideSchema.parse(normalizeGuideDoc(doc));
 }
 
 export const GUIDE_SORTS = ["new", "title"] as const;
@@ -15,6 +45,8 @@ export type PublicGuideQuery = {
   q?: string;
   /** Tag-Filter mit ODER-Semantik: Guide muss mind. einen Tag enthalten. */
   tags?: string[];
+  /** Sprachfilter; undefined = alle Sprachen. */
+  language?: GuideLanguage;
   sort?: GuideSort;
   limit?: number;
 };
@@ -25,7 +57,7 @@ export async function insertGuide(db: Db, guide: Guide): Promise<void> {
 
 export async function findGuideById(db: Db, id: string): Promise<Guide | null> {
   const doc = await db.collection(COLLECTION).findOne({ id }, NO_ID);
-  return doc ? guideSchema.parse(doc) : null;
+  return doc ? parseGuide(doc) : null;
 }
 
 export async function replaceGuide(db: Db, guide: Guide): Promise<void> {
@@ -41,27 +73,42 @@ export async function listPublicGuides(
   query: PublicGuideQuery = {},
 ): Promise<Guide[]> {
   const filter: Filter<Document> = { isPublic: true };
+
   const tags = query.tags
     ?.map((tag) => tag.trim().toLowerCase())
     .filter(Boolean);
   if (tags && tags.length > 0) {
     filter.tags = { $in: tags };
   }
-  if (query.q?.trim()) {
-    // Substring-Suche über das vorberechnete searchText-Feld
-    // (Titel + Beschreibung + Fließtext, kleingeschrieben).
-    filter.searchText = {
-      $regex: escapeRegex(query.q.trim().toLowerCase()),
-      $options: "i",
-    };
+
+  const q = query.q?.trim().toLowerCase();
+  const language = query.language;
+  const regex = q ? { $regex: escapeRegex(q), $options: "i" } : undefined;
+
+  if (language && regex) {
+    // gleiche Übersetzung muss Sprache UND Suchtext erfüllen
+    filter.translations = { $elemMatch: { language, searchText: regex } };
+  } else if (language) {
+    filter["translations.language"] = language;
+  } else if (regex) {
+    filter["translations.searchText"] = regex;
   }
 
-  const sort: Sort = query.sort === "title" ? { title: 1 } : { updatedAt: -1 };
+  const docs = await db.collection(COLLECTION).find(filter, NO_ID).toArray();
+  let guides = docs.map(parseGuide);
 
-  let cursor = db.collection(COLLECTION).find(filter, NO_ID).sort(sort);
-  if (query.limit) cursor = cursor.limit(query.limit);
-  const docs = await cursor.toArray();
-  return docs.map((doc) => guideSchema.parse(doc));
+  // Sortierung in JS über die Anzeige-Übersetzung (Titel ist pro Sprache)
+  const displayLanguage = language ?? GUIDE_FALLBACK_LANGUAGE;
+  guides =
+    query.sort === "title"
+      ? guides.sort((a, b) =>
+          pickGuideTranslation(a, displayLanguage).title.localeCompare(
+            pickGuideTranslation(b, displayLanguage).title,
+          ),
+        )
+      : guides.sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
+
+  return query.limit ? guides.slice(0, query.limit) : guides;
 }
 
 /** Obergrenze der im Tag-Filter angezeigten Tags. */
@@ -86,6 +133,17 @@ export async function listPublicGuideTags(db: Db): Promise<string[]> {
   return rows.map((row) => row._id);
 }
 
+/** In öffentlichen Guides tatsächlich vorkommende Sprachen (Preset-Reihenfolge). */
+export async function listPublicGuideLanguages(
+  db: Db,
+): Promise<GuideLanguage[]> {
+  const values = await db
+    .collection(COLLECTION)
+    .distinct("translations.language", { isPublic: true });
+  const present = new Set(values as string[]);
+  return GUIDE_LANGUAGES.filter((language) => present.has(language));
+}
+
 export async function listGuidesByOwner(
   db: Db,
   userId: string,
@@ -95,5 +153,5 @@ export async function listGuidesByOwner(
     .find({ ownerUserId: userId }, NO_ID)
     .sort({ updatedAt: -1 })
     .toArray();
-  return docs.map((doc) => guideSchema.parse(doc));
+  return docs.map(parseGuide);
 }

@@ -8,7 +8,13 @@ import {
   insertGuide,
   replaceGuide,
 } from "./guides.repository";
-import { guideSchema, type Guide, type GuideInput } from "./guides.schema";
+import {
+  guideSchema,
+  type Guide,
+  type GuideInput,
+  type GuideTranslation,
+  type GuideTranslationInput,
+} from "./guides.schema";
 import { buildGuideSearchText } from "./guides.search";
 
 export class GuideValidationError extends Error {}
@@ -41,26 +47,35 @@ function cleanDescription(description: string | undefined): string | undefined {
   return trimmed ? trimmed : undefined;
 }
 
+/** Baut eine gespeicherte Sprachversion inkl. berechnetem searchText. */
+function buildTranslation(input: GuideTranslationInput): GuideTranslation {
+  const title = cleanTitle(input.title);
+  const description = cleanDescription(input.description);
+  return {
+    language: input.language,
+    title,
+    description,
+    content: input.content,
+    searchText: buildGuideSearchText({
+      title,
+      description,
+      content: input.content,
+    }),
+  };
+}
+
 export async function createGuide(
   db: Db,
   userId: string,
   input: GuideInput,
 ): Promise<Guide> {
   const now = new Date().toISOString();
-  const title = cleanTitle(input.title);
-  const description = cleanDescription(input.description);
   const guide = guideSchema.parse({
-    ...input,
-    title,
-    description,
-    tags: normalizeTags(input.tags),
-    searchText: buildGuideSearchText({
-      title,
-      description,
-      content: input.content,
-    }),
     id: randomUUID(),
+    tags: normalizeTags(input.tags),
+    translations: input.translations.map(buildTranslation),
     ownerUserId: userId,
+    isPublic: input.isPublic,
     patchVersion: CURRENT_PATCH_VERSION,
     createdAt: now,
     updatedAt: now,
@@ -91,24 +106,14 @@ export async function updateGuide(
 ): Promise<Guide> {
   const existing = await findOwnGuide(db, userId, guideId);
 
-  const title =
-    input.title !== undefined ? cleanTitle(input.title) : existing.title;
-  const description =
-    input.description !== undefined
-      ? cleanDescription(input.description)
-      : existing.description;
-  const content = input.content ?? existing.content;
-
   const merged = guideSchema.parse({
-    ...existing,
-    ...input,
-    title,
-    description,
-    content,
-    tags: input.tags ? normalizeTags(input.tags) : existing.tags,
-    searchText: buildGuideSearchText({ title, description, content }),
     id: existing.id,
+    tags: input.tags ? normalizeTags(input.tags) : existing.tags,
+    translations: input.translations
+      ? input.translations.map(buildTranslation)
+      : existing.translations,
     ownerUserId: existing.ownerUserId,
+    isPublic: input.isPublic ?? existing.isPublic,
     createdAt: existing.createdAt,
     updatedAt: new Date().toISOString(),
     // Bearbeitung stempelt auf den aktuellen Patch (Aktualitäts-Anzeige)

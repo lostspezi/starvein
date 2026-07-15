@@ -19,10 +19,11 @@ describe("guides API without a session", () => {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
-          title: "Test",
           tags: [],
           isPublic: false,
-          content: { type: "doc" },
+          translations: [
+            { language: "en", title: "Test", content: { type: "doc" } },
+          ],
         }),
       }),
     );
@@ -34,7 +35,7 @@ describe("guides API without a session", () => {
       new Request("http://localhost/api/guides/guide-1", {
         method: "PATCH",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ title: "Neu" }),
+        body: JSON.stringify({ isPublic: true }),
       }),
       params,
     );

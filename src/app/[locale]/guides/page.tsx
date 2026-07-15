@@ -3,10 +3,15 @@ import { GuideCard } from "@/features/guides/GuideCard";
 import { GuidesFilters } from "@/features/guides/GuidesFilters";
 import {
   GUIDE_SORTS,
+  listPublicGuideLanguages,
   listPublicGuides,
   listPublicGuideTags,
   type GuideSort,
 } from "@/features/guides/guides.repository";
+import {
+  isGuideLanguage,
+  type GuideLanguage,
+} from "@/features/guides/guides.languages";
 import { Link } from "@/i18n/navigation";
 import { Button } from "@/lib/components/ui/Button";
 import { PageHeader } from "@/lib/components/ui/PageHeader";
@@ -42,6 +47,7 @@ export default async function GuidesPage({
 }) {
   const { locale } = await params;
   setRequestLocale(locale);
+  const uiLanguage = locale as GuideLanguage;
 
   const sp = await searchParams;
   const q = typeof sp.q === "string" ? sp.q : undefined;
@@ -49,11 +55,22 @@ export default async function GuidesPage({
     typeof sp.tags === "string" ? sp.tags.split(",").filter(Boolean) : [];
   const sort = parseEnumParam<GuideSort>(sp.sort, GUIDE_SORTS) ?? "new";
 
+  // Sprachfilter: "all" → alle Sprachen; gültige Sprache → diese; sonst UI-Sprache
+  const langParam = typeof sp.lang === "string" ? sp.lang : undefined;
+  const language: GuideLanguage | undefined =
+    langParam === "all"
+      ? undefined
+      : isGuideLanguage(langParam)
+        ? langParam
+        : uiLanguage;
+  const displayLanguage = language ?? uiLanguage;
+
   const t = await getTranslations("guides");
   const db = await getDb();
-  const [guides, tags] = await Promise.all([
-    listPublicGuides(db, { q, tags: selectedTags, sort }),
+  const [guides, tags, languages] = await Promise.all([
+    listPublicGuides(db, { q, tags: selectedTags, sort, language }),
     listPublicGuideTags(db),
+    listPublicGuideLanguages(db),
   ]);
   const hasFilters = Boolean(q) || selectedTags.length > 0;
 
@@ -66,7 +83,11 @@ export default async function GuidesPage({
         </Link>
       </div>
 
-      <GuidesFilters tags={tags} />
+      <GuidesFilters
+        tags={tags}
+        languages={languages}
+        defaultLanguage={uiLanguage}
+      />
 
       {guides.length === 0 ? (
         <p className="text-text-muted">
@@ -79,7 +100,11 @@ export default async function GuidesPage({
           </p>
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {guides.map((guide) => (
-              <GuideCard key={guide.id} guide={guide} />
+              <GuideCard
+                key={guide.id}
+                guide={guide}
+                language={displayLanguage}
+              />
             ))}
           </div>
         </>

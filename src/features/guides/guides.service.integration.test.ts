@@ -4,7 +4,7 @@ import { closeMongo, getDb } from "@/lib/db";
 import { CURRENT_PATCH_VERSION } from "@/lib/patch";
 import { uniqueDbName } from "@/test/factories";
 import { listPublicGuides } from "./guides.repository";
-import type { GuideInput } from "./guides.schema";
+import type { GuideInput, GuideTranslationInput } from "./guides.schema";
 import {
   createGuide,
   deleteGuide,
@@ -21,20 +21,24 @@ const ADMIN: GuideRequester = { id: "user-admin", role: "admin" };
 const OWNER_REQ: GuideRequester = { id: OWNER, role: "user" };
 const VISITOR_REQ: GuideRequester = { id: VISITOR, role: "user" };
 
+function paragraph(text: string): GuideTranslationInput["content"] {
+  return {
+    type: "doc",
+    content: [{ type: "paragraph", content: [{ type: "text", text }] }],
+  } as GuideTranslationInput["content"];
+}
+
 const validInput: GuideInput = {
-  title: "Mining Quantainium in Aaron Halo",
-  description: "Where to look and how to scan",
   tags: ["Mining", "quantainium", "mining"],
   isPublic: true,
-  content: {
-    type: "doc",
-    content: [
-      {
-        type: "paragraph",
-        content: [{ type: "text", text: "Head to the Aaron Halo." }],
-      },
-    ],
-  } as GuideInput["content"],
+  translations: [
+    {
+      language: "en",
+      title: "Mining Quantainium in Aaron Halo",
+      description: "Where to look and how to scan",
+      content: paragraph("Head to the Aaron Halo."),
+    },
+  ],
 };
 
 describe("guides service", () => {
@@ -60,42 +64,79 @@ describe("guides service", () => {
       expect(created.tags).toEqual(["mining", "quantainium"]);
     });
 
+    it("stores multiple translations with per-language searchText", async () => {
+      const created = await createGuide(db, OWNER, {
+        ...validInput,
+        translations: [
+          validInput.translations[0],
+          {
+            language: "de",
+            title: "Quantainium im Aaron Halo abbauen",
+            content: paragraph("Flieg in den Aaron Halo."),
+          },
+        ],
+      });
+
+      expect(created.translations).toHaveLength(2);
+      const de = created.translations.find((t) => t.language === "de");
+      expect(de?.searchText).toContain("aaron halo");
+    });
+
     it("rejects a whitespace-only title", async () => {
       await expect(
-        createGuide(db, OWNER, { ...validInput, title: "   " }),
+        createGuide(db, OWNER, {
+          ...validInput,
+          translations: [{ ...validInput.translations[0], title: "   " }],
+        }),
       ).rejects.toThrow(GuideValidationError);
     });
 
     it("stamps a searchText that makes body text findable", async () => {
       const created = await createGuide(db, OWNER, validInput);
-      expect(created.searchText).toContain("aaron halo");
+      expect(created.translations[0].searchText).toContain("aaron halo");
 
-      // Volltextsuche findet den Guide über den Fließtext
       const hits = await listPublicGuides(db, { q: "aaron halo" });
       expect(hits.map((g) => g.id)).toContain(created.id);
     });
   });
 
   describe("updateGuide", () => {
-    it("updates own guide and bumps updatedAt", async () => {
+    it("replaces translations and bumps updatedAt", async () => {
       const created = await createGuide(db, OWNER, validInput);
       const updated = await updateGuide(db, OWNER, created.id, {
-        title: "Updated title",
+        translations: [
+          {
+            language: "en",
+            title: "Updated title",
+            content: paragraph("New body"),
+          },
+        ],
       });
-      expect(updated.title).toBe("Updated title");
+      expect(updated.translations[0].title).toBe("Updated title");
       expect(updated.createdAt).toBe(created.createdAt);
+    });
+
+    it("keeps translations on a visibility-only update", async () => {
+      const created = await createGuide(db, OWNER, validInput);
+      const updated = await updateGuide(db, OWNER, created.id, {
+        isPublic: false,
+      });
+      expect(updated.isPublic).toBe(false);
+      expect(updated.translations[0].title).toBe(
+        validInput.translations[0].title,
+      );
     });
 
     it("throws NotFound for non-owners", async () => {
       const created = await createGuide(db, OWNER, validInput);
       await expect(
-        updateGuide(db, VISITOR, created.id, { title: "Hijacked" }),
+        updateGuide(db, VISITOR, created.id, { isPublic: false }),
       ).rejects.toThrow(GuideNotFoundError);
     });
 
     it("throws NotFound for missing guides", async () => {
       await expect(
-        updateGuide(db, OWNER, "missing", { title: "x" }),
+        updateGuide(db, OWNER, "missing", { isPublic: false }),
       ).rejects.toThrow(GuideNotFoundError);
     });
   });
@@ -122,7 +163,6 @@ describe("guides service", () => {
       await expect(deleteGuide(db, VISITOR_REQ, created.id)).rejects.toThrow(
         GuideNotFoundError,
       );
-      // guide still exists for the owner
       await expect(
         getGuideForViewer(db, created.id, OWNER),
       ).resolves.toMatchObject({ id: created.id });

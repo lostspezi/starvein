@@ -12,20 +12,35 @@ import { cn } from "@/lib/cn";
 import { FilterGroup } from "@/lib/components/FilterGroup";
 import { Panel } from "@/lib/components/ui/Panel";
 import { GUIDE_SORTS } from "./guides.repository";
+import { GUIDE_LANGUAGE_NAMES, type GuideLanguage } from "./guides.languages";
 
 const chipBase = "rounded-full px-3 py-1 text-xs transition-all duration-150";
 const chipActive = `${chipBase} bg-accent-primary font-medium text-bg-void shadow-glow-primary`;
 const chipInactive = `${chipBase} border border-bg-nebula-2 text-text-muted hover:border-accent-cyan hover:text-text-primary`;
 
 /**
- * Volltextsuche, Tag-Filter (ODER) und Sortierung der öffentlichen Guide-Liste
- * als URL-State (nuqs, shallow:false → Server-Komponente rendert neu).
+ * Volltextsuche, Sprach-, Tag- (ODER) und Sortier-Filter der öffentlichen
+ * Guide-Liste als URL-State (nuqs, shallow:false → Server-Komponente rendert
+ * neu). Der Sprachfilter ist standardmäßig die Oberflächensprache; "Alle"
+ * setzt lang=all explizit.
  */
-export function GuidesFilters({ tags }: { tags: string[] }) {
+export function GuidesFilters({
+  tags,
+  languages,
+  defaultLanguage,
+}: {
+  tags: string[];
+  languages: GuideLanguage[];
+  defaultLanguage: GuideLanguage;
+}) {
   const t = useTranslations("guides");
   const [q, setQ] = useQueryState(
     "q",
     parseAsString.withOptions({ shallow: false, throttleMs: 300 }),
+  );
+  const [lang, setLang] = useQueryState(
+    "lang",
+    parseAsString.withOptions({ shallow: false }),
   );
   const [selectedTags, setSelectedTags] = useQueryState(
     "tags",
@@ -38,7 +53,15 @@ export function GuidesFilters({ tags }: { tags: string[] }) {
     parseAsStringLiteral(GUIDE_SORTS).withOptions({ shallow: false }),
   );
 
-  const hasFilters = Boolean(q) || selectedTags.length > 0 || Boolean(sort);
+  // Aktuelle Sprachauswahl: "all", eine Sprache, oder (kein Param) Default.
+  const currentLang = lang ?? defaultLanguage;
+  const hasFilters =
+    Boolean(q) || selectedTags.length > 0 || Boolean(sort) || Boolean(lang);
+
+  function chooseLang(value: "all" | GuideLanguage) {
+    // Default-Sprache → Param entfernen (saubere URL); sonst explizit setzen
+    setLang(value === defaultLanguage ? null : value);
+  }
 
   function toggleTag(tag: string) {
     setSelectedTags((current) =>
@@ -50,6 +73,7 @@ export function GuidesFilters({ tags }: { tags: string[] }) {
 
   function clearAll() {
     setQ(null);
+    setLang(null);
     setSelectedTags(null);
     setSort(null);
   }
@@ -72,6 +96,40 @@ export function GuidesFilters({ tags }: { tags: string[] }) {
       </div>
 
       <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-start sm:justify-between">
+        <div
+          role="group"
+          aria-label={t("filter.languageLabel")}
+          className="flex flex-col gap-1"
+        >
+          <span className="text-xs text-text-muted">
+            {t("filter.languageLabel")}
+          </span>
+          <div className="flex flex-wrap gap-1.5">
+            <button
+              type="button"
+              aria-pressed={lang === "all"}
+              onClick={() => chooseLang("all")}
+              className={cn(lang === "all" ? chipActive : chipInactive)}
+            >
+              {t("filter.allLanguages")}
+            </button>
+            {languages.map((language) => {
+              const active = lang !== "all" && currentLang === language;
+              return (
+                <button
+                  key={language}
+                  type="button"
+                  aria-pressed={active}
+                  onClick={() => chooseLang(language)}
+                  className={cn(active ? chipActive : chipInactive)}
+                >
+                  {GUIDE_LANGUAGE_NAMES[language]}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
         {tags.length > 0 && (
           <div
             role="group"

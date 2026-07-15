@@ -1,6 +1,7 @@
 import { headers } from "next/headers";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { GuideEditor } from "@/features/guides/GuideEditor";
+import type { GuideLanguage } from "@/features/guides/guides.languages";
 import { PageHeader } from "@/lib/components/ui/PageHeader";
 import { PageShell } from "@/lib/components/ui/PageShell";
 import { getSessionUserId } from "@/lib/session";
@@ -42,7 +43,7 @@ export default async function NewGuidePage({
   return (
     <PageShell width="wide">
       <PageHeader title={t("createTitle")} />
-      <GuideEditor />
+      <GuideEditor defaultLanguage={locale as GuideLanguage} />
     </PageShell>
   );
 }
