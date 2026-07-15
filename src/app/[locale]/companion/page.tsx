@@ -1,8 +1,10 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { CompanionGuide } from "@/features/companion/CompanionGuide";
+import { fetchCompanionRelease } from "@/features/companion/companion-release";
 import { PageHeader } from "@/lib/components/ui/PageHeader";
 import { PageShell } from "@/lib/components/ui/PageShell";
 import { pageMetadata } from "@/lib/seo";
+import { COMPANION_VERSION } from "@/lib/site-config";
 import type { Metadata } from "next";
 
 export async function generateMetadata({
@@ -29,11 +31,14 @@ export default async function CompanionPage({
   setRequestLocale(locale);
 
   const t = await getTranslations("companion");
+  // Aktuelle Version aus dem neuesten GitHub-Release; der statische Wert
+  // aus site-config ist nur der Fallback, falls GitHub nicht erreichbar ist.
+  const release = await fetchCompanionRelease();
 
   return (
     <PageShell>
       <PageHeader title={t("title")} />
-      <CompanionGuide />
+      <CompanionGuide version={release?.version ?? COMPANION_VERSION} />
     </PageShell>
   );
 }

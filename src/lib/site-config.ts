@@ -6,4 +6,5 @@ export const GITHUB_FEATURE_URL = `${GITHUB_REPO_URL}/issues/new?template=featur
 export const TWITCH_URL = "https://www.twitch.tv/lostspezi";
 /** Beta-Downloads des Desktop-Companions (Prereleases → Release-Liste). */
 export const COMPANION_RELEASES_URL = `${GITHUB_REPO_URL}/releases`;
-export const COMPANION_VERSION = "0.1.0";
+/** Fallback, wenn das neueste Release nicht von GitHub auflösbar ist. */
+export const COMPANION_VERSION = "0.1.1";
