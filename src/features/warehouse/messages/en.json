@@ -37,7 +37,13 @@
       "qualityValue": "Q {value}",
       "noteLabel": "Note",
       "raw": "Raw",
-      "refined": "Refined"
+      "refined": "Refined",
+      "move": "Move",
+      "moveHeading": "Move to another location",
+      "moveQuantityLabel": "Move quantity (SCU)",
+      "moveQuantityHint": "Leave the full amount to move the whole stack.",
+      "moveSubmit": "Move",
+      "moveError": "Move failed — please try again."
     },
     "group": {
       "totalScu": "{count} SCU total"

@@ -70,12 +70,25 @@ export const warehouseEntryInputSchema = warehouseEntrySchema
   .extend({ location: warehouseLocationInputSchema })
   .strict();
 
+/**
+ * Input für das Verschieben eines Eintrags an einen anderen Lagerort.
+ * Ohne quantityScu wird der ganze Eintrag verschoben; mit quantityScu
+ * wird eine Teilmenge abgespalten (Grenze „≤ Bestand" prüft der Service).
+ */
+export const warehouseMoveInputSchema = z
+  .object({
+    location: warehouseLocationInputSchema,
+    quantityScu: quantityScu.optional(),
+  })
+  .strict();
+
 export type WarehouseLocation = z.infer<typeof warehouseLocationSchema>;
 export type WarehouseLocationInput = z.infer<
   typeof warehouseLocationInputSchema
 >;
 export type WarehouseEntry = z.infer<typeof warehouseEntrySchema>;
 export type WarehouseEntryInput = z.infer<typeof warehouseEntryInputSchema>;
+export type WarehouseMoveInput = z.infer<typeof warehouseMoveInputSchema>;
 
 export function warehouseLocationKey(location: WarehouseLocation): string {
   switch (location.kind) {

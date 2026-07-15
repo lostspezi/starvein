@@ -5,6 +5,7 @@ import { uniqueDbName } from "@/test/factories";
 import {
   createWarehouseEntry,
   deleteWarehouseEntry,
+  moveWarehouseEntry,
   updateWarehouseEntry,
   WarehouseNotFoundError,
   WarehouseValidationError,
@@ -209,5 +210,128 @@ describe("warehouse service", () => {
     await deleteWarehouseEntry(db, USER, entry.id);
 
     await expect(listWarehouseEntriesByOwner(db, USER)).resolves.toEqual([]);
+  });
+
+  describe("moveWarehouseEntry", () => {
+    it("moves the whole entry to a new location without splitting", async () => {
+      const entry = await createWarehouseEntry(
+        db,
+        USER,
+        makeInput({ quantityScu: 100 }),
+      );
+
+      const moved = await moveWarehouseEntry(db, USER, entry.id, {
+        location: { kind: "terminal", terminalId: 32 },
+      });
+
+      expect(moved.id).toBe(entry.id);
+      expect(moved.quantityScu).toBe(100);
+      expect(moved.location).toEqual({
+        kind: "terminal",
+        terminalId: 32,
+        terminalName: "ARC-L1 Wide Forest Station",
+      });
+      expect(moved.updatedAt >= entry.updatedAt).toBe(true);
+
+      const all = await listWarehouseEntriesByOwner(db, USER);
+      expect(all).toHaveLength(1);
+    });
+
+    it("treats a full-amount move as a whole move (no split)", async () => {
+      const entry = await createWarehouseEntry(
+        db,
+        USER,
+        makeInput({ quantityScu: 40 }),
+      );
+
+      await moveWarehouseEntry(db, USER, entry.id, {
+        location: { kind: "custom", label: "im Schiff" },
+        quantityScu: 40,
+      });
+
+      const all = await listWarehouseEntriesByOwner(db, USER);
+      expect(all).toHaveLength(1);
+      expect(all[0].quantityScu).toBe(40);
+      expect(all[0].location).toEqual({ kind: "custom", label: "im Schiff" });
+    });
+
+    it("splits a partial move into two entries, inheriting ore/kind/quality/note", async () => {
+      const entry = await createWarehouseEntry(
+        db,
+        USER,
+        makeInput({
+          kind: "refined",
+          quantityScu: 100,
+          qualityRating: 640,
+          note: "Charge A",
+        }),
+      );
+
+      const moved = await moveWarehouseEntry(db, USER, entry.id, {
+        location: { kind: "custom", label: "im Schiff" },
+        quantityScu: 40,
+      });
+
+      // Rückgabe = der neue (verschobene) Eintrag
+      expect(moved.id).not.toBe(entry.id);
+      expect(moved.quantityScu).toBe(40);
+      expect(moved.oreCode).toBe(entry.oreCode);
+      expect(moved.kind).toBe("refined");
+      expect(moved.qualityRating).toBe(640);
+      expect(moved.note).toBe("Charge A");
+      expect(moved.location).toEqual({ kind: "custom", label: "im Schiff" });
+
+      const all = await listWarehouseEntriesByOwner(db, USER);
+      expect(all).toHaveLength(2);
+      const original = all.find((e) => e.id === entry.id);
+      expect(original?.quantityScu).toBe(60);
+      expect(original?.location).toEqual(entry.location);
+      // Gesamtbestand bleibt erhalten
+      expect(all.reduce((sum, e) => sum + e.quantityScu, 0)).toBe(100);
+    });
+
+    it("rejects moving more than the available quantity", async () => {
+      const entry = await createWarehouseEntry(
+        db,
+        USER,
+        makeInput({ quantityScu: 30 }),
+      );
+
+      await expect(
+        moveWarehouseEntry(db, USER, entry.id, {
+          location: { kind: "custom", label: "im Schiff" },
+          quantityScu: 50,
+        }),
+      ).rejects.toBeInstanceOf(WarehouseValidationError);
+
+      const all = await listWarehouseEntriesByOwner(db, USER);
+      expect(all).toHaveLength(1);
+      expect(all[0].quantityScu).toBe(30);
+    });
+
+    it("rejects an unknown target location", async () => {
+      const entry = await createWarehouseEntry(db, USER, makeInput());
+
+      await expect(
+        moveWarehouseEntry(db, USER, entry.id, {
+          location: { kind: "terminal", terminalId: 999 },
+        }),
+      ).rejects.toBeInstanceOf(WarehouseValidationError);
+    });
+
+    it("throws NotFound for foreign or missing entries", async () => {
+      const entry = await createWarehouseEntry(db, USER, makeInput());
+
+      await expect(
+        moveWarehouseEntry(db, OTHER, entry.id, {
+          location: { kind: "custom", label: "x" },
+        }),
+      ).rejects.toBeInstanceOf(WarehouseNotFoundError);
+      await expect(
+        moveWarehouseEntry(db, USER, "missing", {
+          location: { kind: "custom", label: "x" },
+        }),
+      ).rejects.toBeInstanceOf(WarehouseNotFoundError);
+    });
   });
 });

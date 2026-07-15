@@ -1,34 +1,48 @@
 "use client";
 
-import { Pencil, Trash2 } from "lucide-react";
+import { ArrowRightLeft, Pencil, Trash2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useId, useState } from "react";
 import { useRouter } from "@/i18n/navigation";
 import { Button } from "@/lib/components/ui/Button";
+import {
+  type BodyOption,
+  type SystemOption,
+  type TerminalOption,
+} from "./LocationPicker";
+import { WarehouseMoveForm } from "./WarehouseMoveForm";
 
 const inputClass =
   "w-full rounded border border-bg-nebula-2 bg-bg-void px-3 py-1.5 text-sm transition-all duration-150 placeholder:text-text-muted focus:border-accent-primary focus:outline-none";
 
 /**
- * Inline-Aktionen auf einem Lager-Eintrag: Menge/Notiz bearbeiten (PATCH)
- * und löschen (mit Bestätigung). Nach Mutationen wird die Server-Komponente
- * per router.refresh() aktualisiert.
+ * Inline-Aktionen auf einem Lager-Eintrag: Menge/Notiz bearbeiten (PATCH),
+ * an einen anderen Lagerort verschieben (ganz oder teilweise) und löschen
+ * (mit Bestätigung). Nach Mutationen wird die Server-Komponente per
+ * router.refresh() aktualisiert.
  */
 export function WarehouseEntryActions({
   entryId,
   quantityScu,
   qualityRating,
   note,
+  systems,
+  bodies,
+  terminals,
 }: {
   entryId: string;
   quantityScu: number;
   qualityRating?: number;
   note: string;
+  systems: SystemOption[];
+  bodies: BodyOption[];
+  terminals: TerminalOption[];
 }) {
   const t = useTranslations("warehouse.entry");
   const router = useRouter();
   const formId = useId();
   const [editing, setEditing] = useState(false);
+  const [moving, setMoving] = useState(false);
   const [quantity, setQuantity] = useState(String(quantityScu));
   const [qualityDraft, setQualityDraft] = useState(
     qualityRating != null ? String(qualityRating) : "",
@@ -75,6 +89,19 @@ export function WarehouseEntryActions({
     } finally {
       setBusy(false);
     }
+  }
+
+  if (moving) {
+    return (
+      <WarehouseMoveForm
+        entryId={entryId}
+        quantityScu={quantityScu}
+        systems={systems}
+        bodies={bodies}
+        terminals={terminals}
+        onDone={() => setMoving(false)}
+      />
+    );
   }
 
   if (editing) {
@@ -152,6 +179,10 @@ export function WarehouseEntryActions({
       <Button variant="ghost" disabled={busy} onClick={() => setEditing(true)}>
         <Pencil aria-hidden="true" className="size-4" />
         {t("edit")}
+      </Button>
+      <Button variant="ghost" disabled={busy} onClick={() => setMoving(true)}>
+        <ArrowRightLeft aria-hidden="true" className="size-4" />
+        {t("move")}
       </Button>
       <Button
         variant="ghost"
