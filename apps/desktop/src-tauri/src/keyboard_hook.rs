@@ -101,8 +101,8 @@ pub fn parse_hotkey(combo: &str) -> Result<Hotkey, String> {
             "shift" => hotkey.shift = true,
             "super" | "win" | "cmd" | "meta" => hotkey.win = true,
             key => {
-                let vk =
-                    vk_for_key(key).ok_or_else(|| format!("unsupported key '{key}' in '{combo}'"))?;
+                let vk = vk_for_key(key)
+                    .ok_or_else(|| format!("unsupported key '{key}' in '{combo}'"))?;
                 if hotkey.vk != 0 {
                     return Err(format!("more than one key in '{combo}'"));
                 }
@@ -152,10 +152,8 @@ unsafe extern "system" fn hook_proc(code: i32, wparam: WPARAM, lparam: LPARAM) -
                         }
                     }
                 }
-                WM_KEYUP | WM_SYSKEYUP => {
-                    if event.vkCode == hotkey.vk {
-                        HELD.store(false, Ordering::SeqCst);
-                    }
+                WM_KEYUP | WM_SYSKEYUP if event.vkCode == hotkey.vk => {
+                    HELD.store(false, Ordering::SeqCst);
                 }
                 _ => {}
             }
@@ -218,7 +216,13 @@ mod tests {
     /// Buchstabe/Ziffer/F-Taste — dieser Wertebereich muss parsen.
     #[test]
     fn parses_the_recorder_output_space() {
-        for combo in ["ctrl+alt+m", "ctrl+shift+3", "super+k", "f5", "ctrl+alt+shift+f13"] {
+        for combo in [
+            "ctrl+alt+m",
+            "ctrl+shift+3",
+            "super+k",
+            "f5",
+            "ctrl+alt+shift+f13",
+        ] {
             assert!(parse_hotkey(combo).is_ok(), "combo: {combo}");
         }
     }
