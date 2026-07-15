@@ -25,7 +25,11 @@ pub struct OcrCapture {
     pub source: String,
     pub width: u32,
     pub height: u32,
+    /// Zeilen des ersten Frames — für Debug-Panel/Altpfade, identisch zu
+    /// `frames[0]`.
     pub lines: Vec<OcrLine>,
+    /// Alle Frames des Bursts; das Frontend merged sie per Voting.
+    pub frames: Vec<Vec<OcrLine>>,
 }
 
 /// Windows-OCR erwartet Bgra8 — xcap liefert RGBA, also R/B tauschen.
