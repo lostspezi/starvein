@@ -7,6 +7,15 @@ import setupFixture from "./__fixtures__/refinery-setup-dede.json";
 const SETUP_LINES = setupFixture as OcrLine[];
 const PROCESSING_LINES = processingFixture as OcrLine[];
 
+/** Item ohne sourceY — für Assertions, die nur Name/Menge/Qualität prüfen. */
+function core(items: ReturnType<typeof parseWorkOrder>["items"]) {
+  return items.map(({ oreName, quantityScu, qualityRating }) => ({
+    oreName,
+    quantityScu,
+    qualityRating,
+  }));
+}
+
 /**
  * Synthetische Fixtures nach dem bekannten Aufbau des Refinery-Terminals
  * (Materialzeile: Name + Menge, Fußzeilen: Processing Time / Methode).
@@ -25,7 +34,7 @@ const EN_TERMINAL = [
 describe("parseWorkOrder", () => {
   it("extracts material rows with SCU quantities", () => {
     const parsed = parseWorkOrder(EN_TERMINAL);
-    expect(parsed.items).toEqual([
+    expect(core(parsed.items)).toEqual([
       { oreName: "Quantainium", quantityScu: 32, qualityRating: null },
       { oreName: "Laranite", quantityScu: 12.5, qualityRating: null }, // 1.250 cSCU → 12,5 SCU
     ]);
@@ -42,7 +51,7 @@ describe("parseWorkOrder", () => {
 
   it("parses German decimal quantities", () => {
     const parsed = parseWorkOrder(["Hadanit 1.234,5 SCU"]);
-    expect(parsed.items).toEqual([
+    expect(core(parsed.items)).toEqual([
       { oreName: "Hadanit", quantityScu: 1234.5, qualityRating: null },
     ]);
   });
@@ -101,7 +110,7 @@ describe("parseWorkOrder on real terminal captures", () => {
   it("reconstructs the material table of the SETUP screen", () => {
     const parsed = parseWorkOrder(SETUP_LINES);
 
-    expect(parsed.items).toEqual([
+    expect(core(parsed.items)).toEqual([
       { oreName: "TITANIUM (ORE)", quantityScu: 0.63, qualityRating: 295 },
       { oreName: "TITANIUM (ORE)", quantityScu: 0.76, qualityRating: 516 },
       { oreName: "ASLARITE (RAW)", quantityScu: 0.13, qualityRating: 575 },
@@ -123,7 +132,7 @@ describe("parseWorkOrder on real terminal captures", () => {
   it("reconstructs the material table of the PROCESSING screen", () => {
     const parsed = parseWorkOrder(PROCESSING_LINES);
 
-    expect(parsed.items).toEqual([
+    expect(core(parsed.items)).toEqual([
       { oreName: "TITANIUM", quantityScu: 0.63, qualityRating: 295 },
       { oreName: "TITANIUM", quantityScu: 0.76, qualityRating: 516 },
       { oreName: "ASLARITE", quantityScu: 0.13, qualityRating: 575 },
@@ -138,6 +147,129 @@ describe("parseWorkOrder on real terminal captures", () => {
       expect(names.join(" ")).not.toMatch(/INERT/i);
       expect(names.join(" ")).not.toMatch(/Iron|Corundum|Quartz|Laranite/i);
     }
+  });
+});
+
+/**
+ * Koordinaten-Tabelle mit echten Terminal-Headern (MATERIALS/YIELD/QUALITY),
+ * damit der Pfad `findMaterialTable` → `tableItems` getroffen wird. Spalten
+ * wie an ARC-L1: Name ~710, QUALITY-Zentrum ~885, YIELD-Zentrum ~1005.
+ */
+function tableWord(
+  text: string,
+  x: number,
+  y: number,
+): OcrLine["words"][number] {
+  return { text, x, y, width: text.length * 9, height: 14 };
+}
+
+const TABLE_HEADER: OcrLine = {
+  text: "MATERIALS QUALITY YIELD",
+  words: [
+    tableWord("MATERIALS", 673, 0),
+    tableWord("QUALITY", 866, 0),
+    tableWord("YIELD", 996, 0),
+  ],
+};
+
+function materialRow(
+  name: string,
+  y: number,
+  quality: number | null,
+  quantity: number | null,
+): OcrLine[] {
+  const rows: OcrLine[] = [{ text: name, words: [tableWord(name, 710, y)] }];
+  if (quality !== null) {
+    rows.push({
+      text: String(quality),
+      words: [tableWord(String(quality), 878, y)],
+    });
+  }
+  if (quantity !== null) {
+    rows.push({
+      text: String(quantity),
+      words: [tableWord(String(quantity), 1004, y)],
+    });
+  }
+  return rows;
+}
+
+describe("parseWorkOrder keeps partial rows", () => {
+  it("keeps a row whose quantity column is missing, with quantityScu null", () => {
+    const lines: OcrLine[] = [
+      TABLE_HEADER,
+      ...materialRow("TITANIUM", 40, 295, 63),
+      // AGRICIUM: Name + Qualität erkannt, aber die YIELD-Zahl fehlt.
+      ...materialRow("AGRICIUM", 93, 588, null),
+    ];
+
+    const parsed = parseWorkOrder(lines);
+    expect(core(parsed.items)).toEqual([
+      { oreName: "TITANIUM", quantityScu: 0.63, qualityRating: 295 },
+      { oreName: "AGRICIUM", quantityScu: null, qualityRating: 588 },
+    ]);
+  });
+
+  it("keeps a row where only the quality survived (quantity missing)", () => {
+    const lines: OcrLine[] = [
+      TABLE_HEADER,
+      ...materialRow("QUANTAINIUM", 40, 720, null),
+    ];
+
+    const parsed = parseWorkOrder(lines);
+    expect(core(parsed.items)).toEqual([
+      { oreName: "QUANTAINIUM", quantityScu: null, qualityRating: 720 },
+    ]);
+  });
+
+  it("drops a name-only row with no numbers (indistinguishable from a label)", () => {
+    // Ohne jede Zahl ist eine Zeile nicht von einem Footer-Label wie
+    // "TOTAL COST" zu unterscheiden — sie darf kein Erz werden.
+    const lines: OcrLine[] = [
+      TABLE_HEADER,
+      ...materialRow("QUANTAINIUM", 40, null, null),
+    ];
+
+    expect(parseWorkOrder(lines).items).toEqual([]);
+  });
+});
+
+/**
+ * Deutscher Spielclient: die Terminal-Header sind übersetzt (MATERIALS →
+ * MATERIALIEN, YIELD → ERTRAG/AUSBEUTE, …). Der Alias-Mechanismus in
+ * ocr-parse.ts (MATERIALS_HEADERS/YIELD_HEADERS/…) ist vorbereitet; die
+ * exakten deutschen Strings sind erst mit echten Screenshots eines
+ * deutschen Terminals bekannt.
+ *
+ * Aktivierung (sobald refinery-*-dede-client.json vorliegt):
+ *   1. deutsche Labels in die *_HEADERS-Tabellen eintragen,
+ *   2. hier die echten Fixtures laden und this `it.skip` → `it` machen.
+ * Bis dahin bewusst geskippt — keine geratenen deutschen Strings.
+ */
+describe("parseWorkOrder on a German client (pending real fixtures)", () => {
+  it.skip("reconstructs the material table with German column headers", () => {
+    // Platzhalter: mit den Ist-Werten aus dem deutschen SETUP-Screenshot
+    // befüllen (Erze, Menge, Qualität), analog zu den EN-Fixtures.
+    expect(true).toBe(true);
+  });
+});
+
+describe("parseWorkOrder sourceY", () => {
+  it("tags each table row with the y of its name line (cross-frame merge key)", () => {
+    const lines: OcrLine[] = [
+      TABLE_HEADER,
+      ...materialRow("TITANIUM", 40, 295, 63),
+      ...materialRow("AGRICIUM", 93, 588, 21),
+    ];
+
+    const parsed = parseWorkOrder(lines);
+    // centerY = name.y + height/2 (14/2 = 7)
+    expect(parsed.items.map((item) => item.sourceY)).toEqual([47, 100]);
+  });
+
+  it("leaves sourceY null for plain string input without coordinates", () => {
+    const parsed = parseWorkOrder(["Quantainium 32 SCU"]);
+    expect(parsed.items[0].sourceY).toBeNull();
   });
 });
 
@@ -167,7 +299,7 @@ describe("parseWorkOrder with word coordinates", () => {
     ];
 
     const parsed = parseWorkOrder(rows);
-    expect(parsed.items).toEqual([
+    expect(core(parsed.items)).toEqual([
       { oreName: "Quantainium", quantityScu: 32, qualityRating: 850 },
     ]);
   });

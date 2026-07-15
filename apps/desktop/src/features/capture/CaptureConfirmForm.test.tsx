@@ -230,6 +230,60 @@ describe("CaptureConfirmForm", () => {
     await vi.waitFor(() => expect(onCreated).toHaveBeenCalled());
   });
 
+  it("merges multiple frames: fills gaps and matches a marquee name", async () => {
+    createRefineryJob.mockResolvedValue({ id: "job-1" });
+    const w = (text: string, x: number, y: number) => ({
+      text,
+      x,
+      y,
+      width: text.length * 9,
+      height: 14,
+    });
+    const header = {
+      text: "MATERIALS QUALITY YIELD",
+      words: [w("MATERIALS", 100, 0), w("QUALITY", 400, 0), w("YIELD", 500, 0)],
+    };
+    // Frame 1: verkürzter Laufschrift-Name + Qualität, aber keine Menge.
+    const frame1 = [
+      header,
+      { text: "QUANTAINIU", words: [w("QUANTAINIU", 100, 40)] },
+      { text: "850", words: [w("850", 420, 40)] },
+      { text: "Dinyx Solventation", words: [] },
+    ];
+    // Frame 2: anderes Namensfragment + Menge, aber keine Qualität.
+    const frame2 = [
+      header,
+      { text: "UANTAINIUM", words: [w("UANTAINIUM", 100, 41)] },
+      { text: "32", words: [w("32", 510, 41)] },
+    ];
+    const multiFrame: OcrCapture = {
+      source: "window",
+      width: 1920,
+      height: 1080,
+      lines: frame1,
+      frames: [frame1, frame2],
+    };
+    render(
+      <IntlProvider locale="en" messages={messages.en}>
+        <CaptureConfirmForm
+          token="tok-1"
+          capture={multiFrame}
+          ores={ORES}
+          terminals={TERMINALS}
+          methods={METHODS}
+          onCreated={vi.fn()}
+          onCancel={vi.fn()}
+        />
+      </IntlProvider>,
+    );
+
+    // Erz aus dem Marquee-Fragment erkannt, Menge (Frame 2) und Qualität
+    // (Frame 1) zusammengeführt.
+    expect(screen.getByDisplayValue("QUAN — Quantainium")).toBeInTheDocument();
+    expect(screen.getByLabelText("Quality (0–1000)")).toHaveValue(850);
+    expect(screen.getByDisplayValue("0.32")).toBeInTheDocument();
+  });
+
   it("requires a terminal before submitting", async () => {
     renderForm();
 

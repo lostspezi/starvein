@@ -10,17 +10,40 @@ use tauri::{AppHandle, Emitter};
 use tauri_plugin_autostart::MacosLauncher;
 
 fn run_capture_pipeline() -> Result<ocr::OcrCapture, String> {
-    let captured = capture::capture_game_or_screen()?;
-    let source = captured.source;
-    let image = capture::downscale(captured.image, ocr::max_image_dimension());
-    let (width, height) = (image.width(), image.height());
-    let bgra = ocr::rgba_to_bgra(image.as_raw());
-    let lines = ocr::recognize(&bgra, width, height)?;
+    // Mehrere Frames aufnehmen und jeden einzeln durch die OCR schicken;
+    // das Frontend merged sie per Voting (robuster gegen Verleser). Ein
+    // Frame ohne OCR-Ergebnis wird toleriert, solange mindestens einer bleibt.
+    let captured = capture::capture_frames()?;
+    let source = captured
+        .first()
+        .map(|frame| frame.source)
+        .unwrap_or("monitor");
+    let max = ocr::max_image_dimension();
+
+    let mut frames: Vec<Vec<ocr::OcrLine>> = Vec::with_capacity(captured.len());
+    let mut width = 0;
+    let mut height = 0;
+    for frame in captured {
+        let image = capture::downscale(frame.image, max);
+        let (frame_width, frame_height) = (image.width(), image.height());
+        let bgra = ocr::rgba_to_bgra(image.as_raw());
+        if let Ok(lines) = ocr::recognize(&bgra, frame_width, frame_height) {
+            width = frame_width;
+            height = frame_height;
+            frames.push(lines);
+        }
+    }
+
+    if frames.is_empty() {
+        return Err("OCR produced no frames".to_string());
+    }
+    let lines = frames[0].clone();
     Ok(ocr::OcrCapture {
         source: source.to_string(),
         width,
         height,
         lines,
+        frames,
     })
 }
 

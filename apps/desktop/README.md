@@ -69,6 +69,19 @@ läuft komplett im Companion-Prozess, der Tastendruck wird unverändert
 ans Spiel weitergereicht. Nebeneffekt: Kollisionen mit Hotkeys anderer
 Programme gibt es nicht mehr.
 
+## OCR: Multi-Frame-Erfassung
+
+Ein Hotkey-Druck nimmt mehrere Screenshots über ~1,2 s auf
+(`capture_frames`, `FRAME_COUNT`) und lässt jeden Frame durch die OCR
+laufen. Das Frontend führt die Ergebnisse per Mehrheitsvotum zusammen
+(`merge-work-orders.ts`): Zeilen werden über die y-Position der Namenszeile
+zugeordnet, Menge/Qualität pro Zeile gevotet (Ausreißer-Frames fliegen
+raus, Lücken werden aus anderen Frames gefüllt), und die Fragmente langer
+Laufschrift-Namen über die Frames gesammelt und gegen den Erz-Katalog
+gematcht. Deutsche Terminal-Header sind über Alias-Tabellen in
+`ocr-parse.ts` vorbereitet (aktiv, sobald deutsche Terminal-Screenshots als
+Fixtures vorliegen).
+
 ## OCR-Sprachpaket
 
 Die Texterkennung nutzt bevorzugt die englische Windows-OCR-Engine
