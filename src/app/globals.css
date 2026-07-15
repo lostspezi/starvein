@@ -74,6 +74,77 @@ body {
   }
 }
 
+/* Gerenderte Guide-Inhalte (renderGuideHtml) und der TipTap-Editor teilen
+   sich dieselbe HUD-typische Prose-Typografie, damit Vorschau und Ergebnis
+   übereinstimmen. Tokens statt Rohwerte (MASTER §7). */
+@layer components {
+  .guide-prose {
+    @apply flex flex-col gap-4 text-text-primary;
+  }
+  .guide-prose h1,
+  .guide-prose h2,
+  .guide-prose h3 {
+    @apply font-semibold text-accent-ice;
+  }
+  .guide-prose h1 {
+    @apply text-2xl;
+  }
+  .guide-prose h2 {
+    @apply text-xl;
+  }
+  .guide-prose h3 {
+    @apply text-lg;
+  }
+  .guide-prose p {
+    @apply leading-relaxed;
+  }
+  .guide-prose a {
+    @apply text-accent-primary underline transition-colors duration-150 hover:text-accent-glow;
+  }
+  .guide-prose ul {
+    @apply list-disc pl-6;
+  }
+  .guide-prose ol {
+    @apply list-decimal pl-6;
+  }
+  .guide-prose li {
+    @apply my-1;
+  }
+  .guide-prose blockquote {
+    @apply border-l-2 border-accent-cyan/40 pl-4 text-text-muted italic;
+  }
+  .guide-prose code {
+    @apply rounded bg-bg-nebula-2 px-1 py-0.5 font-mono text-sm text-accent-secondary;
+  }
+  .guide-prose pre {
+    @apply overflow-x-auto rounded-lg bg-bg-nebula-2 p-4 font-mono text-sm;
+  }
+  .guide-prose pre code {
+    @apply bg-transparent p-0;
+  }
+  .guide-prose img {
+    @apply max-w-full rounded-lg border border-bg-nebula-2;
+  }
+  .guide-prose [data-youtube-video] {
+    @apply aspect-video overflow-hidden rounded-lg border border-bg-nebula-2;
+  }
+  .guide-prose [data-youtube-video] iframe {
+    @apply h-full w-full;
+  }
+
+  /* TipTap-Editorfläche: gleiche Prose-Regeln plus Platzhalter/Fokus. */
+  .guide-editor .ProseMirror {
+    @apply min-h-[16rem] outline-none;
+  }
+  .guide-editor .ProseMirror:focus {
+    @apply outline-none;
+  }
+  .guide-editor .ProseMirror p.is-editor-empty:first-child::before {
+    content: attr(data-placeholder);
+    @apply pointer-events-none float-left h-0 text-text-muted;
+  }
+}
+
 /* Statischer Fallback des Sternenhintergrunds: dezente Nebel-Gradienten plus
    eine Handvoll Stern-Punkte — sichtbar bei reduced-motion, ohne WebGL oder
    bevor das Canvas eingeblendet ist. */

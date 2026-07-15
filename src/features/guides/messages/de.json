@@ -1,0 +1,78 @@
+{
+  "guides": {
+    "title": "Mining-Guides",
+    "subtitle": "Community-Guides für Ship-, ROC- und FPS-Mining — schreib deinen eigenen und teil ihn.",
+    "browse": {
+      "createCta": "Guide schreiben",
+      "empty": "Noch keine Guides. Schreib den ersten!",
+      "noResults": "Kein Guide passt zu deiner Suche.",
+      "searchLabel": "Guides durchsuchen",
+      "searchPlaceholder": "Titel, Beschreibung und Inhalt durchsuchen…",
+      "resultsCount": "{count, plural, one {# Guide} other {# Guides}}"
+    },
+    "filter": {
+      "tagsLabel": "Nach Tag filtern",
+      "sortLabel": "Sortierung",
+      "clear": "Filter zurücksetzen"
+    },
+    "sort": {
+      "new": "Neueste",
+      "title": "A–Z"
+    },
+    "card": {
+      "private": "Privat",
+      "public": "Öffentlich",
+      "outdated": "Patch {patchVersion}"
+    },
+    "editor": {
+      "createTitle": "Guide schreiben",
+      "editTitle": "Guide bearbeiten",
+      "titleLabel": "Titel",
+      "titlePlaceholder": "z. B. Quantainium im Aaron Halo minen",
+      "descriptionLabel": "Kurzbeschreibung (optional)",
+      "descriptionPlaceholder": "Ein bis zwei Sätze, die in der Guide-Liste erscheinen.",
+      "tagsLabel": "Tags",
+      "tagsPlaceholder": "mining, quantainium, roc",
+      "tagsHint": "Kommagetrennt, bis zu 8 Tags.",
+      "isPublicLabel": "Diesen Guide öffentlich machen",
+      "contentLabel": "Guide-Inhalt",
+      "submitCreate": "Guide veröffentlichen",
+      "submitSave": "Änderungen speichern",
+      "loginRequired": "Mit Discord anmelden, um Guides zu schreiben und zu bearbeiten. Lesen bleibt kostenlos.",
+      "error": "Der Guide konnte nicht gespeichert werden. Prüfe deine Eingaben und versuch es erneut.",
+      "uploading": "Bild wird hochgeladen…",
+      "imageUploadError": "Das Bild konnte nicht hochgeladen werden. Nutze PNG, JPEG, WebP oder GIF unter 5 MB.",
+      "linkPrompt": "Link-URL (http/https)",
+      "youtubePrompt": "YouTube-Video-URL",
+      "youtubeInvalid": "Das sieht nicht nach einer gültigen YouTube-URL aus.",
+      "toolbar": {
+        "bold": "Fett",
+        "italic": "Kursiv",
+        "strike": "Durchgestrichen",
+        "code": "Inline-Code",
+        "heading2": "Überschrift",
+        "heading3": "Zwischenüberschrift",
+        "bulletList": "Aufzählung",
+        "orderedList": "Nummerierte Liste",
+        "blockquote": "Zitat",
+        "codeBlock": "Codeblock",
+        "link": "Link einfügen",
+        "image": "Bild einfügen",
+        "youtube": "YouTube-Video einbetten",
+        "undo": "Rückgängig",
+        "redo": "Wiederholen"
+      }
+    },
+    "mine": {
+      "title": "Meine Guides",
+      "subtitle": "Deine privaten Entwürfe und veröffentlichten Guides.",
+      "empty": "Du hast noch keine Guides geschrieben.",
+      "loginRequired": "Mit Discord anmelden, um deine Guides zu sehen.",
+      "edit": "Bearbeiten",
+      "delete": "Löschen",
+      "confirmDelete": "Diesen Guide endgültig löschen?",
+      "publish": "Veröffentlichen",
+      "unpublish": "Privat machen"
+    }
+  }
+}

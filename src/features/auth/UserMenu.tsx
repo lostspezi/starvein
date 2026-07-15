@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useRef, useState } from "react";
+import { useId, useRef, useState, useSyncExternalStore } from "react";
 import { ChevronDown } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { toRole } from "@/features/moderation/roles";
@@ -12,6 +12,9 @@ import { panelClasses } from "@/lib/components/ui/Panel";
 
 const itemClasses =
   "block w-full px-3 py-2 text-left text-sm text-text-muted transition-colors duration-150 hover:bg-bg-nebula-2 hover:text-text-primary";
+
+// Stabile no-op-Subscription für useSyncExternalStore (kein Re-Subscribe).
+const noopSubscribe = () => () => {};
 
 function Avatar({ image, name }: { image?: string | null; name: string }) {
   if (image) {
@@ -45,7 +48,18 @@ export function UserMenu() {
   const triggerRef = useRef<HTMLButtonElement>(null);
   const panelId = useId();
 
-  if (isPending) {
+  // useSession hydratisiert auf dem Client synchron aus dem Cookie-Cache,
+  // auf dem Server ist es pending → null. Ohne Guard unterscheiden sich
+  // Server- und erster Client-Render → Hydration-Mismatch. useSyncExternalStore
+  // liefert bei SSR + Hydration den Server-Snapshot (false), danach den
+  // Client-Wert (true) — das echte Menü erscheint erst nach der Hydration.
+  const hydrated = useSyncExternalStore(
+    noopSubscribe,
+    () => true,
+    () => false,
+  );
+
+  if (!hydrated || isPending) {
     return null;
   }
 
@@ -126,6 +140,13 @@ export function UserMenu() {
             onClick={() => setOpen(false)}
           >
             {t("myLoadouts")}
+          </Link>
+          <Link
+            href="/guides/mine"
+            className={itemClasses}
+            onClick={() => setOpen(false)}
+          >
+            {t("myGuides")}
           </Link>
           <Link
             href="/refinery-jobs"
