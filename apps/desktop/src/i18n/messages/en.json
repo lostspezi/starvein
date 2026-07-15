@@ -22,6 +22,7 @@
     "hotkeyInvalid": "This combination is not supported.",
     "hotkeyError": "This hotkey could not be registered.",
     "hotkeyInactive": "The hotkey {hotkey} could not be registered — another application is probably using it. Record a different one.",
+    "gameElevated": "Star Citizen is running as administrator — the hotkey will not fire in-game. Run the Companion as administrator or start the RSI Launcher without admin rights.",
     "localeLabel": "Language",
     "localeSystem": "System language",
     "serverLabel": "Server URL",

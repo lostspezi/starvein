@@ -1,4 +1,5 @@
 mod capture;
+mod elevation;
 mod ocr;
 mod secrets;
 mod shortcuts;
@@ -82,7 +83,8 @@ pub fn run() {
             secrets::secret_set,
             secrets::secret_delete,
             shortcuts::set_capture_shortcut,
-            shortcuts::get_capture_shortcut
+            shortcuts::get_capture_shortcut,
+            elevation::get_game_elevation_status
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

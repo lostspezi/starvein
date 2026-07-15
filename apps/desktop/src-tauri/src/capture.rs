@@ -27,6 +27,19 @@ pub fn fit_within(width: u32, height: u32, max: u32) -> (u32, u32) {
     (scaled_w.max(1), scaled_h.max(1))
 }
 
+/// PID des Star-Citizen-Prozesses, falls ein Spielfenster existiert
+/// (auch minimiert — für die Elevation-Warnung zählt der Prozess).
+pub fn star_citizen_pid() -> Option<u32> {
+    Window::all().ok()?.into_iter().find_map(|window| {
+        let title = window.title().unwrap_or_default();
+        if is_star_citizen_window(&title) {
+            window.pid().ok()
+        } else {
+            None
+        }
+    })
+}
+
 pub fn capture_game_or_screen() -> Result<Captured, String> {
     if let Ok(windows) = Window::all() {
         for window in windows {

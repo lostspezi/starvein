@@ -49,6 +49,8 @@ Windows (UIPI) globale Hotkeys **aller** nicht-erhöhten Programme, solange das
 Spiel den Fokus hat — das betrifft auch Discord/OBS und den Companion-Hotkey.
 Abhilfe: Launcher ohne Admin-Rechte starten, oder den Companion ebenfalls
 als Administrator ausführen. Der Hotkey feuert dann wieder im Spiel.
+Die Einstellungen erkennen diesen Fall (`get_game_elevation_status`,
+Token-Elevation-Vergleich) und zeigen eine entsprechende Warnung an.
 
 ## Manuelle Test-Checkliste (nicht automatisierbar)
 
@@ -59,6 +61,8 @@ Nach relevanten Änderungen von Hand prüfen:
       Kombination zeigt Warnung und der alte Hotkey bleibt aktiv
 - [ ] Einstellungen zeigen eine Warnung, wenn der aktive Hotkey vom System nicht
       registriert werden konnte (z. B. weil eine andere Anwendung ihn hält)
+- [ ] Einstellungen warnen, wenn Star Citizen als Administrator läuft und der
+      Companion nicht (Hotkey feuert dann im Spiel nicht)
 - [ ] OCR-Genauigkeit am Refinery-Terminal bei 1080p / 1440p / 4K
 - [ ] Native Benachrichtigung erscheint, wenn ein Job fertig wird
 - [ ] Tray-Verhalten: Close-to-Tray, Wiederherstellen, Single-Instance
