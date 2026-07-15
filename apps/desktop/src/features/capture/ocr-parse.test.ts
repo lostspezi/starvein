@@ -141,6 +141,90 @@ describe("parseWorkOrder on real terminal captures", () => {
   });
 });
 
+/**
+ * Koordinaten-Tabelle mit echten Terminal-Headern (MATERIALS/YIELD/QUALITY),
+ * damit der Pfad `findMaterialTable` → `tableItems` getroffen wird. Spalten
+ * wie an ARC-L1: Name ~710, QUALITY-Zentrum ~885, YIELD-Zentrum ~1005.
+ */
+function tableWord(
+  text: string,
+  x: number,
+  y: number,
+): OcrLine["words"][number] {
+  return { text, x, y, width: text.length * 9, height: 14 };
+}
+
+const TABLE_HEADER: OcrLine = {
+  text: "MATERIALS QUALITY YIELD",
+  words: [
+    tableWord("MATERIALS", 673, 0),
+    tableWord("QUALITY", 866, 0),
+    tableWord("YIELD", 996, 0),
+  ],
+};
+
+function materialRow(
+  name: string,
+  y: number,
+  quality: number | null,
+  quantity: number | null,
+): OcrLine[] {
+  const rows: OcrLine[] = [{ text: name, words: [tableWord(name, 710, y)] }];
+  if (quality !== null) {
+    rows.push({
+      text: String(quality),
+      words: [tableWord(String(quality), 878, y)],
+    });
+  }
+  if (quantity !== null) {
+    rows.push({
+      text: String(quantity),
+      words: [tableWord(String(quantity), 1004, y)],
+    });
+  }
+  return rows;
+}
+
+describe("parseWorkOrder keeps partial rows", () => {
+  it("keeps a row whose quantity column is missing, with quantityScu null", () => {
+    const lines: OcrLine[] = [
+      TABLE_HEADER,
+      ...materialRow("TITANIUM", 40, 295, 63),
+      // AGRICIUM: Name + Qualität erkannt, aber die YIELD-Zahl fehlt.
+      ...materialRow("AGRICIUM", 93, 588, null),
+    ];
+
+    const parsed = parseWorkOrder(lines);
+    expect(parsed.items).toEqual([
+      { oreName: "TITANIUM", quantityScu: 0.63, qualityRating: 295 },
+      { oreName: "AGRICIUM", quantityScu: null, qualityRating: 588 },
+    ]);
+  });
+
+  it("keeps a row where only the quality survived (quantity missing)", () => {
+    const lines: OcrLine[] = [
+      TABLE_HEADER,
+      ...materialRow("QUANTAINIUM", 40, 720, null),
+    ];
+
+    const parsed = parseWorkOrder(lines);
+    expect(parsed.items).toEqual([
+      { oreName: "QUANTAINIUM", quantityScu: null, qualityRating: 720 },
+    ]);
+  });
+
+  it("drops a name-only row with no numbers (indistinguishable from a label)", () => {
+    // Ohne jede Zahl ist eine Zeile nicht von einem Footer-Label wie
+    // "TOTAL COST" zu unterscheiden — sie darf kein Erz werden.
+    const lines: OcrLine[] = [
+      TABLE_HEADER,
+      ...materialRow("QUANTAINIUM", 40, null, null),
+    ];
+
+    expect(parseWorkOrder(lines).items).toEqual([]);
+  });
+});
+
 describe("parseWorkOrder duration formats", () => {
   it("parses minutes-and-seconds and hours-minutes-seconds", () => {
     expect(parseWorkOrder(["TIME REMAINING 50m 17s"]).durationMinutes).toBe(51);

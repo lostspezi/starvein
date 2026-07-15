@@ -47,12 +47,15 @@ function prefill(
     if (match) {
       rows.push({
         oreCode: match.key,
-        quantity: String(item.quantityScu),
+        // Fehlende Menge → leeres Feld; der Nutzer trägt sie nach.
+        quantity: item.quantityScu === null ? "" : String(item.quantityScu),
         quality: item.qualityRating === null ? "" : String(item.qualityRating),
         rawName: item.oreName,
       });
     } else {
-      leftovers.push(`${item.oreName} (${item.quantityScu} SCU)`);
+      const quantityLabel =
+        item.quantityScu === null ? "?" : String(item.quantityScu);
+      leftovers.push(`${item.oreName} (${quantityLabel} SCU)`);
     }
   }
 

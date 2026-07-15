@@ -4,7 +4,13 @@ import { parseLocalizedNumber } from "./parse-number";
 
 export type ParsedItem = {
   oreName: string;
-  quantityScu: number;
+  /**
+   * Menge in SCU; null, wenn der Erzname erkannt wurde, aber die Mengenzahl
+   * (noch) nicht — die Zeile wird trotzdem behalten, damit das Erz im
+   * Formular auftaucht und der Nutzer die Menge nachtragen kann. Über mehrere
+   * Frames füllt das Voting (merge-work-orders.ts) fehlende Werte auf.
+   */
+  quantityScu: number | null;
   /**
    * Qualität (0–1000), sofern eine "QUALITY"-Spalte am Terminal erkannt und
    * der Zeile zugeordnet werden konnte — sonst null (Nutzer trägt sie manuell
@@ -265,12 +271,17 @@ function tableItems(lines: OcrLine[], table: MaterialTable): ParsedItem[] {
         }
       }
     }
-    if (quantity === null) {
+    // Zeile behalten, auch wenn NUR die Menge ODER NUR die Qualität fehlt
+    // (Teilerkennung) — aber nicht bei komplett fehlenden Zahlen: reine
+    // Label-/Footer-Zeilen ("TOTAL COST", "PROCESSING TIME") liegen ebenfalls
+    // in der Namensspalte und dürfen keine Erze werden. Über mehrere Frames
+    // füllt das Voting fehlende Werte einer echten Materialzeile auf.
+    if (quantity === null && quality === null) {
       continue;
     }
     items.push({
       oreName: name,
-      quantityScu: quantity.value / 100,
+      quantityScu: quantity === null ? null : quantity.value / 100,
       qualityRating: quality === null ? null : quality.value,
     });
   }
