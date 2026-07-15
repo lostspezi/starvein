@@ -1,4 +1,4 @@
-import { screen } from "@testing-library/react";
+import { fireEvent, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import { renderWithIntl } from "@/test/render";
@@ -87,6 +87,38 @@ describe("Combobox", () => {
     await user.tab();
 
     await vi.waitFor(() => expect(input).toHaveValue("Gold"));
+  });
+
+  it("clears the pending blur timer on unmount", () => {
+    vi.useFakeTimers();
+    try {
+      const onChange = vi.fn();
+      const { unmount } = renderWithIntl(
+        <Combobox
+          id="ore"
+          ariaLabel="Ore"
+          options={OPTIONS}
+          value=""
+          onChange={onChange}
+          noResultsLabel="No matches"
+        />,
+        { locale: "en" },
+      );
+      const input = screen.getByRole("combobox");
+      fireEvent.focus(input);
+      fireEvent.change(input, { target: { value: "q" } });
+      fireEvent.change(input, { target: { value: "" } });
+      fireEvent.blur(input);
+      unmount();
+
+      // Ohne Cleanup feuert der 150ms-Blur-Timer nach dem Unmount weiter
+      // (in CI dann nach dem Test-Teardown: "window is not defined").
+      vi.runAllTimers();
+
+      expect(onChange).not.toHaveBeenCalled();
+    } finally {
+      vi.useRealTimers();
+    }
   });
 
   it("deselects when the input is cleared and blurred", async () => {
