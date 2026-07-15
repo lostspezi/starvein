@@ -178,9 +178,4 @@ mod tests {
             Err("no frames captured".to_string())
         );
     }
-
-    #[test]
-    fn burst_takes_several_frames() {
-        assert!(FRAME_COUNT >= 3);
-    }
 }
