@@ -9,6 +9,7 @@ import { ApiError, createRefineryJob } from "../../lib/api";
 import type { OcrCapture } from "../../lib/tauri";
 import { fuzzyBestMatch } from "./fuzzy-match";
 import { parseWorkOrder } from "./ocr-parse";
+import { matchTerminal } from "./terminal-match";
 
 type ItemRow = {
   oreCode: string;
@@ -69,22 +70,9 @@ function prefill(
     }
   }
 
-  // Terminal-Vorauswahl: der Stationsname steht als eigene Kopfzeile im
-  // Capture (z. B. "ARC-L1 WIDE FOREST STATION", von der OCR gern leicht
-  // verlesen) — bester Fuzzy-Treffer über alle nicht zugeordneten Zeilen.
-  const terminalCandidates = terminals.map((terminal) => ({
-    key: String(terminal.terminalId),
-    aliases: [terminal.terminalName],
-  }));
-  let terminalId = "";
-  let bestTerminalScore = Number.POSITIVE_INFINITY;
-  for (const line of parsed.unmatched) {
-    const match = fuzzyBestMatch(line, terminalCandidates);
-    if (match && match.score < bestTerminalScore) {
-      terminalId = match.key;
-      bestTerminalScore = match.score;
-    }
-  }
+  // Terminal-Vorauswahl über den Stations-Teil des Katalognamens — Details
+  // und warum kein Fuzzy-Match über den vollen Namen: terminal-match.ts.
+  const terminalId = matchTerminal(parsed.unmatched, terminals);
 
   return {
     rows:
