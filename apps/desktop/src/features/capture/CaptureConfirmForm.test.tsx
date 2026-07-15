@@ -33,14 +33,14 @@ const ORES = [
 
 const TERMINALS = [
   {
-    terminalId: 32,
-    terminalName: "ARC-L1 Wide Forest Station",
+    terminalId: 246,
+    terminalName: "Refinement Processing - ARC-L1",
     starSystemName: "Stanton",
   },
   {
-    terminalId: 12,
-    terminalName: "CRU-L1 Ambitious Dream Station",
-    starSystemName: "Stanton",
+    terminalId: 788,
+    terminalName: "Refinement Center - Levski",
+    starSystemName: "Nyx",
   },
 ];
 
@@ -104,6 +104,11 @@ describe("CaptureConfirmForm", () => {
   it("prefills ores, quantities, method and duration from the capture", () => {
     renderForm();
 
+    // Einheiten-/Spalten-Labels hinter den Feldern: SCU (Menge) und
+    // QUALITY (0-1000, wie die Terminal-Spalte heisst).
+    expect(screen.getAllByText("SCU").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("QUALITY").length).toBeGreaterThan(0);
+
     expect(screen.getByDisplayValue("QUAN — Quantainium")).toBeInTheDocument();
     expect(screen.getByDisplayValue("32")).toBeInTheDocument();
     expect(screen.getByDisplayValue("12.5")).toBeInTheDocument();
@@ -115,19 +120,27 @@ describe("CaptureConfirmForm", () => {
     renderForm({
       capture: {
         ...CAPTURE,
-        // OCR-Verleser der de-DE-Engine: "ARC-L1" wird als "ARC-LI" gelesen.
+        // OCR-Verleser der de-DE-Engine: "ARC-L1" wird als "ARC-LI" gelesen;
+        // "REFINEMENT CENTER" steht auf jedem Terminal und darf nicht
+        // fälschlich Levski treffen (realer Fehlgriff, 15.07.2026).
         lines: [
           ...CAPTURE.lines,
+          { text: "REFINEMENT CENTER", words: [] },
           { text: "ARC-LI WIDE FOREST STATION", words: [] },
         ],
       },
     });
 
-    expect(screen.getByLabelText("Refinery terminal")).toHaveValue("32");
+    expect(screen.getByLabelText("Refinery terminal")).toHaveValue("246");
   });
 
-  it("leaves the terminal unselected when no station line matches", () => {
-    renderForm();
+  it("leaves the terminal unselected when only the generic module header is captured", () => {
+    renderForm({
+      capture: {
+        ...CAPTURE,
+        lines: [...CAPTURE.lines, { text: "REFINEMENT CENTER", words: [] }],
+      },
+    });
 
     expect(screen.getByLabelText("Refinery terminal")).toHaveValue("");
   });
@@ -138,12 +151,12 @@ describe("CaptureConfirmForm", () => {
 
     await userEvent.selectOptions(
       screen.getByLabelText("Refinery terminal"),
-      "32",
+      "246",
     );
     await userEvent.click(screen.getByRole("button", { name: "Create job" }));
 
     expect(createRefineryJob).toHaveBeenCalledWith("tok-1", {
-      terminalId: 32,
+      terminalId: 246,
       methodCode: "DINYX",
       items: [
         { oreCode: "QUAN", quantityScu: 32 },
@@ -204,12 +217,12 @@ describe("CaptureConfirmForm", () => {
 
     await userEvent.selectOptions(
       screen.getByLabelText("Refinery terminal"),
-      "32",
+      "246",
     );
     await userEvent.click(screen.getByRole("button", { name: "Create job" }));
 
     expect(createRefineryJob).toHaveBeenCalledWith("tok-1", {
-      terminalId: 32,
+      terminalId: 246,
       methodCode: "DINYX",
       items: [{ oreCode: "QUAN", quantityScu: 32, qualityRating: 850 }],
       durationMinutes: 90,
@@ -234,7 +247,7 @@ describe("CaptureConfirmForm", () => {
 
     await userEvent.selectOptions(
       screen.getByLabelText("Refinery terminal"),
-      "32",
+      "246",
     );
     await userEvent.click(screen.getByRole("button", { name: "Create job" }));
 
