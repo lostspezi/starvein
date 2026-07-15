@@ -3,29 +3,46 @@ import type { Db } from "mongodb";
 import { closeMongo, getDb } from "@/lib/db";
 import { CURRENT_PATCH_VERSION } from "@/lib/patch";
 import { uniqueDbName } from "@/test/factories";
+import type { GuideLanguage } from "./guides.languages";
 import {
   deleteGuideById,
   findGuideById,
   insertGuide,
   listGuidesByOwner,
+  listPublicGuideLanguages,
   listPublicGuides,
   listPublicGuideTags,
   replaceGuide,
 } from "./guides.repository";
 import type { Guide } from "./guides.schema";
 
+type Translation = Guide["translations"][number];
+
+const emptyContent = {
+  type: "doc",
+  content: [{ type: "paragraph" }],
+} as Translation["content"];
+
+function tr(
+  language: GuideLanguage,
+  title: string,
+  opts: { searchText?: string; description?: string } = {},
+): Translation {
+  return {
+    language,
+    title,
+    description: opts.description,
+    content: emptyContent,
+    searchText: opts.searchText ?? title.toLowerCase(),
+  };
+}
+
 function makeGuide(overrides: Partial<Guide> = {}): Guide {
   const now = new Date().toISOString();
   return {
     id: `guide-${Math.random().toString(16).slice(2)}`,
-    title: "Sample guide",
-    description: undefined,
     tags: ["mining"],
-    content: {
-      type: "doc",
-      content: [{ type: "paragraph" }],
-    } as Guide["content"],
-    searchText: "sample guide",
+    translations: [tr("en", "Sample guide")],
     ownerUserId: "owner-1",
     isPublic: true,
     patchVersion: CURRENT_PATCH_VERSION,
@@ -50,16 +67,16 @@ describe("guides repository", () => {
     const guide = makeGuide();
     await insertGuide(db, guide);
     const found = await findGuideById(db, guide.id);
-    expect(found).toMatchObject({ id: guide.id, title: "Sample guide" });
+    expect(found?.translations[0].title).toBe("Sample guide");
   });
 
   it("replaces and deletes a guide", async () => {
     const guide = makeGuide();
     await insertGuide(db, guide);
-    await replaceGuide(db, { ...guide, title: "Renamed" });
-    expect(await findGuideById(db, guide.id)).toMatchObject({
-      title: "Renamed",
-    });
+    await replaceGuide(db, { ...guide, translations: [tr("en", "Renamed")] });
+    expect((await findGuideById(db, guide.id))?.translations[0].title).toBe(
+      "Renamed",
+    );
     await deleteGuideById(db, guide.id);
     expect(await findGuideById(db, guide.id)).toBeNull();
   });
@@ -70,72 +87,116 @@ describe("guides repository", () => {
     await insertGuide(db, makeGuide({ isPublic: true, tags: ["fps"] }));
     await insertGuide(db, makeGuide({ isPublic: false, tags: ["roc"] }));
 
-    const all = await listPublicGuides(db);
-    expect(all).toHaveLength(3);
-
-    // ODER-Semantik: roc ODER ship
-    const rocOrShip = await listPublicGuides(db, { tags: ["roc", "ship"] });
-    expect(rocOrShip).toHaveLength(2);
-
+    expect(await listPublicGuides(db)).toHaveLength(3);
+    expect(await listPublicGuides(db, { tags: ["roc", "ship"] })).toHaveLength(
+      2,
+    );
     const roc = await listPublicGuides(db, { tags: ["roc"] });
     expect(roc).toHaveLength(1);
     expect(roc[0].tags).toContain("roc");
   });
 
-  it("full-text searches the searchText field (title + body)", async () => {
-    await insertGuide(
-      db,
-      makeGuide({ title: "Quantainium run", searchText: "quantainium run" }),
-    );
+  it("full-text searches across translation body text", async () => {
+    await insertGuide(db, makeGuide({ translations: [tr("en", "Quant run")] }));
     await insertGuide(
       db,
       makeGuide({
-        title: "ROC basics",
-        searchText: "roc basics scan the aaron halo carefully",
+        translations: [
+          tr("en", "ROC basics", { searchText: "roc basics aaron halo" }),
+        ],
       }),
     );
 
-    const byTitle = await listPublicGuides(db, { q: "quantainium" });
-    expect(byTitle).toHaveLength(1);
-
-    // Treffer im Fließtext (nur in searchText, nicht im Titel)
+    expect(await listPublicGuides(db, { q: "quant" })).toHaveLength(1);
     const byBody = await listPublicGuides(db, { q: "aaron" });
     expect(byBody).toHaveLength(1);
-    expect(byBody[0].title).toBe("ROC basics");
+    expect(byBody[0].translations[0].title).toBe("ROC basics");
   });
 
-  it("sorts by title when requested", async () => {
-    await insertGuide(db, makeGuide({ title: "Zeta guide" }));
-    await insertGuide(db, makeGuide({ title: "Alpha guide" }));
+  it("filters by language", async () => {
+    await insertGuide(db, makeGuide({ translations: [tr("en", "EN only")] }));
+    await insertGuide(db, makeGuide({ translations: [tr("de", "DE only")] }));
+    await insertGuide(
+      db,
+      makeGuide({ translations: [tr("en", "Both EN"), tr("de", "Both DE")] }),
+    );
+
+    expect(await listPublicGuides(db, { language: "de" })).toHaveLength(2);
+    expect(await listPublicGuides(db, { language: "en" })).toHaveLength(2);
+    expect(await listPublicGuides(db, { language: "fr" })).toHaveLength(0);
+  });
+
+  it("scopes full-text search to the requested language", async () => {
+    await insertGuide(
+      db,
+      makeGuide({
+        translations: [
+          tr("en", "English", { searchText: "aaron halo english" }),
+          tr("de", "Deutsch", { searchText: "pyro krater deutsch" }),
+        ],
+      }),
+    );
+
+    // "aaron" steht nur in der englischen Übersetzung
+    expect(
+      await listPublicGuides(db, { q: "aaron", language: "en" }),
+    ).toHaveLength(1);
+    expect(
+      await listPublicGuides(db, { q: "aaron", language: "de" }),
+    ).toHaveLength(0);
+  });
+
+  it("sorts by title (in the display language) when requested", async () => {
+    await insertGuide(db, makeGuide({ translations: [tr("en", "Zeta")] }));
+    await insertGuide(db, makeGuide({ translations: [tr("en", "Alpha")] }));
 
     const sorted = await listPublicGuides(db, { sort: "title" });
-    expect(sorted.map((g) => g.title)).toEqual(["Alpha guide", "Zeta guide"]);
+    expect(sorted.map((g) => g.translations[0].title)).toEqual([
+      "Alpha",
+      "Zeta",
+    ]);
   });
 
-  it("lists public tags by usage, most-used first", async () => {
-    await insertGuide(db, makeGuide({ isPublic: true, tags: ["ship", "roc"] }));
-    await insertGuide(db, makeGuide({ isPublic: true, tags: ["roc", "fps"] }));
+  it("lists the most-used tags, most-used first, capped at 10", async () => {
+    await insertGuide(db, makeGuide({ tags: ["ship", "roc"] }));
+    await insertGuide(db, makeGuide({ tags: ["roc", "fps"] }));
     await insertGuide(db, makeGuide({ isPublic: false, tags: ["secret"] }));
-
-    const tags = await listPublicGuideTags(db);
-    // roc (2×) zuerst, dann fps/ship (je 1×) alphabetisch; privat "secret" raus
-    expect(tags).toEqual(["roc", "fps", "ship"]);
+    expect(await listPublicGuideTags(db)).toEqual(["roc", "fps", "ship"]);
   });
 
-  it("caps the tag filter at 10, keeping the most-used", async () => {
-    // t0..t9 kommen je 2×, rare0/rare1 je 1× vor
-    for (let i = 0; i < 10; i += 1) {
-      await insertGuide(db, makeGuide({ isPublic: true, tags: [`t${i}`] }));
-      await insertGuide(db, makeGuide({ isPublic: true, tags: [`t${i}`] }));
-    }
-    await insertGuide(db, makeGuide({ isPublic: true, tags: ["rare0"] }));
-    await insertGuide(db, makeGuide({ isPublic: true, tags: ["rare1"] }));
+  it("lists present public languages in preset order", async () => {
+    await insertGuide(db, makeGuide({ translations: [tr("fr", "FR")] }));
+    await insertGuide(
+      db,
+      makeGuide({ translations: [tr("de", "DE"), tr("en", "EN")] }),
+    );
+    await insertGuide(
+      db,
+      makeGuide({ isPublic: false, translations: [tr("es", "ES")] }),
+    );
 
-    const tags = await listPublicGuideTags(db);
-    expect(tags).toHaveLength(10);
-    // die selteneren Tags fallen raus
-    expect(tags).not.toContain("rare0");
-    expect(tags).not.toContain("rare1");
+    expect(await listPublicGuideLanguages(db)).toEqual(["de", "en", "fr"]);
+  });
+
+  it("normalizes legacy flat guides on read", async () => {
+    const now = new Date().toISOString();
+    await db.collection("guides").insertOne({
+      id: "legacy-1",
+      title: "Legacy",
+      description: "old",
+      tags: ["x"],
+      content: { type: "doc", content: [] },
+      searchText: "legacy old",
+      ownerUserId: "o",
+      isPublic: true,
+      patchVersion: "4.7",
+      createdAt: now,
+      updatedAt: now,
+    });
+
+    const found = await findGuideById(db, "legacy-1");
+    expect(found?.translations[0].language).toBe("en");
+    expect(found?.translations[0].title).toBe("Legacy");
   });
 
   it("lists guides by owner including private ones", async () => {
@@ -143,7 +204,6 @@ describe("guides repository", () => {
     await insertGuide(db, makeGuide({ ownerUserId: "me", isPublic: true }));
     await insertGuide(db, makeGuide({ ownerUserId: "other" }));
 
-    const mine = await listGuidesByOwner(db, "me");
-    expect(mine).toHaveLength(2);
+    expect(await listGuidesByOwner(db, "me")).toHaveLength(2);
   });
 });

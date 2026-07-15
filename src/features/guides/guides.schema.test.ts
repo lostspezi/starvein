@@ -2,10 +2,11 @@ import { describe, expect, it } from "vitest";
 import {
   guideContentSchema,
   guideInputSchema,
+  type GuideContent,
   type GuideInput,
 } from "./guides.schema";
 
-const validDoc: GuideInput["content"] = {
+const validDoc: GuideContent = {
   type: "doc",
   content: [
     {
@@ -109,15 +110,49 @@ describe("guideContentSchema", () => {
 
 describe("guideInputSchema", () => {
   const baseInput: GuideInput = {
-    title: "How to mine Quantainium",
-    description: "A short intro",
     tags: ["mining", "quantainium"],
-    content: validDoc,
     isPublic: true,
+    translations: [
+      {
+        language: "en",
+        title: "How to mine Quantainium",
+        description: "A short intro",
+        content: validDoc,
+      },
+      {
+        language: "de",
+        title: "Quantainium abbauen",
+        content: validDoc,
+      },
+    ],
   };
 
-  it("accepts a valid input", () => {
+  it("accepts a valid multilingual input", () => {
     expect(guideInputSchema.safeParse(baseInput).success).toBe(true);
+  });
+
+  it("requires at least one translation", () => {
+    const input = { ...baseInput, translations: [] };
+    expect(guideInputSchema.safeParse(input).success).toBe(false);
+  });
+
+  it("rejects duplicate languages", () => {
+    const input = {
+      ...baseInput,
+      translations: [
+        { language: "en", title: "A", content: validDoc },
+        { language: "en", title: "B", content: validDoc },
+      ],
+    };
+    expect(guideInputSchema.safeParse(input).success).toBe(false);
+  });
+
+  it("rejects an unknown language", () => {
+    const input = {
+      ...baseInput,
+      translations: [{ language: "xx", title: "A", content: validDoc }],
+    };
+    expect(guideInputSchema.safeParse(input).success).toBe(false);
   });
 
   it("rejects more than eight tags", () => {
@@ -133,9 +168,11 @@ describe("guideInputSchema", () => {
     expect(guideInputSchema.safeParse(input).success).toBe(false);
   });
 
-  it("rejects an empty title", () => {
-    expect(
-      guideInputSchema.safeParse({ ...baseInput, title: "" }).success,
-    ).toBe(false);
+  it("rejects an empty title in a translation", () => {
+    const input = {
+      ...baseInput,
+      translations: [{ language: "en", title: "", content: validDoc }],
+    };
+    expect(guideInputSchema.safeParse(input).success).toBe(false);
   });
 });

@@ -1,4 +1,9 @@
 import { z } from "zod";
+import {
+  GUIDE_FALLBACK_LANGUAGE,
+  GUIDE_LANGUAGES,
+  type GuideLanguage,
+} from "./guides.languages";
 
 /**
  * Erlaubte Bild-Quelle: ausschließlich unsere eigene GridFS-Ausgabe-Route
@@ -151,8 +156,9 @@ export const guideContentSchema = z
     "content too large",
   );
 
-export const guideSchema = z.object({
-  id: z.string().min(1),
+/** Eine Sprachversion eines Guides (Titel/Beschreibung/Inhalt je Sprache). */
+export const guideTranslationSchema = z.object({
+  language: z.enum(GUIDE_LANGUAGES),
   title: z.string().min(1).max(GUIDE_TITLE_MAX),
   // nullish + normalize: MongoDB speichert weggelassene Felder als null
   description: z
@@ -160,13 +166,27 @@ export const guideSchema = z.object({
     .max(GUIDE_DESCRIPTION_MAX)
     .nullish()
     .transform((value) => value ?? undefined),
-  tags: z
-    .array(z.string().min(1).max(GUIDE_TAG_MAX_LENGTH))
-    .max(GUIDE_MAX_TAGS),
   content: guideContentSchema,
-  // Server-verwaltet: kleingeschriebener Suchtext (Titel + Beschreibung +
-  // Fließtext) für die Volltextsuche. Default für Alt-Dokumente ohne Feld.
+  // Server-verwaltet: kleingeschriebener Suchtext dieser Sprachversion.
   searchText: z.string().default(""),
+});
+
+function uniqueLanguages(items: { language: string }[]): boolean {
+  return new Set(items.map((item) => item.language)).size === items.length;
+}
+
+const tagsSchema = z
+  .array(z.string().min(1).max(GUIDE_TAG_MAX_LENGTH))
+  .max(GUIDE_MAX_TAGS);
+
+export const guideSchema = z.object({
+  id: z.string().min(1),
+  // Tags sind sprachübergreifend (Spielbegriffe), nicht pro Übersetzung.
+  tags: tagsSchema,
+  translations: z
+    .array(guideTranslationSchema)
+    .min(1)
+    .refine(uniqueLanguages, "duplicate language"),
   ownerUserId: z.string().min(1),
   isPublic: z.boolean(),
   patchVersion: z.string().min(1),
@@ -174,17 +194,53 @@ export const guideSchema = z.object({
   updatedAt: z.string().min(1),
 });
 
-/** User-editierbare Felder — API-Input und Editor-Formular. */
-export const guideInputSchema = guideSchema
-  .pick({
-    title: true,
-    description: true,
-    tags: true,
-    content: true,
-    isPublic: true,
+/**
+ * User-editierbare Felder einer Sprachversion (API-Input / Editor). Bewusst
+ * eigenständig definiert (nicht via pick), damit `description` ein optionaler
+ * Key bleibt (die gespeicherte Version nutzt nullish+transform fürs Lesen).
+ */
+export const guideTranslationInputSchema = z
+  .object({
+    language: z.enum(GUIDE_LANGUAGES),
+    title: z.string().min(1).max(GUIDE_TITLE_MAX),
+    description: z.string().max(GUIDE_DESCRIPTION_MAX).optional(),
+    content: guideContentSchema,
+  })
+  .strict();
+
+/**
+ * User-editierbare Guide-Felder. Der unique-Refine sitzt am translations-Feld
+ * (nicht am Objekt), damit `.partial()` für PATCH weiter funktioniert.
+ */
+export const guideInputSchema = z
+  .object({
+    tags: tagsSchema,
+    isPublic: z.boolean(),
+    translations: z
+      .array(guideTranslationInputSchema)
+      .min(1)
+      .max(GUIDE_LANGUAGES.length)
+      .refine(uniqueLanguages, "duplicate language"),
   })
   .strict();
 
 export type Guide = z.infer<typeof guideSchema>;
 export type GuideInput = z.infer<typeof guideInputSchema>;
+export type GuideTranslation = z.infer<typeof guideTranslationSchema>;
+export type GuideTranslationInput = z.infer<typeof guideTranslationInputSchema>;
 export type GuideContent = z.infer<typeof guideContentSchema>;
+
+/**
+ * Wählt die anzuzeigende Sprachversion: bevorzugte Sprache → Fallback (en) →
+ * erste vorhandene. Ein Guide hat immer mindestens eine Übersetzung.
+ */
+export function pickGuideTranslation(
+  guide: Guide,
+  preferred: GuideLanguage,
+): GuideTranslation {
+  return (
+    guide.translations.find((t) => t.language === preferred) ??
+    guide.translations.find((t) => t.language === GUIDE_FALLBACK_LANGUAGE) ??
+    guide.translations[0]
+  );
+}

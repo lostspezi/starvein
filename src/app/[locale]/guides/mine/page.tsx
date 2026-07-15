@@ -1,6 +1,11 @@
 import { headers } from "next/headers";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { listGuidesByOwner } from "@/features/guides/guides.repository";
+import {
+  GUIDE_LANGUAGE_NAMES,
+  type GuideLanguage,
+} from "@/features/guides/guides.languages";
+import { pickGuideTranslation } from "@/features/guides/guides.schema";
 import { OwnerActions } from "@/features/guides/OwnerActions";
 import { Link } from "@/i18n/navigation";
 import { Badge } from "@/lib/components/ui/Badge";
@@ -32,6 +37,7 @@ export default async function MyGuidesPage({
 }) {
   const { locale } = await params;
   setRequestLocale(locale);
+  const uiLanguage = locale as GuideLanguage;
 
   const t = await getTranslations("guides");
   const userId = await getSessionUserId(await headers());
@@ -71,12 +77,17 @@ export default async function MyGuidesPage({
                   href={`/guides/${guide.id}`}
                   className="font-medium transition-colors duration-150 hover:text-accent-glow"
                 >
-                  {guide.title}
+                  {pickGuideTranslation(guide, uiLanguage).title}
                 </Link>
                 <div className="flex flex-wrap items-center gap-2 text-sm text-text-muted">
                   <Badge tone={guide.isPublic ? "success" : "default"}>
                     {t(guide.isPublic ? "card.public" : "card.private")}
                   </Badge>
+                  {guide.translations.map((translation) => (
+                    <Badge key={translation.language}>
+                      {GUIDE_LANGUAGE_NAMES[translation.language]}
+                    </Badge>
+                  ))}
                 </div>
               </div>
               <OwnerActions

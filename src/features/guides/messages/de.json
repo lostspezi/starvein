@@ -11,9 +11,15 @@
       "resultsCount": "{count, plural, one {# Guide} other {# Guides}}"
     },
     "filter": {
+      "languageLabel": "Sprache",
+      "allLanguages": "Alle",
       "tagsLabel": "Nach Tag filtern",
       "sortLabel": "Sortierung",
       "clear": "Filter zurücksetzen"
+    },
+    "detail": {
+      "languageSwitcher": "Guide-Sprache",
+      "fallbackLanguage": "Nur auf {language} verfügbar"
     },
     "sort": {
       "new": "Neueste",
@@ -36,6 +42,10 @@
       "tagsHint": "Kommagetrennt, bis zu 8 Tags.",
       "isPublicLabel": "Diesen Guide öffentlich machen",
       "contentLabel": "Guide-Inhalt",
+      "languagesLabel": "Sprachen",
+      "addLanguage": "Sprache hinzufügen",
+      "removeLanguage": "{language} entfernen",
+      "missingTitle": "Jede Sprache braucht einen Titel.",
       "submitCreate": "Guide veröffentlichen",
       "submitSave": "Änderungen speichern",
       "loginRequired": "Mit Discord anmelden, um Guides zu schreiben und zu bearbeiten. Lesen bleibt kostenlos.",
