@@ -56,6 +56,19 @@ minisign-signiert (`plugins.updater.pubkey` in `tauri.conf.json`).
   `%USERPROFILE%\.tauri\starvein-companion.key`) — Backup anlegen! Geht er
   verloren, können bestehende Installationen keine Updates mehr verifizieren.
 
+## Hotkey-Technik: Low-Level-Hook statt RegisterHotKey
+
+Star Citizen liest die Tastatur per Raw Input und unterdrückt damit die
+Erzeugung klassischer Tastatur-Messages — `RegisterHotKey`-Hotkeys
+(auch die des früheren `tauri-plugin-global-shortcut`) feuern deshalb
+**nie**, solange das Spiel den Fokus hat (live nachgewiesen, 07/2026).
+Der Companion nutzt daher einen `WH_KEYBOARD_LL`-Hook
+(`src-tauri/src/keyboard_hook.rs`), der vor dieser Filterung sitzt —
+dieselbe Technik wie Discord/AutoHotkey. Anti-Cheat-konform: der Hook
+läuft komplett im Companion-Prozess, der Tastendruck wird unverändert
+ans Spiel weitergereicht. Nebeneffekt: Kollisionen mit Hotkeys anderer
+Programme gibt es nicht mehr.
+
 ## Bekannte Stolperfalle: Spiel läuft als Administrator
 
 Läuft der RSI Launcher (und damit Star Citizen) mit Admin-Rechten, blockiert
@@ -71,10 +84,10 @@ Token-Elevation-Vergleich) und zeigen eine entsprechende Warnung an.
 Nach relevanten Änderungen von Hand prüfen:
 
 - [ ] Globaler Hotkey feuert, während Star Citizen im Borderless-Fullscreen läuft
-- [ ] Hotkey-Rebind in den Einstellungen per Tastendruck (Aufnahme-Feld); belegte
-      Kombination zeigt Warnung und der alte Hotkey bleibt aktiv
-- [ ] Einstellungen zeigen eine Warnung, wenn der aktive Hotkey vom System nicht
-      registriert werden konnte (z. B. weil eine andere Anwendung ihn hält)
+      **und den Fokus hat** (Raw-Input-Fall — der eigentliche Kerntest)
+- [ ] Hotkey-Rebind in den Einstellungen per Tastendruck (Aufnahme-Feld);
+      ungültige Kombination zeigt Meldung und der alte Hotkey bleibt aktiv
+- [ ] Gehaltene Hotkey-Taste löst nur EINE Erfassung aus (kein Auto-Repeat)
 - [ ] Einstellungen warnen, wenn Star Citizen als Administrator läuft und der
       Companion nicht (Hotkey feuert dann im Spiel nicht)
 - [ ] OCR-Genauigkeit am Refinery-Terminal bei 1080p / 1440p / 4K
