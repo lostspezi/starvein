@@ -5,6 +5,8 @@
     "platform": "Windows-Desktop-App für Star Citizen",
     "intro": "Der Companion läuft neben Star Citizen und erfasst deine Refinery-Work-Orders fast automatisch: Hotkey am Terminal drücken, erkannte Werte kurz prüfen, fertig — der Job landet mit Countdown in deiner STARVEIN-Übersicht und meldet sich, wenn er abholbereit ist.",
     "download": "Für Windows herunterladen",
+    "downloadMsi": "MSI-Installer",
+    "allReleases": "Alle Versionen auf GitHub",
     "smartscreenHint": "Beta ohne Code-Signatur — Windows SmartScreen fragt beim ersten Start nach („Weitere Informationen“ → „Trotzdem ausführen“).",
     "howTitle": "So funktioniert es",
     "steps": {

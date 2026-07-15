@@ -5,6 +5,8 @@
     "platform": "Windows desktop app for Star Citizen",
     "intro": "The companion runs alongside Star Citizen and captures your refinery work orders almost automatically: press a hotkey at the terminal, quickly review the recognized values, done — the job shows up with a countdown in your STARVEIN overview and pings you when it is ready to collect.",
     "download": "Download for Windows",
+    "downloadMsi": "MSI installer",
+    "allReleases": "All releases on GitHub",
     "smartscreenHint": "Unsigned beta — Windows SmartScreen will ask on first launch (“More info” → “Run anyway”).",
     "howTitle": "How it works",
     "steps": {

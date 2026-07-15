@@ -10,14 +10,13 @@ test("companion page shows the guide and beta download", async ({ page }) => {
   await expect(
     page.getByRole("heading", { name: "STARVEIN Companion" }),
   ).toBeVisible();
-  await expect(page.getByText("Beta 0.1.0")).toBeVisible();
+  // Version kommt live aus dem neuesten GitHub-Release (Fallback:
+  // site-config) — nur das Muster prüfen, nicht eine feste Nummer.
+  await expect(page.getByText(/^Beta \d+\.\d+\.\d+$/)).toBeVisible();
 
   const download = page.getByRole("link", { name: "Download for Windows" });
   await expect(download).toBeVisible();
-  await expect(download).toHaveAttribute(
-    "href",
-    "https://github.com/lostspezi/starvein/releases",
-  );
+  await expect(download).toHaveAttribute("href", "/api/companion/download");
 
   // Alle vier Schritte der Anleitung
   await expect(page.getByText("Connect with Discord")).toBeVisible();
