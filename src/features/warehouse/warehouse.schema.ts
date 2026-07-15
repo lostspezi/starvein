@@ -2,6 +2,11 @@ import { z } from "zod";
 
 const oreCode = z.string().regex(/^[A-Z]{2,5}$/);
 const quantityScu = z.number().positive().max(100_000);
+/**
+ * Qualität eines Erzes/Materials (0–1000, am Refinery-Terminal ablesbar).
+ * Optional, damit bestehende Lager-Dokumente ohne das Feld weiter lesbar sind.
+ */
+const qualityRating = z.number().int().min(0).max(1000).optional();
 const systemCode = z.string().regex(/^[A-Z]+$/);
 const bodySlug = z.string().regex(/^[a-z0-9]+(-[a-z0-9]+)*$/);
 
@@ -46,6 +51,7 @@ export const warehouseEntrySchema = z.object({
   oreCode,
   kind: z.enum(["raw", "refined"]),
   quantityScu,
+  qualityRating,
   location: warehouseLocationSchema,
   note: z.string().max(200).optional(),
   createdAt: z.string().min(1),
@@ -54,7 +60,13 @@ export const warehouseEntrySchema = z.object({
 
 /** User-editierbare Felder — API-Input und Formular. */
 export const warehouseEntryInputSchema = warehouseEntrySchema
-  .pick({ oreCode: true, kind: true, quantityScu: true, note: true })
+  .pick({
+    oreCode: true,
+    kind: true,
+    quantityScu: true,
+    qualityRating: true,
+    note: true,
+  })
   .extend({ location: warehouseLocationInputSchema })
   .strict();
 

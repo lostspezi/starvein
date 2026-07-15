@@ -148,6 +148,33 @@ describe("warehouse service", () => {
     expect(updated.updatedAt >= entry.updatedAt).toBe(true);
   });
 
+  it("persists and updates a qualityRating", async () => {
+    const entry = await createWarehouseEntry(
+      db,
+      USER,
+      makeInput({ qualityRating: 640 }),
+    );
+    expect(entry.qualityRating).toBe(640);
+
+    const updated = await updateWarehouseEntry(db, USER, entry.id, {
+      qualityRating: 900,
+    });
+    expect(updated.qualityRating).toBe(900);
+  });
+
+  it("leaves an existing qualityRating untouched on unrelated updates", async () => {
+    const entry = await createWarehouseEntry(
+      db,
+      USER,
+      makeInput({ qualityRating: 500 }),
+    );
+
+    const updated = await updateWarehouseEntry(db, USER, entry.id, {
+      quantityScu: 5,
+    });
+    expect(updated.qualityRating).toBe(500);
+  });
+
   it("re-resolves the location on update", async () => {
     const entry = await createWarehouseEntry(db, USER, makeInput());
 

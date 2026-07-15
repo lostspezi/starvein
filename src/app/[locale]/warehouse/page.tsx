@@ -116,6 +116,13 @@ export default async function WarehousePage({
                         <span className="font-mono text-sm text-accent-secondary">
                           {entry.quantityScu} SCU
                         </span>
+                        {entry.qualityRating != null && (
+                          <span className="font-mono text-sm text-accent-cyan">
+                            {t("entry.qualityValue", {
+                              value: entry.qualityRating,
+                            })}
+                          </span>
+                        )}
                       </div>
                       {entry.note && (
                         <p className="text-sm text-text-muted">{entry.note}</p>
@@ -124,6 +131,7 @@ export default async function WarehousePage({
                     <WarehouseEntryActions
                       entryId={entry.id}
                       quantityScu={entry.quantityScu}
+                      qualityRating={entry.qualityRating}
                       note={entry.note ?? ""}
                     />
                   </li>

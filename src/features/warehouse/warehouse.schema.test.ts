@@ -62,6 +62,34 @@ describe("warehouseEntrySchema", () => {
     };
     expect(warehouseEntrySchema.safeParse(entry).success).toBe(false);
   });
+
+  it("parses an entry with a qualityRating in range", () => {
+    const entry = makeEntry({ qualityRating: 720 });
+    expect(warehouseEntrySchema.parse(entry)).toEqual(entry);
+  });
+
+  it("still parses an entry without a qualityRating (backward compatible)", () => {
+    const entry = makeEntry();
+    expect(warehouseEntrySchema.parse(entry).qualityRating).toBeUndefined();
+  });
+
+  it("accepts the boundary values 0 and 1000", () => {
+    expect(
+      warehouseEntrySchema.safeParse(makeEntry({ qualityRating: 0 })).success,
+    ).toBe(true);
+    expect(
+      warehouseEntrySchema.safeParse(makeEntry({ qualityRating: 1000 }))
+        .success,
+    ).toBe(true);
+  });
+
+  it("rejects out-of-range and non-integer qualityRating", () => {
+    for (const qualityRating of [-1, 1001, 12.5]) {
+      expect(
+        warehouseEntrySchema.safeParse(makeEntry({ qualityRating })).success,
+      ).toBe(false);
+    }
+  });
 });
 
 describe("warehouseEntryInputSchema", () => {
@@ -99,6 +127,27 @@ describe("warehouseEntryInputSchema", () => {
       ownerUserId: "user-2",
     });
     expect(parsed.success).toBe(false);
+  });
+
+  it("accepts a qualityRating and still rejects unknown keys", () => {
+    expect(
+      warehouseEntryInputSchema.safeParse({
+        oreCode: "QUAN",
+        kind: "refined",
+        quantityScu: 12.5,
+        qualityRating: 640,
+        location: { kind: "custom", label: "im Schiff" },
+      }).success,
+    ).toBe(true);
+    expect(
+      warehouseEntryInputSchema.safeParse({
+        oreCode: "QUAN",
+        kind: "refined",
+        quantityScu: 12.5,
+        qualityRating: 1500,
+        location: { kind: "custom", label: "im Schiff" },
+      }).success,
+    ).toBe(false);
   });
 });
 

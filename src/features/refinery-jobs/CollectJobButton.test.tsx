@@ -52,6 +52,32 @@ describe("CollectJobButton", () => {
     });
   });
 
+  it("includes qualityRating in the transfer when a quality is entered", async () => {
+    const user = userEvent.setup();
+    renderWithIntl(<CollectJobButton jobId="job-1" items={ITEMS} />, {
+      locale: "en",
+    });
+
+    await user.click(screen.getByRole("button", { name: "Collect" }));
+    await user.type(
+      screen.getByLabelText("Quality Quantainium (0–1000)"),
+      "640",
+    );
+    await user.click(
+      screen.getByRole("button", { name: "Confirm collection" }),
+    );
+
+    const body = JSON.parse(
+      (vi.mocked(fetch).mock.calls[0][1] as RequestInit).body as string,
+    );
+    expect(body.transfer[0]).toEqual({
+      oreCode: "QUAN",
+      quantityScu: 32,
+      qualityRating: 640,
+    });
+    expect(body.transfer[1].qualityRating).toBeUndefined();
+  });
+
   it("collects without transfer when the checkbox is unchecked", async () => {
     const user = userEvent.setup();
     renderWithIntl(<CollectJobButton jobId="job-1" items={ITEMS} />, {

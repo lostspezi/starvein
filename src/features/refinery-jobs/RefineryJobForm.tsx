@@ -29,7 +29,7 @@ type MethodOption = {
 };
 type OreOption = { code: string; name: string };
 
-type ItemRow = { oreCode: string; quantity: string };
+type ItemRow = { oreCode: string; quantity: string; quality: string };
 
 /**
  * Formular zum Tracken eines neuen Raffinerie-Jobs: Terminal und Erze
@@ -52,7 +52,7 @@ export function RefineryJobForm({
   const [terminalId, setTerminalId] = useState("");
   const [methodCode, setMethodCode] = useState(methods[0]?.code ?? "");
   const [items, setItems] = useState<ItemRow[]>([
-    { oreCode: "", quantity: "1" },
+    { oreCode: "", quantity: "1", quality: "" },
   ]);
   const [hours, setHours] = useState("0");
   const [minutes, setMinutes] = useState("0");
@@ -103,6 +103,9 @@ export function RefineryJobForm({
           items: items.map((item) => ({
             oreCode: item.oreCode,
             quantityScu: Number(item.quantity),
+            ...(item.quality.trim() !== ""
+              ? { qualityRating: Number(item.quality) }
+              : {}),
           })),
           durationMinutes,
           ...(startedAt !== ""
@@ -218,6 +221,26 @@ export function RefineryJobForm({
                   className={`${inputClass} w-28`}
                 />
               </div>
+              <div className="flex flex-col gap-1">
+                <label
+                  htmlFor={`${formId}-quality-${index}`}
+                  className="text-xs text-text-muted"
+                >
+                  {t("qualityLabel", { index: index + 1 })}
+                </label>
+                <input
+                  id={`${formId}-quality-${index}`}
+                  type="number"
+                  min={0}
+                  max={1000}
+                  step={1}
+                  value={item.quality}
+                  onChange={(event) =>
+                    setItem(index, { quality: event.target.value })
+                  }
+                  className={`${inputClass} w-28`}
+                />
+              </div>
               {items.length > 1 && (
                 <Button
                   variant="ghost"
@@ -241,7 +264,7 @@ export function RefineryJobForm({
                 onClick={() =>
                   setItems((current) => [
                     ...current,
-                    { oreCode: "", quantity: "1" },
+                    { oreCode: "", quantity: "1", quality: "" },
                   ])
                 }
               >

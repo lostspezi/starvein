@@ -11,6 +11,7 @@
       "kindRaw": "Roh",
       "kindRefined": "Raffiniert",
       "quantityLabel": "Menge (SCU)",
+      "qualityLabel": "Qualität (0–1000)",
       "locationKindLabel": "Art des Lagerorts",
       "locationBody": "Himmelskörper",
       "locationTerminal": "Refinery-Terminal",
@@ -32,6 +33,8 @@
       "delete": "Löschen",
       "confirmDelete": "Diesen Eintrag löschen?",
       "quantityLabel": "Menge (SCU)",
+      "qualityLabel": "Qualität (0–1000)",
+      "qualityValue": "Q {value}",
       "noteLabel": "Notiz",
       "raw": "Roh",
       "refined": "Raffiniert"

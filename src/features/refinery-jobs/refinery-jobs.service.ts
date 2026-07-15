@@ -194,6 +194,11 @@ export async function collectRefineryJob(
       oreCode: item.oreCode,
       kind: "refined",
       quantityScu: item.quantityScu,
+      // Nur setzen, wenn vorhanden — sonst schreibt Mongo null, das das
+      // optionale (nicht nullable) Schema beim Zurücklesen ablehnen würde.
+      ...(item.qualityRating !== undefined
+        ? { qualityRating: item.qualityRating }
+        : {}),
       location: {
         kind: "terminal",
         terminalId: existing.terminalId,

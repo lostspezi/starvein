@@ -17,10 +17,12 @@ const inputClass =
 export function WarehouseEntryActions({
   entryId,
   quantityScu,
+  qualityRating,
   note,
 }: {
   entryId: string;
   quantityScu: number;
+  qualityRating?: number;
   note: string;
 }) {
   const t = useTranslations("warehouse.entry");
@@ -28,6 +30,9 @@ export function WarehouseEntryActions({
   const formId = useId();
   const [editing, setEditing] = useState(false);
   const [quantity, setQuantity] = useState(String(quantityScu));
+  const [qualityDraft, setQualityDraft] = useState(
+    qualityRating != null ? String(qualityRating) : "",
+  );
   const [noteDraft, setNoteDraft] = useState(note);
   const [busy, setBusy] = useState(false);
 
@@ -44,6 +49,9 @@ export function WarehouseEntryActions({
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
           quantityScu: parsedQuantity,
+          ...(qualityDraft.trim() !== ""
+            ? { qualityRating: Number(qualityDraft) }
+            : {}),
           note: noteDraft.trim(),
         }),
       });
@@ -90,6 +98,24 @@ export function WarehouseEntryActions({
           />
         </div>
         <div className="flex flex-col gap-1">
+          <label
+            htmlFor={`${formId}-quality`}
+            className="text-xs text-text-muted"
+          >
+            {t("qualityLabel")}
+          </label>
+          <input
+            id={`${formId}-quality`}
+            type="number"
+            min={0}
+            max={1000}
+            step={1}
+            value={qualityDraft}
+            onChange={(event) => setQualityDraft(event.target.value)}
+            className={`${inputClass} w-28`}
+          />
+        </div>
+        <div className="flex flex-col gap-1">
           <label htmlFor={`${formId}-note`} className="text-xs text-text-muted">
             {t("noteLabel")}
           </label>
@@ -111,6 +137,7 @@ export function WarehouseEntryActions({
           onClick={() => {
             setEditing(false);
             setQuantity(String(quantityScu));
+            setQualityDraft(qualityRating != null ? String(qualityRating) : "");
             setNoteDraft(note);
           }}
         >

@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { parseWorkOrder } from "./ocr-parse";
+import type { OcrLine } from "../../lib/tauri";
 
 /**
  * Synthetische Fixtures nach dem bekannten Aufbau des Refinery-Terminals
@@ -20,8 +21,8 @@ describe("parseWorkOrder", () => {
   it("extracts material rows with SCU quantities", () => {
     const parsed = parseWorkOrder(EN_TERMINAL);
     expect(parsed.items).toEqual([
-      { oreName: "Quantainium", quantityScu: 32 },
-      { oreName: "Laranite", quantityScu: 12.5 }, // 1.250 cSCU → 12,5 SCU
+      { oreName: "Quantainium", quantityScu: 32, qualityRating: null },
+      { oreName: "Laranite", quantityScu: 12.5, qualityRating: null }, // 1.250 cSCU → 12,5 SCU
     ]);
   });
 
@@ -36,7 +37,14 @@ describe("parseWorkOrder", () => {
 
   it("parses German decimal quantities", () => {
     const parsed = parseWorkOrder(["Hadanit 1.234,5 SCU"]);
-    expect(parsed.items).toEqual([{ oreName: "Hadanit", quantityScu: 1234.5 }]);
+    expect(parsed.items).toEqual([
+      { oreName: "Hadanit", quantityScu: 1234.5, qualityRating: null },
+    ]);
+  });
+
+  it("leaves qualityRating null for plain string input without coordinates", () => {
+    const parsed = parseWorkOrder(["Quantainium 32 SCU 850"]);
+    expect(parsed.items[0].qualityRating).toBeNull();
   });
 
   it("keeps lines without quantities as unmatched candidates", () => {
@@ -58,5 +66,74 @@ describe("parseWorkOrder", () => {
       durationMinutes: null,
       unmatched: [],
     });
+  });
+});
+
+/**
+ * Layout-Fixtures mit Wort-Koordinaten (x/y/width/height, wie ocr.rs sie
+ * liefert). Spalten: MATERIAL (~x10), QUANTITY (~x200), QUALITY (~x400).
+ * Der Qualitätswert wird über die Spalte der "QUALITY"-Kopfzeile der
+ * richtigen Materialzeile zugeordnet — nicht über die Zeilenreihenfolge.
+ */
+function word(text: string, x: number): OcrLine["words"][number] {
+  return { text, x, y: 0, width: text.length * 10, height: 18 };
+}
+
+const HEADER_LINE: OcrLine = {
+  text: "MATERIAL QUANTITY QUALITY",
+  words: [word("MATERIAL", 10), word("QUANTITY", 200), word("QUALITY", 400)],
+};
+
+describe("parseWorkOrder with word coordinates", () => {
+  it("associates a quality value from the QUALITY column to its row", () => {
+    const rows: OcrLine[] = [
+      HEADER_LINE,
+      {
+        text: "Quantainium 32 SCU 850",
+        words: [
+          word("Quantainium", 10),
+          word("32", 205),
+          word("SCU", 240),
+          word("850", 405),
+        ],
+      },
+    ];
+
+    const parsed = parseWorkOrder(rows);
+    expect(parsed.items).toEqual([
+      { oreName: "Quantainium", quantityScu: 32, qualityRating: 850 },
+    ]);
+  });
+
+  it("does not mistake the quantity for the quality", () => {
+    const rows: OcrLine[] = [
+      HEADER_LINE,
+      {
+        // Keine Zahl in der Qualitätsspalte → qualityRating bleibt null,
+        // die Mengen-Zahl (32) darf nicht fälschlich übernommen werden.
+        text: "Quantainium 32 SCU",
+        words: [word("Quantainium", 10), word("32", 205), word("SCU", 240)],
+      },
+    ];
+
+    const parsed = parseWorkOrder(rows);
+    expect(parsed.items[0].qualityRating).toBeNull();
+  });
+
+  it("falls back to null when no QUALITY header is present", () => {
+    const rows: OcrLine[] = [
+      {
+        text: "Quantainium 32 SCU 850",
+        words: [
+          word("Quantainium", 10),
+          word("32", 205),
+          word("SCU", 240),
+          word("850", 405),
+        ],
+      },
+    ];
+
+    const parsed = parseWorkOrder(rows);
+    expect(parsed.items[0].qualityRating).toBeNull();
   });
 });

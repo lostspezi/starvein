@@ -13,6 +13,7 @@ import { parseWorkOrder } from "./ocr-parse";
 type ItemRow = {
   oreCode: string;
   quantity: string;
+  quality: string;
   rawName: string | null;
 };
 
@@ -28,7 +29,9 @@ function prefill(
   duration: string;
   leftovers: string[];
 } {
-  const parsed = parseWorkOrder(capture.lines.map((line) => line.text));
+  // Ganze OcrLine[] (inkl. Wort-Koordinaten) weiterreichen, damit die
+  // Qualitätsspalte per Layout erkannt werden kann.
+  const parsed = parseWorkOrder(capture.lines);
 
   const oreCandidates = ores.map((ore) => ({
     key: ore.code,
@@ -42,6 +45,7 @@ function prefill(
       rows.push({
         oreCode: match.key,
         quantity: String(item.quantityScu),
+        quality: item.qualityRating === null ? "" : String(item.qualityRating),
         rawName: item.oreName,
       });
     } else {
@@ -65,7 +69,9 @@ function prefill(
 
   return {
     rows:
-      rows.length > 0 ? rows : [{ oreCode: "", quantity: "", rawName: null }],
+      rows.length > 0
+        ? rows
+        : [{ oreCode: "", quantity: "", quality: "", rawName: null }],
     methodCode,
     duration:
       parsed.durationMinutes === null ? "" : String(parsed.durationMinutes),
@@ -125,6 +131,9 @@ export function CaptureConfirmForm({
       .map((row) => ({
         oreCode: row.oreCode,
         quantityScu: Number(row.quantity),
+        ...(row.quality.trim() !== ""
+          ? { qualityRating: Number(row.quality) }
+          : {}),
       }));
     const durationMinutes = Number(duration);
     if (
@@ -241,6 +250,18 @@ export function CaptureConfirmForm({
                 className={`${inputClasses} w-24`}
               />
               <span className="text-text-muted text-xs">SCU</span>
+              <input
+                aria-label={t("qualityLabel")}
+                type="number"
+                min={0}
+                max={1000}
+                step={1}
+                value={row.quality}
+                onChange={(event) =>
+                  updateRow(index, { quality: event.target.value })
+                }
+                className={`${inputClasses} w-20`}
+              />
               <button
                 type="button"
                 aria-label={t("removeItem")}
@@ -258,7 +279,7 @@ export function CaptureConfirmForm({
             onClick={() =>
               setRows((current) => [
                 ...current,
-                { oreCode: "", quantity: "", rawName: null },
+                { oreCode: "", quantity: "", quality: "", rawName: null },
               ])
             }
             className="text-accent-primary hover:text-accent-glow w-fit text-xs transition-colors duration-150"

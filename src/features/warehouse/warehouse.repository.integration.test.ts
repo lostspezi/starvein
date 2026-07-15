@@ -105,4 +105,32 @@ describe("warehouse repository", () => {
 
     await expect(listWarehouseEntriesByOwner(db, USER)).resolves.toEqual([]);
   });
+
+  it("round-trips a qualityRating", async () => {
+    await insertWarehouseEntry(db, makeEntry({ qualityRating: 720 }));
+
+    const found = await findWarehouseEntryById(db, "entry-1");
+    expect(found?.qualityRating).toBe(720);
+  });
+
+  it("reads legacy documents that predate the qualityRating field", async () => {
+    // Simuliert einen Altbestand: direkt eingefügt, ohne qualityRating.
+    await db.collection("warehouseEntries").insertOne({
+      id: "legacy",
+      ownerUserId: USER,
+      oreCode: "QUAN",
+      kind: "raw",
+      quantityScu: 12,
+      location: {
+        kind: "custom",
+        label: "im Schiff",
+      },
+      createdAt: "2026-07-10T10:00:00.000Z",
+      updatedAt: "2026-07-10T10:00:00.000Z",
+    });
+
+    const entries = await listWarehouseEntriesByOwner(db, USER);
+    expect(entries).toHaveLength(1);
+    expect(entries[0].qualityRating).toBeUndefined();
+  });
 });

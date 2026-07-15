@@ -70,6 +70,7 @@ export default async function RefineryJobsPage({
       oreCode: item.oreCode,
       oreName: oreNames.get(item.oreCode) ?? item.oreCode,
       quantityScu: item.quantityScu,
+      qualityRating: item.qualityRating,
     }));
   }
 
@@ -93,6 +94,8 @@ export default async function RefineryJobsPage({
           {jobItems(job).map((item) => (
             <span key={item.oreCode} className="font-mono text-xs">
               {item.oreName} · {item.quantityScu} SCU
+              {item.qualityRating != null &&
+                ` · ${t("card.quality", { value: item.qualityRating })}`}
             </span>
           ))}
         </div>

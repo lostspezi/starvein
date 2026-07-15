@@ -89,6 +89,7 @@
       "oreLabel": "Erz",
       "orePlaceholder": "Erz wählen …",
       "quantityLabel": "Menge (SCU)",
+      "qualityLabel": "Qualität (0–1000)",
       "addItem": "+ Erz hinzufügen",
       "removeItem": "Zeile entfernen",
       "durationLabel": "Dauer (Minuten)",
