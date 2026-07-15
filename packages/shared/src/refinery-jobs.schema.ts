@@ -6,8 +6,13 @@ export const JOB_MAX_DURATION_MINUTES = 14 * 24 * 60;
 
 const oreCode = z.string().regex(/^[A-Z]{2,5}$/);
 const quantityScu = z.number().positive().max(100_000);
+/**
+ * Qualität eines Erzes/Materials (0–1000, am Refinery-Terminal ablesbar).
+ * Optional, damit bestehende Job-Dokumente ohne das Feld weiter lesbar sind.
+ */
+const qualityRating = z.number().int().min(0).max(1000).optional();
 
-const refineryJobItemSchema = z.object({ oreCode, quantityScu });
+const refineryJobItemSchema = z.object({ oreCode, quantityScu, qualityRating });
 
 /**
  * Ein getrackter Raffinerie-Auftrag. terminalName/starSystemName sind bei

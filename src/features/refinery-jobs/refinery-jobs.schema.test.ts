@@ -111,4 +111,55 @@ describe("collectJobInputSchema", () => {
       }).success,
     ).toBe(false);
   });
+
+  it("accepts a qualityRating on transfer items", () => {
+    expect(
+      collectJobInputSchema.safeParse({
+        transfer: [{ oreCode: "QUAN", quantityScu: 28.5, qualityRating: 640 }],
+      }).success,
+    ).toBe(true);
+  });
+});
+
+describe("qualityRating on job items", () => {
+  it("parses items with a qualityRating in range", () => {
+    const job = makeJob({
+      items: [{ oreCode: "QUAN", quantityScu: 32, qualityRating: 850 }],
+    });
+    expect(refineryJobSchema.parse(job)).toEqual(job);
+  });
+
+  it("still parses items without a qualityRating (backward compatible)", () => {
+    const job = makeJob({ items: [{ oreCode: "QUAN", quantityScu: 32 }] });
+    expect(refineryJobSchema.safeParse(job).success).toBe(true);
+    expect(refineryJobSchema.parse(job).items[0].qualityRating).toBeUndefined();
+  });
+
+  it("accepts the boundary values 0 and 1000", () => {
+    for (const qualityRating of [0, 1000]) {
+      const job = makeJob({
+        items: [{ oreCode: "QUAN", quantityScu: 32, qualityRating }],
+      });
+      expect(refineryJobSchema.safeParse(job).success).toBe(true);
+    }
+  });
+
+  it("rejects out-of-range and non-integer qualityRating", () => {
+    for (const qualityRating of [-1, 1001, 12.5]) {
+      const job = makeJob({
+        items: [{ oreCode: "QUAN", quantityScu: 32, qualityRating }],
+      });
+      expect(refineryJobSchema.safeParse(job).success).toBe(false);
+    }
+  });
+
+  it("accepts a nested qualityRating through the input schema", () => {
+    const parsed = refineryJobInputSchema.safeParse({
+      terminalId: 32,
+      methodCode: "DINYX",
+      items: [{ oreCode: "QUAN", quantityScu: 32, qualityRating: 500 }],
+      durationMinutes: 90,
+    });
+    expect(parsed.success).toBe(true);
+  });
 });
