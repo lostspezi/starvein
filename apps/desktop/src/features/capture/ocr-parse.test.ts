@@ -7,6 +7,15 @@ import setupFixture from "./__fixtures__/refinery-setup-dede.json";
 const SETUP_LINES = setupFixture as OcrLine[];
 const PROCESSING_LINES = processingFixture as OcrLine[];
 
+/** Item ohne sourceY — für Assertions, die nur Name/Menge/Qualität prüfen. */
+function core(items: ReturnType<typeof parseWorkOrder>["items"]) {
+  return items.map(({ oreName, quantityScu, qualityRating }) => ({
+    oreName,
+    quantityScu,
+    qualityRating,
+  }));
+}
+
 /**
  * Synthetische Fixtures nach dem bekannten Aufbau des Refinery-Terminals
  * (Materialzeile: Name + Menge, Fußzeilen: Processing Time / Methode).
@@ -25,7 +34,7 @@ const EN_TERMINAL = [
 describe("parseWorkOrder", () => {
   it("extracts material rows with SCU quantities", () => {
     const parsed = parseWorkOrder(EN_TERMINAL);
-    expect(parsed.items).toEqual([
+    expect(core(parsed.items)).toEqual([
       { oreName: "Quantainium", quantityScu: 32, qualityRating: null },
       { oreName: "Laranite", quantityScu: 12.5, qualityRating: null }, // 1.250 cSCU → 12,5 SCU
     ]);
@@ -42,7 +51,7 @@ describe("parseWorkOrder", () => {
 
   it("parses German decimal quantities", () => {
     const parsed = parseWorkOrder(["Hadanit 1.234,5 SCU"]);
-    expect(parsed.items).toEqual([
+    expect(core(parsed.items)).toEqual([
       { oreName: "Hadanit", quantityScu: 1234.5, qualityRating: null },
     ]);
   });
@@ -101,7 +110,7 @@ describe("parseWorkOrder on real terminal captures", () => {
   it("reconstructs the material table of the SETUP screen", () => {
     const parsed = parseWorkOrder(SETUP_LINES);
 
-    expect(parsed.items).toEqual([
+    expect(core(parsed.items)).toEqual([
       { oreName: "TITANIUM (ORE)", quantityScu: 0.63, qualityRating: 295 },
       { oreName: "TITANIUM (ORE)", quantityScu: 0.76, qualityRating: 516 },
       { oreName: "ASLARITE (RAW)", quantityScu: 0.13, qualityRating: 575 },
@@ -123,7 +132,7 @@ describe("parseWorkOrder on real terminal captures", () => {
   it("reconstructs the material table of the PROCESSING screen", () => {
     const parsed = parseWorkOrder(PROCESSING_LINES);
 
-    expect(parsed.items).toEqual([
+    expect(core(parsed.items)).toEqual([
       { oreName: "TITANIUM", quantityScu: 0.63, qualityRating: 295 },
       { oreName: "TITANIUM", quantityScu: 0.76, qualityRating: 516 },
       { oreName: "ASLARITE", quantityScu: 0.13, qualityRating: 575 },
@@ -195,7 +204,7 @@ describe("parseWorkOrder keeps partial rows", () => {
     ];
 
     const parsed = parseWorkOrder(lines);
-    expect(parsed.items).toEqual([
+    expect(core(parsed.items)).toEqual([
       { oreName: "TITANIUM", quantityScu: 0.63, qualityRating: 295 },
       { oreName: "AGRICIUM", quantityScu: null, qualityRating: 588 },
     ]);
@@ -208,7 +217,7 @@ describe("parseWorkOrder keeps partial rows", () => {
     ];
 
     const parsed = parseWorkOrder(lines);
-    expect(parsed.items).toEqual([
+    expect(core(parsed.items)).toEqual([
       { oreName: "QUANTAINIUM", quantityScu: null, qualityRating: 720 },
     ]);
   });
@@ -222,6 +231,25 @@ describe("parseWorkOrder keeps partial rows", () => {
     ];
 
     expect(parseWorkOrder(lines).items).toEqual([]);
+  });
+});
+
+describe("parseWorkOrder sourceY", () => {
+  it("tags each table row with the y of its name line (cross-frame merge key)", () => {
+    const lines: OcrLine[] = [
+      TABLE_HEADER,
+      ...materialRow("TITANIUM", 40, 295, 63),
+      ...materialRow("AGRICIUM", 93, 588, 21),
+    ];
+
+    const parsed = parseWorkOrder(lines);
+    // centerY = name.y + height/2 (14/2 = 7)
+    expect(parsed.items.map((item) => item.sourceY)).toEqual([47, 100]);
+  });
+
+  it("leaves sourceY null for plain string input without coordinates", () => {
+    const parsed = parseWorkOrder(["Quantainium 32 SCU"]);
+    expect(parsed.items[0].sourceY).toBeNull();
   });
 });
 
@@ -251,7 +279,7 @@ describe("parseWorkOrder with word coordinates", () => {
     ];
 
     const parsed = parseWorkOrder(rows);
-    expect(parsed.items).toEqual([
+    expect(core(parsed.items)).toEqual([
       { oreName: "Quantainium", quantityScu: 32, qualityRating: 850 },
     ]);
   });

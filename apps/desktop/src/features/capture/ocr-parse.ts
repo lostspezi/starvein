@@ -17,6 +17,12 @@ export type ParsedItem = {
    * nach). Nur mit Wort-Koordinaten möglich; reiner Text ergibt null.
    */
   qualityRating: number | null;
+  /**
+   * Bildschirm-y-Mitte der Namenszeile — stabiler Schlüssel, um dieselbe
+   * Tabellenzeile über mehrere Frames hinweg zuzuordnen (merge-work-orders.ts).
+   * Null bei reinem String-Input (kein Koordinaten-Layout).
+   */
+  sourceY: number | null;
 };
 
 /** Roh-Zeilen: entweder nur Text oder mit Wort-Koordinaten (ocr.rs). */
@@ -283,6 +289,7 @@ function tableItems(lines: OcrLine[], table: MaterialTable): ParsedItem[] {
       oreName: name,
       quantityScu: quantity === null ? null : quantity.value / 100,
       qualityRating: quality === null ? null : quality.value,
+      sourceY: rowCenterY,
     });
   }
   return items;
@@ -335,6 +342,7 @@ export function parseWorkOrder(input: InputLine[]): ParsedWorkOrder {
             oreName,
             quantityScu: value * UNIT_FACTOR[unit.toLowerCase()],
             qualityRating: extractQuality(line, qualityColumnX),
+            sourceY: null,
           });
           continue;
         }
