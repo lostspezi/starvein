@@ -14,7 +14,10 @@ fn run_capture_pipeline() -> Result<ocr::OcrCapture, String> {
     // das Frontend merged sie per Voting (robuster gegen Verleser). Ein
     // Frame ohne OCR-Ergebnis wird toleriert, solange mindestens einer bleibt.
     let captured = capture::capture_frames()?;
-    let source = captured.first().map(|frame| frame.source).unwrap_or("monitor");
+    let source = captured
+        .first()
+        .map(|frame| frame.source)
+        .unwrap_or("monitor");
     let max = ocr::max_image_dimension();
 
     let mut frames: Vec<Vec<ocr::OcrLine>> = Vec::with_capacity(captured.len());

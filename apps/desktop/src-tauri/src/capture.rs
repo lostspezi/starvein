@@ -173,7 +173,10 @@ mod tests {
     #[test]
     fn collect_frames_errors_on_empty() {
         let results: Vec<Result<i32, String>> = vec![];
-        assert_eq!(collect_frames(results), Err("no frames captured".to_string()));
+        assert_eq!(
+            collect_frames(results),
+            Err("no frames captured".to_string())
+        );
     }
 
     #[test]
