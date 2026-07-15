@@ -69,6 +69,16 @@ läuft komplett im Companion-Prozess, der Tastendruck wird unverändert
 ans Spiel weitergereicht. Nebeneffekt: Kollisionen mit Hotkeys anderer
 Programme gibt es nicht mehr.
 
+## OCR-Sprachpaket
+
+Die Texterkennung nutzt bevorzugt die englische Windows-OCR-Engine
+(Spieltexte sind englisch) und fällt sonst auf die Profilsprache zurück —
+die de-DE-Engine liest englische Terminals brauchbar, aber mit mehr
+Verlesern (QUALITY→OUALITY, 575→S7S; der Parser normalisiert die
+häufigsten). Für beste Ergebnisse das englische Sprachpaket installieren:
+Einstellungen → Zeit und Sprache → Sprache & Region → „Englisch
+(Vereinigte Staaten)" hinzufügen (Texterkennung-Feature genügt).
+
 ## Bekannte Stolperfalle: Spiel läuft als Administrator
 
 Läuft der RSI Launcher (und damit Star Citizen) mit Admin-Rechten, blockiert

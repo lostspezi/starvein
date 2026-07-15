@@ -76,13 +76,15 @@ const CAPTURE: OcrCapture = {
   ],
 };
 
-function renderForm(overrides: { onCreated?: () => void } = {}) {
+function renderForm(
+  overrides: { onCreated?: () => void; capture?: OcrCapture } = {},
+) {
   const onCreated = overrides.onCreated ?? vi.fn();
   render(
     <IntlProvider locale="en" messages={messages.en}>
       <CaptureConfirmForm
         token="tok-1"
-        capture={CAPTURE}
+        capture={overrides.capture ?? CAPTURE}
         ores={ORES}
         terminals={TERMINALS}
         methods={METHODS}
@@ -107,6 +109,27 @@ describe("CaptureConfirmForm", () => {
     expect(screen.getByDisplayValue("12.5")).toBeInTheDocument();
     expect(screen.getByLabelText("Refinery method")).toHaveValue("DINYX");
     expect(screen.getByLabelText("Duration (minutes)")).toHaveValue(125);
+  });
+
+  it("preselects the terminal matched from the station header", () => {
+    renderForm({
+      capture: {
+        ...CAPTURE,
+        // OCR-Verleser der de-DE-Engine: "ARC-L1" wird als "ARC-LI" gelesen.
+        lines: [
+          ...CAPTURE.lines,
+          { text: "ARC-LI WIDE FOREST STATION", words: [] },
+        ],
+      },
+    });
+
+    expect(screen.getByLabelText("Refinery terminal")).toHaveValue("32");
+  });
+
+  it("leaves the terminal unselected when no station line matches", () => {
+    renderForm();
+
+    expect(screen.getByLabelText("Refinery terminal")).toHaveValue("");
   });
 
   it("submits the confirmed job to the API", async () => {

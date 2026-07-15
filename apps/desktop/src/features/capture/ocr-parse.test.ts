@@ -1,6 +1,11 @@
 import { describe, expect, it } from "vitest";
 import { parseWorkOrder } from "./ocr-parse";
 import type { OcrLine } from "../../lib/tauri";
+import processingFixture from "./__fixtures__/refinery-processing-dede.json";
+import setupFixture from "./__fixtures__/refinery-setup-dede.json";
+
+const SETUP_LINES = setupFixture as OcrLine[];
+const PROCESSING_LINES = processingFixture as OcrLine[];
 
 /**
  * Synthetische Fixtures nach dem bekannten Aufbau des Refinery-Terminals
@@ -83,6 +88,68 @@ const HEADER_LINE: OcrLine = {
   text: "MATERIAL QUANTITY QUALITY",
   words: [word("MATERIAL", 10), word("QUANTITY", 200), word("QUALITY", 400)],
 };
+
+/**
+ * Echte OCR-Dumps (Windows-OCR, de-DE-Engine) von den Refinery-Terminals
+ * ARC-L1, SC 4.x — Ground Truth siehe Screenshots vom 15.07.2026. Das
+ * Terminal rendert Materialname und Zahlenspalten so weit auseinander,
+ * dass die OCR sie als separate Zeilen liefert; die Zuordnung muss über
+ * Wort-Koordinaten laufen. Enthält typische Verleser der deutschen
+ * Engine: QUALITY→OUALITY, QTY→OTY, 575→S7S, 0→o.
+ */
+describe("parseWorkOrder on real terminal captures", () => {
+  it("reconstructs the material table of the SETUP screen", () => {
+    const parsed = parseWorkOrder(SETUP_LINES);
+
+    expect(parsed.items).toEqual([
+      { oreName: "TITANIUM (ORE)", quantityScu: 0.63, qualityRating: 295 },
+      { oreName: "TITANIUM (ORE)", quantityScu: 0.76, qualityRating: 516 },
+      { oreName: "ASLARITE (RAW)", quantityScu: 0.13, qualityRating: 575 },
+      { oreName: "AGRICIUM (ORE)", quantityScu: 0.21, qualityRating: 588 },
+    ]);
+  });
+
+  it("parses the minutes-and-seconds processing time of the SETUP screen", () => {
+    // "PROCESSING TIME 50m 27s" → aufgerundet 51 Minuten
+    expect(parseWorkOrder(SETUP_LINES).durationMinutes).toBe(51);
+  });
+
+  it("keeps station and method lines available for downstream matching", () => {
+    const parsed = parseWorkOrder(SETUP_LINES);
+    expect(parsed.unmatched).toContain("ARC-LI WIDE FOREST STATION");
+    expect(parsed.unmatched).toContain("Dinyx Solventation");
+  });
+
+  it("reconstructs the material table of the PROCESSING screen", () => {
+    const parsed = parseWorkOrder(PROCESSING_LINES);
+
+    expect(parsed.items).toEqual([
+      { oreName: "TITANIUM", quantityScu: 0.63, qualityRating: 295 },
+      { oreName: "TITANIUM", quantityScu: 0.76, qualityRating: 516 },
+      { oreName: "ASLARITE", quantityScu: 0.13, qualityRating: 575 },
+      { oreName: "AGRICIUM", quantityScu: 0.21, qualityRating: 588 },
+    ]);
+    expect(parsed.durationMinutes).toBe(51);
+  });
+
+  it("never turns inert materials or sidebar rows into items", () => {
+    for (const lines of [SETUP_LINES, PROCESSING_LINES]) {
+      const names = parseWorkOrder(lines).items.map((item) => item.oreName);
+      expect(names.join(" ")).not.toMatch(/INERT/i);
+      expect(names.join(" ")).not.toMatch(/Iron|Corundum|Quartz|Laranite/i);
+    }
+  });
+});
+
+describe("parseWorkOrder duration formats", () => {
+  it("parses minutes-and-seconds and hours-minutes-seconds", () => {
+    expect(parseWorkOrder(["TIME REMAINING 50m 17s"]).durationMinutes).toBe(51);
+    expect(parseWorkOrder(["PROCESSING TIME 1h 30m 20s"]).durationMinutes).toBe(
+      91,
+    );
+    expect(parseWorkOrder(["PROCESSING TIME 45m 0s"]).durationMinutes).toBe(45);
+  });
+});
 
 describe("parseWorkOrder with word coordinates", () => {
   it("associates a quality value from the QUALITY column to its row", () => {
