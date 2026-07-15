@@ -17,6 +17,8 @@ import deModeration from "@/features/moderation/messages/de.json";
 import enModeration from "@/features/moderation/messages/en.json";
 import deFavorites from "@/features/favorites/messages/de.json";
 import enFavorites from "@/features/favorites/messages/en.json";
+import deGuides from "@/features/guides/messages/de.json";
+import enGuides from "@/features/guides/messages/en.json";
 import deHome from "@/features/home/messages/de.json";
 import enHome from "@/features/home/messages/en.json";
 import deSwitcher from "@/features/i18n-switcher/messages/de.json";
@@ -64,6 +66,7 @@ const messages = {
     ...deChat,
     ...deModeration,
     ...deLoadouts,
+    ...deGuides,
     ...deWarehouse,
     ...deRefineryJobs,
   },
@@ -86,6 +89,7 @@ const messages = {
     ...enChat,
     ...enModeration,
     ...enLoadouts,
+    ...enGuides,
     ...enWarehouse,
     ...enRefineryJobs,
   },

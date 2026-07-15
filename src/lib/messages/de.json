@@ -31,8 +31,15 @@
       "title": "Mining-Loadouts",
       "description": "Community-Mining-Loadouts für Star Citizen: Laser, Module und Gadgets für Prospector, MOLE und mehr."
     },
+    "guides": {
+      "title": "Mining-Guides",
+      "description": "Community-Mining-Guides für Star Citizen: wo und wie man mint, mit Bildern und Video-Walkthroughs."
+    },
     "favorites": { "title": "Favoriten" },
     "myLoadouts": { "title": "Meine Loadouts" },
+    "myGuides": { "title": "Meine Guides" },
+    "newGuide": { "title": "Guide schreiben" },
+    "editGuide": { "title": "Guide bearbeiten" },
     "newLoadout": { "title": "Neues Loadout" },
     "myWarehouse": { "title": "Mein Lager" },
     "myRefineryJobs": { "title": "Meine Raffinerie-Jobs" },
@@ -54,6 +61,7 @@
       "signatures": "Signaturen",
       "compare": "Vergleich",
       "loadouts": "Loadouts",
+      "guides": "Guides",
       "companion": "Companion"
     },
     "disclaimer": {

@@ -1,0 +1,78 @@
+{
+  "guides": {
+    "title": "Mining Guides",
+    "subtitle": "Community-written guides for ship, ROC and FPS mining — write your own and share it.",
+    "browse": {
+      "createCta": "Write a guide",
+      "empty": "No guides yet. Be the first to write one!",
+      "noResults": "No guides match your search.",
+      "searchLabel": "Search guides",
+      "searchPlaceholder": "Search title, description and content…",
+      "resultsCount": "{count, plural, one {# guide} other {# guides}}"
+    },
+    "filter": {
+      "tagsLabel": "Filter by tag",
+      "sortLabel": "Sort",
+      "clear": "Clear filters"
+    },
+    "sort": {
+      "new": "Newest",
+      "title": "A–Z"
+    },
+    "card": {
+      "private": "Private",
+      "public": "Public",
+      "outdated": "Patch {patchVersion}"
+    },
+    "editor": {
+      "createTitle": "Write a guide",
+      "editTitle": "Edit guide",
+      "titleLabel": "Title",
+      "titlePlaceholder": "e.g. Mining Quantainium in the Aaron Halo",
+      "descriptionLabel": "Short description (optional)",
+      "descriptionPlaceholder": "One or two sentences shown in the guide list.",
+      "tagsLabel": "Tags",
+      "tagsPlaceholder": "mining, quantainium, roc",
+      "tagsHint": "Comma-separated, up to 8 tags.",
+      "isPublicLabel": "Make this guide public",
+      "contentLabel": "Guide content",
+      "submitCreate": "Publish guide",
+      "submitSave": "Save changes",
+      "loginRequired": "Sign in with Discord to write and edit guides. Reading stays free.",
+      "error": "The guide could not be saved. Check your input and try again.",
+      "uploading": "Uploading image…",
+      "imageUploadError": "The image could not be uploaded. Use a PNG, JPEG, WebP or GIF under 5 MB.",
+      "linkPrompt": "Link URL (http/https)",
+      "youtubePrompt": "YouTube video URL",
+      "youtubeInvalid": "That does not look like a valid YouTube URL.",
+      "toolbar": {
+        "bold": "Bold",
+        "italic": "Italic",
+        "strike": "Strikethrough",
+        "code": "Inline code",
+        "heading2": "Heading",
+        "heading3": "Subheading",
+        "bulletList": "Bullet list",
+        "orderedList": "Numbered list",
+        "blockquote": "Quote",
+        "codeBlock": "Code block",
+        "link": "Insert link",
+        "image": "Insert image",
+        "youtube": "Embed YouTube video",
+        "undo": "Undo",
+        "redo": "Redo"
+      }
+    },
+    "mine": {
+      "title": "My guides",
+      "subtitle": "Your private drafts and published guides.",
+      "empty": "You have not written any guides yet.",
+      "loginRequired": "Sign in with Discord to see your guides.",
+      "edit": "Edit",
+      "delete": "Delete",
+      "confirmDelete": "Delete this guide permanently?",
+      "publish": "Publish",
+      "unpublish": "Make private"
+    }
+  }
+}
