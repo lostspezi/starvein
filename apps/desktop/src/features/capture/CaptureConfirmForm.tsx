@@ -6,8 +6,9 @@ import type {
   RefineryTerminal,
 } from "@starvein/shared/refinery-catalog";
 import { ApiError, createRefineryJob } from "../../lib/api";
-import type { OcrCapture } from "../../lib/tauri";
-import { fuzzyBestMatch } from "./fuzzy-match";
+import { captureFrames, type OcrCapture } from "../../lib/tauri";
+import { fuzzyBestMatch, type MatchCandidate } from "./fuzzy-match";
+import { mergeWorkOrders } from "./merge-work-orders";
 import { parseWorkOrder } from "./ocr-parse";
 import { matchTerminal } from "./terminal-match";
 
@@ -19,6 +20,25 @@ type ItemRow = {
 };
 
 type SubmitError = "missingTerminal" | "invalid" | "rateLimited" | "protocol";
+
+/**
+ * Bester Erz-Treffer über alle Namensfragmente einer Zeile (Laufschrift
+ * zeigt pro Frame ein anderes Teilstück). Global kleinster Fuzzy-Score
+ * gewinnt — ein sauberes Teilstück schlägt ein verrauschtes.
+ */
+function bestOreFromFragments(
+  fragments: string[],
+  candidates: MatchCandidate[],
+): { key: string; score: number } | null {
+  let best: { key: string; score: number } | null = null;
+  for (const fragment of fragments) {
+    const match = fuzzyBestMatch(fragment, candidates);
+    if (match && (best === null || match.score < best.score)) {
+      best = match;
+    }
+  }
+  return best;
+}
 
 function prefill(
   capture: OcrCapture,
@@ -32,9 +52,9 @@ function prefill(
   duration: string;
   leftovers: string[];
 } {
-  // Ganze OcrLine[] (inkl. Wort-Koordinaten) weiterreichen, damit die
-  // Qualitätsspalte per Layout erkannt werden kann.
-  const parsed = parseWorkOrder(capture.lines);
+  // Jeden Frame einzeln parsen (Layout/Koordinaten pro Frame) und über
+  // Voting zusammenführen — robuster gegen Glow/Animation/Laufschrift.
+  const parsed = mergeWorkOrders(captureFrames(capture).map(parseWorkOrder));
 
   const oreCandidates = ores.map((ore) => ({
     key: ore.code,
@@ -43,19 +63,22 @@ function prefill(
   const rows: ItemRow[] = [];
   const leftovers: string[] = [];
   for (const item of parsed.items) {
-    const match = fuzzyBestMatch(item.oreName, oreCandidates);
+    // Laufschrift: über alle beobachteten Namensfragmente matchen und den
+    // global besten Treffer nehmen. Der endliche Erz-Katalog macht schon
+    // ein ausreichend vollständiges Teilstück eindeutig.
+    const match = bestOreFromFragments(item.fragments, oreCandidates);
     if (match) {
       rows.push({
         oreCode: match.key,
         // Fehlende Menge → leeres Feld; der Nutzer trägt sie nach.
         quantity: item.quantityScu === null ? "" : String(item.quantityScu),
         quality: item.qualityRating === null ? "" : String(item.qualityRating),
-        rawName: item.oreName,
+        rawName: item.fragments[0] ?? null,
       });
     } else {
       const quantityLabel =
         item.quantityScu === null ? "?" : String(item.quantityScu);
-      leftovers.push(`${item.oreName} (${quantityLabel} SCU)`);
+      leftovers.push(`${item.fragments[0] ?? "?"} (${quantityLabel} SCU)`);
     }
   }
 
