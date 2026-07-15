@@ -52,13 +52,26 @@ function renderScreen() {
   );
 }
 
+function mockCommands(overrides: Record<string, unknown> = {}) {
+  const defaults: Record<string, unknown> = {
+    get_capture_shortcut: { shortcut: "ctrl+alt+r", registered: true },
+    get_game_elevation_status: { gameRunning: false, hotkeyBlocked: false },
+  };
+  invoke.mockImplementation((command: unknown) => {
+    const commands = { ...defaults, ...overrides };
+    if (typeof command === "string" && command in commands) {
+      const value = commands[command];
+      return value instanceof Error
+        ? Promise.reject(value.message)
+        : Promise.resolve(value);
+    }
+    return Promise.resolve(undefined);
+  });
+}
+
 beforeEach(() => {
   invoke.mockReset();
-  invoke.mockImplementation((command: unknown) =>
-    command === "get_capture_shortcut"
-      ? Promise.resolve({ shortcut: "ctrl+alt+r", registered: true })
-      : Promise.resolve(undefined),
-  );
+  mockCommands();
   saveSetting.mockClear();
   enableAutostart.mockClear();
   openDialog.mockReset();
@@ -85,11 +98,7 @@ describe("SettingsScreen", () => {
   });
 
   it("reports a combination taken by another application and keeps the old one", async () => {
-    invoke.mockImplementation((command: unknown) =>
-      command === "get_capture_shortcut"
-        ? Promise.resolve({ shortcut: "ctrl+alt+r", registered: true })
-        : Promise.reject("unavailable"),
-    );
+    mockCommands({ set_capture_shortcut: new Error("unavailable") });
     renderScreen();
 
     await recordHotkey("KeyJ");
@@ -103,11 +112,7 @@ describe("SettingsScreen", () => {
   });
 
   it("reports an unsupported combination", async () => {
-    invoke.mockImplementation((command: unknown) =>
-      command === "get_capture_shortcut"
-        ? Promise.resolve({ shortcut: "ctrl+alt+r", registered: true })
-        : Promise.reject("invalid"),
-    );
+    mockCommands({ set_capture_shortcut: new Error("invalid") });
     renderScreen();
 
     await recordHotkey("KeyJ");
@@ -119,11 +124,9 @@ describe("SettingsScreen", () => {
   });
 
   it("warns when the active hotkey is not registered in the system", async () => {
-    invoke.mockImplementation((command: unknown) =>
-      command === "get_capture_shortcut"
-        ? Promise.resolve({ shortcut: "ctrl+alt+r", registered: false })
-        : Promise.resolve(undefined),
-    );
+    mockCommands({
+      get_capture_shortcut: { shortcut: "ctrl+alt+r", registered: false },
+    });
     renderScreen();
 
     expect(
@@ -131,6 +134,31 @@ describe("SettingsScreen", () => {
         "The hotkey Ctrl+Alt+R could not be registered — another application is probably using it. Record a different one.",
       ),
     ).toBeVisible();
+  });
+
+  it("warns when Star Citizen runs elevated and would block the hotkey", async () => {
+    mockCommands({
+      get_game_elevation_status: { gameRunning: true, hotkeyBlocked: true },
+    });
+    renderScreen();
+
+    expect(
+      await screen.findByText(
+        "Star Citizen is running as administrator — the hotkey will not fire in-game. Run the Companion as administrator or start the RSI Launcher without admin rights.",
+      ),
+    ).toBeVisible();
+  });
+
+  it("shows no elevation warning when the game does not block the hotkey", async () => {
+    mockCommands({
+      get_game_elevation_status: { gameRunning: true, hotkeyBlocked: false },
+    });
+    renderScreen();
+
+    await screen.findByRole("button", { name: "Capture hotkey" });
+    expect(
+      screen.queryByText(/running as administrator/),
+    ).not.toBeInTheDocument();
   });
 
   it("toggles autostart", async () => {
