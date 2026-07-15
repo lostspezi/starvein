@@ -152,10 +152,8 @@ unsafe extern "system" fn hook_proc(code: i32, wparam: WPARAM, lparam: LPARAM) -
                         }
                     }
                 }
-                WM_KEYUP | WM_SYSKEYUP => {
-                    if event.vkCode == hotkey.vk {
-                        HELD.store(false, Ordering::SeqCst);
-                    }
+                WM_KEYUP | WM_SYSKEYUP if event.vkCode == hotkey.vk => {
+                    HELD.store(false, Ordering::SeqCst);
                 }
                 _ => {}
             }
