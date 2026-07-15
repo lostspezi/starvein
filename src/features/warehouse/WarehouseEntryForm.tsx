@@ -6,22 +6,27 @@ import { useRouter } from "@/i18n/navigation";
 import { Button } from "@/lib/components/ui/Button";
 import { Combobox } from "@/lib/components/ui/Combobox";
 import { Panel } from "@/lib/components/ui/Panel";
+import {
+  buildLocationInput,
+  emptyLocationDraft,
+  isLocationDraftValid,
+} from "./location-input";
+import {
+  LocationPicker,
+  type BodyOption,
+  type SystemOption,
+  type TerminalOption,
+} from "./LocationPicker";
 
 const inputClass =
   "w-full rounded border border-bg-nebula-2 bg-bg-void px-3 py-1.5 text-sm transition-all duration-150 placeholder:text-text-muted focus:border-accent-primary focus:outline-none";
 
 type OreOption = { code: string; name: string };
-type SystemOption = { code: string; name: string };
-type BodyOption = { systemCode: string; slug: string; name: string };
-type TerminalOption = { terminalId: number; terminalName: string };
-
-type LocationKind = "celestialBody" | "terminal" | "custom";
 
 /**
- * Inline-Formular zum Anlegen eines Lager-Eintrags. Erz, Himmelskörper
- * und Terminal werden per Autocomplete (Combobox) gewählt; die
- * Lagerort-Art wechselt per Radio zwischen Himmelskörper,
- * Refinery-Terminal (nur wenn gesynct) und Freitext.
+ * Inline-Formular zum Anlegen eines Lager-Eintrags. Erz wird per
+ * Autocomplete (Combobox) gewählt; die Lagerort-Auswahl übernimmt der
+ * wiederverwendbare {@link LocationPicker}.
  */
 export function WarehouseEntryForm({
   ores,
@@ -42,39 +47,12 @@ export function WarehouseEntryForm({
   const [kind, setKind] = useState<"raw" | "refined">("raw");
   const [quantity, setQuantity] = useState("1");
   const [quality, setQuality] = useState("");
-  const [locationKind, setLocationKind] =
-    useState<LocationKind>("celestialBody");
-  const [bodyValue, setBodyValue] = useState("");
-  const [terminalId, setTerminalId] = useState("");
-  const [customLabel, setCustomLabel] = useState("");
+  const [location, setLocation] = useState(emptyLocationDraft());
   const [note, setNote] = useState("");
   const [busy, setBusy] = useState(false);
   const [failed, setFailed] = useState(false);
 
-  const systemNames = new Map(systems.map((s) => [s.code, s.name]));
   const oreOptions = ores.map((ore) => ({ value: ore.code, label: ore.name }));
-  const bodyOptions = bodies.map((body) => ({
-    value: `${body.systemCode}:${body.slug}`,
-    label: body.name,
-    detail: systemNames.get(body.systemCode) ?? body.systemCode,
-  }));
-  const terminalOptions = terminals.map((terminal) => ({
-    value: String(terminal.terminalId),
-    label: terminal.terminalName,
-  }));
-
-  function buildLocation() {
-    switch (locationKind) {
-      case "celestialBody": {
-        const [systemCode, bodySlug] = bodyValue.split(":");
-        return { kind: "celestialBody", systemCode, bodySlug } as const;
-      }
-      case "terminal":
-        return { kind: "terminal", terminalId: Number(terminalId) } as const;
-      case "custom":
-        return { kind: "custom", label: customLabel.trim() } as const;
-    }
-  }
 
   const quantityScu = Number(quantity);
   const canSubmit =
@@ -82,9 +60,7 @@ export function WarehouseEntryForm({
     oreCode !== "" &&
     Number.isFinite(quantityScu) &&
     quantityScu > 0 &&
-    (locationKind !== "celestialBody" || bodyValue !== "") &&
-    (locationKind !== "terminal" || terminalId !== "") &&
-    (locationKind !== "custom" || customLabel.trim() !== "");
+    isLocationDraftValid(location);
 
   async function submit(event: React.FormEvent) {
     event.preventDefault();
@@ -100,7 +76,7 @@ export function WarehouseEntryForm({
           kind,
           quantityScu,
           ...(quality.trim() !== "" ? { qualityRating: Number(quality) } : {}),
-          location: buildLocation(),
+          location: buildLocationInput(location),
           ...(note.trim() !== "" ? { note: note.trim() } : {}),
         }),
       });
@@ -111,7 +87,7 @@ export function WarehouseEntryForm({
       setQuantity("1");
       setQuality("");
       setNote("");
-      setCustomLabel("");
+      setLocation(emptyLocationDraft(location.kind));
       router.refresh();
     } catch {
       setFailed(true);
@@ -119,17 +95,6 @@ export function WarehouseEntryForm({
       setBusy(false);
     }
   }
-
-  const locationKinds: LocationKind[] = [
-    "celestialBody",
-    ...(terminals.length > 0 ? (["terminal"] as const) : []),
-    "custom",
-  ];
-  const locationKindLabels: Record<LocationKind, string> = {
-    celestialBody: t("locationBody"),
-    terminal: t("locationTerminal"),
-    custom: t("locationCustom"),
-  };
 
   return (
     <Panel className="p-4">
@@ -212,84 +177,14 @@ export function WarehouseEntryForm({
           </div>
         </div>
 
-        <fieldset className="flex flex-col gap-2">
-          <legend className="text-xs text-text-muted">
-            {t("locationKindLabel")}
-          </legend>
-          <div className="flex flex-wrap gap-3 py-1 text-sm">
-            {locationKinds.map((option) => (
-              <label key={option} className="flex items-center gap-1.5">
-                <input
-                  type="radio"
-                  name={`${formId}-location-kind`}
-                  checked={locationKind === option}
-                  onChange={() => setLocationKind(option)}
-                />
-                {locationKindLabels[option]}
-              </label>
-            ))}
-          </div>
-
-          {locationKind === "celestialBody" && (
-            <div className="flex flex-col gap-1">
-              <label
-                htmlFor={`${formId}-body`}
-                className="text-xs text-text-muted"
-              >
-                {t("bodyLabel")}
-              </label>
-              <Combobox
-                id={`${formId}-body`}
-                ariaLabel={t("bodyLabel")}
-                options={bodyOptions}
-                value={bodyValue}
-                onChange={setBodyValue}
-                placeholder={t("searchPlaceholder")}
-                noResultsLabel={t("noMatches")}
-              />
-            </div>
-          )}
-
-          {locationKind === "terminal" && (
-            <div className="flex flex-col gap-1">
-              <label
-                htmlFor={`${formId}-terminal`}
-                className="text-xs text-text-muted"
-              >
-                {t("terminalLabel")}
-              </label>
-              <Combobox
-                id={`${formId}-terminal`}
-                ariaLabel={t("terminalLabel")}
-                options={terminalOptions}
-                value={terminalId}
-                onChange={setTerminalId}
-                placeholder={t("searchPlaceholder")}
-                noResultsLabel={t("noMatches")}
-              />
-            </div>
-          )}
-
-          {locationKind === "custom" && (
-            <div className="flex flex-col gap-1">
-              <label
-                htmlFor={`${formId}-custom`}
-                className="text-xs text-text-muted"
-              >
-                {t("customLabel")}
-              </label>
-              <input
-                id={`${formId}-custom`}
-                type="text"
-                maxLength={80}
-                value={customLabel}
-                placeholder={t("customPlaceholder")}
-                onChange={(event) => setCustomLabel(event.target.value)}
-                className={inputClass}
-              />
-            </div>
-          )}
-        </fieldset>
+        <LocationPicker
+          idPrefix={formId}
+          systems={systems}
+          bodies={bodies}
+          terminals={terminals}
+          value={location}
+          onChange={setLocation}
+        />
 
         <div className="flex flex-col gap-1">
           <label htmlFor={`${formId}-note`} className="text-xs text-text-muted">

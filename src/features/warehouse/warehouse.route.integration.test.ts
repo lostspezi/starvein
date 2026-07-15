@@ -1,6 +1,7 @@
 import { afterAll, describe, expect, it } from "vitest";
 import { POST as CREATE } from "@/app/api/warehouse/route";
 import { DELETE, PATCH } from "@/app/api/warehouse/[id]/route";
+import { POST as MOVE } from "@/app/api/warehouse/[id]/move/route";
 import { closeMongo } from "@/lib/db";
 
 const params = { params: Promise.resolve({ id: "entry-1" }) };
@@ -44,6 +45,21 @@ describe("warehouse API without a session", () => {
     const response = await DELETE(
       new Request("http://localhost/api/warehouse/entry-1", {
         method: "DELETE",
+      }),
+      params,
+    );
+    expect(response.status).toBe(401);
+  });
+
+  it("rejects anonymous moves", async () => {
+    const response = await MOVE(
+      new Request("http://localhost/api/warehouse/entry-1/move", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          location: { kind: "custom", label: "im Schiff" },
+          quantityScu: 5,
+        }),
       }),
       params,
     );

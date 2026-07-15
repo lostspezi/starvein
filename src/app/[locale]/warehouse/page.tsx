@@ -133,6 +133,19 @@ export default async function WarehousePage({
                       quantityScu={entry.quantityScu}
                       qualityRating={entry.qualityRating}
                       note={entry.note ?? ""}
+                      systems={systems.map((system) => ({
+                        code: system.code,
+                        name: system.name,
+                      }))}
+                      bodies={bodies.map((body) => ({
+                        systemCode: body.systemCode,
+                        slug: body.slug,
+                        name: body.name,
+                      }))}
+                      terminals={terminals.map((terminal) => ({
+                        terminalId: terminal.terminalId,
+                        terminalName: terminal.terminalName,
+                      }))}
                     />
                   </li>
                 ))}

@@ -15,6 +15,7 @@ import {
   type WarehouseEntryInput,
   type WarehouseLocation,
   type WarehouseLocationInput,
+  type WarehouseMoveInput,
 } from "./warehouse.schema";
 
 export class WarehouseValidationError extends Error {}
@@ -122,6 +123,63 @@ export async function updateWarehouseEntry(
 
   await replaceWarehouseEntry(db, updated);
   return updated;
+}
+
+/**
+ * Verschiebt einen Eintrag an einen anderen Lagerort. Ohne `quantityScu`
+ * (oder bei voller Menge) zieht der ganze Eintrag um; bei einer Teilmenge
+ * wird der Stack geteilt: ein neuer Eintrag am Ziel plus reduzierter Rest.
+ */
+export async function moveWarehouseEntry(
+  db: Db,
+  userId: string,
+  entryId: string,
+  input: WarehouseMoveInput,
+): Promise<WarehouseEntry> {
+  const existing = await findOwnEntry(db, userId, entryId);
+  const location = await resolveLocation(db, input.location);
+
+  const moved = input.quantityScu ?? existing.quantityScu;
+  if (moved <= 0 || moved > existing.quantityScu) {
+    throw new WarehouseValidationError(
+      `cannot move ${moved} SCU of ${existing.quantityScu} available`,
+    );
+  }
+
+  const now = new Date().toISOString();
+
+  // Voll-Umzug: nur den Lagerort ersetzen, kein Split.
+  if (moved === existing.quantityScu) {
+    const updated = warehouseEntrySchema.parse({
+      ...existing,
+      location,
+      updatedAt: now,
+    });
+    await replaceWarehouseEntry(db, updated);
+    return updated;
+  }
+
+  // Teil-Umzug: neuen Eintrag anlegen, dann Restmenge am Original reduzieren.
+  // Reihenfolge insert→replace wie in collectRefineryJob — ohne Transaktion
+  // ist der schlimmste Fall ein löschbares Duplikat, nie verlorener Bestand.
+  const split = warehouseEntrySchema.parse({
+    ...existing,
+    location,
+    id: randomUUID(),
+    quantityScu: moved,
+    createdAt: now,
+    updatedAt: now,
+  });
+  await insertWarehouseEntry(db, split);
+
+  const remainder = warehouseEntrySchema.parse({
+    ...existing,
+    quantityScu: existing.quantityScu - moved,
+    updatedAt: now,
+  });
+  await replaceWarehouseEntry(db, remainder);
+
+  return split;
 }
 
 export async function deleteWarehouseEntry(

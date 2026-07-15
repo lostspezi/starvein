@@ -37,7 +37,13 @@
       "qualityValue": "Q {value}",
       "noteLabel": "Notiz",
       "raw": "Roh",
-      "refined": "Raffiniert"
+      "refined": "Raffiniert",
+      "move": "Verschieben",
+      "moveHeading": "An anderen Lagerort verschieben",
+      "moveQuantityLabel": "Menge verschieben (SCU)",
+      "moveQuantityHint": "Volle Menge stehen lassen, um alles zu verschieben.",
+      "moveSubmit": "Verschieben",
+      "moveError": "Verschieben fehlgeschlagen — bitte erneut versuchen."
     },
     "group": {
       "totalScu": "{count} SCU gesamt"

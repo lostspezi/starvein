@@ -41,6 +41,11 @@ test("warehouse mutations require a session", async ({ request }) => {
   });
   expect(edit.status()).toBe(401);
 
+  const move = await request.post("/api/warehouse/some-id/move", {
+    data: { location: { kind: "custom", label: "in my ship" }, quantityScu: 5 },
+  });
+  expect(move.status()).toBe(401);
+
   const remove = await request.delete("/api/warehouse/some-id");
   expect(remove.status()).toBe(401);
 });

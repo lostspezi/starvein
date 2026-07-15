@@ -5,6 +5,7 @@ import {
   warehouseEntrySchema,
   warehouseLocationKey,
   warehouseLocationLabel,
+  warehouseMoveInputSchema,
   type WarehouseEntry,
 } from "./warehouse.schema";
 
@@ -146,6 +147,61 @@ describe("warehouseEntryInputSchema", () => {
         quantityScu: 12.5,
         qualityRating: 1500,
         location: { kind: "custom", label: "im Schiff" },
+      }).success,
+    ).toBe(false);
+  });
+});
+
+describe("warehouseMoveInputSchema", () => {
+  it("accepts a location without a quantity (move everything)", () => {
+    const parsed = warehouseMoveInputSchema.safeParse({
+      location: { kind: "custom", label: "im Schiff" },
+    });
+    expect(parsed.success).toBe(true);
+  });
+
+  it("accepts a partial quantity alongside a location", () => {
+    const parsed = warehouseMoveInputSchema.safeParse({
+      location: {
+        kind: "celestialBody",
+        systemCode: "STANTON",
+        bodySlug: "daymar",
+      },
+      quantityScu: 12.5,
+    });
+    expect(parsed.success).toBe(true);
+  });
+
+  it("rejects a denormalized location name", () => {
+    const parsed = warehouseMoveInputSchema.safeParse({
+      location: BODY_LOCATION,
+    });
+    expect(parsed.success).toBe(false);
+  });
+
+  it("rejects zero, negative and missing location", () => {
+    expect(
+      warehouseMoveInputSchema.safeParse({
+        location: { kind: "custom", label: "x" },
+        quantityScu: 0,
+      }).success,
+    ).toBe(false);
+    expect(
+      warehouseMoveInputSchema.safeParse({
+        location: { kind: "custom", label: "x" },
+        quantityScu: -3,
+      }).success,
+    ).toBe(false);
+    expect(warehouseMoveInputSchema.safeParse({ quantityScu: 5 }).success).toBe(
+      false,
+    );
+  });
+
+  it("rejects extra keys", () => {
+    expect(
+      warehouseMoveInputSchema.safeParse({
+        location: { kind: "custom", label: "x" },
+        oreCode: "QUAN",
       }).success,
     ).toBe(false);
   });
