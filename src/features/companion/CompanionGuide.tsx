@@ -1,11 +1,9 @@
 import { useTranslations } from "next-intl";
 import { Badge } from "@/lib/components/ui/Badge";
 import { Panel } from "@/lib/components/ui/Panel";
-import {
-  COMPANION_RELEASES_URL,
-  COMPANION_VERSION,
-  GITHUB_BUG_URL,
-} from "@/lib/site-config";
+import { COMPANION_RELEASES_URL, GITHUB_BUG_URL } from "@/lib/site-config";
+
+export const COMPANION_DOWNLOAD_PATH = "/api/companion/download";
 import {
   ConfirmIllustration,
   HotkeyIllustration,
@@ -25,9 +23,11 @@ const STEP_KEYS = ["login", "hotkey", "confirm", "track"] as const;
 /**
  * Landing-/Anleitungsseite des Desktop-Companions: Beta-Download,
  * Vier-Schritte-Anleitung mit stilisierten HUD-Illustrationen und
- * Sicherheits-/Anforderungshinweise.
+ * Sicherheits-/Anforderungshinweise. `version` kommt vom Server aus dem
+ * neuesten GitHub-Release (Fallback: site-config), der Download-Button
+ * lädt direkt über /api/companion/download herunter.
  */
-export function CompanionGuide() {
+export function CompanionGuide({ version }: { version: string }) {
   const t = useTranslations("companion");
 
   return (
@@ -35,17 +35,13 @@ export function CompanionGuide() {
       {/* Hero mit Download */}
       <section className="flex flex-col gap-4">
         <div className="flex flex-wrap items-center gap-3">
-          <Badge tone="warning">
-            {t("betaBadge", { version: COMPANION_VERSION })}
-          </Badge>
+          <Badge tone="warning">{t("betaBadge", { version })}</Badge>
           <span className="text-text-muted text-sm">{t("platform")}</span>
         </div>
         <p className="text-text-muted max-w-2xl">{t("intro")}</p>
         <div className="flex flex-wrap items-center gap-4">
           <a
-            href={COMPANION_RELEASES_URL}
-            target="_blank"
-            rel="noopener noreferrer"
+            href={COMPANION_DOWNLOAD_PATH}
             className="bg-accent-primary text-bg-void hover:bg-accent-glow hover:shadow-glow-primary rounded px-5 py-2.5 text-sm font-medium transition-all duration-200"
           >
             {t("download")}
@@ -54,6 +50,23 @@ export function CompanionGuide() {
             {t("smartscreenHint")}
           </span>
         </div>
+        <p className="text-text-muted text-xs">
+          <a
+            href={`${COMPANION_DOWNLOAD_PATH}?installer=msi`}
+            className="text-accent-primary hover:text-accent-glow transition-colors duration-150"
+          >
+            {t("downloadMsi")}
+          </a>
+          {" · "}
+          <a
+            href={COMPANION_RELEASES_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-accent-primary hover:text-accent-glow transition-colors duration-150"
+          >
+            {t("allReleases")}
+          </a>
+        </p>
       </section>
 
       {/* Schritt-für-Schritt-Anleitung */}
