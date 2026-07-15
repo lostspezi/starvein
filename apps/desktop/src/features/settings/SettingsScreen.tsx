@@ -17,6 +17,12 @@ type CaptureShortcutStatus = {
   registered: boolean;
 };
 
+/** Spiegelt GameElevationStatus in src-tauri/src/elevation.rs. */
+type GameElevationStatus = {
+  gameRunning: boolean;
+  hotkeyBlocked: boolean;
+};
+
 type HotkeyFeedback = "applied" | "taken" | "invalid" | "failed";
 
 /** Einstellungen (Slice D6): Hotkey, Sprache, Server, Game.log, Autostart. */
@@ -27,18 +33,29 @@ export function SettingsScreen({ onClose }: { onClose: () => void }) {
     null,
   );
   const [hotkeyRegistered, setHotkeyRegistered] = useState(true);
+  const [hotkeyBlockedByGame, setHotkeyBlockedByGame] = useState(false);
   const [serverDraft, setServerDraft] = useState(settings.serverUrl ?? "");
   const activeHotkey = settings.hotkey ?? DEFAULT_HOTKEY;
 
-  // Registrierungsstatus aus Rust: schlägt die Registrierung fehl (z. B.
-  // weil eine andere Anwendung die Kombination hält), passiert das sonst
-  // unsichtbar im Hintergrund.
+  // Status aus Rust: schlägt die Hotkey-Registrierung fehl (z. B. weil
+  // eine andere Anwendung die Kombination hält) oder läuft Star Citizen
+  // mit Adminrechten (UIPI blockiert den Hotkey im Spiel), passiert das
+  // sonst unsichtbar im Hintergrund.
   useEffect(() => {
     let cancelled = false;
     invoke<CaptureShortcutStatus>("get_capture_shortcut")
       .then((status) => {
         if (!cancelled) {
           setHotkeyRegistered(status.registered);
+        }
+      })
+      .catch(() => {
+        // Status nicht abfragbar — keine falsche Warnung anzeigen.
+      });
+    invoke<GameElevationStatus>("get_game_elevation_status")
+      .then((status) => {
+        if (!cancelled) {
+          setHotkeyBlockedByGame(status.hotkeyBlocked);
         }
       })
       .catch(() => {
@@ -120,6 +137,11 @@ export function SettingsScreen({ onClose }: { onClose: () => void }) {
           {!hotkeyRegistered && (
             <p className="text-warning text-xs" role="alert">
               {t("hotkeyInactive", { hotkey: formatCombo(activeHotkey) })}
+            </p>
+          )}
+          {hotkeyBlockedByGame && (
+            <p className="text-warning text-xs" role="alert">
+              {t("gameElevated")}
             </p>
           )}
           {hotkeyFeedback === "applied" && (
