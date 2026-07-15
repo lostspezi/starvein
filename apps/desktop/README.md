@@ -42,6 +42,20 @@ ausführen — `tauri::generate_context!` braucht das `dist/`-Verzeichnis.
   Branding-Compliance-Test** (CLAUDE.md §2) — nie löschen, skippen oder
   abschwächen.
 
+## Auto-Update
+
+Die App prüft beim Start (und über die Einstellungen) gegen
+`https://starvein.app/api/companion/latest.json` — ein Proxy auf das
+`latest.json` des neuesten `desktop-v*`-GitHub-Release. Updates sind
+minisign-signiert (`plugins.updater.pubkey` in `tauri.conf.json`).
+
+- Der Release-Workflow braucht die Repo-Secrets `TAURI_SIGNING_PRIVATE_KEY`
+  und `TAURI_SIGNING_PRIVATE_KEY_PASSWORD`, sonst entstehen keine
+  Updater-Artefakte (`.sig` + `latest.json`).
+- Der private Schlüssel liegt NICHT im Repo (lokal:
+  `%USERPROFILE%\.tauri\starvein-companion.key`) — Backup anlegen! Geht er
+  verloren, können bestehende Installationen keine Updates mehr verifizieren.
+
 ## Bekannte Stolperfalle: Spiel läuft als Administrator
 
 Läuft der RSI Launcher (und damit Star Citizen) mit Admin-Rechten, blockiert
@@ -67,3 +81,7 @@ Nach relevanten Änderungen von Hand prüfen:
 - [ ] Native Benachrichtigung erscheint, wenn ein Job fertig wird
 - [ ] Tray-Verhalten: Close-to-Tray, Wiederherstellen, Single-Instance
 - [ ] Session-Token übersteht App-Neustart (Windows Credential Manager)
+- [ ] Update-Dialog erscheint beim Start, wenn ein neueres Release existiert;
+      "Später" lässt die App normal laufen
+- [ ] Einstellungen: Version wird angezeigt, "Nach Updates suchen" findet
+      neue Releases und installiert per Klick (App startet danach neu)

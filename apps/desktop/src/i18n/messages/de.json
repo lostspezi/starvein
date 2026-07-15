@@ -30,7 +30,20 @@
     "logPathLabel": "Star-Citizen-Game.log (für Standort-Vorschläge)",
     "pickLogFile": "Game.log wählen …",
     "logPathUnset": "Nicht gesetzt",
-    "autostartLabel": "Mit Windows starten"
+    "autostartLabel": "Mit Windows starten",
+    "versionLabel": "Version",
+    "checkUpdates": "Nach Updates suchen",
+    "upToDate": "Companion ist aktuell.",
+    "installUpdate": "Auf {version} aktualisieren",
+    "updateInstalling": "Update wird installiert …",
+    "updateFailed": "Update-Prüfung fehlgeschlagen — bitte später erneut versuchen."
+  },
+  "update": {
+    "title": "Update verfügbar",
+    "available": "Version {version} ist verfügbar — jetzt installieren?",
+    "install": "Jetzt updaten",
+    "later": "Später",
+    "installing": "Update wird installiert …"
   },
   "login": {
     "title": "Mit STARVEIN verbinden",

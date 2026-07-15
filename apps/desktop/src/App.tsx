@@ -6,6 +6,7 @@ import { CaptureFlow } from "./features/capture/CaptureFlow";
 import { JobsPanel } from "./features/jobs/JobsPanel";
 import { LoginScreen } from "./features/login/LoginScreen";
 import { SettingsScreen } from "./features/settings/SettingsScreen";
+import { UpdatePrompt } from "./features/update/UpdatePrompt";
 import { clearSessionToken, getSessionToken } from "./lib/secrets";
 import {
   fetchSessionUser,
@@ -13,6 +14,7 @@ import {
   type SessionUser,
 } from "./lib/session";
 import { onCaptureError, onCaptureResult, type OcrCapture } from "./lib/tauri";
+import { checkForUpdate, type AvailableUpdate } from "./lib/updater";
 
 type AuthState =
   | { phase: "loading" }
@@ -27,6 +29,9 @@ export function App() {
   const [captureError, setCaptureError] = useState<string | null>(null);
   const [jobsVersion, setJobsVersion] = useState(0);
   const [showSettings, setShowSettings] = useState(false);
+  const [availableUpdate, setAvailableUpdate] =
+    useState<AvailableUpdate | null>(null);
+  const [updateBusy, setUpdateBusy] = useState(false);
 
   const adoptToken = useCallback(async (token: string) => {
     const user = await fetchSessionUser(token);
@@ -48,6 +53,38 @@ export function App() {
       await adoptToken(token);
     })();
   }, [adoptToken]);
+
+  // Update-Check beim Start: neue Version gefunden → einmalig fragen;
+  // "Später" oder Fehler lassen die App normal weiterlaufen.
+  useEffect(() => {
+    let cancelled = false;
+    checkForUpdate()
+      .then((update) => {
+        if (!cancelled) {
+          setAvailableUpdate(update);
+        }
+      })
+      .catch(() => {
+        // Offline oder Endpoint nicht erreichbar — still weiterlaufen.
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  async function installUpdate() {
+    if (!availableUpdate) {
+      return;
+    }
+    setUpdateBusy(true);
+    try {
+      // Erfolgreiche Installation startet die App neu (relaunch).
+      await availableUpdate.install();
+    } catch {
+      setUpdateBusy(false);
+      setAvailableUpdate(null);
+    }
+  }
 
   // Hotkey-Erfassungen aus Rust: Ergebnis öffnet das Bestätigungsformular.
   useEffect(() => {
@@ -75,6 +112,14 @@ export function App() {
 
   return (
     <div className="flex h-screen flex-col">
+      {availableUpdate && (
+        <UpdatePrompt
+          version={availableUpdate.version}
+          busy={updateBusy}
+          onInstall={() => void installUpdate()}
+          onDismiss={() => setAvailableUpdate(null)}
+        />
+      )}
       <header className="border-glass-border bg-glass flex items-center justify-between border-b px-4 py-3 backdrop-blur-md">
         <h1 className="text-accent-cyan font-mono text-sm tracking-[0.3em]">
           STARVEIN <span className="text-text-muted">COMPANION</span>
