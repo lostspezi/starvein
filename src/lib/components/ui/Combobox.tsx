@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { cn } from "@/lib/cn";
 
 export type ComboboxOption = {
@@ -43,6 +43,15 @@ export function Combobox({
   const [draft, setDraft] = useState<string | null>(null);
   const [activeIndex, setActiveIndex] = useState(-1);
   const blurTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Offenen Blur-Timer beim Unmount aufräumen — sonst feuert der Callback
+  // ins Leere (setState nach Unmount; in Vitest nach dem Teardown sogar
+  // "window is not defined" als Uncaught Exception).
+  useEffect(() => {
+    return () => {
+      if (blurTimer.current) clearTimeout(blurTimer.current);
+    };
+  }, []);
 
   const selected = options.find((option) => option.value === value);
   const display = draft ?? selected?.label ?? "";
