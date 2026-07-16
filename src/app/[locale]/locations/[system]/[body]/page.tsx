@@ -115,7 +115,7 @@ export default async function BodyPage({
     : false;
 
   return (
-    <PageShell>
+    <PageShell width="wide">
       <Breadcrumbs items={crumbs} />
       <div className="animate-reveal">
         <div className="flex items-center gap-2">
