@@ -1,6 +1,7 @@
 /**
  * Slice-2-Happy-Path: Location-Browser.
- * Voraussetzung: docker compose up -d && pnpm seed (befüllte 'starvein'-DB).
+ * Voraussetzung: docker compose up -d && pnpm seed && pnpm sync:wiki
+ * (befüllte 'starvein'-DB, Bodies/Vorkommen aus dem Wiki-Sync).
  */
 import { expect, test } from "@playwright/test";
 
@@ -48,21 +49,41 @@ test("outpost page shows the full ancestor chain in breadcrumbs", async ({
   await expect(breadcrumbs.getByRole("link", { name: "Wala" })).toBeVisible();
 });
 
-test("system page groups space mining areas and Aaron Halo lists ship ores", async ({
+test("system page groups lagrange clusters and HUR L1 lists ship ores", async ({
   page,
 }) => {
   await page.goto("/en/locations/stanton");
 
   await expect(
-    page.getByRole("heading", { name: "Asteroid belts" }),
-  ).toBeVisible();
-  await expect(
-    page.getByRole("heading", { name: "Asteroid fields & mining bases" }),
+    page.getByRole("heading", { name: "Lagrange points" }),
   ).toBeVisible();
 
-  await page.getByRole("link", { name: /Aaron Halo/ }).click();
-  await expect(page).toHaveURL(/\/en\/locations\/stanton\/aaron-halo$/);
-  await expect(page.getByRole("link", { name: /Quantainium/ })).toBeVisible();
+  await page.getByRole("link", { name: /HUR L1/ }).click();
+  await expect(page).toHaveURL(/\/en\/locations\/stanton\/hur-l1$/);
+  // Lagrange-Cluster tragen eigene Wiki-Vorkommen (z. B. Laranite)
+  const occurrenceRows = page.locator("table tbody tr");
+  await expect(occurrenceRows.first()).toBeVisible();
+});
+
+/**
+ * Regressionstest für den Outpost-Roll-up: Mining-Outposts haben keine
+ * eigenen Ressourcen-Daten — sie erben die Vorkommen des Mutter-Monds
+ * und zeigen das als Hinweis an.
+ */
+test("mining outpost inherits the parent moon's occurrences", async ({
+  page,
+}) => {
+  await page.goto("/en/locations/stanton/arccorp-mining-area-061");
+
+  await expect(
+    page.getByRole("heading", { name: "ArcCorp Mining Area 061" }),
+  ).toBeVisible();
+  await expect(
+    page.getByText(/No local occurrences — showing occurrences of Wala/),
+  ).toBeVisible();
+
+  const occurrenceRows = page.locator("table tbody tr");
+  await expect(occurrenceRows.first()).toBeVisible();
 });
 
 test("unknown system returns 404", async ({ page }) => {

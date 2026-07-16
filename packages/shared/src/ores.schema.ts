@@ -21,6 +21,12 @@ export const oreSchema = z.object({
     roc: z.boolean(),
     fps: z.boolean(),
   }),
+  // Physikalische Eigenschaften aus den Spieldaten (Wiki-Sync) — optional,
+  // damit ältere Dokumente und Desktop-Consumer weiter parsen.
+  density: z.number().positive().optional(),
+  instability: z.number().nonnegative().optional(),
+  // Kann negativ sein (z. B. Kupfer -0.7)
+  resistance: z.number().optional(),
 });
 
 export type Ore = z.infer<typeof oreSchema>;

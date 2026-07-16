@@ -5,7 +5,7 @@
     "sources": [
       "Diftic/SC_Signature_Scanner SignatureValue.md, SC 4.7 (MIT, extrahiert aus Game2.dcb; siehe CREDITS.md)"
     ],
-    "notes": "Ship: Signatur identifiziert das dominante Mineral direkt (SC 4.7 hat das alte Asteroiden-Typ-System ersetzt). ROC/FPS: Signatur codiert nur die Groesse (3000 = FPS-Klein-Deposit, 4000 = ROC/GV-Gross-Deposit), das Mineral ergibt sich aus der Location. Achtung: Signatur 3000 kollidiert mit Capital-Wrack-Truemmern (890 Jump) - Kontext entscheidet.",
+    "notes": "MASSGEBLICHER Datensatz: Der Wiki-Sync fasst signatureProfiles bewusst NICHT an - das signature-Feld der Wiki-API entspricht nicht dem In-Game-Scanner-RS-Wert (2026-07-16 gegen sc-mining-hud und rocksyndicate.com verifiziert, beide identisch mit dieser Tabelle). Der Scanner zeigt die SUMME eines Clusters: Basis-RS x Anzahl Rocks (z. B. 18000 = 5x Bexalite 3600); je niedriger die Basis-RS, desto seltener das Mineral. Ship: Signatur identifiziert das dominante Mineral direkt (SC 4.7 hat das alte Asteroiden-Typ-System ersetzt). ROC/FPS: Signatur codiert nur die Groesse (3000 = FPS-Klein-Deposit, 4000 = ROC/GV-Gross-Deposit, ebenfalls x Anzahl Deposits), das Mineral ergibt sich aus der Location. Achtung: Signatur 3000 kollidiert mit Capital-Wrack-Truemmern (890 Jump) - Kontext entscheidet.",
     "defaults": {
       "patchVersion": "4.7",
       "sourceType": "curated",

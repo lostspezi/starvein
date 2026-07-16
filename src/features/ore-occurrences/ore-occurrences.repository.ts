@@ -95,3 +95,27 @@ export async function upsertOreOccurrences(
     })),
   );
 }
+
+export async function ensureOreOccurrenceIndexes(db: Db): Promise<void> {
+  const collection = db.collection(COLLECTION);
+  await collection.createIndex(
+    { oreCode: 1, systemCode: 1, bodySlug: 1, method: 1, patchVersion: 1 },
+    { unique: true },
+  );
+  await collection.createIndex({ systemCode: 1, bodySlug: 1 });
+}
+
+/**
+ * Entfernt alle Rows, die der aktuelle Wiki-Sync nicht angefasst hat
+ * (jede gesyncte Row trägt lastVerifiedAt = syncedAt des Laufs) — räumt
+ * alte curated-Rows und Vorpatch-Bestände ab.
+ */
+export async function pruneOreOccurrencesNotSyncedAt(
+  db: Db,
+  syncedAt: string,
+): Promise<number> {
+  const result = await db
+    .collection(COLLECTION)
+    .deleteMany({ lastVerifiedAt: { $ne: syncedAt } });
+  return result.deletedCount;
+}

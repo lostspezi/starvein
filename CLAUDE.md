@@ -42,8 +42,7 @@ das die Community selbst aktuell hält.
 4. Signatur-Referenz: worauf man beim Scannen achten muss, getrennt nach Methode (siehe 6.2 für
    die fachlichen Unterschiede).
 5. Refinery-Yield & Verkaufspreise pro Erz (aus UEX Corp API gesynct).
-6. Community-Korrekturen mit Wiki-Style-Voting (kein Admin-Gate nötig).
-7. Login (Discord/Twitch/Google) fürs Speichern von Favoriten/Routen — v1 minimal, Ausbau später.
+6. Login (Discord/Twitch/Google) fürs Speichern von Favoriten/Routen — v1 minimal, Ausbau später.
 
 **Nicht in v1** (siehe Abschnitt 15): Routenplanung/Optimierung, Preis-Alerts, Mobile App,
 Moderations-Backoffice, eigene p4k-Datenextraktion.
@@ -83,7 +82,7 @@ immer mitgeführt werden, da er die von RSI vorgegebene Formulierung ist.
   suggerieren.
 - **Kein Paywall, keine Pflicht-Registrierung fürs Grundangebot, keine kommerzielle Nutzung** —
   das Referenz-Browsing muss immer kostenlos und ohne Account nutzbar sein (Login nur für
-  Favoriten/Submissions, siehe Abschnitt 8). Keine Werbung, die den fandomischen Charakter
+  Favoriten & Co., siehe Abschnitt 8). Keine Werbung, die den fandomischen Charakter
   verwässert.
 - Keine copyrightgeschützten Inhalte 1:1 übernehmen (keine Lore-Texte, keine Artworks, keine
   Screenshots aus dem Spiel). Erznamen, Zahlenwerte, Wahrscheinlichkeiten sind Fakten/Spieldaten,
@@ -172,20 +171,21 @@ Game-Update nicht stillschweigend falsch angezeigt werden.
 starSystems
   _id, code ("STANTON" | "PYRO"), name, status ("live" | "ptu")
 
-celestialBodies
-  _id, systemId, type ("planet" | "moon" | "lagrangePoint" | "spaceStation"
-                        | "outpost" | "asteroidBelt" | "cave"),
-  name, parentBodyId (für Monde), uexLocationId (Mapping für Sync)
+celestialBodies         # wiki-gesynct (siehe 6.2), Prune bei jedem Sync
+  _id, slug, systemCode, type ("planet" | "moon" | "lagrangePoint" | "spaceStation"
+                        | "outpost" | "asteroidBelt" | "asteroidField" | "cave"),
+  name, parentSlug (Hierarchie), wikiUuid (Join für Occurrence-Sync), uexId (optional, Altbestand)
 
-ores
+ores                    # wiki-gesynct; Codes über data/curated/ore-codes.json gemappt
   _id, code (4-Buchstaben-Code wie UEX, z. B. "QUAN", "BEXA" — siehe Liste unten),
   name_de, name_en, rarityTier ("common".."legendary"),
-  mineableBy: { ship: bool, roc: bool, fps: bool }
+  mineableBy: { ship: bool, roc: bool, fps: bool },
+  density?, instability?, resistance?   # physikalische Werte aus den Spieldaten
 
-oreOccurrences        # das Herzstück: WO mit welcher WAHRSCHEINLICHKEIT
-  _id, locationId, oreId, method ("ship" | "roc" | "fps"),
-  probabilityPercent (0-100), patchVersion,
-  sourceType ("curated" | "community"), confidenceScore, lastVerifiedAt
+oreOccurrences          # das Herzstück: WO mit welcher WAHRSCHEINLICHKEIT — wiki-gesynct
+  _id, oreCode, systemCode, bodySlug, method ("ship" | "roc" | "fps"),
+  probabilityPercent (0-100, group_probability), relativeProbabilityPercent?,
+  patchVersion, sourceType ("curated" | "wiki"), confidenceScore, lastVerifiedAt
 
 signatureProfiles      # WORAUF beim Scannen achten — Semantik unterscheidet sich je Methode!
   _id, oreId, method, patchVersion,
@@ -201,13 +201,6 @@ priceSnapshots           # aus UEX gesynct, Redis-gecacht, kurze TTL
 
 user / session / account / verification   # Standard-Collections des Better-Auth MongoDB-Adapters
   user zusätzlich: role ("user" | "moderator" | "admin"), favorites: [{ locationId, note }]
-
-submissions              # Community-Korrekturen
-  _id, targetType ("oreOccurrence" | "signatureProfile"),
-  targetId (null bei Neuanlage), proposedChange (Partial<...>),
-  submittedBy (userId), createdAt,
-  votes: { up: number, down: number }, voters: [{ userId, value: 1 | -1 }],
-  confidenceScore, status ("pending" | "accepted" | "rejected")
 
 patchVersions
   _id, version ("4.8.0"), releasedAt, isCurrent
@@ -236,57 +229,60 @@ etc.), beim Seeding gegen die aktuelle UEX-`items`-Liste abgleichen.
 
 ## 6. Datenquellen-Strategie
 
-### 6.1 UEX Corp API 2.0
+### 6.1 UEX Corp API 2.0 (nur Preise & Refinery)
 
 - Basis: `https://uexcorp.space/api/` — kostenloser API-Key über "My Apps" auf uexcorp.space.
-- Liefert: Locations pro System/Planet/Mond/POI, Refinery-Yields & -Methoden, Rohstoff- &
-  Verkaufspreise, Terminals, Systeme/Planeten/Monde/Stationen als Stammdaten.
-- Liefert **nicht**: Scan-Signaturwerte, Gesteinszusammensetzung — dafür Abschnitt 6.2.
+- Liefert für STARVEIN: Refinery-Yields & -Methoden, Rohstoff- & Verkaufspreise, Terminals,
+  Equipment-Preise. Erze/Locations/Vorkommen kommen **nicht** mehr von UEX (siehe 6.2).
 - Sync-Strategie: Ein serverseitiger Sync-Job (per Cron/Route Handler mit Secret-Header
   getriggert, kein User-Request löst Sync direkt aus) zieht periodisch Preise & Yields, schreibt
   nach MongoDB, invalidiert den Redis-Cache. Preis-Endpunkte im Read-Pfad werden aus Redis bedient
   (kurze TTL, z. B. 15 Minuten), nicht live gegen UEX bei jedem Seitenaufruf.
-- Vor Implementierung des Sync-Clients: exakte Endpunkt-/Feldnamen live gegen die Doku prüfen,
+- Vor Änderungen am Sync-Client: exakte Endpunkt-/Feldnamen live gegen die Doku prüfen,
   nicht aus dieser Datei übernehmen (API kann sich geändert haben).
 
-### 6.2 Kuratiertes Signatur-/Wahrscheinlichkeits-Dataset
+### 6.2 Star Citizen Wiki API v3 (Erze, Locations, Vorkommen, Signaturen, Blueprints)
 
-Es gibt keine öffentliche API für Signaturwerte und Fundwahrscheinlichkeiten — diese Daten stecken
-in `Game2.dcb` innerhalb des `Data.p4k` und werden von der Community patchweise per
-Reverse-Engineering extrahiert. Referenzquellen für den Start-Datensatz:
+Primärquelle für die Mining-Referenz ist die **Star Citizen Wiki API**
+(`https://api.star-citizen.wiki`, Doku: `https://docs.star-citizen.wiki`, kein Key nötig) —
+sie extrahiert die Spieldaten (`Game2.dcb` aus `Data.p4k`) patchweise automatisch:
 
-- `github.com/Diftic/SC_Signature_Scanner` (**MIT-Lizenz**) — `SignatureValue.md` mit
-  Signaturwerten je Mineral, getrennt nach Ship/ROC/FPS, inkl. Kompositionsfenstern.
-- `github.com/RainbowRamen/sc-mining-hud` — RS-Wert-Tabelle für alle 26 Erze (4.7-Stand).
+- `GET /api/commodities` (+ Detail pro Slug): Mineables mit Rarity-Tier, Signaturwert,
+  Instabilität/Resistenz/Dichte, Mining-Methoden und **Fundorten inkl. Wahrscheinlichkeiten**
+  (`group_probability_percent` = angezeigter Wert, `relative_probability_percent` zusätzlich
+  gespeichert).
+- `GET /api/locations`: Starmap-Locations mit Parent-Hierarchie — gesynct werden nur
+  mining-relevante Klassifikationen (Planet, Moon, Outpost, Asteroid mit Ressourcen;
+  Lagrange-Cluster wie "HUR L1" firmieren im Wiki als "Asteroid" und werden per
+  Namens-Heuristik zu `lagrangePoint`).
+- `GET /api/blueprints`: Crafting-Blueprints inkl. Zutaten (→ Materialkatalog).
 
-Diese Werte als **initialen Seed** für `signatureProfiles` verwenden (Attribution in
-`CREDITS.md`), aber `sourceType: "curated"` und `confidenceScore` niedrig genug ansetzen, dass
-Community-Bestätigungen sie im Laufe der Zeit hochstufen können. Bei jedem Game-Patch mit
-Mining-Änderungen: neuen `patchVersions`-Eintrag anlegen, alte Werte nicht überschreiben, sondern
-als historisch markieren (`isCurrent: false`).
+Sync-Pipeline: `runFullWikiSync` (`src/lib/run-wiki-sync.ts`) = Locations → Mining-Daten →
+Blueprints, getriggert über `pnpm sync:wiki` bzw. `POST /api/sync-wiki` mit `x-sync-secret`.
+Die Collections `celestialBodies`, `ores`, `oreOccurrences` sind vollständig wiki-geführt
+(Prune bei jedem Sync); `sourceType` kennt `"curated" | "wiki"`.
 
-### 6.3 Community-Korrekturen & Vote-Konfidenz-System
+**Ore-Codes:** Die 4-Buchstaben-Codes (QUAN, BEXA, …) bleiben die stabile Identität (keyen
+UEX-Preise und Desktop-OCR). `data/curated/ore-codes.json` mappt Wiki-Commodity-Keys auf
+Codes; unbekannte Wiki-Mineables werden geloggt und übersprungen — niemals Auto-Codes
+vergeben, sondern das Mapping erweitern.
 
-Wiki-Style, kein Admin-Gate:
+**Signaturen bleiben kuratiert (Wiki liefert hier falsche Werte!):** Das `signature`-Feld
+der Wiki-API entspricht **nicht** dem In-Game-Scanner-RS-Wert (verifiziert 2026-07-16:
+sc-mining-hud und rocksyndicate.com führen identische, von der Community in-game bestätigte
+Tabellen, die vom Wiki-Feld abweichen — z. B. Stileron real 3185, Wiki 4700). Der Wiki-Sync
+fasst `signatureProfiles` deshalb nie an; Quelle ist ausschließlich
+`data/curated/signature-profiles.json` (Ursprung Diftic/SC_Signature_Scanner, MIT,
+Attribution in `CREDITS.md`). Mechanik: Der Scanner zeigt die **Summe** eines Clusters
+(Basis-RS × Rock-Anzahl, z. B. 18.000 = 5 × Bexalite 3.600); je niedriger die Basis-RS,
+desto seltener das Mineral. ROC/FPS analog: 4.000 bzw. 3.000 × Deposit-Anzahl.
 
-- Eingeloggte Nutzer können Korrekturen zu `oreOccurrences` oder `signatureProfiles` einreichen
-  → landet als `submissions`-Dokument mit `status: "pending"`.
-  - Bei neuen Vorschlägen für einen **bestehenden** Datensatz: Original bleibt sichtbar,
-    Vorschlag wird daneben mit "vorgeschlagene Änderung"-Badge angezeigt.
-  - Bei **neuen** Fundorten/Signaturen: sofort sichtbar, aber mit "unbestätigt"-Badge, bis genug
-    Stimmen vorliegen.
-- Jeder eingeloggte Nutzer kann pro Submission einmal up-/downvoten (1 Stimme/User, per
-  `voters`-Array durchgesetzt; zusätzlich Rate-Limiting über Redis gegen Spam).
-- **Confidence Score = Wilson-Score-Lower-Bound** (klassischer "Best"-Sortieralgorithmus,
-  z. B. wie früher bei Reddit) statt simpler `up - down`-Differenz — verhindert, dass 2 Upvotes ohne
-  Downvotes höher gewichtet werden als 40 Upvotes bei 5 Downvotes.
-- Schwellwerte (Startwerte, später tunen): Score ≥ 0,7 bei ≥ 5 Stimmen → `status: "accepted"`,
-  Daten werden in die reguläre `oreOccurrences`/`signatureProfiles`-Collection übernommen
-  (`sourceType: "community"`). Score ≤ 0,2 bei ≥ 5 Stimmen → `status: "rejected"`, ausgeblendet.
-  Dazwischen: bleibt `pending`, sichtbar mit Badge.
-- Kuratierte (`sourceType: "curated"`) Einträge können ebenfalls Downvotes/Korrekturvorschläge
-  bekommen und werden bei starkem Community-Widerspruch als "umstritten" markiert — auch offizielle
-  Startdaten sind nicht unfehlbar.
+### 6.3 Community-Korrekturen (entfernt)
+
+Das ursprünglich geplante Submissions-/Voting-System (Wiki-Style-Korrekturen mit
+Wilson-Score) wurde im Juli 2026 wieder entfernt: Vorkommen, Signaturen und Locations kommen
+seitdem direkt aus den Spieldaten via Star Citizen Wiki API (siehe 6.2) und brauchen keine
+manuelle Community-Verifikation mehr. `sourceType` kennt nur noch `"curated" | "wiki"`.
 
 ---
 
@@ -395,9 +391,9 @@ export const auth = betterAuth({
 });
 ```
 
-- v1-Nutzung: nur zum Speichern von Favoriten (Locations/Routen merken) und zum Einreichen/Voten
-  von Community-Korrekturen. Kein Zwangs-Login zum reinen Browsen der Referenzdaten (siehe
-  Branding-Pflicht in Abschnitt 2 — Grundangebot muss ohne Account nutzbar bleiben).
+- v1-Nutzung: Speichern von Favoriten (Locations/Routen merken) sowie nutzergebundene Features
+  wie Loadouts, Guides und Warehouse. Kein Zwangs-Login zum reinen Browsen der Referenzdaten
+  (siehe Branding-Pflicht in Abschnitt 2 — Grundangebot muss ohne Account nutzbar bleiben).
 - Rollen: `user` (Standard). Rollenmodell so anlegen, dass `moderator`/`admin` später ergänzbar
   ist, ohne Schema-Migration (`role` als `additionalField` am User-Objekt, default `"user"`).
 - Sessions: Better Auth verwaltet Sessions standardmäßig DB-gestützt mit Cookie-Cache
@@ -435,14 +431,13 @@ starvein/                            # pnpm-Workspace; die Web-App liegt im Repo
 │   │   ├── ore-occurrences/
 │   │   ├── signature-profiles/
 │   │   ├── refinery-and-prices/
-│   │   ├── favorites/
-│   │   └── submissions/
+│   │   └── favorites/
 │   ├── lib/
 │   │   ├── db.ts                   # Mongo-Connection-Singleton
 │   │   ├── redis.ts
 │   │   ├── auth.ts                 # Better-Auth-Konfiguration (siehe Abschnitt 8)
 │   │   ├── uex-client.ts           # UEX-API-Client
-│   │   ├── confidence-score.ts     # Wilson-Score-Berechnung
+│   │   ├── scwiki-client.ts        # Star-Citizen-Wiki-API-Client (siehe Abschnitt 6.2)
 │   │   └── components/
 │   │       └── SiteFooter.tsx      # Footer mit Pflicht-Disclaimer + Links, siehe Abschnitt 2 — im Root-Layout eingebunden
 │   └── test/
@@ -503,9 +498,7 @@ Sync-Job + Redis-Caching, UI zeigt Yield/Preis pro Erz inkl. "zuletzt synchronis
 Login (Discord/Twitch/Google), Location als Favorit speichern/entfernen, Favoriten-Liste im
 Nutzerprofil.
 
-**Slice 7 — Community-Korrekturen & Voting**
-Einreichen-Formular, Up-/Downvote, Wilson-Score-Berechnung, Status-Badges
-(verified/unverified/disputed), Übernahme in Hauptdaten bei erreichtem Schwellwert.
+**Slice 7 — Community-Korrekturen & Voting** _(implementiert, später wieder entfernt — siehe 6.3)_
 
 **Slice 8 — Deployment-Pipeline**
 `Dockerfile`, `docker-compose.prod.yml`, `Caddyfile`, Cloudflare-Konfiguration (Abschnitt 13),
@@ -590,7 +583,7 @@ Voraussetzung.
 
 ## 14. Testing-Strategie im Detail
 
-- **Unit-Tests (Vitest):** reine Funktionen ohne I/O — Wilson-Score-Berechnung, Zod-Validatoren,
+- **Unit-Tests (Vitest):** reine Funktionen ohne I/O — Mapping-Funktionen, Zod-Validatoren,
   Formatierungs-Helper.
 - **Integration-Tests (Vitest + `mongodb-memory-server`):** Repository- und Route-Handler-Tests
   gegen eine echte (In-Memory-)Mongo-Instanz, kein Mocking der DB-Schicht — Vertrauen in echtes
@@ -624,6 +617,7 @@ Voraussetzung.
 ## 16. Quellen & Links
 
 - **RSI Fansite-Policy (bindend, siehe Abschnitt 2):** https://support.robertsspaceindustries.com/hc/en-us/articles/360006895793-Star-Citizen-Fankit-and-Fandom-FAQ
+- **Star Citizen Wiki API v3 (Primärquelle, siehe 6.2):** https://docs.star-citizen.wiki/ (Swagger; Spec: https://api.star-citizen.wiki/api/openapi)
 - UEX Corp API 2.0: https://uexcorp.space/api/documentation/
 - UEX Mining-Locations-Übersicht: https://uexcorp.space/mining/locations
 - Signaturwerte (MIT-Lizenz): https://github.com/Diftic/SC_Signature_Scanner

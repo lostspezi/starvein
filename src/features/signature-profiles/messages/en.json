@@ -2,15 +2,16 @@
   "signatures": {
     "title": "Signature Reference",
     "shipTitle": "Ship mining (Prospector / MOLE)",
-    "shipExplainer": "In ship mining the scan signature identifies the dominant mineral directly — one value, one mineral. Rocks additionally contain secondary minerals.",
+    "shipExplainer": "In ship mining the scan signature identifies the dominant mineral directly — one value, one mineral. Rocks additionally contain secondary minerals. The scanner shows the sum of a cluster: base signature × number of rocks (e.g. 18,000 = 5 × Bexalite 3,600). The lower the base signature, the rarer the mineral.",
     "groundTitle": "ROC & FPS mining (ground deposits)",
-    "groundExplainer": "For ground deposits the signature only indicates the size of the deposit — it does not identify the mineral. Each cluster is 100% one single mineral; which one depends on the location.",
+    "groundExplainer": "For ground deposits the signature only indicates the size of the deposit — it does not identify the mineral. Each cluster is 100% one single mineral; which one depends on the location. The scanner sums here too (e.g. 8,000 = 2 ROC deposits).",
     "groundFpsLabel": "Small deposit (FPS / hand mining)",
     "groundRocLabel": "Large deposit (ROC / ground vehicle)",
     "groundMineralsTitle": "Possible ground deposit minerals",
     "collisionNote": "Note: signature 3000 is shared with capital wreck debris (890 Jump class) — context decides: planet surface = deposit, open space = debris.",
     "oreInfoTitle": "Scan signature",
     "oreGroundNote": "The signature does not identify the mineral — check the location's mineral list instead.",
+    "oreClusterHint": "Cluster: {x2} (×2) · {x3} (×3) · {x4} (×4) — the scanner shows base signature × rock count.",
     "table": {
       "mineral": "Mineral",
       "signature": "Signature",

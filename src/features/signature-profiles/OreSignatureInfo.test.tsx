@@ -44,6 +44,17 @@ describe("OreSignatureInfo", () => {
     expect(screen.getByText("40–80%")).toBeVisible();
   });
 
+  it("shows cluster multiples for the ship signature", () => {
+    renderWithIntl(<OreSignatureInfo profiles={[shipProfile]} />, {
+      locale: "en",
+    });
+
+    // Der In-Game-Scanner zeigt Basis-RS × Rock-Anzahl (3170 × 2/3/4)
+    expect(
+      screen.getByText(/6,340.*9,510.*12,680/, { exact: false }),
+    ).toBeVisible();
+  });
+
   it("explains size-only semantics for ground minerals", () => {
     renderWithIntl(<OreSignatureInfo profiles={groundProfiles} />, {
       locale: "en",

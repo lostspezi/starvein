@@ -22,8 +22,10 @@ test("method filter narrows rows via URL state", async ({ page }) => {
   await methodGroup.getByRole("button", { name: "ROC" }).click();
 
   await expect(page).toHaveURL(/method=roc/);
+  // 15s: Der nuqs-Roundtrip (shallow:false) rendert serverseitig neu —
+  // unter paralleler e2e-Last dauert das länger als die 5s-Default-Poll.
   await expect
-    .poll(async () => page.locator("tbody tr").count())
+    .poll(async () => page.locator("tbody tr").count(), { timeout: 15_000 })
     .toBeLessThan(allCount);
   expect(await page.locator("tbody tr").count()).toBeGreaterThan(0);
 });
@@ -38,14 +40,20 @@ test("ore select narrows to one ore", async ({ page }) => {
     await expect(page).toHaveURL(/ore=QUAN/, { timeout: 2000 });
   }).toPass();
   await expect
-    .poll(async () => {
-      const hrefs = await page
-        .locator("tbody tr td:first-child a")
-        .evaluateAll((links) => links.map((link) => link.getAttribute("href")));
-      return (
-        hrefs.length > 0 && hrefs.every((href) => href?.endsWith("/ores/quan"))
-      );
-    })
+    .poll(
+      async () => {
+        const hrefs = await page
+          .locator("tbody tr td:first-child a")
+          .evaluateAll((links) =>
+            links.map((link) => link.getAttribute("href")),
+          );
+        return (
+          hrefs.length > 0 &&
+          hrefs.every((href) => href?.endsWith("/ores/quan"))
+        );
+      },
+      { timeout: 15_000 },
+    )
     .toBe(true);
 });
 
@@ -59,15 +67,20 @@ test("system filter narrows to Pyro", async ({ page }) => {
 
   await expect(page).toHaveURL(/system=PYRO/);
   await expect
-    .poll(async () => {
-      const hrefs = await page
-        .locator("tbody tr td:nth-child(2) a")
-        .evaluateAll((links) => links.map((link) => link.getAttribute("href")));
-      return (
-        hrefs.length > 0 &&
-        hrefs.every((href) => href?.includes("/locations/pyro/"))
-      );
-    })
+    .poll(
+      async () => {
+        const hrefs = await page
+          .locator("tbody tr td:nth-child(2) a")
+          .evaluateAll((links) =>
+            links.map((link) => link.getAttribute("href")),
+          );
+        return (
+          hrefs.length > 0 &&
+          hrefs.every((href) => href?.includes("/locations/pyro/"))
+        );
+      },
+      { timeout: 15_000 },
+    )
     .toBe(true);
 });
 

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { syncWikiBlueprints } from "@/features/blueprints/blueprints.sync";
+import { runFullWikiSync } from "@/lib/run-wiki-sync";
 import { getDb } from "@/lib/db";
 
 export const dynamic = "force-dynamic";
@@ -18,5 +18,5 @@ export async function POST(request: Request) {
   }
 
   const db = await getDb();
-  return NextResponse.json(await syncWikiBlueprints(db));
+  return NextResponse.json(await runFullWikiSync(db));
 }

@@ -3,14 +3,10 @@ import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { FavoriteButton } from "@/features/favorites/FavoriteButton";
 import { isFavorite } from "@/features/favorites/favorites.repository";
-import { findAllOres } from "@/features/ores/ores.repository";
-import { SubmissionsPanel } from "@/features/submissions/SubmissionsPanel";
-import { findDisputedKeys } from "@/features/submissions/disputed";
-import { listSubmissionsForLocation } from "@/features/submissions/submissions.service";
 import { getSessionUserId } from "@/lib/session";
 import { LocationOccurrencesTable } from "@/features/ore-occurrences/LocationOccurrencesTable";
 import { MethodFilter } from "@/features/ore-occurrences/MethodFilter";
-import { findOccurrencesByLocationWithOre } from "@/features/ore-occurrences/ore-occurrences.service";
+import { findOccurrencesWithInheritance } from "@/features/ore-occurrences/ore-occurrences.service";
 import { MINING_METHODS, type MiningMethod } from "@/features/ores/ores.schema";
 import { parseEnumParam } from "@/lib/search-params";
 import { BodyList } from "@/features/locations/BodyList";
@@ -105,10 +101,11 @@ export default async function BodyPage({
 
   const sp = await searchParams;
   const method = parseEnumParam<MiningMethod>(sp.method, MINING_METHODS);
-  const occurrences = await findOccurrencesByLocationWithOre(
+  // Outposts/Höhlen haben keine eigenen Vorkommen — Roll-up vom Parent-Body
+  const { occurrences, inheritedFrom } = await findOccurrencesWithInheritance(
     db,
     system.code,
-    body.slug,
+    body,
     method,
   );
 
@@ -116,12 +113,6 @@ export default async function BodyPage({
   const favorited = userId
     ? await isFavorite(db, userId, system.code, body.slug)
     : false;
-
-  const [submissions, allOres] = await Promise.all([
-    listSubmissionsForLocation(db, system.code, body.slug),
-    findAllOres(db),
-  ]);
-  const disputedKeys = findDisputedKeys(submissions);
 
   return (
     <PageShell>
@@ -143,19 +134,13 @@ export default async function BodyPage({
 
       <h2 className="text-lg font-medium">{t("occurrences.atLocation")}</h2>
       <MethodFilter />
-      <LocationOccurrencesTable
-        occurrences={occurrences}
-        disputedKeys={disputedKeys}
-      />
+      {inheritedFrom && (
+        <p className="text-sm text-text-muted">
+          {t("occurrences.inheritedFrom", { name: inheritedFrom.name })}
+        </p>
+      )}
+      <LocationOccurrencesTable occurrences={occurrences} />
       <p className="text-xs text-text-muted">{t("occurrences.disclaimer")}</p>
-
-      <SubmissionsPanel
-        systemCode={system.code}
-        bodySlug={body.slug}
-        initialSubmissions={submissions}
-        ores={allOres}
-        isAuthenticated={userId !== null}
-      />
 
       {children.length > 0 && (
         <>

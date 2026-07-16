@@ -3,6 +3,7 @@
     "whereToFind": "Fundorte",
     "atLocation": "Vorkommen",
     "empty": "Noch keine bekannten Vorkommen.",
+    "inheritedFrom": "Keine eigenen Vorkommen — angezeigt werden die Vorkommen von {name}.",
     "table": {
       "location": "Location",
       "ore": "Erz",
@@ -16,6 +17,6 @@
       "unverified": "unbestätigt",
       "verified": "bestätigt"
     },
-    "disclaimer": "Wahrscheinlichkeiten sind vorläufige kuratierte Schätzwerte und warten auf Community-Bestätigung."
+    "disclaimer": "Wahrscheinlichkeiten stammen aus den Spieldaten (Star Citizen Wiki) und können sich mit jedem Patch ändern."
   }
 }

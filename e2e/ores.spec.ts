@@ -24,8 +24,8 @@ test("rarity filter narrows the list via URL state", async ({ page }) => {
   await expect(page.getByText("Quantainium")).not.toBeVisible();
 });
 
-test("method filter shows only ROC minables", async ({ page }) => {
-  await page.goto("/en/ores?method=roc");
+test("method filter shows only FPS minables", async ({ page }) => {
+  await page.goto("/en/ores?method=fps");
 
   await expect(page.getByText("Hadanite")).toBeVisible();
   await expect(page.getByText("Quantainium")).not.toBeVisible();

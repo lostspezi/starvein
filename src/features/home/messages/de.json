@@ -2,7 +2,7 @@
   "home": {
     "title": "STARVEIN",
     "tagline": "Community-Mining-Referenz für Star Citizen — Erze, Fundorte, Scan-Signaturen.",
-    "searchLabel": "Erze, Fundorte und Blueprints finden",
+    "searchLabel": "Erze, Fundorte, Blueprints und Signaturen finden",
     "bento": {
       "heading": "Community-Loadouts",
       "featured": "Top bewertet",
@@ -28,7 +28,8 @@
       "oreLabel": "Erz",
       "oreAll": "Alle Erze",
       "priceHeader": "Bester Verkauf (raffiniert)",
-      "empty": "Keine Vorkommen für diese Filter."
+      "empty": "Keine Vorkommen für diese Filter.",
+      "truncated": "Zeigt die Top {shown} von {total} Vorkommen — mit den Filtern eingrenzen."
     }
   }
 }

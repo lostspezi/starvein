@@ -21,7 +21,7 @@ const fileSchema = z.object({
     notes: z.string().optional(),
     defaults: z.object({
       patchVersion: z.string(),
-      sourceType: z.enum(["curated", "community"]),
+      sourceType: z.literal("curated"),
       confidenceScore: z.number(),
     }),
   }),
