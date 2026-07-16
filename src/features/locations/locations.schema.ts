@@ -33,7 +33,10 @@ export const celestialBodySchema = z.object({
   type: z.enum(BODY_TYPES),
   name: z.string().min(1),
   parentSlug: slug.nullable(),
-  uexId: z.number().int().positive(),
+  // Historisches UEX-Mapping — Wiki-gesyncte Bodies haben keins mehr.
+  uexId: z.number().int().positive().optional(),
+  // Starmap-UUID des Wikis: Join-Schlüssel für den Occurrence-Sync.
+  wikiUuid: z.string().optional(),
 });
 
 export type StarSystem = z.infer<typeof starSystemSchema>;

@@ -33,3 +33,18 @@ export async function upsertOres(db: Db, ores: Ore[]): Promise<void> {
     })),
   );
 }
+
+export async function ensureOreIndexes(db: Db): Promise<void> {
+  await db.collection(COLLECTION).createIndex({ code: 1 }, { unique: true });
+}
+
+/** Entfernt Erze, die der Wiki-Sync nicht mehr liefert. */
+export async function pruneOresNotIn(
+  db: Db,
+  keepCodes: string[],
+): Promise<number> {
+  const result = await db
+    .collection(COLLECTION)
+    .deleteMany({ code: { $nin: keepCodes } });
+  return result.deletedCount;
+}

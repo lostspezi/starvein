@@ -2,7 +2,7 @@
   "home": {
     "title": "STARVEIN",
     "tagline": "Community mining reference for Star Citizen — ores, locations, scan signatures.",
-    "searchLabel": "Find ores, locations and blueprints",
+    "searchLabel": "Find ores, locations, blueprints and signatures",
     "bento": {
       "heading": "Community loadouts",
       "featured": "Top voted",
@@ -28,7 +28,8 @@
       "oreLabel": "Ore",
       "oreAll": "All ores",
       "priceHeader": "Best sell (refined)",
-      "empty": "No occurrences match these filters."
+      "empty": "No occurrences match these filters.",
+      "truncated": "Showing the top {shown} of {total} occurrences — use the filters to narrow down."
     }
   }
 }

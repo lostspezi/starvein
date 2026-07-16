@@ -3,17 +3,19 @@
 STARVEIN baut auf Daten und Vorarbeiten der Star-Citizen-Community auf:
 
 - **[Diftic/SC_Signature_Scanner](https://github.com/Diftic/SC_Signature_Scanner)** (MIT-Lizenz, Autor: Mallachi) —
-  Grundlage für die Ship/ROC/FPS-Zuordnung der Minerale, die Rarity-Tiers der
-  Ship-Erze und (ab Slice 4) die Scan-Signaturwerte. Extrahiert aus
+  Grundlage für die kuratierten Signatur-Fallbacks (Erze ohne Wiki-Signaturwert,
+  z. B. Quantainium) sowie die Kompositionsfenster der Ship-Erze. Extrahiert aus
   `Game2.dcb` (SC 4.7).
-- **[UEX Corp](https://uexcorp.space/)** — Erz-Codes, Namen und Preisdaten über
-  die UEX API 2.0.
+- **[UEX Corp](https://uexcorp.space/)** — Erz-Codes sowie Preis- und
+  Refinery-Daten über die UEX API 2.0.
 - **[Star Citizen Wiki](https://star-citizen.wiki)** ([API](https://docs.star-citizen.wiki),
-  Inhalte CC BY-SA 4.0, Code MIT) — **einzige Quelle für die Crafting-Blueprints**
+  Inhalte CC BY-SA 4.0, Code MIT) — Primärquelle der Mining-Referenz:
+  Erz-Katalog inkl. Rarity und Signaturwerten (`/api/commodities`),
+  Starmap-Locations (`/api/locations`), Fundort-Wahrscheinlichkeiten
+  (Commodity-Details) und **einzige Quelle für die Crafting-Blueprints**
   (`/api/blueprints`): Rezepte, Zutatenmengen, Fertigungszeiten und
   Output-Typen, versioniert je Game-Version. Daraus wird auch der
-  Materialkatalog abgeleitet. Wird per `pnpm sync:wiki` synchronisiert; UEX
-  führt keine Blueprint-/Rezeptdaten.
+  Materialkatalog abgeleitet. Wird per `pnpm sync:wiki` synchronisiert.
 - **[RainbowRamen/sc-mining-hud](https://github.com/RainbowRamen/sc-mining-hud)** —
   Referenz für RS-Wert-Tabellen.
 - **[RegolithCo/RegolithCo-Common](https://github.com/RegolithCo/RegolithCo-Common)** (MIT-Lizenz) —

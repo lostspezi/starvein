@@ -76,7 +76,7 @@ test("the hero search on the home page finds blueprints too", async ({
   await page.goto("/en");
 
   const hero = page.getByRole("combobox", {
-    name: "Find ores, locations and blueprints",
+    name: "Find ores, locations, blueprints and signatures",
   });
   await expect(async () => {
     await hero.fill("");
@@ -87,6 +87,27 @@ test("the hero search on the home page finds blueprints too", async ({
   await expect(
     page.getByRole("option", { name: /Omnisky III Cannon/ }).first(),
   ).toBeVisible();
+});
+
+/**
+ * Numerische Query = gescannter RS-Wert: 18.000 = 5 × Bexalite (3.600).
+ * Regressionstest für die Signatur-Suche (Basis × Cluster-Anzahl).
+ */
+test("resolves a scanned signature value and navigates to the ore", async ({
+  page,
+}) => {
+  await page.goto("/en");
+
+  await searchFor(page, "18000");
+
+  const option = page
+    .getByRole("listbox")
+    .getByRole("option", { name: /5 × Bexalite/ });
+  await expect(option).toBeVisible();
+  await expect(option).toContainText("signature 3600");
+  await option.click();
+
+  await expect(page).toHaveURL(/\/en\/ores\/bexa$/);
 });
 
 test("GET /api/search returns grouped results", async ({ request }) => {

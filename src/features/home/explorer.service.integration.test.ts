@@ -5,7 +5,7 @@ import { upsertOreOccurrences } from "@/features/ore-occurrences/ore-occurrences
 import { upsertOres } from "@/features/ores/ores.repository";
 import { closeMongo, getDb } from "@/lib/db";
 import { uniqueDbName } from "@/test/factories";
-import { findExplorerRows } from "./explorer.service";
+import { EXPLORER_ROW_LIMIT, findExplorerRows } from "./explorer.service";
 
 const NO_FILTERS = { method: null, system: null, ore: null, rarity: null };
 
@@ -89,7 +89,7 @@ describe("explorer service", () => {
   });
 
   it("joins ore, body and price data into explorer rows", async () => {
-    const rows = await findExplorerRows(db, NO_FILTERS);
+    const { rows } = await findExplorerRows(db, NO_FILTERS);
 
     expect(rows).toHaveLength(2);
 
@@ -112,24 +112,63 @@ describe("explorer service", () => {
   });
 
   it("sorts by probability desc", async () => {
-    const rows = await findExplorerRows(db, NO_FILTERS);
+    const { rows } = await findExplorerRows(db, NO_FILTERS);
     expect(rows.map((row) => row.probabilityPercent)).toEqual([20, 12]);
   });
 
   it("filters by rarity after the ore join", async () => {
-    const rows = await findExplorerRows(db, { ...NO_FILTERS, rarity: "epic" });
+    const { rows } = await findExplorerRows(db, {
+      ...NO_FILTERS,
+      rarity: "epic",
+    });
     expect(rows).toHaveLength(1);
     expect(rows[0].oreCode).toBe("HADA");
   });
 
   it("filters by method, system and ore via the query", async () => {
-    const ship = await findExplorerRows(db, { ...NO_FILTERS, method: "ship" });
+    const { rows: ship } = await findExplorerRows(db, {
+      ...NO_FILTERS,
+      method: "ship",
+    });
     expect(ship.map((row) => row.oreCode)).toEqual(["GOLD"]);
 
-    const pyro = await findExplorerRows(db, { ...NO_FILTERS, system: "PYRO" });
+    const { rows: pyro } = await findExplorerRows(db, {
+      ...NO_FILTERS,
+      system: "PYRO",
+    });
     expect(pyro.map((row) => row.oreCode)).toEqual(["GOLD"]);
 
-    const hada = await findExplorerRows(db, { ...NO_FILTERS, ore: "HADA" });
+    const { rows: hada } = await findExplorerRows(db, {
+      ...NO_FILTERS,
+      ore: "HADA",
+    });
     expect(hada.map((row) => row.oreCode)).toEqual(["HADA"]);
+  });
+
+  /**
+   * Der Wiki-Sync liefert tausende Vorkommen — die Startseite rendert nur
+   * die Top-Rows, sonst wird das SSR-HTML mehrere MB groß (Regression:
+   * e2e-Timeouts auf "/").
+   */
+  it("caps the rendered rows and reports the total", async () => {
+    const bulk = Array.from({ length: EXPLORER_ROW_LIMIT + 25 }, (_, i) => ({
+      oreCode: "GOLD",
+      systemCode: "STANTON",
+      bodySlug: `bulk-rock-${i}`,
+      method: "ship" as const,
+      probabilityPercent: 1,
+      patchVersion: "4.8.2",
+      sourceType: "wiki" as const,
+      confidenceScore: 0.9,
+      lastVerifiedAt: "2026-07-16",
+    }));
+    await upsertOreOccurrences(db, bulk);
+
+    const result = await findExplorerRows(db, NO_FILTERS);
+
+    expect(result.rows).toHaveLength(EXPLORER_ROW_LIMIT);
+    expect(result.total).toBe(EXPLORER_ROW_LIMIT + 25 + 2);
+    // Cap schneidet hinten ab: die wahrscheinlichsten Vorkommen bleiben vorn
+    expect(result.rows[0].probabilityPercent).toBe(20);
   });
 });

@@ -106,3 +106,22 @@ export async function upsertCelestialBodies(
     })),
   );
 }
+
+export async function ensureCelestialBodyIndexes(db: Db): Promise<void> {
+  const collection = db.collection(BODIES);
+  await collection.createIndex({ systemCode: 1, slug: 1 }, { unique: true });
+  await collection.createIndex({ systemCode: 1, parentSlug: 1 });
+  await collection.createIndex({ wikiUuid: 1 });
+}
+
+/** Entfernt Bodies eines Systems, die der Wiki-Sync nicht mehr liefert. */
+export async function pruneCelestialBodiesNotIn(
+  db: Db,
+  systemCode: string,
+  keepSlugs: string[],
+): Promise<number> {
+  const result = await db
+    .collection(BODIES)
+    .deleteMany({ systemCode, slug: { $nin: keepSlugs } });
+  return result.deletedCount;
+}

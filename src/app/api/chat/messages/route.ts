@@ -71,7 +71,7 @@ export async function POST(request: Request) {
     );
   }
 
-  // Slow-Mode vor der Fachvalidierung (wie bei Submissions) — auch
+  // Slow-Mode vor der Fachvalidierung — auch
   // abgelehnte Nachrichten verbrauchen den Slot, das bremst Probing.
   const allowed = await checkRateLimit(`chat:${user.id}`, 1, SLOW_MODE_SECONDS);
   if (!allowed) {

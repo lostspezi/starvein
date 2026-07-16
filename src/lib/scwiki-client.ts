@@ -1,7 +1,8 @@
 /**
  * Dünner Client für die Star Citizen Wiki API v3 (verifiziert 2026-07-16).
- * Liefert als einzige bekannte Quelle echte Crafting-Blueprints inkl. Zutaten
- * (UEX hat dafür keine Daten, siehe data/curated-Historie).
+ * Quelle für Crafting-Blueprints, Mineables (Erze inkl. Signaturen und
+ * Fundwahrscheinlichkeiten) und Starmap-Locations — alles direkt aus den
+ * Spieldaten. UEX bleibt nur für Preise/Refinery zuständig.
  *
  * Öffentliche Endpunkte brauchen keinen Key. Basis-URL überschreibbar für Tests.
  * Doku: https://docs.star-citizen.wiki
@@ -66,34 +67,106 @@ export type ScWikiBlueprint = {
   output: ScWikiBlueprintOutput | null;
 };
 
+/** Mineable-Commodity aus der Listen-Ansicht (GET /api/commodities). */
+export type ScWikiCommodity = {
+  uuid: string;
+  key: string;
+  name: string;
+  slug: string;
+  /** Rarity — null bei allen Ground-Gems und Nicht-Erzen. */
+  tier: string | null;
+  density_g_per_cc: number | null;
+  instability: number | null;
+  resistance: number | null;
+  is_mineable: boolean;
+  has_ship_mineables: boolean;
+  has_ground_vehicle_mineables: boolean;
+  has_fps_mineables: boolean;
+  /**
+   * Radar-Signatur aus den Spieldaten — entspricht NICHT dem In-Game-
+   * Scanner-RS-Wert (community-verifiziert, siehe signature-profiles.json)
+   * und wird deshalb bewusst nicht gesynct.
+   */
+  signature: number | null;
+  kind: string | null;
+  /** Unzuverlässig (bei manchen Gems leer) — die has_*-Booleans sind maßgeblich. */
+  methods: string[];
+};
+
+/** Fundort-Eintrag im Commodity-Detail (GET /api/commodities/{slug}). */
+export type ScWikiCommodityLocation = {
+  /** Starmap-UUID der Location — Join-Schlüssel zu celestialBodies.wikiUuid. */
+  uuid: string;
+  name: string;
+  system: string;
+  type: string;
+  parent_uuid: string | null;
+  /** Chance, dass ein Rock/Deposit an der Location dieses Erz enthält. */
+  group_probability_percent: number | null;
+  /** Anteil dieses Erzes unter allen Erzen der Location. */
+  relative_probability_percent: number | null;
+};
+
+export type ScWikiCommodityDetail = ScWikiCommodity & {
+  locations: ScWikiCommodityLocation[] | null;
+};
+
+/** Starmap-Location aus GET /api/locations. */
+export type ScWikiLocation = {
+  uuid: string;
+  slug: string;
+  name: string;
+  has_resources: boolean;
+  system: string;
+  parent: {
+    uuid: string;
+    name: string;
+    type_name: string;
+    slug: string;
+  } | null;
+  type: { name: string; classification: string } | null;
+  version: string | null;
+};
+
 type Paginated<T> = {
   data: T[];
   meta: { current_page: number; last_page: number; total: number };
 };
 
 /**
- * Zieht alle Blueprint-Seiten (Seitengröße 200, ~8 Requests für ~1560
- * Blueprints). Sequenziell, um die API nicht zu hämmern.
+ * Zieht alle Seiten eines paginierten Endpunkts (Seitengröße 200).
+ * Sequenziell, um die API nicht zu hämmern; MAX_PAGES als Backstop.
  */
-async function allBlueprints(): Promise<ScWikiBlueprint[]> {
-  const blueprints: ScWikiBlueprint[] = [];
+async function fetchAllPages<T>(path: string): Promise<T[]> {
+  const items: T[] = [];
 
   for (let page = 1; page <= MAX_PAGES; page++) {
-    const body = await fetchJson<Paginated<ScWikiBlueprint>>(
-      `/api/blueprints?page%5Bsize%5D=${PAGE_SIZE}&page%5Bnumber%5D=${page}`,
+    const body = await fetchJson<Paginated<T>>(
+      `${path}?page%5Bsize%5D=${PAGE_SIZE}&page%5Bnumber%5D=${page}`,
     );
-    blueprints.push(...(body.data ?? []));
+    items.push(...(body.data ?? []));
 
     const lastPage = body.meta?.last_page ?? page;
     if (page >= lastPage) break;
   }
 
-  return blueprints;
+  return items;
 }
 
 export const scWikiClient = {
   defaultGameVersion: async (): Promise<ScWikiGameVersion> =>
     (await fetchJson<{ data: ScWikiGameVersion }>("/api/game-versions/default"))
       .data,
-  blueprints: allBlueprints,
+  blueprints: (): Promise<ScWikiBlueprint[]> =>
+    fetchAllPages<ScWikiBlueprint>("/api/blueprints"),
+  commodities: (): Promise<ScWikiCommodity[]> =>
+    fetchAllPages<ScWikiCommodity>("/api/commodities"),
+  commodityDetail: async (slug: string): Promise<ScWikiCommodityDetail> =>
+    (
+      await fetchJson<{ data: ScWikiCommodityDetail }>(
+        `/api/commodities/${encodeURIComponent(slug)}`,
+      )
+    ).data,
+  locations: (): Promise<ScWikiLocation[]> =>
+    fetchAllPages<ScWikiLocation>("/api/locations"),
 };

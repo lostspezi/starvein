@@ -20,16 +20,32 @@ export type ExplorerRow = OreOccurrence & {
   bestRefinedSell: number | null;
 };
 
+export type ExplorerResult = {
+  /** Auf EXPLORER_ROW_LIMIT gekappte Rows (Wahrscheinlichkeit absteigend). */
+  rows: ExplorerRow[];
+  /** Gesamtzahl vor dem Cap — fürs "Top X von Y"-Hint im UI. */
+  total: number;
+};
+
 /**
- * Read-Model des Startseiten-Explorers: alle Vorkommen, gejoint mit
+ * Der Wiki-Sync liefert tausende Vorkommen — ungekappt wächst das
+ * SSR-HTML der Startseite auf mehrere MB und die Client-Hydration der
+ * Tabelle wird spürbar träge (e2e-"load"-Timeouts). 200 entspricht etwa
+ * dem Umfang des früheren kuratierten Datensatzes; Filter grenzen
+ * serverseitig ein, der Cap greift nur fürs Rendering.
+ */
+export const EXPLORER_ROW_LIMIT = 200;
+
+/**
+ * Read-Model des Startseiten-Explorers: Vorkommen, gejoint mit
  * Erz (Name, Seltenheit), Himmelskörper (Name, Typ) und bestem
  * Refined-Verkaufspreis. Sortierung: Wahrscheinlichkeit absteigend
- * (kommt aus dem Repository). Bei >~1000 Vorkommen Pagination ergänzen.
+ * (kommt aus dem Repository), gekappt auf EXPLORER_ROW_LIMIT.
  */
 export async function findExplorerRows(
   db: Db,
   filters: ExplorerFilters,
-): Promise<ExplorerRow[]> {
+): Promise<ExplorerResult> {
   const [occurrences, priceMap] = await Promise.all([
     findAllOccurrences(db, {
       method: filters.method,
@@ -38,7 +54,7 @@ export async function findExplorerRows(
     }),
     getBestRefinedSellByOre(db),
   ]);
-  if (occurrences.length === 0) return [];
+  if (occurrences.length === 0) return { rows: [], total: 0 };
 
   const oreCodes = [...new Set(occurrences.map((o) => o.oreCode))];
   const bodyKeys = [
@@ -83,7 +99,12 @@ export async function findExplorerRows(
     };
   });
 
-  return filters.rarity
+  const filtered = filters.rarity
     ? rows.filter((row) => row.rarityTier === filters.rarity)
     : rows;
+
+  return {
+    rows: filtered.slice(0, EXPLORER_ROW_LIMIT),
+    total: filtered.length,
+  };
 }

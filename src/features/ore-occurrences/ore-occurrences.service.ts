@@ -1,5 +1,9 @@
 import type { Db } from "mongodb";
-import type { BodyType } from "@/features/locations/locations.schema";
+import { findBodyBySlug } from "@/features/locations/locations.repository";
+import type {
+  BodyType,
+  CelestialBody,
+} from "@/features/locations/locations.schema";
 import type { MiningMethod, RarityTier } from "@/features/ores/ores.schema";
 import {
   findOccurrencesByLocation,
@@ -82,4 +86,51 @@ export async function findOccurrencesByLocationWithOre(
       rarityTier: (ore?.rarityTier as RarityTier) ?? "common",
     };
   });
+}
+
+export type OccurrencesWithInheritance = {
+  occurrences: OccurrenceWithOre[];
+  /** Gesetzt, wenn die Vorkommen von einem übergeordneten Body stammen. */
+  inheritedFrom: CelestialBody | null;
+};
+
+/**
+ * Vorkommen einer Location mit Parent-Roll-up: Outposts/Höhlen tragen im
+ * Spiel (und im Wiki) keine eigenen Ressourcen-Daten — die Erze hängen am
+ * Mutter-Mond/-Planeten. Hat der Body selbst keine Vorkommen, wird die
+ * parentSlug-Kette hochgelaufen (Tiefen-Cap wie der Breadcrumb-Walk), bis
+ * ein Body mit Vorkommen gefunden ist.
+ */
+export async function findOccurrencesWithInheritance(
+  db: Db,
+  systemCode: string,
+  body: CelestialBody,
+  method?: MiningMethod | null,
+): Promise<OccurrencesWithInheritance> {
+  const own = await findOccurrencesByLocationWithOre(
+    db,
+    systemCode,
+    body.slug,
+    method,
+  );
+  if (own.length > 0) return { occurrences: own, inheritedFrom: null };
+
+  let parentSlug = body.parentSlug;
+  for (let depth = 0; parentSlug && depth < 5; depth++) {
+    const parent = await findBodyBySlug(db, systemCode, parentSlug);
+    if (!parent) break;
+
+    const inherited = await findOccurrencesByLocationWithOre(
+      db,
+      systemCode,
+      parent.slug,
+      method,
+    );
+    if (inherited.length > 0) {
+      return { occurrences: inherited, inheritedFrom: parent };
+    }
+    parentSlug = parent.parentSlug;
+  }
+
+  return { occurrences: [], inheritedFrom: null };
 }

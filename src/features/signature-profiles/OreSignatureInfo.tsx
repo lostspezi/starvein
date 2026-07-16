@@ -1,4 +1,4 @@
-import { useTranslations } from "next-intl";
+import { useFormatter, useTranslations } from "next-intl";
 import { Panel } from "@/lib/components/ui/Panel";
 import type { SignatureProfile } from "./signature-profiles.schema";
 
@@ -21,6 +21,7 @@ export function OreSignatureInfo({
   profiles: SignatureProfile[];
 }) {
   const t = useTranslations();
+  const format = useFormatter();
 
   if (profiles.length === 0) {
     return null;
@@ -58,6 +59,17 @@ export function OreSignatureInfo({
             <span className="text-sm text-text-muted">{ship.notes}</span>
           )}
         </div>
+      )}
+
+      {ship?.signatureValue !== undefined && (
+        // Der In-Game-Scanner zeigt die Summe des Clusters (Basis × Rocks)
+        <p className="text-sm text-text-muted">
+          {t("signatures.oreClusterHint", {
+            x2: format.number(ship.signatureValue * 2),
+            x3: format.number(ship.signatureValue * 3),
+            x4: format.number(ship.signatureValue * 4),
+          })}
+        </p>
       )}
 
       {ground.length > 0 && (

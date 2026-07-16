@@ -7,6 +7,7 @@ import {
   upsertStarSystems,
 } from "@/features/locations/locations.repository";
 import { upsertOres } from "@/features/ores/ores.repository";
+import { upsertSignatureProfiles } from "@/features/signature-profiles/signature-profiles.repository";
 import { closeMongo, getDb } from "@/lib/db";
 import { uniqueDbName } from "@/test/factories";
 import { searchAll } from "./search.service";
@@ -82,6 +83,32 @@ describe("search service", () => {
         category: "armor",
       }),
     ]);
+    await upsertSignatureProfiles(db, [
+      {
+        oreCode: "QUAN",
+        method: "ship",
+        signatureValue: 3170,
+        patchVersion: "4.7",
+        sourceType: "curated",
+        confidenceScore: 0.6,
+      },
+      {
+        oreCode: "HADA",
+        method: "fps",
+        signatureValue: 3000,
+        patchVersion: "4.7",
+        sourceType: "curated",
+        confidenceScore: 0.6,
+      },
+      {
+        oreCode: "HADA",
+        method: "roc",
+        signatureValue: 4000,
+        patchVersion: "4.7",
+        sourceType: "curated",
+        confidenceScore: 0.6,
+      },
+    ]);
   });
 
   afterAll(async () => {
@@ -130,6 +157,85 @@ describe("search service", () => {
 
   it("returns an empty list for blank queries", async () => {
     await expect(searchAll(db, "   ")).resolves.toEqual([]);
+  });
+
+  /** Numerische Queries: gescannter RS-Wert -> Mineral × Cluster-Anzahl. */
+  it("resolves an exact signature value to exactly one match", async () => {
+    const results = await searchAll(db, "3170");
+    const signatures = results.filter((r) => r.kind === "signature");
+    // exakter Erz-Treffer -> keine Näherungsvorschläge daneben
+    expect(signatures).toEqual([
+      {
+        kind: "signature",
+        label: "1 × Quantainium",
+        detail: "3170",
+        href: "/ores/quan",
+      },
+    ]);
+  });
+
+  it("resolves cluster sums including thousand separators", async () => {
+    const results = await searchAll(db, "6.340");
+    expect(results[0]).toEqual({
+      kind: "signature",
+      label: "2 × Quantainium",
+      detail: "3170",
+      href: "/ores/quan",
+    });
+  });
+
+  it("resolves ground deposit sums to the signature reference", async () => {
+    const results = await searchAll(db, "12000");
+    // exakte Treffer zuerst, danach der Näherungsvorschlag (4 × 3170)
+    expect(results.slice(0, 3)).toEqual([
+      {
+        kind: "signature",
+        label: "3 × ROC",
+        detail: "4000",
+        href: "/signatures",
+      },
+      {
+        kind: "signature",
+        label: "4 × FPS",
+        detail: "3000",
+        href: "/signatures",
+      },
+      {
+        kind: "signature",
+        label: "4 × Quantainium",
+        detail: "3170",
+        href: "/ores/quan",
+      },
+    ]);
+  });
+
+  /** Näherungssuche: grobe Werte schlagen Minerale in ±10% Toleranz vor. */
+  it("suggests nearby minerals for approximate values", async () => {
+    const results = await searchAll(db, "3000");
+    expect(results.slice(0, 2)).toEqual([
+      {
+        kind: "signature",
+        label: "1 × FPS",
+        detail: "3000",
+        href: "/signatures",
+      },
+      {
+        kind: "signature",
+        label: "1 × Quantainium",
+        detail: "3170",
+        href: "/ores/quan",
+      },
+    ]);
+  });
+
+  it("returns no signature matches outside the tolerance", async () => {
+    const results = await searchAll(db, "5000");
+    expect(results.some((r) => r.kind === "signature")).toBe(false);
+  });
+
+  it("does not run signature matching for text queries", async () => {
+    const results = await searchAll(db, "quant");
+    expect(results.some((r) => r.kind === "signature")).toBe(false);
   });
 
   it("respects the limit", async () => {

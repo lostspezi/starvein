@@ -1,5 +1,4 @@
 import { useTranslations } from "next-intl";
-import { Badge } from "@/lib/components/ui/Badge";
 import {
   DataTable,
   DataTableHead,
@@ -15,11 +14,8 @@ import type { OccurrenceWithOre } from "./ore-occurrences.service";
 /** "Location auswählen → alle Vorkommen dort". */
 export function LocationOccurrencesTable({
   occurrences,
-  disputedKeys,
 }: {
   occurrences: OccurrenceWithOre[];
-  /** Schlüssel "ORECODE|methode" mit stark unterstützter Korrektur-Submission */
-  disputedKeys?: Set<string>;
 }) {
   const t = useTranslations();
 
@@ -63,16 +59,7 @@ export function LocationOccurrencesTable({
               <ProbabilityCell percent={occurrence.probabilityPercent} />
             </DataTableTd>
             <DataTableTd>
-              <span className="flex flex-wrap gap-1">
-                <ConfidenceBadge occurrence={occurrence} />
-                {disputedKeys?.has(
-                  `${occurrence.oreCode}|${occurrence.method}`,
-                ) && (
-                  <Badge className="text-rarity-epic">
-                    {t("submissions.disputed")}
-                  </Badge>
-                )}
-              </span>
+              <ConfidenceBadge occurrence={occurrence} />
             </DataTableTd>
           </DataTableRow>
         ))}

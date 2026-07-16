@@ -17,9 +17,10 @@ test("signature reference shows ship table and ground explainer", async ({
   const quanRow = page.locator("tr", { hasText: "Quantainium" });
   await expect(quanRow.getByText("3170")).toBeVisible();
 
-  // Ground: größenbasierte Signaturen 3000/4000 + Mineral-Liste
-  await expect(page.getByText("3000", { exact: true })).toBeVisible();
-  await expect(page.getByText("4000", { exact: true })).toBeVisible();
+  // Ground: größenbasierte Signaturen 3000/4000 + Mineral-Liste.
+  // .first(): Wiki-Signaturen der Ship-Tabelle können dieselben Werte tragen.
+  await expect(page.getByText("3000", { exact: true }).first()).toBeVisible();
+  await expect(page.getByText("4000", { exact: true }).first()).toBeVisible();
   await expect(page.getByRole("link", { name: "Hadanite" })).toBeVisible();
 });
 
@@ -35,8 +36,8 @@ test("ground mineral detail explains size-only signatures", async ({
 }) => {
   await page.goto("/en/ores/hada");
 
-  await expect(page.getByText("3000", { exact: true })).toBeVisible();
-  await expect(page.getByText("4000", { exact: true })).toBeVisible();
+  await expect(page.getByText("3000", { exact: true }).first()).toBeVisible();
+  await expect(page.getByText("4000", { exact: true }).first()).toBeVisible();
   await expect(
     page.getByText(/does not identify the mineral/, { exact: false }),
   ).toBeVisible();

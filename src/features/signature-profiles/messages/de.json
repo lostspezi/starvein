@@ -2,15 +2,16 @@
   "signatures": {
     "title": "Signatur-Referenz",
     "shipTitle": "Ship-Mining (Prospector / MOLE)",
-    "shipExplainer": "Beim Ship-Mining identifiziert die Scan-Signatur das dominante Mineral direkt — ein Wert, ein Mineral. Gestein enthält zusätzlich Sekundärminerale.",
+    "shipExplainer": "Beim Ship-Mining identifiziert die Scan-Signatur das dominante Mineral direkt — ein Wert, ein Mineral. Gestein enthält zusätzlich Sekundärminerale. Der Scanner zeigt die Summe eines Clusters: Basis-Signatur × Anzahl der Rocks (z. B. 18.000 = 5 × Bexalite 3.600). Je niedriger die Basis-Signatur, desto seltener das Mineral.",
     "groundTitle": "ROC- & FPS-Mining (Ground-Deposits)",
-    "groundExplainer": "Bei Ground-Deposits zeigt die Signatur nur die Größe des Vorkommens an — nicht das Mineral. Jedes Cluster besteht zu 100% aus einem einzigen Mineral; welches, hängt von der Location ab.",
+    "groundExplainer": "Bei Ground-Deposits zeigt die Signatur nur die Größe des Vorkommens an — nicht das Mineral. Jedes Cluster besteht zu 100% aus einem einzigen Mineral; welches, hängt von der Location ab. Auch hier gilt: Der Scanner summiert (z. B. 8.000 = 2 ROC-Deposits).",
     "groundFpsLabel": "Kleines Deposit (FPS / Handmining)",
     "groundRocLabel": "Großes Deposit (ROC / Bodenfahrzeug)",
     "groundMineralsTitle": "Mögliche Ground-Deposit-Minerale",
     "collisionNote": "Hinweis: Signatur 3000 teilt sich den Wert mit Capital-Wrack-Trümmern (890-Jump-Klasse) — der Kontext entscheidet: Planetenoberfläche = Deposit, offenes All = Trümmer.",
     "oreInfoTitle": "Scan-Signatur",
     "oreGroundNote": "Die Signatur identifiziert das Mineral nicht — stattdessen die Mineral-Liste der Location prüfen.",
+    "oreClusterHint": "Cluster: {x2} (×2) · {x3} (×3) · {x4} (×4) — der Scanner zeigt Basis-Signatur × Rock-Anzahl.",
     "table": {
       "mineral": "Mineral",
       "signature": "Signatur",

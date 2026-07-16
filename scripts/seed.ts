@@ -2,18 +2,8 @@
  * Spielt die kuratierten Seed-Daten (data/curated/*.json) nach MongoDB ein.
  * Aufruf: pnpm seed (lädt .env.local über tsx --env-file)
  */
-import {
-  loadCuratedCelestialBodies,
-  loadCuratedStarSystems,
-} from "@/features/locations/curated-locations";
-import {
-  upsertCelestialBodies,
-  upsertStarSystems,
-} from "@/features/locations/locations.repository";
-import { loadCuratedOccurrences } from "@/features/ore-occurrences/curated-occurrences";
-import { upsertOreOccurrences } from "@/features/ore-occurrences/ore-occurrences.repository";
-import { loadCuratedOres } from "@/features/ores/curated-ores";
-import { upsertOres } from "@/features/ores/ores.repository";
+import { loadCuratedStarSystems } from "@/features/locations/curated-locations";
+import { upsertStarSystems } from "@/features/locations/locations.repository";
 import {
   loadCuratedMiningGadgets,
   loadCuratedMiningLasers,
@@ -33,21 +23,9 @@ import { closeMongo, getDb } from "@/lib/db";
 async function main() {
   const db = await getDb();
 
-  const ores = loadCuratedOres();
-  await upsertOres(db, ores);
-  console.log(`Seeded ${ores.length} ores`);
-
   const systems = loadCuratedStarSystems();
   await upsertStarSystems(db, systems);
   console.log(`Seeded ${systems.length} star systems`);
-
-  const bodies = loadCuratedCelestialBodies();
-  await upsertCelestialBodies(db, bodies);
-  console.log(`Seeded ${bodies.length} celestial bodies`);
-
-  const occurrences = loadCuratedOccurrences();
-  await upsertOreOccurrences(db, occurrences);
-  console.log(`Seeded ${occurrences.length} ore occurrences`);
 
   const signatureProfiles = loadCuratedSignatureProfiles();
   await upsertSignatureProfiles(db, signatureProfiles);
@@ -69,8 +47,10 @@ async function main() {
   await upsertMiningGadgets(db, gadgets);
   console.log(`Seeded ${gadgets.length} mining gadgets`);
 
-  // Blueprints und Materialien sind nicht kuratiert, sondern kommen aus dem
-  // Star-Citizen-Wiki-Sync: pnpm sync:wiki (siehe scripts/sync-wiki.ts).
+  // Erze, Locations, Vorkommen, Blueprints und Materialien sind nicht
+  // kuratiert, sondern kommen aus dem Star-Citizen-Wiki-Sync: pnpm sync:wiki
+  // (siehe scripts/sync-wiki.ts). Die Signatur-Profile hier sind nur der
+  // Fallback — der Sync überschreibt Signaturwerte mit Spieldaten.
 
   console.log(`Done (database '${db.databaseName}').`);
 }

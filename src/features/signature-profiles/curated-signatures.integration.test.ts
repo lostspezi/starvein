@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { loadCuratedOres } from "@/features/ores/curated-ores";
+import { loadCuratedOreCodes } from "@/features/ores/curated-ore-codes";
 import { loadCuratedSignatureProfiles } from "./curated-signatures";
 
 describe("curated signature profiles dataset", () => {
@@ -42,12 +42,10 @@ describe("curated signature profiles dataset", () => {
     }
   });
 
-  it("references only existing ores and respects mineableBy", () => {
-    const ores = new Map(loadCuratedOres().map((o) => [o.code, o]));
+  it("references only ores known to the wiki code mapping", () => {
+    const codes = new Set(loadCuratedOreCodes().map((entry) => entry.code));
     for (const profile of loadCuratedSignatureProfiles()) {
-      const ore = ores.get(profile.oreCode);
-      expect(ore).toBeDefined();
-      expect(ore?.mineableBy[profile.method]).toBe(true);
+      expect(codes.has(profile.oreCode)).toBe(true);
     }
   });
 });

@@ -47,15 +47,4 @@ describe("LocationOccurrencesTable", () => {
     });
     expect(screen.getByText("No known occurrences yet.")).toBeVisible();
   });
-
-  it("marks rows with strongly supported corrections as disputed", () => {
-    renderWithIntl(
-      <LocationOccurrencesTable
-        occurrences={rows}
-        disputedKeys={new Set(["HADA|fps"])}
-      />,
-      { locale: "en" },
-    );
-    expect(screen.getByText("disputed")).toBeVisible();
-  });
 });

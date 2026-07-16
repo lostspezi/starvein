@@ -3,6 +3,7 @@
     "whereToFind": "Where to find",
     "atLocation": "Occurrences",
     "empty": "No known occurrences yet.",
+    "inheritedFrom": "No local occurrences — showing occurrences of {name}.",
     "table": {
       "location": "Location",
       "ore": "Ore",
@@ -16,6 +17,6 @@
       "unverified": "unverified",
       "verified": "verified"
     },
-    "disclaimer": "Probabilities are provisional curated estimates awaiting community verification."
+    "disclaimer": "Probabilities are derived from game data (Star Citizen Wiki) and may change with each patch."
   }
 }

@@ -14,13 +14,15 @@ June 2026) as an open-source project the community keeps up to date itself.
 
 ## Features
 
-- **Ore reference** — all mineable ores with rarity, category and base values
+- **Ore reference** — all mineable ores with rarity, category and base values,
+  synced from game data via the [Star Citizen Wiki API](https://docs.star-citizen.wiki/)
 - **Location browser** — star systems → celestial bodies → mining locations
-- **Occurrences & probability** — per ore and mining method (ship / ROC / FPS)
+  (wiki-synced; mining outposts inherit their parent moon's occurrences)
+- **Occurrences & probability** — per ore and mining method (ship / ROC / FPS),
+  straight from the game data via the wiki sync
 - **Scan signature reference** — method-aware: ship signatures identify the mineral,
-  ROC/FPS signatures only indicate deposit size
+  ROC/FPS signatures only indicate deposit size (wiki-first, curated fallback)
 - **Refinery yields & prices** — synced from the [UEX Corp API](https://uexcorp.space/)
-- **Community corrections** — wiki-style submissions with Wilson-score voting
 - **Mining loadouts** — build, share and vote on ship/vehicle loadouts with live
   equipment prices
 - **Bilingual** — English and German, no account required for browsing
@@ -38,7 +40,8 @@ Prerequisites: Node.js 24 LTS, pnpm 11, Docker (for MongoDB + Redis).
 pnpm install
 docker compose up -d        # MongoDB + Redis
 cp .env.example .env.local  # fill in what you need (see below)
-pnpm seed                   # load curated reference data
+pnpm seed                   # star systems, signature fallbacks, mining equipment
+pnpm sync:wiki              # ores, locations, occurrences, signatures, blueprints
 pnpm dev                    # http://localhost:3000
 ```
 
@@ -47,15 +50,15 @@ development — the reference data works without any credentials in `.env.local`
 
 ### Scripts
 
-| Command          | What it does                                            |
-| ---------------- | ------------------------------------------------------- |
-| `pnpm dev`       | dev server on :3000                                     |
-| `pnpm test`      | unit + integration tests (Vitest)                       |
-| `pnpm test:e2e`  | Playwright e2e suite (builds + serves on :3100)         |
-| `pnpm lint`      | ESLint                                                  |
-| `pnpm seed`      | seed curated data into MongoDB                          |
-| `pnpm sync:uex`  | pull prices/yields from the UEX API                     |
-| `pnpm sync:wiki` | pull crafting blueprints/materials from the SC Wiki API |
+| Command          | What it does                                                                      |
+| ---------------- | --------------------------------------------------------------------------------- |
+| `pnpm dev`       | dev server on :3000                                                               |
+| `pnpm test`      | unit + integration tests (Vitest)                                                 |
+| `pnpm test:e2e`  | Playwright e2e suite (builds + serves on :3100)                                   |
+| `pnpm lint`      | ESLint                                                                            |
+| `pnpm seed`      | seed curated data (systems, signature fallbacks, gear)                            |
+| `pnpm sync:uex`  | pull prices/yields from the UEX API                                               |
+| `pnpm sync:wiki` | pull ores, locations, occurrences, signatures and blueprints from the SC Wiki API |
 
 ## Deployment
 

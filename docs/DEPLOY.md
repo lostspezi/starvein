@@ -92,10 +92,13 @@ GitHub (Profile → Packages) → Package settings → Change visibility → Pub
   */30 * * * * cd /opt/starvein && docker compose -f docker-compose.prod.yml run --rm jobs pnpm exec tsx scripts/sync-uex.ts >> /var/log/starvein-sync.log 2>&1
   ```
 
-- **SC-Wiki blueprint sync (cron on the VPS):** Blueprints und der
-  Materialkatalog kommen ausschließlich aus diesem Sync — ohne ihn sind
-  `/blueprints` und `/materials` leer (der Seed liefert sie nicht). Die Daten
-  ändern sich nur mit einem Game-Patch, täglich reicht:
+- **SC-Wiki sync (cron on the VPS):** Erze, Locations, Vorkommen,
+  Signaturwerte, Blueprints und der Materialkatalog kommen ausschließlich aus
+  diesem Sync — ohne ihn sind Referenz, `/blueprints` und `/materials` leer
+  (der Seed liefert nur Sternsysteme, Signatur-Fallbacks und Equipment).
+  Achtung: Der erste Lauf entfernt alte kuratierte/community-Occurrence-Rows
+  (die Collections sind vollständig wiki-geführt, Prune bei jedem Sync).
+  Die Daten ändern sich nur mit einem Game-Patch, täglich reicht:
 
   ```
   17 4 * * * cd /opt/starvein && docker compose -f docker-compose.prod.yml run --rm jobs pnpm exec tsx scripts/sync-wiki.ts >> /var/log/starvein-sync.log 2>&1

@@ -50,7 +50,7 @@ export default async function Home({
 
   const userId = await getSessionUserId(await headers());
   const [
-    rows,
+    explorer,
     favorites,
     showcase,
     locationCount,
@@ -82,7 +82,8 @@ export default async function Home({
       />
       <ExplorerFilters ores={ores} />
       <ExplorerTable
-        rows={rows}
+        rows={explorer.rows}
+        total={explorer.total}
         favoriteKeys={favoriteKeys}
         isAuthenticated={userId !== null}
       />

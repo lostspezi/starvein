@@ -1,0 +1,292 @@
+{
+  "_meta": {
+    "generatedAt": "2026-07-16",
+    "sources": [
+      "wikiKey-Zuordnung abgeglichen mit Star Citizen Wiki API /api/commodities (2026-07-16, Game-Version 4.8.2-LIVE)",
+      "Codes konsistent mit UEX Corp API 2.0 fuer Preis-Mapping",
+      "rarityTierFallback greift, wenn das Wiki tier=null liefert (alle Ground-Gems); mineableByFallback nur fuer Gems ohne Mineable-Booleans im Wiki"
+    ],
+    "notes": "Neue Wiki-Mineables ohne Eintrag hier werden vom Sync geloggt und uebersprungen — nie Auto-Codes vergeben (Codes keyen UEX-Preise und Desktop-OCR)."
+  },
+  "oreCodes": [
+    {
+      "wikiKey": "Raw_Quantainium",
+      "code": "QUAN",
+      "name_de": "Quantainium",
+      "name_en": "Quantainium",
+      "rarityTierFallback": "legendary"
+    },
+    {
+      "wikiKey": "Ore_Stileron",
+      "code": "STIL",
+      "name_de": "Stileron",
+      "name_en": "Stileron",
+      "rarityTierFallback": "legendary"
+    },
+    {
+      "wikiKey": "Ore_Savrilium",
+      "code": "SAVR",
+      "name_de": "Savrilium",
+      "name_en": "Savrilium",
+      "rarityTierFallback": "legendary"
+    },
+    {
+      "wikiKey": "RawOuratite",
+      "code": "OURA",
+      "name_de": "Ouratite",
+      "name_en": "Ouratite",
+      "rarityTierFallback": "epic"
+    },
+    {
+      "wikiKey": "Ore_Riccite",
+      "code": "RICC",
+      "name_de": "Riccite",
+      "name_en": "Riccite",
+      "rarityTierFallback": "epic"
+    },
+    {
+      "wikiKey": "Ore_Lindinium",
+      "code": "LIND",
+      "name_de": "Lindinium",
+      "name_en": "Lindinium",
+      "rarityTierFallback": "epic"
+    },
+    {
+      "wikiKey": "Raw_Beryl",
+      "code": "BERY",
+      "name_de": "Beryl",
+      "name_en": "Beryl",
+      "rarityTierFallback": "rare"
+    },
+    {
+      "wikiKey": "Raw_Taranite",
+      "code": "TARA",
+      "name_de": "Taranite",
+      "name_en": "Taranite",
+      "rarityTierFallback": "rare"
+    },
+    {
+      "wikiKey": "Ore_Borase",
+      "code": "BORA",
+      "name_de": "Borase",
+      "name_en": "Borase",
+      "rarityTierFallback": "rare"
+    },
+    {
+      "wikiKey": "Ore_Gold",
+      "code": "GOLD",
+      "name_de": "Gold",
+      "name_en": "Gold",
+      "rarityTierFallback": "rare"
+    },
+    {
+      "wikiKey": "Raw_Bexalite",
+      "code": "BEXA",
+      "name_de": "Bexalite",
+      "name_en": "Bexalite",
+      "rarityTierFallback": "rare"
+    },
+    {
+      "wikiKey": "Raw_Laranite",
+      "code": "LARA",
+      "name_de": "Laranite",
+      "name_en": "Laranite",
+      "rarityTierFallback": "uncommon"
+    },
+    {
+      "wikiKey": "Raw_Aslarite",
+      "code": "ASLA",
+      "name_de": "Aslarite",
+      "name_en": "Aslarite",
+      "rarityTierFallback": "uncommon"
+    },
+    {
+      "wikiKey": "Ore_Titanium",
+      "code": "TITA",
+      "name_de": "Titanium",
+      "name_en": "Titanium",
+      "rarityTierFallback": "uncommon"
+    },
+    {
+      "wikiKey": "Ore_Tungsten",
+      "code": "TUNG",
+      "name_de": "Tungsten",
+      "name_en": "Tungsten",
+      "rarityTierFallback": "uncommon"
+    },
+    {
+      "wikiKey": "Ore_Agricium",
+      "code": "AGRI",
+      "name_de": "Agricium",
+      "name_en": "Agricium",
+      "rarityTierFallback": "uncommon"
+    },
+    {
+      "wikiKey": "Ore_Torite",
+      "code": "TORI",
+      "name_de": "Torite",
+      "name_en": "Torite",
+      "rarityTierFallback": "uncommon"
+    },
+    {
+      "wikiKey": "Raw_Hephaestanite",
+      "code": "HEPH",
+      "name_de": "Hephaestanite",
+      "name_en": "Hephaestanite",
+      "rarityTierFallback": "common"
+    },
+    {
+      "wikiKey": "Ore_Tin",
+      "code": "TIN",
+      "name_de": "Tin",
+      "name_en": "Tin",
+      "rarityTierFallback": "common"
+    },
+    {
+      "wikiKey": "Raw_Quartz",
+      "code": "QUAR",
+      "name_de": "Quartz",
+      "name_en": "Quartz",
+      "rarityTierFallback": "common"
+    },
+    {
+      "wikiKey": "Raw_Corundum",
+      "code": "CORU",
+      "name_de": "Corundum",
+      "name_en": "Corundum",
+      "rarityTierFallback": "common"
+    },
+    {
+      "wikiKey": "Ore_Copper",
+      "code": "COPP",
+      "name_de": "Copper",
+      "name_en": "Copper",
+      "rarityTierFallback": "common"
+    },
+    {
+      "wikiKey": "RawSilicon",
+      "code": "SILI",
+      "name_de": "Silicon",
+      "name_en": "Silicon",
+      "rarityTierFallback": "common"
+    },
+    {
+      "wikiKey": "Ore_Iron",
+      "code": "IRON",
+      "name_de": "Iron",
+      "name_en": "Iron",
+      "rarityTierFallback": "common"
+    },
+    {
+      "wikiKey": "Ore_Aluminum",
+      "code": "ALUM",
+      "name_de": "Aluminum",
+      "name_en": "Aluminum",
+      "rarityTierFallback": "common"
+    },
+    {
+      "wikiKey": "Raw_Ice",
+      "code": "ICEW",
+      "name_de": "Ice",
+      "name_en": "Ice",
+      "rarityTierFallback": "common"
+    },
+    {
+      "wikiKey": "Glacosite",
+      "code": "GLAC",
+      "name_de": "Glacosite",
+      "name_en": "Glacosite",
+      "rarityTierFallback": "rare"
+    },
+    {
+      "wikiKey": "Aphorite",
+      "code": "APHO",
+      "name_de": "Aphorite",
+      "name_en": "Aphorite",
+      "rarityTierFallback": "rare"
+    },
+    {
+      "wikiKey": "Dolivine",
+      "code": "DOLI",
+      "name_de": "Dolivine",
+      "name_en": "Dolivine",
+      "rarityTierFallback": "rare"
+    },
+    {
+      "wikiKey": "Beradom",
+      "code": "BERA",
+      "name_de": "Beradom",
+      "name_en": "Beradom",
+      "rarityTierFallback": "rare"
+    },
+    {
+      "wikiKey": "Feynmaline",
+      "code": "FEYN",
+      "name_de": "Feynmaline",
+      "name_en": "Feynmaline",
+      "rarityTierFallback": "epic"
+    },
+    {
+      "wikiKey": "Sadaryx",
+      "code": "SADA",
+      "name_de": "Sadaryx",
+      "name_en": "Sadaryx",
+      "rarityTierFallback": "epic",
+      "mineableByFallback": {
+        "ship": false,
+        "roc": true,
+        "fps": true
+      }
+    },
+    {
+      "wikiKey": "Hadanite",
+      "code": "HADA",
+      "name_de": "Hadanite",
+      "name_en": "Hadanite",
+      "rarityTierFallback": "epic"
+    },
+    {
+      "wikiKey": "Janalite",
+      "code": "JANA",
+      "name_de": "Janalite",
+      "name_en": "Janalite",
+      "rarityTierFallback": "legendary"
+    },
+    {
+      "wikiKey": "Ore_Jaclium",
+      "code": "JACO",
+      "name_de": "Jaclium",
+      "name_en": "Jaclium",
+      "rarityTierFallback": "legendary",
+      "mineableByFallback": {
+        "ship": false,
+        "roc": true,
+        "fps": true
+      }
+    },
+    {
+      "wikiKey": "Ore_Saldynium",
+      "code": "SALD",
+      "name_de": "Saldynium",
+      "name_en": "Saldynium",
+      "rarityTierFallback": "legendary",
+      "mineableByFallback": {
+        "ship": false,
+        "roc": true,
+        "fps": true
+      }
+    },
+    {
+      "wikiKey": "Carinite",
+      "code": "CARI",
+      "name_de": "Carinite",
+      "name_en": "Carinite",
+      "rarityTierFallback": "uncommon",
+      "mineableByFallback": {
+        "ship": false,
+        "roc": true,
+        "fps": true
+      }
+    }
+  ]
+}

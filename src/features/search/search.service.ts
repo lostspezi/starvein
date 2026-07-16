@@ -5,15 +5,21 @@ import {
   starSystemSchema,
 } from "@/features/locations/locations.schema";
 import { oreSchema } from "@/features/ores/ores.schema";
+import {
+  matchSignatureValue,
+  parseSignatureQuery,
+  type GroundSignatureEntry,
+  type ShipSignatureEntry,
+} from "./signature-match";
 
 export type SearchResult = {
-  kind: "ore" | "system" | "body" | "blueprint";
+  kind: "ore" | "system" | "body" | "blueprint" | "signature";
   /** Anzeigename */
   label: string;
   /**
    * Kontext für die Sublabel-Anzeige: rarityTier bei Erzen,
    * Body-Typ bei Himmelskörpern, "system" bei Systemen,
-   * Kategorie bei Blueprints.
+   * Kategorie bei Blueprints, Basis-Signatur bei Signatur-Treffern.
    */
   detail: string;
   href: string;
@@ -34,6 +40,68 @@ function escapeRegex(value: string): string {
   return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
+/**
+ * Numerische Query = gescannter RS-Wert: gegen die Signatur-Referenz
+ * auflösen (Basis × Cluster-Anzahl, siehe signature-match.ts).
+ * Erz-Treffer verlinken das Erz, Ground-Treffer die Signatur-Referenz.
+ */
+async function searchSignatures(
+  db: Db,
+  value: number,
+): Promise<SearchResult[]> {
+  const noId = { projection: { _id: 0 } } as const;
+  const profileDocs = await db
+    .collection("signatureProfiles")
+    .find({ signatureValue: { $exists: true } }, noId)
+    .toArray();
+
+  const shipProfiles = profileDocs.filter((doc) => doc.method === "ship");
+  const oreDocs = await db
+    .collection("ores")
+    .find(
+      { code: { $in: shipProfiles.map((doc) => doc.oreCode) } },
+      { projection: { _id: 0, code: 1, name_en: 1 } },
+    )
+    .toArray();
+  const oreNames = new Map(
+    oreDocs.map((doc) => [doc.code as string, doc.name_en as string]),
+  );
+
+  const ship: ShipSignatureEntry[] = shipProfiles.map((doc) => ({
+    oreCode: doc.oreCode as string,
+    oreName: oreNames.get(doc.oreCode as string) ?? (doc.oreCode as string),
+    signatureValue: doc.signatureValue as number,
+  }));
+
+  // ROC/FPS teilen sich größenbasierte Werte — auf Distinct reduzieren
+  const ground: GroundSignatureEntry[] = [
+    ...new Map(
+      profileDocs
+        .filter((doc) => doc.method === "roc" || doc.method === "fps")
+        .map((doc) => [
+          `${doc.method}|${doc.signatureValue}`,
+          {
+            method: doc.method as "roc" | "fps",
+            signatureValue: doc.signatureValue as number,
+          },
+        ]),
+    ).values(),
+  ];
+
+  return matchSignatureValue(value, ship, ground).map((match) => ({
+    kind: "signature" as const,
+    label:
+      match.type === "ore"
+        ? `${match.count} × ${match.oreName}`
+        : `${match.count} × ${match.method.toUpperCase()}`,
+    detail: String(match.signatureValue),
+    href:
+      match.type === "ore"
+        ? `/ores/${match.oreCode.toLowerCase()}`
+        : "/signatures",
+  }));
+}
+
 export async function searchAll(
   db: Db,
   query: string,
@@ -41,6 +109,11 @@ export async function searchAll(
 ): Promise<SearchResult[]> {
   const trimmed = query.trim();
   if (trimmed.length === 0) return [];
+
+  // Numerische Queries zuerst als Signatur-Wert interpretieren
+  const signatureValue = parseSignatureQuery(trimmed);
+  const signatureResults =
+    signatureValue !== null ? await searchSignatures(db, signatureValue) : [];
 
   const contains = new RegExp(escapeRegex(trimmed), "i");
   const noId = { projection: { _id: 0 } } as const;
@@ -136,5 +209,7 @@ export async function searchAll(
     );
   });
 
-  return results.slice(0, limit);
+  // Signatur-Treffer immer zuoberst — bei numerischen Queries sind sie
+  // die wahrscheinlichste Intention
+  return [...signatureResults, ...results].slice(0, limit);
 }
