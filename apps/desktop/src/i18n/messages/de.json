@@ -65,6 +65,10 @@
     "empty": "Noch keine Refinery-Jobs erfasst.",
     "ready": "Bereit zur Abholung",
     "collected": "Abgeholt",
+    "collect": "Abholen",
+    "collecting": "Wird abgeholt …",
+    "collectFailed": "Abholen fehlgeschlagen — Server erreichbar?",
+    "collectRateLimited": "Rate-Limit erreicht — bitte kurz warten und erneut versuchen.",
     "notification": {
       "title": "Refinery-Job fertig",
       "body": "Dein Auftrag bei {terminal} ist bereit zur Abholung."

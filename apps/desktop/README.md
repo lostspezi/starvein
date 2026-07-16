@@ -115,6 +115,9 @@ Nach relevanten Änderungen von Hand prüfen:
       Companion nicht (Hotkey feuert dann im Spiel nicht)
 - [ ] OCR-Genauigkeit am Refinery-Terminal bei 1080p / 1440p / 4K
 - [ ] Native Benachrichtigung erscheint, wenn ein Job fertig wird
+- [ ] "Abholen" bei einem fertigen Job markiert ihn als abgeholt — Status
+      erscheint auch in der Webapp (und umgekehrt resynct die Liste, wenn der
+      Job bereits via Web abgeholt wurde)
 - [ ] Tray-Verhalten: Close-to-Tray, Wiederherstellen, Single-Instance
 - [ ] Session-Token übersteht App-Neustart (Windows Credential Manager)
 - [ ] Update-Dialog erscheint beim Start, wenn ein neueres Release existiert;

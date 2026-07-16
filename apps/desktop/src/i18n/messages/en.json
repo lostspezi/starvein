@@ -65,6 +65,10 @@
     "empty": "No refinery jobs tracked yet.",
     "ready": "Ready to collect",
     "collected": "Collected",
+    "collect": "Collect",
+    "collecting": "Collecting …",
+    "collectFailed": "Could not collect the job — is the server reachable?",
+    "collectRateLimited": "Rate limit reached — please wait a moment and try again.",
     "notification": {
       "title": "Refinery job ready",
       "body": "Your work order at {terminal} is ready to collect."

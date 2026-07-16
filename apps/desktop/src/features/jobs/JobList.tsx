@@ -2,8 +2,19 @@ import { useTranslations } from "use-intl";
 import type { RefineryJob } from "@starvein/shared/refinery-jobs";
 import { isJobReady, remainingMinutes } from "@starvein/shared/job-time";
 import { formatRemaining } from "./format";
+import type { CollectError } from "./useJobs";
 
-function JobRow({ job, nowMs }: { job: RefineryJob; nowMs: number }) {
+function JobRow({
+  job,
+  nowMs,
+  onCollect,
+  collecting,
+}: {
+  job: RefineryJob;
+  nowMs: number;
+  onCollect: (jobId: string) => void;
+  collecting: boolean;
+}) {
   const t = useTranslations("jobs");
   const collected = job.status === "collected";
   const ready = !collected && isJobReady(job, nowMs);
@@ -24,7 +35,19 @@ function JobRow({ job, nowMs }: { job: RefineryJob; nowMs: number }) {
         {collected ? (
           <span className="text-text-muted text-xs">{t("collected")}</span>
         ) : ready ? (
-          <span className="text-success text-sm font-medium">{t("ready")}</span>
+          <div className="flex items-center gap-2">
+            <span className="text-success text-sm font-medium">
+              {t("ready")}
+            </span>
+            <button
+              type="button"
+              disabled={collecting}
+              onClick={() => onCollect(job.id)}
+              className="bg-accent-primary text-bg-void hover:bg-accent-glow hover:shadow-glow-primary rounded px-3 py-1.5 text-xs font-medium transition-all duration-200 disabled:opacity-50"
+            >
+              {collecting ? t("collecting") : t("collect")}
+            </button>
+          </div>
         ) : (
           <span className="text-accent-secondary font-mono text-sm">
             {formatRemaining(remainingMinutes(job, nowMs))}
@@ -40,11 +63,17 @@ export function JobList({
   nowMs,
   onRefresh,
   refreshFailed = false,
+  onCollect,
+  collectingId = null,
+  collectError = null,
 }: {
   jobs: RefineryJob[];
   nowMs: number;
   onRefresh: () => void;
   refreshFailed?: boolean;
+  onCollect: (jobId: string) => void;
+  collectingId?: string | null;
+  collectError?: CollectError | null;
 }) {
   const t = useTranslations("jobs");
 
@@ -67,12 +96,27 @@ export function JobList({
           {t("refreshFailed")}
         </p>
       )}
+      {collectError && (
+        <p className="text-warning text-xs" role="alert">
+          {t(
+            collectError === "rateLimited"
+              ? "collectRateLimited"
+              : "collectFailed",
+          )}
+        </p>
+      )}
       {jobs.length === 0 ? (
         <p className="text-text-muted text-sm">{t("empty")}</p>
       ) : (
         <ul className="flex flex-col gap-2">
           {jobs.map((job) => (
-            <JobRow key={job.id} job={job} nowMs={nowMs} />
+            <JobRow
+              key={job.id}
+              job={job}
+              nowMs={nowMs}
+              onCollect={onCollect}
+              collecting={collectingId === job.id}
+            />
           ))}
         </ul>
       )}

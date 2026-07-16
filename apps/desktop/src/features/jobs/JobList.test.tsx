@@ -1,4 +1,5 @@
 import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { IntlProvider } from "use-intl";
 import { describe, expect, it, vi } from "vitest";
 import type { RefineryJob } from "@starvein/shared/refinery-jobs";
@@ -27,10 +28,19 @@ function makeJob(overrides: Partial<RefineryJob> = {}): RefineryJob {
   };
 }
 
-function renderList(jobs: RefineryJob[]) {
+function renderList(
+  jobs: RefineryJob[],
+  props: Partial<Parameters<typeof JobList>[0]> = {},
+) {
   return render(
     <IntlProvider locale="en" messages={messages.en}>
-      <JobList jobs={jobs} nowMs={NOW} onRefresh={vi.fn()} />
+      <JobList
+        jobs={jobs}
+        nowMs={NOW}
+        onRefresh={vi.fn()}
+        onCollect={vi.fn()}
+        {...props}
+      />
     </IntlProvider>,
   );
 }
@@ -53,5 +63,48 @@ describe("JobList", () => {
   it("shows an empty state without jobs", () => {
     renderList([]);
     expect(screen.getByText("No refinery jobs tracked yet.")).toBeVisible();
+  });
+
+  it("shows a collect button on ready jobs", () => {
+    renderList([makeJob({ startedAt: "2026-07-14T09:00:00.000Z" })]);
+    expect(screen.getByRole("button", { name: "Collect" })).toBeVisible();
+  });
+
+  it("hides the collect button on processing and collected jobs", () => {
+    renderList([
+      makeJob(),
+      makeJob({
+        id: "job-2",
+        startedAt: "2026-07-14T09:00:00.000Z",
+        status: "collected",
+        collectedAt: "2026-07-14T11:30:00.000Z",
+      }),
+    ]);
+    expect(screen.queryByRole("button", { name: "Collect" })).toBeNull();
+  });
+
+  it("calls onCollect with the job id", async () => {
+    const onCollect = vi.fn();
+    renderList([makeJob({ startedAt: "2026-07-14T09:00:00.000Z" })], {
+      onCollect,
+    });
+    await userEvent.click(screen.getByRole("button", { name: "Collect" }));
+    expect(onCollect).toHaveBeenCalledWith("job-1");
+  });
+
+  it("disables the button and shows a pending label while collecting", () => {
+    renderList([makeJob({ startedAt: "2026-07-14T09:00:00.000Z" })], {
+      collectingId: "job-1",
+    });
+    expect(screen.getByRole("button", { name: "Collecting …" })).toBeDisabled();
+  });
+
+  it("shows a collect error", () => {
+    renderList([makeJob({ startedAt: "2026-07-14T09:00:00.000Z" })], {
+      collectError: "rateLimited",
+    });
+    expect(screen.getByRole("alert")).toHaveTextContent(
+      "Rate limit reached — please wait a moment and try again.",
+    );
   });
 });
