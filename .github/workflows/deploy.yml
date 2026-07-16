@@ -75,27 +75,22 @@ jobs:
         run: |
           scp -i ~/.ssh/deploy_key docker-compose.prod.yml Caddyfile \
             "${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/opt/starvein/"
+      # --profile jobs, weil "docker compose pull" ohne aktives Profil den
+      # profil-gegateten jobs-Service überspringt. Ohne das bleibt auf dem VPS
+      # das alte jobs-Image liegen ("run" zieht nur, wenn gar keins da ist) —
+      # Seed und Sync liefen dann gegen veralteten Code. "up -d" ohne Profil
+      # startet den One-Shot-Container weiterhin nicht.
       - name: Pull images and restart stack
         run: |
           ssh -i ~/.ssh/deploy_key "${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}" \
             "cd /opt/starvein && \
-             docker compose -f docker-compose.prod.yml pull && \
+             docker compose -f docker-compose.prod.yml --profile jobs pull && \
              docker compose -f docker-compose.prod.yml up -d --remove-orphans"
       - name: Seed curated data (idempotent upserts)
         run: |
           ssh -i ~/.ssh/deploy_key "${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}" \
             "cd /opt/starvein && \
              docker compose -f docker-compose.prod.yml run --rm jobs"
-      # Blueprints/Materialien kommen ausschließlich aus dem Wiki-Sync — ohne
-      # diesen Schritt wären /blueprints und /materials nach dem Deploy leer.
-      # Idempotent; der reguläre Patch-Abgleich läuft zusätzlich per Cron
-      # (siehe docs/DEPLOY.md).
-      - name: Sync crafting blueprints from the SC Wiki (idempotent)
-        run: |
-          ssh -i ~/.ssh/deploy_key "${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}" \
-            "cd /opt/starvein && \
-             docker compose -f docker-compose.prod.yml run --rm jobs \
-               pnpm exec tsx scripts/sync-wiki.ts"
       - name: Verify health endpoint
         run: |
           ssh -i ~/.ssh/deploy_key "${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}" \
@@ -105,3 +100,14 @@ jobs:
                  echo 'app healthy'; exit 0; \
                fi; sleep 3; \
              done; echo 'app failed health check'; exit 1"
+      # Nach dem Health-Check, nicht davor: Blueprints/Materialien liefert nur
+      # dieser Sync (der Seed kennt sie nicht), aber es sind reine Daten. Läuft
+      # er vorher und schlägt fehl, wird der Health-Check übersprungen und ein
+      # Datenproblem sieht aus wie ein kaputtes Deployment. Idempotent; der
+      # laufende Patch-Abgleich ist der Cron aus docs/DEPLOY.md.
+      - name: Sync crafting blueprints from the SC Wiki (idempotent)
+        run: |
+          ssh -i ~/.ssh/deploy_key "${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}" \
+            "cd /opt/starvein && \
+             docker compose -f docker-compose.prod.yml run --rm jobs \
+               pnpm exec tsx scripts/sync-wiki.ts"
