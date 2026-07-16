@@ -61,6 +61,8 @@ describe("price ticker route", () => {
         prevClose: 85,
         direction: "up",
         changePercent: 7.6,
+        sellTerminals: ["ARC-L1 Wide Forest Station"],
+        sellTerminalCount: 1,
       },
     ]);
   });

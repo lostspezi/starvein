@@ -4,6 +4,8 @@
     "unit": "aUEC/SCU",
     "up": "gestiegen gegenüber Vortag",
     "down": "gefallen gegenüber Vortag",
-    "same": "unverändert gegenüber Vortag"
+    "same": "unverändert gegenüber Vortag",
+    "sellAt": "Zum Bestpreis verkaufen bei:",
+    "moreTerminals": "+{count} weitere"
   }
 }

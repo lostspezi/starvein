@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { NextIntlClientProvider } from "next-intl";
 import type { ReactNode } from "react";
 import { afterEach, describe, expect, it, vi } from "vitest";
@@ -12,6 +12,8 @@ const MESSAGES = {
     up: "up vs. previous day",
     down: "down vs. previous day",
     same: "unchanged vs. previous day",
+    sellAt: "Sell at best price:",
+    moreTerminals: "+{count} more",
   },
 };
 
@@ -32,6 +34,8 @@ const ENTRIES: TickerEntry[] = [
     prevClose: 85,
     direction: "up",
     changePercent: 7.6,
+    sellTerminals: ["TDD Area 18"],
+    sellTerminalCount: 1,
   },
   {
     oreCode: "LARA",
@@ -41,6 +45,8 @@ const ENTRIES: TickerEntry[] = [
     prevClose: 60,
     direction: "down",
     changePercent: -16.7,
+    sellTerminals: ["ARC-L1 Wide Forest Station", "Checkmate Station"],
+    sellTerminalCount: 2,
   },
   {
     oreCode: "GOLD",
@@ -50,6 +56,8 @@ const ENTRIES: TickerEntry[] = [
     prevClose: 6.1,
     direction: "same",
     changePercent: 0,
+    sellTerminals: ["Alpha", "Beta", "Gamma", "Delta", "Epsilon"],
+    sellTerminalCount: 7,
   },
   {
     oreCode: "IRON",
@@ -59,6 +67,8 @@ const ENTRIES: TickerEntry[] = [
     prevClose: null,
     direction: null,
     changePercent: null,
+    sellTerminals: ["Orison Refinery"],
+    sellTerminalCount: 1,
   },
 ];
 
@@ -141,5 +151,67 @@ describe("PriceTicker", () => {
     // same/null bekommen keinen Prozentwert
     expect(screen.queryByText("+0%")).not.toBeInTheDocument();
     expect(screen.queryByText("0%")).not.toBeInTheDocument();
+  });
+
+  it("links every entry to its ore detail page", async () => {
+    mockFetch(ENTRIES);
+    render(<PriceTicker />, { wrapper: Wrapper });
+    await screen.findByRole("region", { name: "Live commodity prices" });
+
+    const quanLink = screen.getByRole("link", { name: /Quantainium/ });
+    expect(quanLink).toHaveAttribute("href", "/ores/quan");
+    expect(screen.getByRole("link", { name: /Iron/ })).toHaveAttribute(
+      "href",
+      "/ores/iron",
+    );
+  });
+
+  it("keeps the duplicated copy out of the tab order", async () => {
+    mockFetch(ENTRIES);
+    const { container } = render(<PriceTicker />, { wrapper: Wrapper });
+    await screen.findByRole("region", { name: "Live commodity prices" });
+
+    const dupLinks = container.querySelectorAll(".ticker-dup a");
+    expect(dupLinks.length).toBe(ENTRIES.length);
+    for (const link of dupLinks) {
+      expect(link).toHaveAttribute("tabindex", "-1");
+    }
+  });
+
+  it("describes the best-price sell terminals for screen readers", async () => {
+    mockFetch(ENTRIES);
+    render(<PriceTicker />, { wrapper: Wrapper });
+    await screen.findByRole("region", { name: "Live commodity prices" });
+
+    expect(
+      screen.getByRole("link", { name: /Quantainium/ }),
+    ).toHaveAccessibleDescription(/Sell at best price:.*TDD Area 18/);
+    expect(
+      screen.getByRole("link", { name: /Gold/ }),
+    ).toHaveAccessibleDescription(/\+2 more/);
+  });
+
+  it("shows a sell-location tooltip on hover and hides it on leave", async () => {
+    mockFetch(ENTRIES);
+    render(<PriceTicker />, { wrapper: Wrapper });
+    await screen.findByRole("region", { name: "Live commodity prices" });
+
+    expect(screen.queryByTestId("ticker-tooltip")).not.toBeInTheDocument();
+
+    const laraLink = screen.getByRole("link", { name: /Laranite/ });
+    fireEvent.mouseEnter(laraLink);
+
+    const tooltip = screen.getByTestId("ticker-tooltip");
+    expect(tooltip).toHaveTextContent("Sell at best price:");
+    expect(tooltip).toHaveTextContent("ARC-L1 Wide Forest Station");
+    expect(tooltip).toHaveTextContent("Checkmate Station");
+
+    fireEvent.mouseLeave(laraLink);
+    expect(screen.queryByTestId("ticker-tooltip")).not.toBeInTheDocument();
+
+    // Gekappte Liste zeigt den Rest als "+N more"
+    const goldLink = screen.getByRole("link", { name: /Gold/ });
+    fireEvent.mouseEnter(goldLink);
+    expect(screen.getByTestId("ticker-tooltip")).toHaveTextContent("+2 more");
   });
 });
