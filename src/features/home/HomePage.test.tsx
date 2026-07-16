@@ -24,7 +24,7 @@ describe("HomePage", () => {
     renderWithIntl(<HomePage />, { locale: "en" });
     expect(
       screen.getByRole("combobox", {
-        name: "Find ores, locations and blueprints",
+        name: "Find ores, locations, blueprints and signatures",
       }),
     ).toBeVisible();
   });

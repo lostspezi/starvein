@@ -120,6 +120,30 @@ describe("SearchBox", () => {
     expect(option).toHaveTextContent("Ship weapon");
   });
 
+  it("shows a signature match with its base value", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () => ({
+        ok: true,
+        json: async () => [
+          {
+            kind: "signature",
+            label: "5 × Bexalite",
+            detail: "3600",
+            href: "/ores/bexa",
+          },
+        ],
+      })),
+    );
+    const user = userEvent.setup();
+    renderWithIntl(<SearchBox debounceMs={0} />, { locale: "en" });
+
+    await user.type(screen.getByRole("combobox"), "18000");
+
+    const option = await screen.findByRole("option", { name: /5 × Bexalite/ });
+    expect(option).toHaveTextContent("signature 3600");
+  });
+
   it("navigates to a selected blueprint", async () => {
     vi.stubGlobal(
       "fetch",

@@ -1,7 +1,8 @@
 {
   "search": {
     "label": "Search",
-    "placeholder": "Search ores, locations & blueprints…",
-    "noResults": "No results"
+    "placeholder": "Search ores, locations, blueprints or scan signature…",
+    "noResults": "No results",
+    "signature": "signature {value}"
   }
 }
