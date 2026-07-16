@@ -1,4 +1,4 @@
-import type { UexItemPriceRecord } from "@/lib/uex-client";
+import type { UexGeoFields } from "@/lib/uex-client";
 import type { EquipmentKind } from "./equipment-prices.schema";
 
 /** UEX-Kategorie-IDs (live verifiziert 2026-07-13). */
@@ -50,7 +50,7 @@ export function mapUexItemSlug(
  * Standort (Stadt/Station/Outpost) · Himmelskörper (Mond/Planet/Orbit)
  * · Sternsystem — leere und direkt doppelte Teile entfallen.
  */
-export function buildLocationLabel(record: UexItemPriceRecord): string {
+export function buildLocationLabel(record: UexGeoFields): string {
   const site =
     record.city_name ?? record.space_station_name ?? record.outpost_name;
   const body = record.moon_name ?? record.planet_name ?? record.orbit_name;

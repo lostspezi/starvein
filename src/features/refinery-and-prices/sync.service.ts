@@ -1,5 +1,6 @@
 import type { Db } from "mongodb";
 import { syncEquipmentPrices } from "@/features/loadouts/equipment-prices.sync";
+import { syncVehiclePrices } from "@/features/ships/vehicle-prices.sync";
 import { findAllOres } from "@/features/ores/ores.repository";
 import { getRedis } from "@/lib/redis";
 import { uexClient } from "@/lib/uex-client";
@@ -15,6 +16,7 @@ export type SyncSummary = {
   yields: number;
   methods: number;
   equipmentPrices: number;
+  vehiclePrices: number;
   syncedAt: string;
 };
 
@@ -125,6 +127,7 @@ export async function syncUex(db: Db): Promise<SyncSummary> {
   }
 
   const equipmentPrices = await syncEquipmentPrices(db, syncedAt);
+  const vehiclePrices = await syncVehiclePrices(db, syncedAt);
 
   await db
     .collection("syncMeta")
@@ -141,6 +144,7 @@ export async function syncUex(db: Db): Promise<SyncSummary> {
     yields: yields.length,
     methods: methods.length,
     equipmentPrices,
+    vehiclePrices,
     syncedAt,
   };
 }

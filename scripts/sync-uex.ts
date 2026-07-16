@@ -10,7 +10,7 @@ async function main() {
   const db = await getDb();
   const summary = await syncUex(db);
   console.log(
-    `Synced ${summary.prices} prices, ${summary.yields} yields, ${summary.methods} methods, ${summary.equipmentPrices} equipment prices at ${summary.syncedAt}.`,
+    `Synced ${summary.prices} prices, ${summary.yields} yields, ${summary.methods} methods, ${summary.equipmentPrices} equipment prices, ${summary.vehiclePrices} vehicle prices at ${summary.syncedAt}.`,
   );
 }
 

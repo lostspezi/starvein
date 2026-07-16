@@ -50,6 +50,8 @@ describe("POST /api/sync-uex", () => {
 
     const body = await response.json();
     expect(body.methods).toBe(1);
+    // Route-Test seedet keine Fahrzeuge — nur Feld-Existenz prüfen
+    expect(typeof body.vehiclePrices).toBe("number");
     expect(typeof body.syncedAt).toBe("string");
   });
 });

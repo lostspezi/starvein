@@ -203,6 +203,172 @@ export const uexFixtures = {
       },
     ],
   } as Record<string, unknown[]>,
+  // Fahrzeuge + Kauf-/Mietpreise, per id_vehicle abgefragt.
+  // mole-carbon-edition ist bewusst unmapped (kein kuratierter Code) —
+  // der Sync darf für sie gar keine Preis-Requests absetzen.
+  vehicles: [
+    {
+      id: 148,
+      name: "Prospector",
+      name_full: "MISC Prospector",
+      slug: "misc-prospector",
+      is_mining: 1,
+    },
+    {
+      id: 122,
+      name: "MOLE",
+      name_full: "Argo MOLE",
+      slug: "argo-mole",
+      is_mining: 1,
+    },
+    {
+      id: 123,
+      name: "MOLE Carbon Edition",
+      name_full: "Argo MOLE Carbon Edition",
+      slug: "mole-carbon-edition",
+      is_mining: 1,
+    },
+  ],
+  vehiclePurchasePricesByVehicle: {
+    "148": [
+      {
+        id_vehicle: 148,
+        id_terminal: 149,
+        terminal_name: "New Deal - Teasa Spaceport - Lorville",
+        price_buy: 2783020,
+        star_system_name: "Stanton",
+        planet_name: "Hurston",
+        orbit_name: "Hurston",
+        moon_name: null,
+        space_station_name: null,
+        outpost_name: null,
+        city_name: "Lorville",
+        terminal_is_player_owned: 0,
+      },
+      {
+        id_vehicle: 148,
+        id_terminal: 148,
+        terminal_name: "Astro Armada - Area 18",
+        price_buy: 2620000,
+        star_system_name: "Stanton",
+        planet_name: "ArcCorp",
+        orbit_name: "ArcCorp",
+        moon_name: null,
+        space_station_name: null,
+        outpost_name: null,
+        city_name: "Area 18",
+        terminal_is_player_owned: 0,
+      },
+      {
+        id_vehicle: 148,
+        id_terminal: 900,
+        terminal_name: "Player Shipyard",
+        price_buy: 2500000,
+        star_system_name: "Stanton",
+        planet_name: null,
+        orbit_name: null,
+        moon_name: null,
+        space_station_name: null,
+        outpost_name: null,
+        city_name: null,
+        terminal_is_player_owned: 1,
+      },
+      {
+        id_vehicle: 148,
+        id_terminal: 901,
+        terminal_name: "Empty Shelf Shipyard",
+        price_buy: 0,
+        star_system_name: "Stanton",
+        planet_name: null,
+        orbit_name: null,
+        moon_name: null,
+        space_station_name: null,
+        outpost_name: null,
+        city_name: null,
+        terminal_is_player_owned: 0,
+      },
+    ],
+    "122": [
+      {
+        id_vehicle: 122,
+        id_terminal: 149,
+        terminal_name: "New Deal - Teasa Spaceport - Lorville",
+        price_buy: 8483740,
+        star_system_name: null,
+        planet_name: null,
+        orbit_name: null,
+        moon_name: null,
+        space_station_name: null,
+        outpost_name: null,
+        city_name: null,
+        terminal_is_player_owned: 0,
+      },
+    ],
+    "123": [
+      {
+        id_vehicle: 123,
+        id_terminal: 149,
+        terminal_name: "New Deal - Teasa Spaceport - Lorville",
+        price_buy: 9000000,
+        star_system_name: "Stanton",
+        planet_name: "Hurston",
+        orbit_name: "Hurston",
+        moon_name: null,
+        space_station_name: null,
+        outpost_name: null,
+        city_name: "Lorville",
+        terminal_is_player_owned: 0,
+      },
+    ],
+  } as Record<string, unknown[]>,
+  vehicleRentalPricesByVehicle: {
+    "148": [
+      {
+        id_vehicle: 148,
+        id_terminal: 157,
+        terminal_name: "Vantage Rentals - ARC-L1",
+        price_rent: 73237,
+        star_system_name: "Stanton",
+        planet_name: "ArcCorp",
+        orbit_name: "ArcCorp Lagrange Point 1",
+        moon_name: null,
+        space_station_name: "ARC-L1 Wide Forest Station",
+        outpost_name: null,
+        city_name: null,
+        terminal_is_player_owned: 0,
+      },
+      {
+        id_vehicle: 148,
+        id_terminal: 156,
+        terminal_name: "Traveler Rentals - Cargo Center - Baijini Point",
+        price_rent: 80500,
+        star_system_name: "Stanton",
+        planet_name: "ArcCorp",
+        orbit_name: "ArcCorp",
+        moon_name: null,
+        space_station_name: "Baijini Point",
+        outpost_name: null,
+        city_name: null,
+        terminal_is_player_owned: 0,
+      },
+    ],
+    "122": [
+      {
+        id_vehicle: 122,
+        id_terminal: 156,
+        terminal_name: "Traveler Rentals - Cargo Center - Baijini Point",
+        price_rent: 223257,
+        star_system_name: "Stanton",
+        planet_name: "ArcCorp",
+        orbit_name: "ArcCorp",
+        moon_name: null,
+        space_station_name: "Baijini Point",
+        outpost_name: null,
+        city_name: null,
+        terminal_is_player_owned: 0,
+      },
+    ],
+  } as Record<string, unknown[]>,
 };
 
 export const uexServer = setupServer(
@@ -231,6 +397,23 @@ export const uexServer = setupServer(
     return HttpResponse.json({
       status: "ok",
       data: uexFixtures.itemPricesByCategory[category] ?? [],
+    });
+  }),
+  http.get(`${UEX_TEST_BASE_URL}/vehicles`, () =>
+    HttpResponse.json({ status: "ok", data: uexFixtures.vehicles }),
+  ),
+  http.get(`${UEX_TEST_BASE_URL}/vehicles_purchases_prices`, ({ request }) => {
+    const vehicle = new URL(request.url).searchParams.get("id_vehicle") ?? "";
+    return HttpResponse.json({
+      status: "ok",
+      data: uexFixtures.vehiclePurchasePricesByVehicle[vehicle] ?? [],
+    });
+  }),
+  http.get(`${UEX_TEST_BASE_URL}/vehicles_rentals_prices`, ({ request }) => {
+    const vehicle = new URL(request.url).searchParams.get("id_vehicle") ?? "";
+    return HttpResponse.json({
+      status: "ok",
+      data: uexFixtures.vehicleRentalPricesByVehicle[vehicle] ?? [],
     });
   }),
 );

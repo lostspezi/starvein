@@ -50,6 +50,8 @@ export const ROUTES: string[] = [
   "/en/loadouts/new",
   "/de/loadouts/mine",
   "/en/loadouts/mine",
+  "/de/ships",
+  "/en/ships",
   "/de/guides",
   "/en/guides",
   "/de/guides/new",

@@ -61,11 +61,12 @@ export type UexItemRecord = {
   slug: string;
 };
 
-export type UexItemPriceRecord = {
-  id_item: number;
-  id_terminal: number;
-  terminal_name: string;
-  price_buy: number;
+/**
+ * Denormalisierte Geo-Felder, die UEX an Preis-Records mitliefert —
+ * struktureller Typ, damit buildLocationLabel für Item- UND
+ * Vehicle-Preise funktioniert.
+ */
+export type UexGeoFields = {
   star_system_name: string | null;
   planet_name: string | null;
   orbit_name: string | null;
@@ -73,6 +74,35 @@ export type UexItemPriceRecord = {
   space_station_name: string | null;
   outpost_name: string | null;
   city_name: string | null;
+};
+
+export type UexItemPriceRecord = UexGeoFields & {
+  id_item: number;
+  id_terminal: number;
+  terminal_name: string;
+  price_buy: number;
+  terminal_is_player_owned: number;
+};
+
+export type UexVehicleRecord = {
+  id: number;
+  name: string;
+  name_full: string;
+  slug: string;
+  is_mining: number;
+};
+
+/**
+ * Kauf-/Miet-Record der per-Vehicle-Endpunkte (vehicles_purchases_prices /
+ * vehicles_rentals_prices) — nur diese tragen die Geo-Felder und das
+ * player-owned-Flag inline, die *_all-Varianten nicht (verifiziert 2026-07-16).
+ */
+export type UexVehiclePriceRecord = UexGeoFields & {
+  id_vehicle: number;
+  id_terminal: number;
+  terminal_name: string;
+  price_buy?: number;
+  price_rent?: number;
   terminal_is_player_owned: number;
 };
 
@@ -85,4 +115,13 @@ export const uexClient = {
     fetchUex<UexItemRecord>(`items?id_category=${categoryId}`),
   itemPrices: (categoryId: number) =>
     fetchUex<UexItemPriceRecord>(`items_prices?id_category=${categoryId}`),
+  vehicles: () => fetchUex<UexVehicleRecord>("vehicles"),
+  vehiclePurchasePrices: (vehicleId: number) =>
+    fetchUex<UexVehiclePriceRecord>(
+      `vehicles_purchases_prices?id_vehicle=${vehicleId}`,
+    ),
+  vehicleRentalPrices: (vehicleId: number) =>
+    fetchUex<UexVehiclePriceRecord>(
+      `vehicles_rentals_prices?id_vehicle=${vehicleId}`,
+    ),
 };

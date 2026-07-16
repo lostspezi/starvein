@@ -1,0 +1,33 @@
+{
+  "ships": {
+    "title": "Schiffe kaufen & mieten",
+    "subtitle": "Wo es Mining-Schiffe und -Fahrzeuge in-game zu kaufen oder zu mieten gibt — Preise aus UEX.",
+    "filter": {
+      "vehicleLabel": "Fahrzeug",
+      "vehicleAll": "Alle",
+      "offerTypeLabel": "Angebot"
+    },
+    "offerType": {
+      "all": "Alle",
+      "purchase": "Kaufen",
+      "rental": "Mieten"
+    },
+    "buyHeading": "Kaufen",
+    "rentHeading": "Mieten",
+    "locationHeader": "Ort",
+    "terminalHeader": "Terminal",
+    "priceHeader": "Preis",
+    "aUEC": "aUEC",
+    "perDay": "aUEC/Tag",
+    "cheapest": "Günstigster",
+    "noPurchase": "Aktuell in-game nicht kaufbar.",
+    "noRental": "Aktuell nicht mietbar.",
+    "neverSynced": "Noch keine UEX-Preisdaten synchronisiert.",
+    "lastSynced": "Zuletzt synchronisiert: {date}",
+    "source": "Daten: UEX Corp",
+    "empty": "Keine Mining-Fahrzeuge im Katalog.",
+    "panel": {
+      "heading": "Kaufen oder mieten"
+    }
+  }
+}

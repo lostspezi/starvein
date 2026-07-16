@@ -35,6 +35,10 @@
       "title": "Mining-Loadouts",
       "description": "Community-Mining-Loadouts für Star Citizen: Laser, Module und Gadgets für Prospector, MOLE und mehr."
     },
+    "ships": {
+      "title": "Schiffe kaufen & mieten",
+      "description": "Wo man Mining-Schiffe in Star Citizen kauft oder mietet: Prospector, MOLE, Golem, ROC & Co. mit Preisen und Terminals aus UEX."
+    },
     "guides": {
       "title": "Mining-Guides",
       "description": "Community-Mining-Guides für Star Citizen: wo und wie man mint, mit Bildern und Video-Walkthroughs."
@@ -68,6 +72,7 @@
       "signatures": "Signaturen",
       "compare": "Vergleich",
       "loadouts": "Loadouts",
+      "ships": "Schiffe",
       "guides": "Guides",
       "companion": "Companion"
     },
