@@ -9,6 +9,7 @@ import { cn } from "@/lib/cn";
 import { Button } from "@/lib/components/ui/Button";
 import { Panel } from "@/lib/components/ui/Panel";
 import { guideExtensions } from "./guides.extensions";
+import { guideMarkdownExtensions } from "./guides.markdown";
 import {
   GUIDE_LANGUAGE_NAMES,
   GUIDE_LANGUAGES,
@@ -105,7 +106,9 @@ export function GuideEditor({
   )?.content ?? "") as Content;
 
   const editor = useEditor({
-    extensions: guideExtensions,
+    // Markdown-Extensions nur im Editor: eingefügtes Markdown wird als echte
+    // Formatierung übernommen. Das Server-Render braucht sie nicht.
+    extensions: [...guideExtensions, ...guideMarkdownExtensions],
     content: initialContent,
     immediatelyRender: false,
     editorProps: {
