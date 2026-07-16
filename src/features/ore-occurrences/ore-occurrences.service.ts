@@ -5,6 +5,7 @@ import type {
   CelestialBody,
 } from "@/features/locations/locations.schema";
 import type { MiningMethod, RarityTier } from "@/features/ores/ores.schema";
+import { getBestSellByOre } from "@/features/refinery-and-prices/price-summary";
 import {
   findOccurrencesByLocation,
   findOccurrencesByOre,
@@ -23,6 +24,9 @@ export type OccurrenceWithOre = OreOccurrence & {
   // Ship identifiziert das Mineral, ROC/FPS nur die Deposit-Größe.
   signatureValue?: number;
   signatureRange?: { min: number; max: number };
+  // Bester aktueller Verkaufspreis (aUEC/SCU) aus dem UEX-Sync
+  bestRawSell: number | null;
+  bestRefinedSell: number | null;
 };
 
 /** "Erz auswählen → alle Fundorte": Vorkommen inkl. Location-Anzeige-Daten. */
@@ -74,30 +78,32 @@ export async function findOccurrencesByLocationWithOre(
   if (occurrences.length === 0) return [];
 
   const oreCodes = occurrences.map((o) => o.oreCode);
-  const oreDocs = await db
-    .collection("ores")
-    .find(
-      { code: { $in: oreCodes } },
-      { projection: { _id: 0, code: 1, name_en: 1, rarityTier: 1 } },
-    )
-    .toArray();
-  const ores = new Map(oreDocs.map((o) => [o.code as string, o]));
-
-  const profileDocs = await db
-    .collection("signatureProfiles")
-    .find(
-      { oreCode: { $in: oreCodes } },
-      {
-        projection: {
-          _id: 0,
-          oreCode: 1,
-          method: 1,
-          signatureValue: 1,
-          signatureRange: 1,
+  const [oreDocs, profileDocs, bestSellByOre] = await Promise.all([
+    db
+      .collection("ores")
+      .find(
+        { code: { $in: oreCodes } },
+        { projection: { _id: 0, code: 1, name_en: 1, rarityTier: 1 } },
+      )
+      .toArray(),
+    db
+      .collection("signatureProfiles")
+      .find(
+        { oreCode: { $in: oreCodes } },
+        {
+          projection: {
+            _id: 0,
+            oreCode: 1,
+            method: 1,
+            signatureValue: 1,
+            signatureRange: 1,
+          },
         },
-      },
-    )
-    .toArray();
+      )
+      .toArray(),
+    getBestSellByOre(db),
+  ]);
+  const ores = new Map(oreDocs.map((o) => [o.code as string, o]));
   const profiles = new Map(
     profileDocs.map((p) => [`${p.oreCode}|${p.method}`, p]),
   );
@@ -105,6 +111,7 @@ export async function findOccurrencesByLocationWithOre(
   return occurrences.map((occurrence) => {
     const ore = ores.get(occurrence.oreCode);
     const profile = profiles.get(`${occurrence.oreCode}|${occurrence.method}`);
+    const bestSell = bestSellByOre.get(occurrence.oreCode);
     return {
       ...occurrence,
       oreName: (ore?.name_en as string) ?? occurrence.oreCode,
@@ -112,6 +119,8 @@ export async function findOccurrencesByLocationWithOre(
       signatureValue: profile?.signatureValue as number | undefined,
       signatureRange: profile?.signatureRange as
         { min: number; max: number } | undefined,
+      bestRawSell: bestSell?.raw ?? null,
+      bestRefinedSell: bestSell?.refined ?? null,
     };
   });
 }

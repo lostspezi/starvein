@@ -72,6 +72,42 @@ export async function getBestRefinedSellByOre(
   return new Map(results.map((entry) => [entry._id, entry.best]));
 }
 
+export type BestSellPrices = {
+  raw: number | null;
+  refined: number | null;
+};
+
+/**
+ * Bester Verkaufspreis (roh UND raffiniert) je Erz in einem Roundtrip —
+ * für Tabellen, die beide Werte zeigen. Erze ohne verkaufbaren Snapshot
+ * fehlen in der Map.
+ */
+export async function getBestSellByOre(
+  db: Db,
+): Promise<Map<string, BestSellPrices>> {
+  const results = await db
+    .collection("priceSnapshots")
+    .aggregate<{ _id: { oreCode: string; kind: string }; best: number }>([
+      { $match: { priceSell: { $gt: 0 } } },
+      {
+        $group: {
+          _id: { oreCode: "$oreCode", kind: "$kind" },
+          best: { $max: "$priceSell" },
+        },
+      },
+    ])
+    .toArray();
+
+  const map = new Map<string, BestSellPrices>();
+  for (const entry of results) {
+    const prices = map.get(entry._id.oreCode) ?? { raw: null, refined: null };
+    if (entry._id.kind === "raw") prices.raw = entry.best;
+    if (entry._id.kind === "refined") prices.refined = entry.best;
+    map.set(entry._id.oreCode, prices);
+  }
+  return map;
+}
+
 export async function findRefineryYieldsByOre(
   db: Db,
   oreCode: string,
