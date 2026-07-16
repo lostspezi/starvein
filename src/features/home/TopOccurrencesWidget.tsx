@@ -13,11 +13,14 @@ export function TopOccurrencesWidget({
   total,
   favoriteKeys,
   isAuthenticated,
+  children,
 }: {
   rows: ExplorerRow[];
   total: number;
   favoriteKeys: Set<string>;
   isAuthenticated: boolean;
+  /** Optionaler Filter-Slot zwischen Überschrift und Tabelle. */
+  children?: React.ReactNode;
 }) {
   const t = useTranslations("home.topOres");
 
@@ -29,6 +32,7 @@ export function TopOccurrencesWidget({
           {t("viewAll", { total })}
         </GlowLink>
       </div>
+      {children}
       <ExplorerTable
         rows={rows}
         favoriteKeys={favoriteKeys}

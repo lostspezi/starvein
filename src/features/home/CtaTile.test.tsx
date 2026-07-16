@@ -4,22 +4,23 @@ import { renderWithIntl } from "@/test/render";
 import { CtaTile } from "./CtaTile";
 
 describe("CtaTile", () => {
-  it("links to the builder and the loadout browser", () => {
+  it("links to the loadout builder and the guide editor", () => {
     renderWithIntl(<CtaTile />, { locale: "en" });
 
     expect(
-      screen.getByRole("heading", { name: "Build your own" }),
+      screen.getByRole("heading", { name: "Share your knowledge" }),
     ).toBeVisible();
     expect(
       screen.getByText(
-        "Put together a loadout for your ship or ROC and share it with the community.",
+        "Put together a loadout for your ship or ROC, or write a guide for the community.",
       ),
     ).toBeVisible();
     expect(
       screen.getByRole("link", { name: "Create loadout" }),
     ).toHaveAttribute("href", "/loadouts/new");
-    expect(
-      screen.getByRole("link", { name: "Browse all loadouts" }),
-    ).toHaveAttribute("href", "/loadouts");
+    expect(screen.getByRole("link", { name: "Write a guide" })).toHaveAttribute(
+      "href",
+      "/guides/new",
+    );
   });
 });

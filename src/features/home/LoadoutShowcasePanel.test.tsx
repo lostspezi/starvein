@@ -2,7 +2,7 @@ import { screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { Loadout } from "@/features/loadouts/loadouts.schema";
 import { renderWithIntl } from "@/test/render";
-import { HomeBento } from "./HomeBento";
+import { LoadoutShowcasePanel } from "./LoadoutShowcasePanel";
 import type {
   LoadoutShowcase,
   ShowcaseLoadout,
@@ -40,11 +40,7 @@ function showcaseLoadout(id: string, name: string): ShowcaseLoadout {
 
 const fullShowcase: LoadoutShowcase = {
   feature: showcaseLoadout("l-feature", "Feature Loadout"),
-  top: [
-    showcaseLoadout("l-top1", "Top Eins"),
-    showcaseLoadout("l-top2", "Top Zwei"),
-    showcaseLoadout("l-top3", "Top Drei"),
-  ],
+  top: [],
   newest: [
     showcaseLoadout("l-new1", "Neu Eins"),
     showcaseLoadout("l-new2", "Neu Zwei"),
@@ -53,14 +49,10 @@ const fullShowcase: LoadoutShowcase = {
 
 const emptyShowcase: LoadoutShowcase = { feature: null, top: [], newest: [] };
 
-function renderBento(showcase: LoadoutShowcase) {
+function renderPanel(showcase: LoadoutShowcase) {
   renderWithIntl(
-    <HomeBento
+    <LoadoutShowcasePanel
       showcase={showcase}
-      oreCount={40}
-      locationCount={120}
-      blueprintCount={1559}
-      loadoutCount={9}
       currentPatchVersion="4.7"
       viewerUserId={null}
     />,
@@ -68,59 +60,31 @@ function renderBento(showcase: LoadoutShowcase) {
   );
 }
 
-describe("HomeBento", () => {
-  it("renders section heading, lists, stats and CTA for a full showcase", () => {
-    renderBento(fullShowcase);
+describe("LoadoutShowcasePanel", () => {
+  it("shows the heading, the featured loadout and the newest list", () => {
+    renderPanel(fullShowcase);
 
     expect(
       screen.getByRole("heading", { level: 2, name: "Community loadouts" }),
     ).toBeVisible();
-    expect(screen.getByRole("heading", { name: "Top rated" })).toBeVisible();
+    expect(screen.getByText("Top voted")).toBeVisible();
     expect(screen.getByRole("heading", { name: "Newest" })).toBeVisible();
 
-    for (const name of [
-      "Feature Loadout",
-      "Top Eins",
-      "Top Zwei",
-      "Top Drei",
-      "Neu Eins",
-      "Neu Zwei",
-    ]) {
+    for (const name of ["Feature Loadout", "Neu Eins", "Neu Zwei"]) {
       expect(screen.getByRole("link", { name })).toBeVisible();
     }
 
-    expect(screen.getByText("120")).toBeVisible();
-    expect(screen.getByRole("link", { name: "Create loadout" })).toBeVisible();
     expect(
       screen.getByRole("link", { name: "Browse all loadouts" }),
-    ).toBeVisible();
+    ).toHaveAttribute("href", "/loadouts");
   });
 
-  it("keeps stats and CTA but drops loadout tiles when empty", () => {
-    renderBento(emptyShowcase);
+  it("shows an empty state without loadout tiles when nothing is public", () => {
+    renderPanel(emptyShowcase);
 
-    expect(screen.queryByRole("heading", { name: "Top rated" })).toBeNull();
-    expect(screen.queryByRole("heading", { name: "Newest" })).toBeNull();
     expect(screen.queryByRole("article")).toBeNull();
-
-    expect(screen.getByText("The database")).toBeVisible();
-    expect(screen.getByRole("link", { name: "Create loadout" })).toBeVisible();
-  });
-
-  it("fans out as a bento grid from md upward", () => {
-    renderBento(fullShowcase);
-
-    const section = screen
-      .getByRole("heading", { level: 2, name: "Community loadouts" })
-      .closest("section");
-    const grid = section?.querySelector("div.grid");
-    expect(grid?.className).toContain("grid-cols-1");
-    expect(grid?.className).toContain("md:grid-cols-2");
-    expect(grid?.className).toContain("lg:grid-cols-4");
-
-    const featureWrapper = screen
-      .getByRole("link", { name: "Feature Loadout" })
-      .closest("div.md\\:col-span-2");
-    expect(featureWrapper?.className).toContain("lg:row-span-2");
+    expect(
+      screen.getByText("No public loadouts yet. Build the first one!"),
+    ).toBeVisible();
   });
 });

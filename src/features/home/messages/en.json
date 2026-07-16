@@ -1,26 +1,37 @@
 {
   "home": {
     "title": "STARVEIN",
-    "tagline": "Community mining reference for Star Citizen — ores, locations, scan signatures.",
+    "welcome": "Welcome to STARVEIN, your free mining reference for Star Citizen. Find every ore, where it spawns and which scan signature to look out for. Built by the community, for the community.",
     "searchLabel": "Find ores, locations, blueprints and signatures",
-    "bento": {
+    "stats": {
+      "heading": "The database",
+      "ores": "Ores",
+      "locations": "Locations",
+      "blueprints": "Blueprints",
+      "community": "Loadouts + guides"
+    },
+    "loadouts": {
       "heading": "Community loadouts",
       "featured": "Top voted",
-      "topHeading": "Top rated",
       "newestHeading": "Newest",
-      "stats": {
-        "heading": "The database",
-        "ores": "Ores",
-        "locations": "Locations",
-        "blueprints": "Blueprints",
-        "loadouts": "Public loadouts"
-      },
-      "cta": {
-        "heading": "Build your own",
-        "text": "Put together a loadout for your ship or ROC and share it with the community.",
-        "create": "Create loadout",
-        "browse": "Browse all loadouts"
-      }
+      "viewAll": "Browse all loadouts",
+      "empty": "No public loadouts yet. Build the first one!"
+    },
+    "guides": {
+      "heading": "Community guides",
+      "featured": "Top voted",
+      "newestHeading": "Newest",
+      "viewAll": "Browse all guides",
+      "empty": "No guides yet. Be the first to write one!"
+    },
+    "cta": {
+      "heading": "Share your knowledge",
+      "text": "Put together a loadout for your ship or ROC, or write a guide for the community.",
+      "create": "Create loadout",
+      "write": "Write a guide"
+    },
+    "quickLinks": {
+      "heading": "Jump right in"
     },
     "topOres": {
       "heading": "Top occurrences",

@@ -24,7 +24,7 @@ export function FeatureLoadoutTile({
   currentPatchVersion: string;
   viewerUserId: string | null;
 }) {
-  const t = useTranslations("home.bento");
+  const t = useTranslations("home.loadouts");
   const tLoadouts = useTranslations("loadouts");
   const isOwner = viewerUserId !== null && viewerUserId === loadout.ownerUserId;
 
