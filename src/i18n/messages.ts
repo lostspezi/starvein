@@ -31,6 +31,8 @@ import deOccurrences from "@/features/ore-occurrences/messages/de.json";
 import enOccurrences from "@/features/ore-occurrences/messages/en.json";
 import dePrices from "@/features/refinery-and-prices/messages/de.json";
 import enPrices from "@/features/refinery-and-prices/messages/en.json";
+import dePriceTicker from "@/features/price-ticker/messages/de.json";
+import enPriceTicker from "@/features/price-ticker/messages/en.json";
 import deCompare from "@/features/ore-compare/messages/de.json";
 import enCompare from "@/features/ore-compare/messages/en.json";
 import deOres from "@/features/ores/messages/de.json";
@@ -59,6 +61,7 @@ const messages = {
     ...deOccurrences,
     ...deSignatures,
     ...dePrices,
+    ...dePriceTicker,
     ...deAuth,
     ...deCompanion,
     ...deDeviceAuth,
@@ -83,6 +86,7 @@ const messages = {
     ...enOccurrences,
     ...enSignatures,
     ...enPrices,
+    ...enPriceTicker,
     ...enAuth,
     ...enCompanion,
     ...enDeviceAuth,

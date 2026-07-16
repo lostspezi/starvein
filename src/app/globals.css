@@ -74,6 +74,43 @@ body {
   }
 }
 
+/* Preisticker unter dem Header: Endlos-Marquee über eine duplizierte Kopie
+   des Tracks (-50% = exakt eine Kopienbreite). Lange dekorative Loops sind
+   analog zu ship-drift von der 500-ms-Motion-Regel ausgenommen. */
+@layer components {
+  .ticker-track {
+    animation: ticker-scroll 60s linear infinite;
+  }
+
+  .ticker-viewport:hover .ticker-track {
+    animation-play-state: paused;
+  }
+
+  @keyframes ticker-scroll {
+    from {
+      transform: translate3d(0, 0, 0);
+    }
+    to {
+      transform: translate3d(-50%, 0, 0);
+    }
+  }
+
+  /* Der globale Kill-Switch (design-tokens.css) würde das Marquee sofort bei
+     translateX(0) beenden — hier explizit statisch: Duplikat weg, Streifen
+     innerhalb der Leiste horizontal scrollbar. */
+  @media (prefers-reduced-motion: reduce) {
+    .ticker-track {
+      animation: none;
+    }
+    .ticker-dup {
+      display: none;
+    }
+    .ticker-viewport {
+      overflow-x: auto;
+    }
+  }
+}
+
 /* Gerenderte Guide-Inhalte (renderGuideHtml) und der TipTap-Editor teilen
    sich dieselbe HUD-typische Prose-Typografie, damit Vorschau und Ergebnis
    übereinstimmen. Tokens statt Rohwerte (MASTER §7). */
