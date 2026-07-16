@@ -1,5 +1,6 @@
 import { screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { CURRENT_PATCH_VERSION } from "@/lib/patch";
 import { renderWithIntl } from "@/test/render";
 import { GuideCard } from "./GuideCard";
 import type { Guide } from "./guides.schema";
@@ -31,7 +32,8 @@ const guide: Guide = {
   isPublic: true,
   votes: { up: 7 },
   voters: ["user-9"],
-  patchVersion: "4.7",
+  // "aktuell" heißt: gleicher Patch wie die App-Konstante — bump-fest
+  patchVersion: CURRENT_PATCH_VERSION,
   createdAt: "2026-07-13T08:00:00.000Z",
   updatedAt: "2026-07-13T08:00:00.000Z",
 };
