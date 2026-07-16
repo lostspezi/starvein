@@ -117,6 +117,10 @@ export async function listPublicGuides(
   return query.limit ? guides.slice(0, query.limit) : guides;
 }
 
+export async function countPublicGuides(db: Db): Promise<number> {
+  return db.collection(COLLECTION).countDocuments({ isPublic: true });
+}
+
 /** Obergrenze der im Tag-Filter angezeigten Tags. */
 export const GUIDE_TAG_FILTER_LIMIT = 10;
 

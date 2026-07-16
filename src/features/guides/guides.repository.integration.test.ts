@@ -5,6 +5,7 @@ import { CURRENT_PATCH_VERSION } from "@/lib/patch";
 import { uniqueDbName } from "@/test/factories";
 import type { GuideLanguage } from "./guides.languages";
 import {
+  countPublicGuides,
   deleteGuideById,
   findGuideById,
   insertGuide,
@@ -254,6 +255,14 @@ describe("guides repository", () => {
       "tie-older",
       "low-but-new",
     ]);
+  });
+
+  it("counts only public guides", async () => {
+    await insertGuide(db, makeGuide({ isPublic: true }));
+    await insertGuide(db, makeGuide({ isPublic: true }));
+    await insertGuide(db, makeGuide({ isPublic: false }));
+
+    expect(await countPublicGuides(db)).toBe(2);
   });
 
   it("defaults votes for documents without vote fields", async () => {
