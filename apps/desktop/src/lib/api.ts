@@ -82,3 +82,29 @@ export async function createRefineryJob(
   }
   return refineryJobSchema.parse(await response.json());
 }
+
+// Die Antwort enthält zusätzlich warehouseEntries — dafür gibt es kein
+// Shared-Schema und die Desktop-App hat kein Warehouse, daher nur `job` parsen.
+const collectJobResponseSchema = z.object({ job: refineryJobSchema });
+
+/** Markiert einen Refinery-Job als abgeholt (reiner Status-Flip, kein Warehouse-Transfer). */
+export async function collectRefineryJob(
+  token: string,
+  jobId: string,
+): Promise<RefineryJob> {
+  const response = await fetch(
+    `${getServerUrl()}/api/refinery-jobs/${encodeURIComponent(jobId)}/collect`,
+    {
+      method: "POST",
+      headers: {
+        authorization: `Bearer ${token}`,
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({}),
+    },
+  );
+  if (!response.ok) {
+    throw new ApiError(response.status);
+  }
+  return collectJobResponseSchema.parse(await response.json()).job;
+}

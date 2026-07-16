@@ -19,7 +19,8 @@ export function JobsPanel({
   onUnauthorized: () => void;
 }) {
   const t = useTranslations("jobs");
-  const { jobs, failed, refresh } = useJobs(token, onUnauthorized);
+  const { jobs, failed, refresh, collect, collectingId, collectError } =
+    useJobs(token, onUnauthorized);
   const [nowMs, setNowMs] = useState(() => Date.now());
   const notifiedIds = useRef<Set<string> | null>(null);
 
@@ -55,6 +56,9 @@ export function JobsPanel({
       nowMs={nowMs}
       onRefresh={() => void refresh()}
       refreshFailed={failed}
+      onCollect={(jobId) => void collect(jobId)}
+      collectingId={collectingId}
+      collectError={collectError}
     />
   );
 }

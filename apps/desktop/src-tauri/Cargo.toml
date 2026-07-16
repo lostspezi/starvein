@@ -1,6 +1,6 @@
 [package]
 name = "starvein-companion"
-version = "0.3.3"
+version = "0.4.0"
 description = "STARVEIN Companion — desktop helper for tracking Star Citizen refinery jobs"
 authors = ["lostspezi"]
 license = "MIT"
