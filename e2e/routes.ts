@@ -32,6 +32,8 @@ export const ROUTES: string[] = [
   "/en/locations/stanton/arccorp-mining-area-045",
   "/de/ores/hada",
   "/en/ores/hada",
+  "/de/occurrences",
+  "/en/occurrences",
   "/de/signatures",
   "/en/signatures",
   "/de/locations/stanton/hur-l1",

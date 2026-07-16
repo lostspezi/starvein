@@ -22,6 +22,10 @@
         "browse": "Alle Loadouts ansehen"
       }
     },
+    "topOres": {
+      "heading": "Top-Vorkommen",
+      "viewAll": "Alle {total} Vorkommen ansehen"
+    },
     "explorer": {
       "systemLabel": "Nach Sternsystem filtern",
       "systemAll": "Alle",

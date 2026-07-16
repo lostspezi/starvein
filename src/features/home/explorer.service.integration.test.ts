@@ -5,7 +5,11 @@ import { upsertOreOccurrences } from "@/features/ore-occurrences/ore-occurrences
 import { upsertOres } from "@/features/ores/ores.repository";
 import { closeMongo, getDb } from "@/lib/db";
 import { uniqueDbName } from "@/test/factories";
-import { EXPLORER_ROW_LIMIT, findExplorerRows } from "./explorer.service";
+import {
+  EXPLORER_ROW_LIMIT,
+  findExplorerRows,
+  findTopOreRows,
+} from "./explorer.service";
 
 const NO_FILTERS = { method: null, system: null, ore: null, rarity: null };
 
@@ -170,5 +174,109 @@ describe("explorer service", () => {
     expect(result.total).toBe(EXPLORER_ROW_LIMIT + 25 + 2);
     // Cap schneidet hinten ab: die wahrscheinlichsten Vorkommen bleiben vorn
     expect(result.rows[0].probabilityPercent).toBe(20);
+  });
+});
+
+describe("findTopOreRows", () => {
+  let db: Db;
+
+  beforeAll(async () => {
+    db = await getDb(uniqueDbName("explorer-top"));
+
+    await upsertOres(db, [
+      {
+        code: "HADA",
+        name_de: "Hadanite",
+        name_en: "Hadanite",
+        rarityTier: "epic",
+        mineableBy: { ship: false, roc: true, fps: true },
+      },
+      {
+        code: "GOLD",
+        name_de: "Gold",
+        name_en: "Gold",
+        rarityTier: "rare",
+        mineableBy: { ship: true, roc: false, fps: false },
+      },
+    ]);
+    await upsertCelestialBodies(db, [
+      {
+        slug: "daymar",
+        systemCode: "STANTON",
+        type: "moon",
+        name: "Daymar",
+        parentSlug: "crusader",
+        uexId: 25,
+      },
+      {
+        slug: "monox",
+        systemCode: "PYRO",
+        type: "planet",
+        name: "Monox",
+        parentSlug: null,
+        uexId: 241,
+      },
+    ]);
+    await upsertOreOccurrences(db, [
+      {
+        oreCode: "HADA",
+        systemCode: "STANTON",
+        bodySlug: "daymar",
+        method: "fps",
+        probabilityPercent: 20,
+        patchVersion: "4.7",
+        sourceType: "curated",
+        confidenceScore: 0.3,
+        lastVerifiedAt: "2026-07-09",
+      },
+      {
+        oreCode: "HADA",
+        systemCode: "PYRO",
+        bodySlug: "monox",
+        method: "fps",
+        probabilityPercent: 35,
+        patchVersion: "4.7",
+        sourceType: "curated",
+        confidenceScore: 0.3,
+        lastVerifiedAt: "2026-07-09",
+      },
+      {
+        oreCode: "GOLD",
+        systemCode: "PYRO",
+        bodySlug: "monox",
+        method: "ship",
+        probabilityPercent: 12,
+        patchVersion: "4.7",
+        sourceType: "curated",
+        confidenceScore: 0.3,
+        lastVerifiedAt: "2026-07-09",
+      },
+    ]);
+  });
+
+  it("keeps only the best occurrence per ore", async () => {
+    const { rows, total } = await findTopOreRows(db, NO_FILTERS);
+
+    expect(rows.map((row) => [row.oreCode, row.probabilityPercent])).toEqual([
+      ["HADA", 35],
+      ["GOLD", 12],
+    ]);
+    // total zählt alle Vorkommen (fürs "Alle X ansehen"-Link), nicht die Dedupe-Rows
+    expect(total).toBe(3);
+  });
+
+  it("caps the deduplicated rows at the limit", async () => {
+    const { rows } = await findTopOreRows(db, NO_FILTERS, 1);
+    expect(rows.map((row) => row.oreCode)).toEqual(["HADA"]);
+  });
+
+  it("applies the explorer filters before deduplicating", async () => {
+    const { rows } = await findTopOreRows(db, {
+      ...NO_FILTERS,
+      system: "STANTON",
+    });
+    expect(rows.map((row) => [row.oreCode, row.probabilityPercent])).toEqual([
+      ["HADA", 20],
+    ]);
   });
 });

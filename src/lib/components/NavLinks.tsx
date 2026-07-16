@@ -9,6 +9,7 @@ const ROUTES = [
   { href: "/blueprints", key: "blueprints" },
   { href: "/materials", key: "materials" },
   { href: "/locations", key: "locations" },
+  { href: "/occurrences", key: "occurrences" },
   { href: "/signatures", key: "signatures" },
   { href: "/compare", key: "compare" },
   { href: "/loadouts", key: "loadouts" },

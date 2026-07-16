@@ -22,6 +22,10 @@
         "browse": "Browse all loadouts"
       }
     },
+    "topOres": {
+      "heading": "Top occurrences",
+      "viewAll": "View all {total} occurrences"
+    },
     "explorer": {
       "systemLabel": "Filter by star system",
       "systemAll": "All",
