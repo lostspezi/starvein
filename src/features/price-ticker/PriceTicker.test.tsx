@@ -191,6 +191,36 @@ describe("PriceTicker", () => {
     ).toHaveAccessibleDescription(/\+2 more/);
   });
 
+  it("survives cached entries in the pre-tooltip shape (no sellTerminals)", async () => {
+    // Prod-Regression 2026-07-16: Redis lieferte nach dem Deploy noch die
+    // alte Entry-Form ohne sellTerminals — das darf nie wieder die ganze
+    // Seite crashen (Ticker sitzt im Root-Layout).
+    const staleEntries = [
+      {
+        oreCode: "QUAN",
+        nameDe: "Quantanium",
+        nameEn: "Quantainium",
+        bestSell: 91.5,
+        prevClose: 85,
+        direction: "up",
+        changePercent: 7.6,
+      },
+    ] as unknown as TickerEntry[];
+    mockFetch(staleEntries);
+    render(<PriceTicker />, { wrapper: Wrapper });
+
+    const region = await screen.findByRole("region", {
+      name: "Live commodity prices",
+    });
+    expect(region).toBeInTheDocument();
+    const link = screen.getByRole("link", { name: /Quantainium/ });
+    expect(link).toHaveAttribute("href", "/ores/quan");
+    // Ohne Terminaldaten gibt es weder Beschreibung noch Tooltip
+    expect(link).not.toHaveAttribute("aria-describedby");
+    fireEvent.mouseEnter(link);
+    expect(screen.queryByTestId("ticker-tooltip")).not.toBeInTheDocument();
+  });
+
   it("shows a sell-location tooltip on hover and hides it on leave", async () => {
     mockFetch(ENTRIES);
     render(<PriceTicker />, { wrapper: Wrapper });

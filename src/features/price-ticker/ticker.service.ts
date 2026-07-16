@@ -4,7 +4,10 @@ import { getRedis } from "@/lib/redis";
 import { getPreviousDayCloses } from "./daily-close.repository";
 
 const CACHE_TTL_SECONDS = 900; // 15 Minuten (CLAUDE.md §6.1)
-const TICKER_CACHE_KEY = `${PRICE_CACHE_PREFIX}ticker`;
+// Versionssuffix bei JEDER Änderung an der TickerEntry-Form mitziehen:
+// nach einem Deploy liegt sonst bis zu TTL/Sync-Invalidierung die alte
+// Form im Cache und crasht den Client (Prod-Vorfall 2026-07-16).
+const TICKER_CACHE_KEY = `${PRICE_CACHE_PREFIX}ticker:v2`;
 const MAX_SELL_TERMINALS = 5;
 
 export type TickerEntry = {

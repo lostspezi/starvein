@@ -7,6 +7,26 @@ import type { TickerEntry } from "./ticker.service";
 const POLL_INTERVAL_MS = 300_000;
 
 /**
+ * Fehlende/fremde Felder tolerieren statt zu crashen: der Ticker sitzt im
+ * Root-Layout, ein kaputter API-Payload (z. B. gecachte Einträge einer
+ * älteren Deploy-Version, Prod-Vorfall 2026-07-16) darf nie die ganze
+ * Seite mitreißen.
+ */
+function normalizeEntry(entry: TickerEntry): TickerEntry {
+  const sellTerminals = Array.isArray(entry.sellTerminals)
+    ? entry.sellTerminals
+    : [];
+  return {
+    ...entry,
+    sellTerminals,
+    sellTerminalCount:
+      typeof entry.sellTerminalCount === "number"
+        ? entry.sellTerminalCount
+        : sellTerminals.length,
+  };
+}
+
+/**
  * Liefert die Ticker-Einträge für die Client-Marquee: initialer Fetch beim
  * Mount, danach periodisch. Ticks in verborgenen Tabs werden übersprungen;
  * beim Zurückkehren wird sofort nachgeladen (Muster useChatPolling).
@@ -25,7 +45,7 @@ export function usePriceTicker(): TickerEntry[] | null {
         return;
       }
       const data = (await response.json()) as TickerEntry[];
-      setEntries(data);
+      setEntries(Array.isArray(data) ? data.map(normalizeEntry) : []);
     } catch {
       // Fehlgeschlagene Polls still überspringen — der nächste Tick kommt
       setEntries((prev) => prev ?? []);
