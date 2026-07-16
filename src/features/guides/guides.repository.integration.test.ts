@@ -5,6 +5,7 @@ import { CURRENT_PATCH_VERSION } from "@/lib/patch";
 import { uniqueDbName } from "@/test/factories";
 import type { GuideLanguage } from "./guides.languages";
 import {
+  countPublicGuides,
   deleteGuideById,
   findGuideById,
   insertGuide,
@@ -45,6 +46,8 @@ function makeGuide(overrides: Partial<Guide> = {}): Guide {
     translations: [tr("en", "Sample guide")],
     ownerUserId: "owner-1",
     isPublic: true,
+    votes: { up: 0 },
+    voters: [],
     patchVersion: CURRENT_PATCH_VERSION,
     createdAt: now,
     updatedAt: now,
@@ -205,5 +208,72 @@ describe("guides repository", () => {
     await insertGuide(db, makeGuide({ ownerUserId: "other" }));
 
     expect(await listGuidesByOwner(db, "me")).toHaveLength(2);
+  });
+
+  it("sorts by votes for the top sort, newest first on ties", async () => {
+    await insertGuide(
+      db,
+      makeGuide({
+        id: "low-but-new",
+        votes: { up: 1 },
+        voters: ["v1"],
+        updatedAt: "2026-07-16T12:00:00.000Z",
+      }),
+    );
+    await insertGuide(
+      db,
+      makeGuide({
+        id: "high-but-old",
+        votes: { up: 5 },
+        voters: ["v1", "v2", "v3", "v4", "v5"],
+        updatedAt: "2026-07-01T12:00:00.000Z",
+      }),
+    );
+    await insertGuide(
+      db,
+      makeGuide({
+        id: "tie-older",
+        votes: { up: 3 },
+        voters: ["v1", "v2", "v3"],
+        updatedAt: "2026-07-02T12:00:00.000Z",
+      }),
+    );
+    await insertGuide(
+      db,
+      makeGuide({
+        id: "tie-newer",
+        votes: { up: 3 },
+        voters: ["v1", "v2", "v3"],
+        updatedAt: "2026-07-10T12:00:00.000Z",
+      }),
+    );
+
+    const sorted = await listPublicGuides(db, { sort: "top" });
+    expect(sorted.map((g) => g.id)).toEqual([
+      "high-but-old",
+      "tie-newer",
+      "tie-older",
+      "low-but-new",
+    ]);
+  });
+
+  it("counts only public guides", async () => {
+    await insertGuide(db, makeGuide({ isPublic: true }));
+    await insertGuide(db, makeGuide({ isPublic: true }));
+    await insertGuide(db, makeGuide({ isPublic: false }));
+
+    expect(await countPublicGuides(db)).toBe(2);
+  });
+
+  it("defaults votes for documents without vote fields", async () => {
+    const guide = makeGuide();
+    const doc: Record<string, unknown> = { ...guide };
+    delete doc.votes;
+    delete doc.voters;
+    await db.collection("guides").insertOne(doc as never);
+
+    const found = await findGuideById(db, guide.id);
+    expect(found?.votes).toEqual({ up: 0 });
+    expect(found?.voters).toEqual([]);
   });
 });

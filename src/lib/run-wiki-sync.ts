@@ -8,6 +8,8 @@ import {
   type LocationsSyncSummary,
 } from "@/features/locations/locations.sync";
 import {
+  collectResourceLocationUuids,
+  fetchWikiMiningSnapshot,
   syncWikiMiningData,
   type MiningDataSyncSummary,
 } from "@/features/ores/mining-data.sync";
@@ -20,15 +22,20 @@ export type FullWikiSyncSummary = {
 
 /**
  * Kompletter Star-Citizen-Wiki-Sync in fester Reihenfolge:
- * 1. Locations (liefert die wikiUuid->Body-Map),
- * 2. Mining-Daten (Erze, Signaturen, Vorkommen — braucht die Bodies),
+ * 0. Mining-Snapshot (Commodities + Fundort-Details, einmalig geladen),
+ * 1. Locations (liefert die wikiUuid->Body-Map; der Snapshot rettet
+ *    Asteroiden mit kaputtem has_resources-Flag über die Fundort-Referenzen),
+ * 2. Mining-Daten (Erze, Vorkommen — braucht die Bodies, nutzt den Snapshot),
  * 3. Blueprints/Materials (braucht den Erz-Katalog für resolveOreCode).
  *
  * Genutzt von scripts/sync-wiki.ts und POST /api/sync-wiki.
  */
 export async function runFullWikiSync(db: Db): Promise<FullWikiSyncSummary> {
-  const locations = await syncWikiLocations(db);
-  const miningData = await syncWikiMiningData(db);
+  const snapshot = await fetchWikiMiningSnapshot();
+  const locations = await syncWikiLocations(db, {
+    resourceLocationUuids: collectResourceLocationUuids(snapshot),
+  });
+  const miningData = await syncWikiMiningData(db, snapshot);
   const blueprints = await syncWikiBlueprints(db);
 
   await db.collection("syncMeta").updateOne(

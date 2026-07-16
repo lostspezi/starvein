@@ -23,7 +23,13 @@
     },
     "sort": {
       "new": "Newest",
+      "top": "Top rated",
       "title": "A–Z"
+    },
+    "vote": {
+      "upvote": "Upvote guide",
+      "removeVote": "Remove your vote",
+      "signInToVote": "Sign in to vote"
     },
     "card": {
       "private": "Private",

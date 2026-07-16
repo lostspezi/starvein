@@ -3,6 +3,8 @@ import { cn } from "@/lib/cn";
 const WIDTH_CLASS = {
   default: "max-w-4xl",
   wide: "max-w-5xl",
+  /** Dashboard-Breite (~1440px) — bisher nur für die Startseite. */
+  xl: "max-w-[90rem]",
 } as const;
 
 /** Zentrierte Seiten-Spalte — ersetzt den pro Seite kopierten Container-String. */

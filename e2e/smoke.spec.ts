@@ -12,7 +12,7 @@ test("redirects / to /de for German Accept-Language", async ({ browser }) => {
 test("locale switcher navigates from /de to /en", async ({ page }) => {
   await page.goto("/de");
   await expect(
-    page.getByText("Community-Mining-Referenz für Star Citizen", {
+    page.getByText("deiner freien Mining-Referenz für Star Citizen", {
       exact: false,
     }),
   ).toBeVisible();
@@ -21,7 +21,7 @@ test("locale switcher navigates from /de to /en", async ({ page }) => {
 
   await expect(page).toHaveURL(/\/en$/);
   await expect(
-    page.getByText("Community mining reference for Star Citizen", {
+    page.getByText("your free mining reference for Star Citizen", {
       exact: false,
     }),
   ).toBeVisible();

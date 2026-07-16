@@ -19,6 +19,10 @@
     "body": {
       "description": "Erzvorkommen bei {body} ({system}) in Star Citizen — Fundwahrscheinlichkeiten je Mining-Methode (Ship, ROC, FPS)."
     },
+    "occurrences": {
+      "title": "Vorkommen",
+      "description": "Alle bekannten Erzvorkommen in Star Citizen: Fundort, Wahrscheinlichkeit und Mining-Methode — filterbar nach System, Seltenheit und Erz."
+    },
     "signatures": {
       "title": "Scan-Signaturen",
       "description": "Scan-Signatur-Referenz fürs Star-Citizen-Mining: Ship-Signaturen pro Mineral plus Vorkommensgrößen für ROC- und FPS-Mining."
@@ -60,6 +64,7 @@
       "blueprints": "Blueprints",
       "materials": "Materialien",
       "locations": "Locations",
+      "occurrences": "Vorkommen",
       "signatures": "Signaturen",
       "compare": "Vergleich",
       "loadouts": "Loadouts",

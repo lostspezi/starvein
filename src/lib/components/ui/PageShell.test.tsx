@@ -25,4 +25,9 @@ describe("PageShell", () => {
     render(<PageShell width="wide">wide content</PageShell>);
     expect(screen.getByRole("main")).toHaveClass("max-w-5xl");
   });
+
+  it("supports an xl dashboard variant (~1440px)", () => {
+    render(<PageShell width="xl">dashboard content</PageShell>);
+    expect(screen.getByRole("main")).toHaveClass("max-w-[90rem]");
+  });
 });

@@ -9,6 +9,7 @@ import {
 } from "@/features/guides/guides.languages";
 import { getGuideForViewer } from "@/features/guides/guides.service";
 import { pickGuideTranslation } from "@/features/guides/guides.schema";
+import { GuideVoteButton } from "@/features/guides/GuideVoteButton";
 import { OwnerActions } from "@/features/guides/OwnerActions";
 import { Link } from "@/i18n/navigation";
 import { Badge } from "@/lib/components/ui/Badge";
@@ -83,14 +84,28 @@ export default async function GuideDetailPage({
             ) : undefined
           }
         />
-        {canDelete && (
-          <OwnerActions
-            guideId={guide.id}
-            isPublic={guide.isPublic}
-            canEdit={isOwner}
-            canDelete={canDelete}
-          />
-        )}
+        <div className="flex items-center gap-3">
+          {guide.isPublic && (
+            <GuideVoteButton
+              guideId={guide.id}
+              initialVotes={guide.votes.up}
+              initialHasVoted={
+                user !== null &&
+                user !== undefined &&
+                guide.voters.includes(user.id)
+              }
+              isOwner={isOwner}
+            />
+          )}
+          {canDelete && (
+            <OwnerActions
+              guideId={guide.id}
+              isPublic={guide.isPublic}
+              canEdit={isOwner}
+              canDelete={canDelete}
+            />
+          )}
+        </div>
       </div>
 
       {guide.translations.length > 1 && (

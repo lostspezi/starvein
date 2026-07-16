@@ -11,13 +11,25 @@ describe("HomePage", () => {
     ).toBeVisible();
   });
 
-  it("shows the localized tagline", () => {
+  it("shows the localized welcome text", () => {
     renderWithIntl(<HomePage />, { locale: "de" });
     expect(
       screen.getByText(
-        "Community-Mining-Referenz für Star Citizen — Erze, Fundorte, Scan-Signaturen.",
+        /Willkommen bei STARVEIN, deiner freien Mining-Referenz/,
       ),
     ).toBeVisible();
+    expect(
+      screen.getByText(/Gebaut von der Community, für die Community\./),
+    ).toBeVisible();
+  });
+
+  it("is left-aligned instead of a centered hero column", () => {
+    renderWithIntl(<HomePage />, { locale: "en" });
+    const section = screen
+      .getByRole("heading", { level: 1 })
+      .closest("section");
+    expect(section?.className).not.toContain("items-center");
+    expect(section?.className).not.toContain("text-center");
   });
 
   it("renders the hero search with its own accessible name", () => {

@@ -4,9 +4,9 @@ import { Button } from "@/lib/components/ui/Button";
 import { GlowLink } from "@/lib/components/ui/GlowLink";
 import { Panel } from "@/lib/components/ui/Panel";
 
-/** Bento-Kachel mit den Loadout-CTAs — zugleich Empty-State-Botschaft. */
+/** Community-CTA: eigenes Loadout bauen oder einen Guide schreiben. */
 export function CtaTile() {
-  const t = useTranslations("home.bento.cta");
+  const t = useTranslations("home.cta");
 
   return (
     <Panel className="flex h-full flex-col gap-3 p-4">
@@ -16,8 +16,8 @@ export function CtaTile() {
         <Link href="/loadouts/new">
           <Button>{t("create")}</Button>
         </Link>
-        <GlowLink href="/loadouts" className="text-sm">
-          {t("browse")}
+        <GlowLink href="/guides/new" className="text-sm">
+          {t("write")}
         </GlowLink>
       </div>
     </Panel>

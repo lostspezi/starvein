@@ -19,6 +19,10 @@
     "body": {
       "description": "Ore occurrences at {body} ({system}) in Star Citizen — spawn probabilities per mining method (ship, ROC, FPS)."
     },
+    "occurrences": {
+      "title": "Occurrences",
+      "description": "Every known ore occurrence in Star Citizen: location, probability and mining method. Filter by system, rarity and ore."
+    },
     "signatures": {
       "title": "Scan Signatures",
       "description": "Scan signature reference for Star Citizen mining: ship signatures per mineral plus deposit sizes for ROC and FPS mining."
@@ -60,6 +64,7 @@
       "blueprints": "Blueprints",
       "materials": "Materials",
       "locations": "Locations",
+      "occurrences": "Occurrences",
       "signatures": "Signatures",
       "compare": "Compare",
       "loadouts": "Loadouts",

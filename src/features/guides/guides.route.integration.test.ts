@@ -2,6 +2,7 @@ import { afterAll, describe, expect, it } from "vitest";
 import { POST as CREATE } from "@/app/api/guides/route";
 import { DELETE, PATCH } from "@/app/api/guides/[id]/route";
 import { POST as UPLOAD } from "@/app/api/guides/images/route";
+import { POST as VOTE } from "@/app/api/guides/[id]/vote/route";
 import { closeMongo } from "@/lib/db";
 
 const params = { params: Promise.resolve({ id: "guide-1" }) };
@@ -45,6 +46,16 @@ describe("guides API without a session", () => {
   it("rejects anonymous deletes", async () => {
     const response = await DELETE(
       new Request("http://localhost/api/guides/guide-1", { method: "DELETE" }),
+      params,
+    );
+    expect(response.status).toBe(401);
+  });
+
+  it("rejects anonymous votes", async () => {
+    const response = await VOTE(
+      new Request("http://localhost/api/guides/guide-1/vote", {
+        method: "POST",
+      }),
       params,
     );
     expect(response.status).toBe(401);

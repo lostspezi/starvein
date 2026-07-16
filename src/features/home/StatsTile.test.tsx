@@ -10,7 +10,7 @@ describe("StatsTile", () => {
         oreCount={42}
         locationCount={1234}
         blueprintCount={1559}
-        loadoutCount={7}
+        communityCount={17}
       />,
       { locale: "en" },
     );
@@ -19,11 +19,11 @@ describe("StatsTile", () => {
     expect(screen.getByText("Ores")).toBeVisible();
     expect(screen.getByText("Locations")).toBeVisible();
     expect(screen.getByText("Blueprints")).toBeVisible();
-    expect(screen.getByText("Public loadouts")).toBeVisible();
+    expect(screen.getByText("Loadouts + guides")).toBeVisible();
     expect(screen.getByText("42")).toBeVisible();
     expect(screen.getByText("1,234")).toBeVisible();
     expect(screen.getByText("1,559")).toBeVisible();
-    expect(screen.getByText("7")).toBeVisible();
+    expect(screen.getByText("17")).toBeVisible();
   });
 
   it("translates labels and number format in German", () => {
@@ -32,13 +32,13 @@ describe("StatsTile", () => {
         oreCount={42}
         locationCount={1234}
         blueprintCount={1559}
-        loadoutCount={7}
+        communityCount={17}
       />,
       { locale: "de" },
     );
 
     expect(screen.getByText("Erze")).toBeVisible();
-    expect(screen.getByText("Blueprints")).toBeVisible();
+    expect(screen.getByText("Loadouts + Guides")).toBeVisible();
     expect(screen.getByText("1.234")).toBeVisible();
     expect(screen.getByText("1.559")).toBeVisible();
   });

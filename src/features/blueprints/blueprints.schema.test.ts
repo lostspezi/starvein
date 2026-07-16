@@ -81,4 +81,23 @@ describe("blueprintSchema", () => {
     expect(BLUEPRINT_CATEGORIES).toContain("ship-weapon");
     expect(BLUEPRINT_CATEGORIES).toContain("other");
   });
+
+  it("accepts keys longer than 64 chars (seen live with 4.4 mission items)", () => {
+    // 66 Zeichen — z. B. BP_CRAFT_Carryable_2H_FL_MissionItem_prototype_ship_component_2_a
+    const longKey =
+      "BP_CRAFT_Carryable_2H_FL_MissionItem_prototype_ship_component_2_a";
+    expect(longKey.length).toBeGreaterThan(64);
+    const parsed = blueprintSchema.parse({
+      ...base,
+      key: longKey,
+      slug: longKey.toLowerCase(),
+    });
+    expect(parsed.key).toBe(longKey);
+  });
+
+  it("still rejects keys with characters outside [A-Za-z0-9_]", () => {
+    expect(() =>
+      blueprintSchema.parse({ ...base, key: "BP-CRAFT-THING" }),
+    ).toThrow();
+  });
 });

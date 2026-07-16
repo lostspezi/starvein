@@ -108,3 +108,31 @@ export async function findExplorerRows(
     total: filtered.length,
   };
 }
+
+/** Zeilenbudget des kompakten Startseiten-Widgets. */
+export const TOP_ORE_ROW_LIMIT = 10;
+
+/**
+ * Kompakt-Variante fürs Startseiten-Widget: pro Erz nur das Vorkommen mit
+ * der höchsten Wahrscheinlichkeit (die Rows kommen bereits absteigend
+ * sortiert), gekappt auf `limit`. `total` zählt weiterhin alle gefilterten
+ * Vorkommen — für den "Alle X ansehen"-Link zur vollen Tabelle.
+ */
+export async function findTopOreRows(
+  db: Db,
+  filters: ExplorerFilters,
+  limit: number = TOP_ORE_ROW_LIMIT,
+): Promise<ExplorerResult> {
+  const { rows, total } = await findExplorerRows(db, filters);
+
+  const seen = new Set<string>();
+  const deduped: ExplorerRow[] = [];
+  for (const row of rows) {
+    if (seen.has(row.oreCode)) continue;
+    seen.add(row.oreCode);
+    deduped.push(row);
+    if (deduped.length >= limit) break;
+  }
+
+  return { rows: deduped, total };
+}

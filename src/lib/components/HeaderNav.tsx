@@ -53,7 +53,12 @@ export function HeaderNav() {
       <nav
         id={navId}
         className={cn(
-          "order-4 col-span-full w-full flex-col gap-3 text-sm sm:order-2 sm:flex sm:w-auto sm:flex-row sm:gap-4",
+          // Ab sm eine eigene, umbruchfähige volle Zeile unter dem Header —
+          // 10 Einträge passen bei Tablet-Breite nicht mehr neben Wortmarke
+          // und Suche. Erst ab lg wieder inline in der Header-Zeile.
+          "order-4 col-span-full w-full flex-col gap-3 text-sm",
+          "sm:order-5 sm:flex sm:w-full sm:flex-row sm:flex-wrap sm:gap-x-4 sm:gap-y-2",
+          "lg:order-2 lg:w-auto lg:flex-nowrap",
           open ? "flex animate-reveal" : "hidden",
         )}
       >

@@ -37,12 +37,18 @@ test.describe("mobile header", () => {
   test("keeps nav, search and locale switcher usable", async ({ page }) => {
     await page.goto("/en");
 
+    // Auf den Header scopen: die Startseite hat eigene "Ores"-Links
+    // (Quick-Link-Chips), hier geht es nur um die Burger-Navigation.
+    const header = page.getByRole("banner");
+
     // Nav ist mobil hinter dem Burger-Toggle eingeklappt
-    await expect(page.getByRole("link", { name: "Ores" })).toBeHidden();
-    await page.getByRole("button", { name: "Navigation" }).click();
-    await expect(page.getByRole("link", { name: "Ores" })).toBeVisible();
-    await expect(page.getByRole("combobox", { name: "Search" })).toBeVisible();
-    await expect(page.getByRole("button", { name: "English" })).toBeVisible();
+    await expect(header.getByRole("link", { name: "Ores" })).toBeHidden();
+    await header.getByRole("button", { name: "Navigation" }).click();
+    await expect(header.getByRole("link", { name: "Ores" })).toBeVisible();
+    await expect(
+      header.getByRole("combobox", { name: "Search" }),
+    ).toBeVisible();
+    await expect(header.getByRole("button", { name: "English" })).toBeVisible();
   });
 });
 

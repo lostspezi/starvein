@@ -21,11 +21,18 @@ export type LocationsSyncSummary = {
  * `celestialBodies`. Die Collection ist danach vollständig wiki-geführt:
  * pro bekanntem System wird alles entfernt, was der Sync nicht liefert.
  *
+ * `resourceLocationUuids` (aus dem Mining-Snapshot) rettet Asteroiden, deren
+ * has_resources-Flag upstream kaputt ist (4.9: flächendeckend false).
+ *
  * Muss vor dem Mining-Data-Sync laufen (liefert die wikiUuid->Body-Map).
  * Nie user-getriggert, nur Cron/Route-Handler mit Secret (CLAUDE.md §6.1).
  */
-export async function syncWikiLocations(db: Db): Promise<LocationsSyncSummary> {
+export async function syncWikiLocations(
+  db: Db,
+  options: { resourceLocationUuids?: ReadonlySet<string> } = {},
+): Promise<LocationsSyncSummary> {
   const syncedAt = new Date().toISOString();
+  const resourceLocationUuids = options.resourceLocationUuids ?? new Set();
 
   const [wikiLocations, systems] = await Promise.all([
     scWikiClient.locations(),
@@ -34,7 +41,9 @@ export async function syncWikiLocations(db: Db): Promise<LocationsSyncSummary> {
   const knownSystemCodes = new Set(systems.map((system) => system.code));
 
   const mapped = wikiLocations
-    .map((location) => mapWikiLocation(location, knownSystemCodes))
+    .map((location) =>
+      mapWikiLocation(location, knownSystemCodes, resourceLocationUuids),
+    )
     .filter((body): body is CelestialBody => body !== null);
 
   // Defensive Validierung: fehlerhafte Wiki-Slugs sollen den Sync nicht kippen.

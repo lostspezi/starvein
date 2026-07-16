@@ -16,10 +16,14 @@ export const BLUEPRINT_CATEGORIES = [
   "other",
 ] as const;
 
-/** Wiki-Key, z. B. BP_CRAFT_AMRS_LaserCannon_S1 (unique, 23–54 Zeichen). */
-const blueprintKeyRegex = /^[A-Za-z0-9_]{3,64}$/;
+/**
+ * Wiki-Key, z. B. BP_CRAFT_AMRS_LaserCannon_S1 (unique). Länge ist
+ * upstream-kontrolliert — 4.4 lieferte erstmals 66 Zeichen, daher 96 als
+ * Puffer statt 64.
+ */
+const blueprintKeyRegex = /^[A-Za-z0-9_]{3,96}$/;
 /** URL-Slug = key.toLowerCase() (ebenfalls unique über alle Blueprints). */
-const blueprintSlugRegex = /^[a-z0-9_]{3,64}$/;
+const blueprintSlugRegex = /^[a-z0-9_]{3,96}$/;
 
 export const blueprintIngredientSchema = z.object({
   materialCode: z.string().regex(materialCodeRegex),

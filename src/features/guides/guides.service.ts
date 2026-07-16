@@ -76,6 +76,8 @@ export async function createGuide(
     translations: input.translations.map(buildTranslation),
     ownerUserId: userId,
     isPublic: input.isPublic,
+    votes: { up: 0 },
+    voters: [],
     patchVersion: CURRENT_PATCH_VERSION,
     createdAt: now,
     updatedAt: now,
@@ -114,6 +116,9 @@ export async function updateGuide(
       : existing.translations,
     ownerUserId: existing.ownerUserId,
     isPublic: input.isPublic ?? existing.isPublic,
+    // Inhalts-Edits sind kein Neuanfang: Votes bleiben erhalten
+    votes: existing.votes,
+    voters: existing.voters,
     createdAt: existing.createdAt,
     updatedAt: new Date().toISOString(),
     // Bearbeitung stempelt auf den aktuellen Patch (Aktualitäts-Anzeige)
@@ -140,6 +145,34 @@ export async function deleteGuide(
     throw new GuideNotFoundError("guide not found");
   }
   await deleteGuideById(db, guideId);
+}
+
+/** Upvote-Toggle: 1 Stimme pro User, erneuter Aufruf nimmt sie zurück. */
+export async function toggleGuideVote(
+  db: Db,
+  userId: string,
+  guideId: string,
+): Promise<Guide> {
+  const guide = await findGuideById(db, guideId);
+  if (!guide || !guide.isPublic) {
+    throw new GuideNotFoundError("guide not found");
+  }
+  if (guide.ownerUserId === userId) {
+    throw new GuideValidationError("cannot vote own guide");
+  }
+
+  const voters = guide.voters.includes(userId)
+    ? guide.voters.filter((voter) => voter !== userId)
+    : [...guide.voters, userId];
+
+  const updated: Guide = {
+    ...guide,
+    voters,
+    votes: { up: voters.length },
+  };
+
+  await replaceGuide(db, updated);
+  return updated;
 }
 
 /** Public → für alle sichtbar, privat → nur für den Owner, sonst null. */

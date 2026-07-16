@@ -1,26 +1,41 @@
 {
   "home": {
     "title": "STARVEIN",
-    "tagline": "Community-Mining-Referenz für Star Citizen — Erze, Fundorte, Scan-Signaturen.",
+    "welcome": "Willkommen bei STARVEIN, deiner freien Mining-Referenz für Star Citizen. Hier findest du alle Erze, ihre Fundorte und die Scan-Signaturen, nach denen du Ausschau halten musst. Gebaut von der Community, für die Community.",
     "searchLabel": "Erze, Fundorte, Blueprints und Signaturen finden",
-    "bento": {
+    "stats": {
+      "heading": "Die Datenbank",
+      "ores": "Erze",
+      "locations": "Fundorte",
+      "blueprints": "Blueprints",
+      "community": "Loadouts + Guides"
+    },
+    "loadouts": {
       "heading": "Community-Loadouts",
       "featured": "Top bewertet",
-      "topHeading": "Top bewertet",
       "newestHeading": "Neueste",
-      "stats": {
-        "heading": "Die Datenbank",
-        "ores": "Erze",
-        "locations": "Fundorte",
-        "blueprints": "Blueprints",
-        "loadouts": "Öffentliche Loadouts"
-      },
-      "cta": {
-        "heading": "Bau dein eigenes",
-        "text": "Stell ein Loadout für dein Schiff oder deinen ROC zusammen und teile es mit der Community.",
-        "create": "Loadout erstellen",
-        "browse": "Alle Loadouts ansehen"
-      }
+      "viewAll": "Alle Loadouts ansehen",
+      "empty": "Noch keine öffentlichen Loadouts. Bau das erste!"
+    },
+    "guides": {
+      "heading": "Guides aus der Community",
+      "featured": "Top bewertet",
+      "newestHeading": "Neueste",
+      "viewAll": "Alle Guides ansehen",
+      "empty": "Noch keine Guides. Schreib den ersten!"
+    },
+    "cta": {
+      "heading": "Teile dein Wissen",
+      "text": "Stell ein Loadout für dein Schiff oder deinen ROC zusammen oder schreib einen Guide für die Community.",
+      "create": "Loadout erstellen",
+      "write": "Guide schreiben"
+    },
+    "quickLinks": {
+      "heading": "Direkt einsteigen"
+    },
+    "topOres": {
+      "heading": "Top-Vorkommen",
+      "viewAll": "Alle {total} Vorkommen ansehen"
     },
     "explorer": {
       "systemLabel": "Nach Sternsystem filtern",

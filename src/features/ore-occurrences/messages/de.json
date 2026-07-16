@@ -17,6 +17,10 @@
       "unverified": "unbestätigt",
       "verified": "bestätigt"
     },
-    "disclaimer": "Wahrscheinlichkeiten stammen aus den Spieldaten (Star Citizen Wiki) und können sich mit jedem Patch ändern."
+    "disclaimer": "Wahrscheinlichkeiten stammen aus den Spieldaten (Star Citizen Wiki) und können sich mit jedem Patch ändern.",
+    "page": {
+      "title": "Vorkommen",
+      "subtitle": "Alle bekannten Erzvorkommen mit Wahrscheinlichkeit, Methode und bestem Verkaufspreis — filterbar nach System, Methode, Seltenheit und Erz."
+    }
   }
 }

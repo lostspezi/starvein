@@ -1,3 +1,4 @@
+import { headers } from "next/headers";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { GuideCard } from "@/features/guides/GuideCard";
 import { GuidesFilters } from "@/features/guides/GuidesFilters";
@@ -18,6 +19,7 @@ import { PageHeader } from "@/lib/components/ui/PageHeader";
 import { PageShell } from "@/lib/components/ui/PageShell";
 import { getDb } from "@/lib/db";
 import { parseEnumParam } from "@/lib/search-params";
+import { getSessionUserId } from "@/lib/session";
 import { pageMetadata } from "@/lib/seo";
 import type { Metadata } from "next";
 
@@ -67,10 +69,11 @@ export default async function GuidesPage({
 
   const t = await getTranslations("guides");
   const db = await getDb();
-  const [guides, tags, languages] = await Promise.all([
+  const [guides, tags, languages, viewerUserId] = await Promise.all([
     listPublicGuides(db, { q, tags: selectedTags, sort, language }),
     listPublicGuideTags(db),
     listPublicGuideLanguages(db),
+    getSessionUserId(await headers()),
   ]);
   const hasFilters = Boolean(q) || selectedTags.length > 0;
 
@@ -104,6 +107,7 @@ export default async function GuidesPage({
                 key={guide.id}
                 guide={guide}
                 language={displayLanguage}
+                viewerUserId={viewerUserId}
               />
             ))}
           </div>

@@ -31,6 +31,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "",
     "/ores",
     "/locations",
+    "/occurrences",
     "/signatures",
     "/compare",
     "/loadouts",
