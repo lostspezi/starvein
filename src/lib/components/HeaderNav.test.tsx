@@ -37,6 +37,17 @@ describe("HeaderNav", () => {
     expect(toggle).toHaveAttribute("aria-controls", nav.id);
   });
 
+  it("wraps as its own full-width row on tablet and inlines only from lg", () => {
+    // 10 Nav-Einträge passen bei 768px nicht mehr neben Wortmarke + Suche in
+    // eine Zeile (CI-Fontmetriken: ~25px Overflow) — ab sm eigene, umbruch-
+    // fähige Zeile, erst ab lg wieder inline im Header.
+    renderWithIntl(<HeaderNav />, { locale: "en" });
+
+    const nav = screen.getByRole("navigation");
+    expect(nav).toHaveClass("sm:order-5", "sm:w-full", "sm:flex-wrap");
+    expect(nav).toHaveClass("lg:order-2", "lg:w-auto", "lg:flex-nowrap");
+  });
+
   it("expands the nav when the toggle is clicked", async () => {
     const user = userEvent.setup();
     renderWithIntl(<HeaderNav />, { locale: "en" });
