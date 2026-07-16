@@ -2,7 +2,11 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
 import type { Db } from "mongodb";
 import { closeMongo, getDb } from "@/lib/db";
 import { uniqueDbName } from "@/test/factories";
-import { SCWIKI_TEST_BASE_URL, scWikiServer } from "@/test/scwiki-server";
+import {
+  LOC_UUIDS,
+  SCWIKI_TEST_BASE_URL,
+  scWikiServer,
+} from "@/test/scwiki-server";
 import {
   findAllCelestialBodies,
   findBodyBySlug,
@@ -51,8 +55,21 @@ describe("syncWikiLocations", () => {
   it("skips cities, resource-less asteroids and unknown systems", async () => {
     const summary = await syncWikiLocations(db);
 
-    expect(summary.skipped).toBe(3);
+    expect(summary.skipped).toBe(4);
     expect(await findBodyBySlug(db, "STANTON", "lorville")).toBeNull();
+    expect(await findBodyBySlug(db, "STANTON", "empty-rock")).toBeNull();
+    expect(await findBodyBySlug(db, "STANTON", "halo-band-alpha")).toBeNull();
+  });
+
+  it("rescues asteroids referenced by mining data despite has_resources=false", async () => {
+    const summary = await syncWikiLocations(db, {
+      resourceLocationUuids: new Set([LOC_UUIDS.haloBand]),
+    });
+
+    expect(summary.bodies).toBe(7);
+    const rescued = await findBodyBySlug(db, "STANTON", "halo-band-alpha");
+    expect(rescued?.type).toBe("asteroidField");
+    // Der wirklich leere Asteroid bleibt draußen
     expect(await findBodyBySlug(db, "STANTON", "empty-rock")).toBeNull();
   });
 

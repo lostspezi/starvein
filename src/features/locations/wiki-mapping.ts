@@ -24,14 +24,20 @@ export function systemCodeFromWikiSystem(system: string): string {
   return system.replace(/\s+System$/i, "").toUpperCase();
 }
 
+const NO_RESOURCE_UUIDS: ReadonlySet<string> = new Set();
+
 /**
  * Mappt eine Wiki-Location auf ein CelestialBody oder null (= nicht syncen).
- * Asteroiden nur mit Ressourcen (sonst ~600 leere Felsen im Browser);
+ * Asteroiden nur mit Ressourcen ODER wenn sie von Mining-Daten referenziert
+ * werden (`resourceLocationUuids`) — seit 4.9 liefert das Wiki
+ * has_resources flächendeckend als false, die Referenz ist dann die einzige
+ * verlässliche Quelle. Wirklich leere Felsen (~600) bleiben draußen.
  * Outposts immer (Mining Areas ohne eigene Ressourcen erben per Roll-up).
  */
 export function mapWikiLocation(
   location: ScWikiLocation,
   knownSystemCodes: ReadonlySet<string>,
+  resourceLocationUuids: ReadonlySet<string> = NO_RESOURCE_UUIDS,
 ): CelestialBody | null {
   const systemCode = systemCodeFromWikiSystem(location.system ?? "");
   if (!knownSystemCodes.has(systemCode)) return null;
@@ -40,7 +46,9 @@ export function mapWikiLocation(
   let type = CLASSIFICATION_TO_BODY_TYPE[classification];
 
   if (!type && classification === "Asteroid") {
-    if (!location.has_resources) return null;
+    if (!location.has_resources && !resourceLocationUuids.has(location.uuid)) {
+      return null;
+    }
     type = LAGRANGE_NAME.test(location.name)
       ? "lagrangePoint"
       : "asteroidField";

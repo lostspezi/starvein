@@ -34,9 +34,13 @@ describe("runFullWikiSync", () => {
     async () => {
       const summary = await runFullWikiSync(db);
 
-      expect(summary.locations.bodies).toBe(6);
+      // 7 Bodies: inkl. Halo Band Alpha, das trotz has_resources=false über
+      // die Mining-Daten-Referenz gerettet wird (4.9: Flag upstream kaputt)
+      expect(summary.locations.bodies).toBe(7);
       expect(summary.miningData.ores).toBe(4);
-      expect(summary.miningData.occurrences).toBe(6);
+      // 7 Occurrences: inkl. AGRI auf dem geretteten Halo Band Alpha
+      expect(summary.miningData.occurrences).toBe(7);
+      expect(summary.miningData.skippedOccurrences).toBe(1);
       // Blueprint-Zutaten lösen gegen den frisch gesyncten Erz-Katalog auf
       expect(summary.blueprints.blueprints).toBe(2);
     },
@@ -48,9 +52,9 @@ describe("runFullWikiSync", () => {
     const meta = await db.collection("syncMeta").findOne({ key: "scwiki" });
     expect(meta).toMatchObject({
       counts: {
-        bodies: 6,
+        bodies: 7,
         ores: 4,
-        occurrences: 6,
+        occurrences: 7,
         blueprints: 2,
       },
     });

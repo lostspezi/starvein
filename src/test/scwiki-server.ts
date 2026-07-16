@@ -27,6 +27,7 @@ export const LOC_UUIDS = {
   hurL1: "10000000-0000-4000-8000-000000000007",
   frontierMoon: "10000000-0000-4000-8000-000000000008",
   emptyRock: "10000000-0000-4000-8000-000000000009",
+  haloBand: "10000000-0000-4000-8000-00000000000a",
 } as const;
 
 const STAR_PARENT = {
@@ -147,6 +148,19 @@ export const scWikiFixtures = {
       type: { name: "Asteroid", classification: "Asteroid" },
       version: GAME_VERSION,
     },
+    // 4.9-Regression: has_resources ist upstream kaputt (flächendeckend false),
+    // aber die Location wird von Mining-Daten referenziert -> muss via
+    // resourceLocationUuids gerettet werden.
+    {
+      uuid: LOC_UUIDS.haloBand,
+      slug: "halo-band-alpha",
+      name: "Halo Band Alpha",
+      has_resources: false,
+      system: "Stanton System",
+      parent: STAR_PARENT,
+      type: { name: "Asteroid", classification: "Asteroid" },
+      version: GAME_VERSION,
+    },
     // Unbekanntes System -> wird nicht gesynct.
     {
       uuid: LOC_UUIDS.frontierMoon,
@@ -251,6 +265,25 @@ export const scWikiFixtures = {
       kind: "mineable",
       methods: ["Ship"],
     },
+    // Harvestable (Hand-Pickup, kein Mineral) — darf nie als "unmapped ore"
+    // gemeldet werden und bekommt keinen Detail-Fetch.
+    {
+      uuid: "30000000-0000-4000-8000-000000000006",
+      key: "SunsetBerry",
+      name: "Sunset Berries",
+      slug: "sunset-berries",
+      tier: null,
+      density_g_per_cc: null,
+      instability: null,
+      resistance: null,
+      is_mineable: true,
+      has_ship_mineables: false,
+      has_ground_vehicle_mineables: false,
+      has_fps_mineables: false,
+      signature: null,
+      kind: "harvestable",
+      methods: [],
+    },
     {
       uuid: AGRI_UUID,
       key: "Agricium",
@@ -289,6 +322,16 @@ export const scWikiFixtures = {
         parent_uuid: null,
         group_probability_percent: 12,
         relative_probability_percent: 4,
+      },
+      // Referenziert den Asteroiden mit kaputtem has_resources-Flag.
+      {
+        uuid: LOC_UUIDS.haloBand,
+        name: "Halo Band Alpha",
+        system: "Stanton System",
+        type: "Asteroid",
+        parent_uuid: null,
+        group_probability_percent: 8,
+        relative_probability_percent: 3,
       },
     ],
     "quantainium-raw": [
