@@ -26,6 +26,17 @@ describe("NavLinks", () => {
     }
   });
 
+  it("links to the ships buy/rent page", () => {
+    renderWithIntl(<NavLinks />, { locale: "en" });
+    expect(screen.getByRole("link", { name: "Ships" })).toHaveAttribute(
+      "href",
+      "/ships",
+    );
+
+    renderWithIntl(<NavLinks />, { locale: "de" });
+    expect(screen.getByRole("link", { name: "Schiffe" })).toBeVisible();
+  });
+
   it("marks the active route with aria-current and cyan glow", () => {
     pathnameMock.mockReturnValue("/ores");
     renderWithIntl(<NavLinks />, { locale: "en" });

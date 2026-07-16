@@ -13,6 +13,7 @@ const ROUTES = [
   { href: "/signatures", key: "signatures" },
   { href: "/compare", key: "compare" },
   { href: "/loadouts", key: "loadouts" },
+  { href: "/ships", key: "ships" },
   { href: "/guides", key: "guides" },
   { href: "/companion", key: "companion" },
 ] as const;

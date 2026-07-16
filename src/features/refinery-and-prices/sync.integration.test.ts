@@ -1,5 +1,6 @@
 import { afterAll, afterEach, beforeAll, describe, expect, it } from "vitest";
 import type { Db } from "mongodb";
+import { upsertMiningVehicles } from "@/features/loadouts/equipment.repository";
 import { upsertOres } from "@/features/ores/ores.repository";
 import { closeMongo, getDb } from "@/lib/db";
 import { uniqueDbName } from "@/test/factories";
@@ -31,6 +32,18 @@ describe("UEX sync service", () => {
         mineableBy: { ship: true, roc: false, fps: false },
       },
     ]);
+    await upsertMiningVehicles(db, [
+      {
+        code: "prospector",
+        name: "Prospector",
+        manufacturer: "MISC",
+        method: "ship",
+        hardpoints: [{ size: 1 }],
+        gadgetCapable: true,
+        stockLaserCode: "arbor-mh1",
+        patchVersion: "4.7",
+      },
+    ]);
   });
 
   afterEach(() => {
@@ -48,6 +61,9 @@ describe("UEX sync service", () => {
     expect(summary.prices).toBe(2); // GOLD refined + GOLD raw, WiDoW gefiltert
     expect(summary.yields).toBe(1); // IRONO -> IRON
     expect(summary.methods).toBe(1);
+    // prospector: 2 Käufe (player-owned + Nullpreis gefiltert) + 2 Mieten
+    expect(summary.vehiclePrices).toBe(4);
+    expect(await db.collection("vehiclePrices").countDocuments()).toBe(4);
 
     const snapshots = await db
       .collection("priceSnapshots")

@@ -45,6 +45,8 @@ import deRefineryJobs from "@/features/refinery-jobs/messages/de.json";
 import enRefineryJobs from "@/features/refinery-jobs/messages/en.json";
 import deBlueprints from "@/features/blueprints/messages/de.json";
 import enBlueprints from "@/features/blueprints/messages/en.json";
+import deShips from "@/features/ships/messages/de.json";
+import enShips from "@/features/ships/messages/en.json";
 
 const messages = {
   de: {
@@ -69,6 +71,7 @@ const messages = {
     ...deWarehouse,
     ...deRefineryJobs,
     ...deBlueprints,
+    ...deShips,
   },
   en: {
     ...enCommon,
@@ -92,6 +95,7 @@ const messages = {
     ...enWarehouse,
     ...enRefineryJobs,
     ...enBlueprints,
+    ...enShips,
   },
 };
 

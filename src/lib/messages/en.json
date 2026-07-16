@@ -35,6 +35,10 @@
       "title": "Mining Loadouts",
       "description": "Community mining loadouts for Star Citizen: lasers, modules and gadgets for Prospector, MOLE and more."
     },
+    "ships": {
+      "title": "Buy & Rent Ships",
+      "description": "Where to buy or rent mining ships in Star Citizen: Prospector, MOLE, Golem, ROC & co. with prices and terminals from UEX."
+    },
     "guides": {
       "title": "Mining Guides",
       "description": "Community-written mining guides for Star Citizen: where and how to mine, with images and video walkthroughs."
@@ -68,6 +72,7 @@
       "signatures": "Signatures",
       "compare": "Compare",
       "loadouts": "Loadouts",
+      "ships": "Ships",
       "guides": "Guides",
       "companion": "Companion"
     },

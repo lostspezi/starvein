@@ -13,6 +13,8 @@ import {
 import { getLoadoutForViewer } from "@/features/loadouts/loadouts.service";
 import { OwnerActions } from "@/features/loadouts/OwnerActions";
 import { VoteButton } from "@/features/loadouts/VoteButton";
+import { VehicleOffersPanel } from "@/features/ships/VehicleOffersPanel";
+import { getCachedVehicleOffersByCodes } from "@/features/ships/vehicle-prices.read";
 import { Badge } from "@/lib/components/ui/Badge";
 import { PageHeader } from "@/lib/components/ui/PageHeader";
 import { PageShell } from "@/lib/components/ui/PageShell";
@@ -93,10 +95,13 @@ export default async function LoadoutDetailPage({
     .filter((gadget) => gadget !== undefined);
 
   const shoppingList = buildShoppingList(loadout, catalog);
-  const purchases = await getCachedEquipmentPurchasesByCodes(
-    db,
-    shoppingList.map((entry) => entry.code),
-  );
+  const [purchases, vehicleOffers] = await Promise.all([
+    getCachedEquipmentPurchasesByCodes(
+      db,
+      shoppingList.map((entry) => entry.code),
+    ),
+    getCachedVehicleOffersByCodes(db, [loadout.vehicleCode]),
+  ]);
 
   const isOwner = userId !== null && userId === loadout.ownerUserId;
 
@@ -199,6 +204,18 @@ export default async function LoadoutDetailPage({
             locations: purchases.byCode.get(entry.code) ?? [],
           }))}
           syncedAt={purchases.syncedAt}
+        />
+      )}
+
+      {vehicle && (
+        <VehicleOffersPanel
+          offers={
+            vehicleOffers.byCode.get(loadout.vehicleCode) ?? {
+              purchase: [],
+              rental: [],
+            }
+          }
+          syncedAt={vehicleOffers.syncedAt}
         />
       )}
     </PageShell>
