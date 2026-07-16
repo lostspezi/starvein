@@ -83,9 +83,13 @@ function TickerItems({
   return (
     <>
       {entries.map((entry) => {
-        const descriptionId = interactive
-          ? `ticker-sell-${entry.oreCode}`
-          : undefined;
+        // Ohne Terminaldaten (z. B. alte gecachte Entry-Form) gibt es
+        // weder Beschreibung noch Tooltip — der Link funktioniert trotzdem.
+        const hasTerminals = entry.sellTerminals.length > 0;
+        const descriptionId =
+          interactive && hasTerminals
+            ? `ticker-sell-${entry.oreCode}`
+            : undefined;
         return (
           <span
             key={entry.oreCode}
@@ -97,13 +101,13 @@ function TickerItems({
               tabIndex={interactive ? undefined : -1}
               aria-describedby={descriptionId}
               onMouseEnter={
-                interactive
+                interactive && hasTerminals
                   ? (event) => onShowTooltip(entry, event.currentTarget)
                   : undefined
               }
               onMouseLeave={interactive ? onHideTooltip : undefined}
               onFocus={
-                interactive
+                interactive && hasTerminals
                   ? (event) => onShowTooltip(entry, event.currentTarget)
                   : undefined
               }
@@ -118,7 +122,7 @@ function TickerItems({
               </span>
               <DirectionIndicator entry={entry} />
             </Link>
-            {interactive && (
+            {descriptionId && (
               <span id={descriptionId} className="sr-only">
                 {sellAtText(entry)}
               </span>
