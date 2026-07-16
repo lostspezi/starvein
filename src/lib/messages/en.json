@@ -57,6 +57,8 @@
     "nav": {
       "toggle": "Navigation",
       "ores": "Ores",
+      "blueprints": "Blueprints",
+      "materials": "Materials",
       "locations": "Locations",
       "signatures": "Signatures",
       "compare": "Compare",

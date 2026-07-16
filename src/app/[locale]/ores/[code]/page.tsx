@@ -1,5 +1,7 @@
 import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import { OreBlueprintsPanel } from "@/features/blueprints/OreBlueprintsPanel";
+import { findBlueprintsUsingOre } from "@/features/blueprints/blueprints.service";
 import { MethodFilter } from "@/features/ore-occurrences/MethodFilter";
 import { OreOccurrencesTable } from "@/features/ore-occurrences/OreOccurrencesTable";
 import { findOccurrencesByOreWithLocation } from "@/features/ore-occurrences/ore-occurrences.service";
@@ -20,6 +22,12 @@ import { pageMetadata } from "@/lib/seo";
 import type { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
+
+/**
+ * Erze speisen fast das gesamte Crafting (Aslarite z. B. über 800 Blueprints) —
+ * die Erz-Seite zeigt nur einen Ausschnitt plus Link auf die gefilterte Liste.
+ */
+const BLUEPRINT_PREVIEW_LIMIT = 10;
 
 export async function generateMetadata({
   params,
@@ -60,13 +68,19 @@ export default async function OreDetailPage({
   const method = parseEnumParam<MiningMethod>(sp.method, MINING_METHODS);
 
   const t = await getTranslations();
-  const [occurrences, signatureProfiles, priceSummary, refineryYields] =
-    await Promise.all([
-      findOccurrencesByOreWithLocation(db, ore.code, method),
-      findSignatureProfilesByOre(db, ore.code),
-      getCachedOrePriceSummary(db, ore.code),
-      findRefineryYieldsByOre(db, ore.code),
-    ]);
+  const [
+    occurrences,
+    signatureProfiles,
+    priceSummary,
+    refineryYields,
+    blueprintsUsingOre,
+  ] = await Promise.all([
+    findOccurrencesByOreWithLocation(db, ore.code, method),
+    findSignatureProfilesByOre(db, ore.code),
+    getCachedOrePriceSummary(db, ore.code),
+    findRefineryYieldsByOre(db, ore.code),
+    findBlueprintsUsingOre(db, ore.code),
+  ]);
 
   return (
     <PageShell>
@@ -97,6 +111,18 @@ export default async function OreDetailPage({
       <MethodFilter />
       <OreOccurrencesTable occurrences={occurrences} />
       <p className="text-xs text-text-muted">{t("occurrences.disclaimer")}</p>
+
+      <OreBlueprintsPanel
+        entries={blueprintsUsingOre.slice(0, BLUEPRINT_PREVIEW_LIMIT)}
+        totalCount={blueprintsUsingOre.length}
+        materialCodes={[
+          ...new Set(
+            blueprintsUsingOre.flatMap((entry) =>
+              entry.viaMaterials.map((material) => material.code),
+            ),
+          ),
+        ]}
+      />
     </PageShell>
   );
 }

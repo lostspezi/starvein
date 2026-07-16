@@ -1,0 +1,142 @@
+{
+  "blueprints": {
+    "title": "Blueprints",
+    "subtitle": "Crafting blueprints — search by name, category or material.",
+    "empty": "No blueprints found — adjust filters or run the wiki sync.",
+    "table": {
+      "name": "Produces",
+      "key": "Key",
+      "category": "Category",
+      "type": "Type",
+      "ingredients": "Materials",
+      "craftTime": "Craft time"
+    },
+    "category": {
+      "all": "All",
+      "armor": "Armor",
+      "weapon": "Weapon",
+      "ship-weapon": "Ship weapon",
+      "ship-component": "Ship component",
+      "mining": "Mining",
+      "salvage": "Salvage",
+      "other": "Other"
+    },
+    "filter": {
+      "categoryLabel": "Filter by category",
+      "materialLabel": "Filter by material",
+      "materialAll": "Any material",
+      "collectedOnly": "Collected only",
+      "searchLabel": "Search blueprints",
+      "searchPlaceholder": "Search by produced item or key…"
+    },
+    "detail": {
+      "backToList": "All blueprints",
+      "typeLabel": "Type",
+      "categoryLabel": "Category",
+      "craftTimeLabel": "Craft time",
+      "availabilityLabel": "Availability",
+      "availableByDefault": "Unlocked by default",
+      "needsUnlock": "Must be unlocked",
+      "ingredientsHeading": "Required materials",
+      "ingredientTable": {
+        "material": "Material",
+        "quantity": "Quantity",
+        "ore": "From ore"
+      },
+      "none": "—"
+    },
+    "collect": {
+      "add": "Mark blueprint as collected",
+      "remove": "Remove blueprint from collection",
+      "collected": "Collected"
+    },
+    "usedIn": {
+      "heading": "Craftable with this material",
+      "empty": "No blueprint uses this material."
+    },
+    "fromOre": {
+      "heading": "Blueprints using this ore",
+      "empty": "No blueprint uses this ore.",
+      "viaMaterial": "via {material}",
+      "showAll": "Show all {count} blueprints"
+    },
+    "pagination": {
+      "label": "Blueprint pages",
+      "previous": "Previous",
+      "next": "Next",
+      "status": "Page {page} of {totalPages} · {total} blueprints",
+      "total": "{total} blueprints"
+    },
+    "source": {
+      "attribution": "Blueprint and material data from the Star Citizen Wiki ({version}).",
+      "syncedAt": "Last synced: {date}"
+    },
+    "units": {
+      "scu": "{value} SCU",
+      "count": "{value}×"
+    }
+  },
+  "inventory": {
+    "title": "My Materials",
+    "subtitle": "Track how much of each material you have — used to work out what you can craft.",
+    "loginRequired": "Sign in to track your material inventory.",
+    "empty": "No materials yet — run the wiki sync.",
+    "table": {
+      "material": "Material",
+      "kind": "Unit",
+      "ore": "From ore",
+      "quantity": "Quantity"
+    },
+    "quantityLabel": "Quantity of {material}",
+    "saveError": "Could not save — please try again.",
+    "craftableLink": "What can I craft?"
+  },
+  "craftable": {
+    "title": "What can I craft?",
+    "subtitle": "Blueprints matched against your material inventory.",
+    "loginRequired": "Sign in and fill your material inventory to see what you can craft.",
+    "inventoryLink": "Edit my materials",
+    "craftableHeading": "Ready to craft",
+    "partialHeading": "Almost there",
+    "empty": "Nothing craftable yet — add materials to your inventory.",
+    "partialEmpty": "No partially-stocked blueprints.",
+    "maxCraftable": "{count}× possible",
+    "missingLabel": "Missing {amount} {material}",
+    "status": {
+      "craftable": "Craftable",
+      "partial": "Partial",
+      "missing": "Missing"
+    }
+  },
+  "materials": {
+    "title": "Material Catalog",
+    "subtitle": "Every material used by a crafting blueprint — most of them ores.",
+    "empty": "No materials found — adjust filters or run the wiki sync.",
+    "table": {
+      "name": "Name",
+      "code": "Code",
+      "kind": "Unit",
+      "ore": "From ore",
+      "usedIn": "Blueprints"
+    },
+    "kind": {
+      "all": "All",
+      "resource": "Resource (SCU)",
+      "item": "Item (count)"
+    },
+    "filter": {
+      "kindLabel": "Filter by unit",
+      "oresOnly": "Ores only",
+      "searchLabel": "Search materials",
+      "searchPlaceholder": "Search by name or code…"
+    },
+    "detail": {
+      "kindLabel": "Unit",
+      "oreLabel": "Mineable as ore",
+      "usedInLabel": "Used by",
+      "usedInCount": "{count} blueprints",
+      "backToList": "All materials",
+      "none": "—"
+    }
+  }
+}

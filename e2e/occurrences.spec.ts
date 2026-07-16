@@ -9,7 +9,11 @@ test("ore detail lists locations sorted by probability", async ({ page }) => {
 
   await expect(page.getByRole("heading", { name: /Hadanite/ })).toBeVisible();
 
-  const rows = page.locator("tbody tr");
+  // Die Erz-Seite zeigt mehrere Tabellen (Vorkommen, Blueprints) — gezielt
+  // die Vorkommen-Tabelle adressieren.
+  const rows = page
+    .getByRole("table", { name: "Where to find" })
+    .locator("tbody tr");
   await expect(rows.first()).toBeVisible();
 
   // Aberdeen (30%) muss vor Daymar-FPS (20%) stehen
@@ -25,7 +29,9 @@ test("ore detail lists locations sorted by probability", async ({ page }) => {
 test("method filter on ore detail narrows to ROC", async ({ page }) => {
   await page.goto("/en/ores/hada?method=roc");
 
-  const rows = page.locator("tbody tr");
+  const rows = page
+    .getByRole("table", { name: "Where to find" })
+    .locator("tbody tr");
   await expect(rows.first()).toBeVisible();
   const texts = await rows.allTextContents();
   expect(texts.every((tx) => tx.includes("ROC"))).toBe(true);
