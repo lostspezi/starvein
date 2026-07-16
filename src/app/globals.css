@@ -82,7 +82,10 @@ body {
     animation: ticker-scroll 60s linear infinite;
   }
 
-  .ticker-viewport:hover .ticker-track {
+  /* :focus-within: Tastatur-Nutzer tabben durch die Links — das Laufband
+     muss dabei genauso stillstehen wie beim Hover */
+  .ticker-viewport:hover .ticker-track,
+  .ticker-viewport:focus-within .ticker-track {
     animation-play-state: paused;
   }
 

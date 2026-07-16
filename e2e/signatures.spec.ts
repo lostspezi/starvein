@@ -21,7 +21,10 @@ test("signature reference shows ship table and ground explainer", async ({
   // .first(): Wiki-Signaturen der Ship-Tabelle können dieselben Werte tragen.
   await expect(page.getByText("3000", { exact: true }).first()).toBeVisible();
   await expect(page.getByText("4000", { exact: true }).first()).toBeVisible();
-  await expect(page.getByRole("link", { name: "Hadanite" })).toBeVisible();
+  // Auf <main> gescoped: der Preisticker verlinkt Erznamen auf jeder Seite
+  await expect(
+    page.getByRole("main").getByRole("link", { name: "Hadanite" }),
+  ).toBeVisible();
 });
 
 test("ship ore detail shows its per-mineral signature", async ({ page }) => {

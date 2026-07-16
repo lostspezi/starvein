@@ -1,11 +1,11 @@
 import type { Db } from "mongodb";
-import { getBestRefinedSellByOre } from "@/features/refinery-and-prices/price-summary";
 import { PRICE_CACHE_PREFIX } from "@/features/refinery-and-prices/sync.service";
 import { getRedis } from "@/lib/redis";
 import { getPreviousDayCloses } from "./daily-close.repository";
 
 const CACHE_TTL_SECONDS = 900; // 15 Minuten (CLAUDE.md §6.1)
 const TICKER_CACHE_KEY = `${PRICE_CACHE_PREFIX}ticker`;
+const MAX_SELL_TERMINALS = 5;
 
 export type TickerEntry = {
   oreCode: string;
@@ -15,7 +15,60 @@ export type TickerEntry = {
   prevClose: number | null;
   direction: "up" | "down" | "same" | null;
   changePercent: number | null;
+  /** Terminals mit dem Bestpreis, alphabetisch, max. MAX_SELL_TERMINALS */
+  sellTerminals: string[];
+  /** Gesamtzahl der Terminals mit dem Bestpreis (für "+N weitere") */
+  sellTerminalCount: number;
 };
+
+type BestSellWithTerminals = {
+  best: number;
+  terminals: string[];
+  terminalCount: number;
+};
+
+/**
+ * Wie getBestRefinedSellByOre, aber inklusive der Terminals, die den
+ * Bestpreis zahlen — für den Verkaufsort-Tooltip im Ticker.
+ */
+async function getBestRefinedSellWithTerminals(
+  db: Db,
+): Promise<Map<string, BestSellWithTerminals>> {
+  const results = await db
+    .collection("priceSnapshots")
+    .aggregate<{
+      _id: string;
+      best: number;
+      offers: { name: string; price: number }[];
+    }>([
+      { $match: { kind: "refined", priceSell: { $gt: 0 } } },
+      {
+        $group: {
+          _id: "$oreCode",
+          best: { $max: "$priceSell" },
+          offers: { $push: { name: "$terminalName", price: "$priceSell" } },
+        },
+      },
+    ])
+    .toArray();
+
+  return new Map(
+    results.map((entry) => {
+      const atBest = entry.offers
+        .filter((offer) => offer.price === entry.best)
+        .map((offer) => offer.name)
+        .sort((a, b) => a.localeCompare(b));
+      return [
+        entry._id,
+        {
+          best: entry.best,
+          terminals: atBest.slice(0, MAX_SELL_TERMINALS),
+          terminalCount: atBest.length,
+        },
+      ];
+    }),
+  );
+}
 
 function toDirection(
   bestSell: number,
@@ -37,7 +90,7 @@ export async function getTickerEntries(
   today: string = new Date().toISOString().slice(0, 10),
 ): Promise<TickerEntry[]> {
   const [bestByOre, prevCloses, ores] = await Promise.all([
-    getBestRefinedSellByOre(db),
+    getBestRefinedSellWithTerminals(db),
     getPreviousDayCloses(db, today),
     db
       .collection("ores")
@@ -52,7 +105,7 @@ export async function getTickerEntries(
   );
 
   const entries: TickerEntry[] = [];
-  for (const [oreCode, bestSell] of bestByOre) {
+  for (const [oreCode, { best, terminals, terminalCount }] of bestByOre) {
     const names = namesByCode.get(oreCode);
     if (!names) continue;
 
@@ -61,13 +114,15 @@ export async function getTickerEntries(
       oreCode,
       nameDe: names.nameDe,
       nameEn: names.nameEn,
-      bestSell,
+      bestSell: best,
       prevClose,
-      direction: toDirection(bestSell, prevClose),
+      direction: toDirection(best, prevClose),
       changePercent:
         prevClose === null
           ? null
-          : Math.round(((bestSell - prevClose) / prevClose) * 1000) / 10,
+          : Math.round(((best - prevClose) / prevClose) * 1000) / 10,
+      sellTerminals: terminals,
+      sellTerminalCount: terminalCount,
     });
   }
 

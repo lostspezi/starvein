@@ -47,7 +47,11 @@ test("location page lists its occurrences with ore links", async ({ page }) => {
     page.getByRole("heading", { name: "Occurrences" }),
   ).toBeVisible();
 
-  const hadaniteLink = page.getByRole("link", { name: /Hadanite/ }).first();
+  // Auf <main> gescoped: der Preisticker verlinkt Erznamen auf jeder Seite
+  const hadaniteLink = page
+    .getByRole("main")
+    .getByRole("link", { name: /Hadanite/ })
+    .first();
   await expect(hadaniteLink).toBeVisible();
   await hadaniteLink.click();
 

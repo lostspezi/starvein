@@ -68,7 +68,12 @@ describe("getTickerEntries", () => {
     ]);
     await db.collection("priceSnapshots").insertMany([
       makeSnapshot({ oreCode: "QUAN", priceSell: 88 }),
-      makeSnapshot({ oreCode: "QUAN", terminalId: 12, priceSell: 91.5 }),
+      makeSnapshot({
+        oreCode: "QUAN",
+        terminalId: 12,
+        terminalName: "TDD Area 18",
+        priceSell: 91.5,
+      }),
       makeSnapshot({ oreCode: "GOLD", priceSell: 6.1 }),
       makeSnapshot({ oreCode: "IRON", priceSell: 300 }),
       makeSnapshot({ oreCode: "LARA", priceSell: 50 }),
@@ -101,7 +106,10 @@ describe("getTickerEntries", () => {
       prevClose: null,
       direction: null,
       changePercent: null,
+      sellTerminals: ["ARC-L1 Wide Forest Station"],
+      sellTerminalCount: 1,
     });
+    // Nur Terminals MIT dem Bestpreis — der 88er-Snapshot zählt nicht
     expect(entries[1]).toEqual({
       oreCode: "QUAN",
       nameDe: "Quantanium",
@@ -110,6 +118,8 @@ describe("getTickerEntries", () => {
       prevClose: 85,
       direction: "up",
       changePercent: 7.6,
+      sellTerminals: ["TDD Area 18"],
+      sellTerminalCount: 1,
     });
     expect(entries[2]).toEqual({
       oreCode: "LARA",
@@ -119,12 +129,51 @@ describe("getTickerEntries", () => {
       prevClose: 60,
       direction: "down",
       changePercent: -16.7,
+      sellTerminals: ["ARC-L1 Wide Forest Station"],
+      sellTerminalCount: 1,
     });
     expect(entries[3]).toMatchObject({
       oreCode: "GOLD",
       direction: "same",
       changePercent: 0,
     });
+  });
+
+  it("lists all terminals sharing the best price, alphabetically capped at 5", async () => {
+    await upsertOres(db, [makeOre({ code: "TITA" })]);
+    const names = [
+      "Gamma Outpost",
+      "Beta Station",
+      "Alpha Terminal",
+      "Delta Depot",
+      "Zeta Hub",
+      "Epsilon Post",
+      "Eta Yard",
+    ];
+    await db.collection("priceSnapshots").insertMany([
+      ...names.map((terminalName, index) =>
+        makeSnapshot({
+          oreCode: "TITA",
+          terminalId: 100 + index,
+          terminalName,
+          priceSell: 7,
+        }),
+      ),
+      // schlechterer Preis — taucht nicht in der Terminal-Liste auf
+      makeSnapshot({ oreCode: "TITA", terminalId: 200, priceSell: 5 }),
+    ]);
+
+    const entries = await getTickerEntries(db, TODAY);
+
+    expect(entries).toHaveLength(1);
+    expect(entries[0].sellTerminals).toEqual([
+      "Alpha Terminal",
+      "Beta Station",
+      "Delta Depot",
+      "Epsilon Post",
+      "Eta Yard",
+    ]);
+    expect(entries[0].sellTerminalCount).toBe(7);
   });
 
   it("breaks bestSell ties by ore code", async () => {

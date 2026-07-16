@@ -44,3 +44,26 @@ test("ticker bar shows entries below the header — or nothing without data", as
   await expect(region.getByText(first.nameEn).first()).toBeVisible();
   await expect(region.getByText("aUEC/SCU").first()).toBeVisible();
 });
+
+test("a ticker entry links to its ore detail page", async ({
+  page,
+  request,
+}) => {
+  const entries = await (await request.get("/api/price-ticker")).json();
+  test.skip(entries.length === 0, "keine Preisdaten in der E2E-DB");
+
+  await page.goto("/en");
+  const region = page.getByRole("region", { name: "Live commodity prices" });
+  const first = entries[0];
+
+  const link = region
+    .getByRole("link", { name: new RegExp(first.nameEn) })
+    .first();
+  // sr-only-Beschreibung nennt die Bestpreis-Terminals (Tooltip-Inhalt)
+  await expect(link).toHaveAccessibleDescription(/Sell at best price:/);
+
+  await link.click();
+  await expect(page).toHaveURL(
+    new RegExp(`/en/ores/${first.oreCode.toLowerCase()}$`),
+  );
+});
