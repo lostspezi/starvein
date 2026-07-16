@@ -1,0 +1,9 @@
+{
+  "priceTicker": {
+    "label": "Live commodity prices",
+    "unit": "aUEC/SCU",
+    "up": "up vs. previous day",
+    "down": "down vs. previous day",
+    "same": "unchanged vs. previous day"
+  }
+}

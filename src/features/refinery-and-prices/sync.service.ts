@@ -1,5 +1,6 @@
 import type { Db } from "mongodb";
 import { syncEquipmentPrices } from "@/features/loadouts/equipment-prices.sync";
+import { captureDailyClose } from "@/features/price-ticker/daily-close.repository";
 import { syncVehiclePrices } from "@/features/ships/vehicle-prices.sync";
 import { findAllOres } from "@/features/ores/ores.repository";
 import { getRedis } from "@/lib/redis";
@@ -17,6 +18,7 @@ export type SyncSummary = {
   methods: number;
   equipmentPrices: number;
   vehiclePrices: number;
+  dailyCloses: number;
   syncedAt: string;
 };
 
@@ -126,6 +128,9 @@ export async function syncUex(db: Db): Promise<SyncSummary> {
     );
   }
 
+  // Rolling Close für den Preisticker — muss nach dem Snapshot-Write laufen
+  const dailyCloses = await captureDailyClose(db, syncedAt);
+
   const equipmentPrices = await syncEquipmentPrices(db, syncedAt);
   const vehiclePrices = await syncVehiclePrices(db, syncedAt);
 
@@ -145,6 +150,7 @@ export async function syncUex(db: Db): Promise<SyncSummary> {
     methods: methods.length,
     equipmentPrices,
     vehiclePrices,
+    dailyCloses,
     syncedAt,
   };
 }

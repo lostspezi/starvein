@@ -100,6 +100,28 @@ describe("UEX sync service", () => {
     expect(await db.collection("refineryMethods").countDocuments()).toBe(1);
   });
 
+  it("captures a daily close per ore for the ticker", async () => {
+    const summary = await syncUex(db);
+
+    expect(summary.dailyCloses).toBe(1); // nur GOLD hat einen Refined-Sell
+    const closes = await db
+      .collection("priceDailyCloses")
+      .find({}, { projection: { _id: 0 } })
+      .toArray();
+    expect(closes).toEqual([
+      {
+        oreCode: "GOLD",
+        date: summary.syncedAt.slice(0, 10),
+        bestSell: 28000,
+        syncedAt: summary.syncedAt,
+      },
+    ]);
+
+    // Re-Run am selben Tag überschreibt statt zu duplizieren
+    await syncUex(db);
+    expect(await db.collection("priceDailyCloses").countDocuments()).toBe(1);
+  });
+
   it("records the sync timestamp", async () => {
     await syncUex(db);
     const meta = await db.collection("syncMeta").findOne({ key: "uex" });

@@ -1,6 +1,10 @@
 /**
  * Slice-1-Happy-Path: Erz-Referenz.
  * Voraussetzung: docker compose up -d && pnpm seed (befüllte 'starvein'-DB).
+ *
+ * Erznamen-Assertions sind auf <main> gescoped: der Preisticker unter dem
+ * Header zeigt dieselben Namen als Laufband auf jeder Seite — ungescopte
+ * getByText-Matcher würden im Strict Mode kollidieren.
  */
 import { expect, test } from "@playwright/test";
 
@@ -10,8 +14,9 @@ test("ore reference lists seeded ores", async ({ page }) => {
   await expect(
     page.getByRole("heading", { name: "Ore Reference" }),
   ).toBeVisible();
-  await expect(page.getByText("Quantainium")).toBeVisible();
-  await expect(page.getByText("Hadanite")).toBeVisible();
+  const main = page.getByRole("main");
+  await expect(main.getByText("Quantainium")).toBeVisible();
+  await expect(main.getByText("Hadanite")).toBeVisible();
 });
 
 test("rarity filter narrows the list via URL state", async ({ page }) => {
@@ -20,15 +25,17 @@ test("rarity filter narrows the list via URL state", async ({ page }) => {
   await page.getByRole("button", { name: "Rare", exact: true }).click();
 
   await expect(page).toHaveURL(/rarity=rare/);
-  await expect(page.getByText("Gold", { exact: true })).toBeVisible();
-  await expect(page.getByText("Quantainium")).not.toBeVisible();
+  const main = page.getByRole("main");
+  await expect(main.getByText("Gold", { exact: true })).toBeVisible();
+  await expect(main.getByText("Quantainium")).not.toBeVisible();
 });
 
 test("method filter shows only FPS minables", async ({ page }) => {
   await page.goto("/en/ores?method=fps");
 
-  await expect(page.getByText("Hadanite")).toBeVisible();
-  await expect(page.getByText("Quantainium")).not.toBeVisible();
+  const main = page.getByRole("main");
+  await expect(main.getByText("Hadanite")).toBeVisible();
+  await expect(main.getByText("Quantainium")).not.toBeVisible();
 });
 
 test("GET /api/ores returns the seeded dataset", async ({ request }) => {

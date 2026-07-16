@@ -5,6 +5,7 @@ import { Inter, JetBrains_Mono } from "next/font/google";
 import { notFound } from "next/navigation";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { ChatAside } from "@/features/chat/ChatAside";
+import { PriceTicker } from "@/features/price-ticker/PriceTicker";
 import { routing } from "@/i18n/routing";
 import { SiteFooter } from "@/lib/components/SiteFooter";
 import { localeAlternates, OG_LOCALES, SITE_NAME, SITE_URL } from "@/lib/seo";
@@ -110,6 +111,7 @@ export default async function LocaleLayout({
             <DriftingShips />
             <StarfieldRouteListener />
             <Header />
+            <PriceTicker />
             <div className="flex flex-1 flex-col">{children}</div>
             <SiteFooter />
             <ChatAside />

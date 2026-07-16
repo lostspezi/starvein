@@ -1,0 +1,9 @@
+{
+  "priceTicker": {
+    "label": "Aktuelle Rohstoffpreise",
+    "unit": "aUEC/SCU",
+    "up": "gestiegen gegenüber Vortag",
+    "down": "gefallen gegenüber Vortag",
+    "same": "unverändert gegenüber Vortag"
+  }
+}
