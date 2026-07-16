@@ -18,6 +18,7 @@ export function HomeBento({
   showcase,
   oreCount,
   locationCount,
+  blueprintCount,
   loadoutCount,
   currentPatchVersion,
   viewerUserId,
@@ -25,6 +26,7 @@ export function HomeBento({
   showcase: LoadoutShowcase;
   oreCount: number;
   locationCount: number;
+  blueprintCount: number;
   loadoutCount: number;
   currentPatchVersion: string;
   viewerUserId: string | null;
@@ -78,6 +80,7 @@ export function HomeBento({
           <StatsTile
             oreCount={oreCount}
             locationCount={locationCount}
+            blueprintCount={blueprintCount}
             loadoutCount={loadoutCount}
           />
         </div>

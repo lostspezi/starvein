@@ -1,5 +1,7 @@
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import type { Db } from "mongodb";
+import { upsertBlueprints } from "@/features/blueprints/blueprints.repository";
+import type { Blueprint } from "@/features/blueprints/blueprints.schema";
 import {
   upsertCelestialBodies,
   upsertStarSystems,
@@ -8,6 +10,24 @@ import { upsertOres } from "@/features/ores/ores.repository";
 import { closeMongo, getDb } from "@/lib/db";
 import { uniqueDbName } from "@/test/factories";
 import { searchAll } from "./search.service";
+
+function blueprint(over: Partial<Blueprint> = {}): Blueprint {
+  return {
+    key: "BP_CRAFT_AMRS_LaserCannon_S1",
+    slug: "bp_craft_amrs_lasercannon_s1",
+    wikiUuid: "26838ca7-418a-47d2-8429-7339ebbb8993",
+    outputName: "Omnisky III Cannon",
+    outputType: "WeaponGun",
+    category: "ship-weapon",
+    craftTimeSeconds: 540,
+    isAvailableByDefault: false,
+    ingredients: [{ materialCode: "AGRI", kind: "resource", quantity: 0.36 }],
+    gameVersion: "4.8.2-LIVE.12030094",
+    sourceType: "wiki",
+    syncedAt: "2026-07-16T00:00:00.000Z",
+    ...over,
+  };
+}
 
 describe("search service", () => {
   let db: Db;
@@ -50,6 +70,17 @@ describe("search service", () => {
         parentSlug: "wala",
         uexId: 1,
       },
+    ]);
+    await upsertBlueprints(db, [
+      blueprint(),
+      blueprint({
+        key: "BP_CRAFT_Char_Armor_Helmet_Quartz",
+        slug: "bp_craft_char_armor_helmet_quartz",
+        wikiUuid: "1893e596-acaf-49bc-b367-e43e99c2925f",
+        outputName: "Quartzite Helmet",
+        outputType: "Char_Armor_Helmet",
+        category: "armor",
+      }),
     ]);
   });
 
@@ -108,5 +139,51 @@ describe("search service", () => {
 
   it("does not choke on regex special characters", async () => {
     await expect(searchAll(db, "a(")).resolves.toEqual([]);
+  });
+
+  it("finds blueprints by the item they produce", async () => {
+    const results = await searchAll(db, "omnisky");
+
+    expect(results).toContainEqual({
+      kind: "blueprint",
+      label: "Omnisky III Cannon",
+      detail: "ship-weapon",
+      href: "/blueprints/bp_craft_amrs_lasercannon_s1",
+    });
+  });
+
+  it("finds blueprints by their wiki key", async () => {
+    const results = await searchAll(db, "BP_CRAFT_AMRS");
+
+    expect(results.some((r) => r.label === "Omnisky III Cannon")).toBe(true);
+  });
+
+  it("does not match blueprints on their raw output type", async () => {
+    // outputType würde bei "radar"/"weapongun" die Vorschläge fluten —
+    // dafür gibt es den Kategorie-Filter auf /blueprints.
+    const results = await searchAll(db, "weapongun");
+
+    expect(results).toEqual([]);
+  });
+
+  /** Kern-Entitäten dürfen nicht von den >1500 Blueprints verdrängt werden. */
+  it("ranks an ore above a blueprint when both match the prefix", async () => {
+    const results = await searchAll(db, "quar");
+
+    const oreIndex = results.findIndex((r) => r.label === "Quartz");
+    const blueprintIndex = results.findIndex(
+      (r) => r.label === "Quartzite Helmet",
+    );
+
+    expect(oreIndex).toBeGreaterThanOrEqual(0);
+    expect(blueprintIndex).toBeGreaterThan(oreIndex);
+  });
+
+  it("still ranks a prefix-matching blueprint above a substring-matching ore", async () => {
+    const results = await searchAll(db, "quartz");
+
+    // "Quartzite Helmet" matcht am Wortanfang, "Quartz" (Erz) ebenfalls —
+    // bei Gleichstand gewinnt das Erz.
+    expect(results[0].label).toBe("Quartz");
   });
 });

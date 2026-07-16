@@ -104,6 +104,12 @@ jobs:
           BETTER_AUTH_SECRET=ci-only-secret
           EOF
       - run: pnpm seed
+      # Blueprints/Materialien liefert nicht der Seed, sondern der Wiki-Sync
+      # (einzige Quelle für Crafting-Rezepte). Ohne diesen Schritt laufen die
+      # Blueprint-e2e-Tests gegen eine leere Collection. Der Schritt hängt an
+      # der externen Wiki-API — fällt sie aus, ist die CI rot, dafür ist sie
+      # zugleich Kanarienvogel für Schema-Änderungen der API.
+      - run: pnpm sync:wiki
       - run: pnpm exec playwright install chromium --with-deps
       - run: pnpm test:e2e
       - name: Upload Playwright report on failure

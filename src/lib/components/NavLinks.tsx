@@ -6,6 +6,8 @@ import { cn } from "@/lib/cn";
 
 const ROUTES = [
   { href: "/ores", key: "ores" },
+  { href: "/blueprints", key: "blueprints" },
+  { href: "/materials", key: "materials" },
   { href: "/locations", key: "locations" },
   { href: "/signatures", key: "signatures" },
   { href: "/compare", key: "compare" },

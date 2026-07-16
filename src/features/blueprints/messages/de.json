@@ -1,0 +1,142 @@
+{
+  "blueprints": {
+    "title": "Blueprints",
+    "subtitle": "Crafting-Baupläne — nach Name, Kategorie oder Material suchen.",
+    "empty": "Keine Blueprints gefunden — Filter anpassen oder Wiki-Sync ausführen.",
+    "table": {
+      "name": "Erzeugt",
+      "key": "Key",
+      "category": "Kategorie",
+      "type": "Typ",
+      "ingredients": "Materialien",
+      "craftTime": "Fertigungszeit"
+    },
+    "category": {
+      "all": "Alle",
+      "armor": "Rüstung",
+      "weapon": "Waffe",
+      "ship-weapon": "Schiffswaffe",
+      "ship-component": "Schiffskomponente",
+      "mining": "Mining",
+      "salvage": "Salvage",
+      "other": "Sonstige"
+    },
+    "filter": {
+      "categoryLabel": "Nach Kategorie filtern",
+      "materialLabel": "Nach Material filtern",
+      "materialAll": "Beliebiges Material",
+      "collectedOnly": "Nur gesammelte",
+      "searchLabel": "Blueprints suchen",
+      "searchPlaceholder": "Nach erzeugtem Item oder Key suchen…"
+    },
+    "detail": {
+      "backToList": "Alle Blueprints",
+      "typeLabel": "Typ",
+      "categoryLabel": "Kategorie",
+      "craftTimeLabel": "Fertigungszeit",
+      "availabilityLabel": "Verfügbarkeit",
+      "availableByDefault": "Standardmäßig freigeschaltet",
+      "needsUnlock": "Muss freigeschaltet werden",
+      "ingredientsHeading": "Benötigte Materialien",
+      "ingredientTable": {
+        "material": "Material",
+        "quantity": "Menge",
+        "ore": "Aus Erz"
+      },
+      "none": "—"
+    },
+    "collect": {
+      "add": "Blueprint als gesammelt markieren",
+      "remove": "Blueprint aus Sammlung entfernen",
+      "collected": "Gesammelt"
+    },
+    "usedIn": {
+      "heading": "Damit craftbar",
+      "empty": "Kein Blueprint verwendet dieses Material."
+    },
+    "fromOre": {
+      "heading": "Blueprints mit diesem Erz",
+      "empty": "Kein Blueprint verwendet dieses Erz.",
+      "viaMaterial": "über {material}",
+      "showAll": "Alle {count} Blueprints anzeigen"
+    },
+    "pagination": {
+      "label": "Blueprint-Seiten",
+      "previous": "Zurück",
+      "next": "Weiter",
+      "status": "Seite {page} von {totalPages} · {total} Blueprints",
+      "total": "{total} Blueprints"
+    },
+    "source": {
+      "attribution": "Blueprint- und Materialdaten vom Star Citizen Wiki ({version}).",
+      "syncedAt": "Zuletzt synchronisiert: {date}"
+    },
+    "units": {
+      "scu": "{value} SCU",
+      "count": "{value}×"
+    }
+  },
+  "inventory": {
+    "title": "Meine Materialien",
+    "subtitle": "Trage ein, wie viel du von jedem Material hast — daraus ergibt sich, was du craften kannst.",
+    "loginRequired": "Melde dich an, um dein Materialinventar zu führen.",
+    "empty": "Noch keine Materialien — Wiki-Sync ausführen.",
+    "table": {
+      "material": "Material",
+      "kind": "Einheit",
+      "ore": "Aus Erz",
+      "quantity": "Menge"
+    },
+    "quantityLabel": "Menge von {material}",
+    "saveError": "Konnte nicht gespeichert werden — bitte erneut versuchen.",
+    "craftableLink": "Was kann ich craften?"
+  },
+  "craftable": {
+    "title": "Was kann ich craften?",
+    "subtitle": "Blueprints abgeglichen mit deinem Materialinventar.",
+    "loginRequired": "Melde dich an und fülle dein Materialinventar, um zu sehen, was du craften kannst.",
+    "inventoryLink": "Meine Materialien bearbeiten",
+    "craftableHeading": "Sofort craftbar",
+    "partialHeading": "Fast vollständig",
+    "empty": "Noch nichts craftbar — trage Materialien in dein Inventar ein.",
+    "partialEmpty": "Keine teilweise gedeckten Blueprints.",
+    "maxCraftable": "{count}× möglich",
+    "missingLabel": "Es fehlen {amount} {material}",
+    "status": {
+      "craftable": "Craftbar",
+      "partial": "Teilweise",
+      "missing": "Fehlt"
+    }
+  },
+  "materials": {
+    "title": "Material-Katalog",
+    "subtitle": "Alle Materialien, die ein Crafting-Blueprint benötigt — überwiegend Erze.",
+    "empty": "Keine Materialien gefunden — Filter anpassen oder Wiki-Sync ausführen.",
+    "table": {
+      "name": "Name",
+      "code": "Code",
+      "kind": "Einheit",
+      "ore": "Aus Erz",
+      "usedIn": "Blueprints"
+    },
+    "kind": {
+      "all": "Alle",
+      "resource": "Rohstoff (SCU)",
+      "item": "Item (Stück)"
+    },
+    "filter": {
+      "kindLabel": "Nach Einheit filtern",
+      "oresOnly": "Nur Erze",
+      "searchLabel": "Materialien suchen",
+      "searchPlaceholder": "Nach Name oder Code suchen…"
+    },
+    "detail": {
+      "kindLabel": "Einheit",
+      "oreLabel": "Als Erz abbaubar",
+      "usedInLabel": "Verwendet von",
+      "usedInCount": "{count} Blueprints",
+      "backToList": "Alle Materialien",
+      "none": "—"
+    }
+  }
+}

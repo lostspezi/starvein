@@ -92,6 +92,18 @@ GitHub (Profile → Packages) → Package settings → Change visibility → Pub
   */30 * * * * cd /opt/starvein && docker compose -f docker-compose.prod.yml run --rm jobs pnpm exec tsx scripts/sync-uex.ts >> /var/log/starvein-sync.log 2>&1
   ```
 
+- **SC-Wiki blueprint sync (cron on the VPS):** Blueprints und der
+  Materialkatalog kommen ausschließlich aus diesem Sync — ohne ihn sind
+  `/blueprints` und `/materials` leer (der Seed liefert sie nicht). Die Daten
+  ändern sich nur mit einem Game-Patch, täglich reicht:
+
+  ```
+  17 4 * * * cd /opt/starvein && docker compose -f docker-compose.prod.yml run --rm jobs pnpm exec tsx scripts/sync-wiki.ts >> /var/log/starvein-sync.log 2>&1
+  ```
+
+  Alternativ per Route-Handler mit Secret: `POST /api/sync-wiki` mit Header
+  `x-sync-secret: $SYNC_SECRET` (fail closed, wie `/api/sync-uex`).
+
 - **Manual seed:** `docker compose -f docker-compose.prod.yml run --rm jobs`
 - **Mongo backup:** the data lives in the `starvein_mongo-data` volume;
   `docker compose -f docker-compose.prod.yml exec mongo mongodump --archive` piped

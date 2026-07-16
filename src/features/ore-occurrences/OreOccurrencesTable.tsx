@@ -21,7 +21,12 @@ export function OreOccurrencesTable({
 
   return (
     <div className="overflow-x-auto rounded-lg border border-bg-nebula-2 bg-bg-nebula">
-      <table className="w-full text-left text-sm">
+      {/* Benannt, weil die Erz-Detailseite mehrere Tabellen zeigt (u. a. das
+          Blueprint-Panel) — Tests und Screenreader brauchen die Unterscheidung. */}
+      <table
+        aria-label={t("occurrences.whereToFind")}
+        className="w-full text-left text-sm"
+      >
         <thead>
           <tr className="border-b border-bg-nebula-2 text-text-muted">
             <th className="px-4 py-3 font-medium">

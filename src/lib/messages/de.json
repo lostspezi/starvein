@@ -57,6 +57,8 @@
     "nav": {
       "toggle": "Navigation",
       "ores": "Erze",
+      "blueprints": "Blueprints",
+      "materials": "Materialien",
       "locations": "Locations",
       "signatures": "Signaturen",
       "compare": "Vergleich",

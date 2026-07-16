@@ -69,6 +69,9 @@ async function main() {
   await upsertMiningGadgets(db, gadgets);
   console.log(`Seeded ${gadgets.length} mining gadgets`);
 
+  // Blueprints und Materialien sind nicht kuratiert, sondern kommen aus dem
+  // Star-Citizen-Wiki-Sync: pnpm sync:wiki (siehe scripts/sync-wiki.ts).
+
   console.log(`Done (database '${db.databaseName}').`);
 }
 

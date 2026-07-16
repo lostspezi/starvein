@@ -1,5 +1,6 @@
 import { headers } from "next/headers";
 import { setRequestLocale } from "next-intl/server";
+import { countBlueprints } from "@/features/blueprints/blueprints.repository";
 import { listFavorites } from "@/features/favorites/favorites.repository";
 import { ExplorerFilters } from "@/features/home/ExplorerFilters";
 import { ExplorerTable } from "@/features/home/ExplorerTable";
@@ -48,14 +49,21 @@ export default async function Home({
   };
 
   const userId = await getSessionUserId(await headers());
-  const [rows, favorites, showcase, locationCount, loadoutCount] =
-    await Promise.all([
-      findExplorerRows(db, filters),
-      userId ? listFavorites(db, userId) : Promise.resolve([]),
-      findLoadoutShowcase(db),
-      countCelestialBodies(db),
-      countPublicLoadouts(db),
-    ]);
+  const [
+    rows,
+    favorites,
+    showcase,
+    locationCount,
+    blueprintCount,
+    loadoutCount,
+  ] = await Promise.all([
+    findExplorerRows(db, filters),
+    userId ? listFavorites(db, userId) : Promise.resolve([]),
+    findLoadoutShowcase(db),
+    countCelestialBodies(db),
+    countBlueprints(db),
+    countPublicLoadouts(db),
+  ]);
   const favoriteKeys = new Set(
     favorites.map((favorite) => `${favorite.systemCode}|${favorite.bodySlug}`),
   );
@@ -67,6 +75,7 @@ export default async function Home({
         showcase={showcase}
         oreCount={ores.length}
         locationCount={locationCount}
+        blueprintCount={blueprintCount}
         loadoutCount={loadoutCount}
         currentPatchVersion={CURRENT_PATCH_VERSION}
         viewerUserId={userId}

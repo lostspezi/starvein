@@ -23,7 +23,9 @@ describe("HomePage", () => {
   it("renders the hero search with its own accessible name", () => {
     renderWithIntl(<HomePage />, { locale: "en" });
     expect(
-      screen.getByRole("combobox", { name: "Find ores and locations" }),
+      screen.getByRole("combobox", {
+        name: "Find ores, locations and blueprints",
+      }),
     ).toBeVisible();
   });
 

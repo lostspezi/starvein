@@ -93,4 +93,58 @@ describe("SearchBox", () => {
 
     expect(fetch).not.toHaveBeenCalled();
   });
+
+  it("shows a blueprint result with its localized category", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () => ({
+        ok: true,
+        json: async () => [
+          {
+            kind: "blueprint",
+            label: "Omnisky III Cannon",
+            detail: "ship-weapon",
+            href: "/blueprints/bp_craft_amrs_lasercannon_s1",
+          },
+        ],
+      })),
+    );
+    const user = userEvent.setup();
+    renderWithIntl(<SearchBox debounceMs={0} />, { locale: "en" });
+
+    await user.type(screen.getByRole("combobox"), "omnisky");
+
+    const option = await screen.findByRole("option", {
+      name: /Omnisky III Cannon/,
+    });
+    expect(option).toHaveTextContent("Ship weapon");
+  });
+
+  it("navigates to a selected blueprint", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () => ({
+        ok: true,
+        json: async () => [
+          {
+            kind: "blueprint",
+            label: "Omnisky III Cannon",
+            detail: "ship-weapon",
+            href: "/blueprints/bp_craft_amrs_lasercannon_s1",
+          },
+        ],
+      })),
+    );
+    const user = userEvent.setup();
+    renderWithIntl(<SearchBox debounceMs={0} />, { locale: "en" });
+
+    await user.type(screen.getByRole("combobox"), "omnisky");
+    await user.click(
+      await screen.findByRole("option", { name: /Omnisky III Cannon/ }),
+    );
+
+    expect(pushMock).toHaveBeenCalledWith(
+      "/blueprints/bp_craft_amrs_lasercannon_s1",
+    );
+  });
 });

@@ -1,4 +1,5 @@
 import type { Db } from "mongodb";
+import { blueprintSchema } from "@/features/blueprints/blueprints.schema";
 import {
   celestialBodySchema,
   starSystemSchema,
@@ -6,18 +7,28 @@ import {
 import { oreSchema } from "@/features/ores/ores.schema";
 
 export type SearchResult = {
-  kind: "ore" | "system" | "body";
+  kind: "ore" | "system" | "body" | "blueprint";
   /** Anzeigename */
   label: string;
   /**
    * Kontext für die Sublabel-Anzeige: rarityTier bei Erzen,
-   * Body-Typ bei Himmelskörpern, "system" bei Systemen.
+   * Body-Typ bei Himmelskörpern, "system" bei Systemen,
+   * Kategorie bei Blueprints.
    */
   detail: string;
   href: string;
 };
 
 const DEFAULT_LIMIT = 8;
+
+/**
+ * Bei gleichem Prefix-Rang kommen die Kern-Entitäten (Erz, System, Körper)
+ * vor Blueprints: der Wiki-Sync liefert über 1500 Blueprints und würde die
+ * Vorschläge sonst dominieren. Ein Prefix-Treffer schlägt die Art weiterhin.
+ */
+function kindRank(kind: SearchResult["kind"]): number {
+  return kind === "blueprint" ? 1 : 0;
+}
 
 function escapeRegex(value: string): string {
   return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -34,7 +45,7 @@ export async function searchAll(
   const contains = new RegExp(escapeRegex(trimmed), "i");
   const noId = { projection: { _id: 0 } } as const;
 
-  const [oreDocs, systemDocs, bodyDocs] = await Promise.all([
+  const [oreDocs, systemDocs, bodyDocs, blueprintDocs] = await Promise.all([
     db
       .collection("ores")
       .find(
@@ -60,6 +71,15 @@ export async function searchAll(
       .collection("celestialBodies")
       .find({ name: contains }, noId)
       .sort({ name: 1 })
+      .limit(limit)
+      .toArray(),
+    // Gesucht wird über das erzeugte Item und den Wiki-Key; der outputType
+    // bleibt außen vor (er würde bei "radar" & Co. die Liste fluten — dafür
+    // gibt es den Kategorie-Filter auf /blueprints).
+    db
+      .collection("blueprints")
+      .find({ $or: [{ outputName: contains }, { key: contains }] }, noId)
+      .sort({ outputName: 1 })
       .limit(limit)
       .toArray(),
   ]);
@@ -92,14 +112,28 @@ export async function searchAll(
         href: `/ores/${ore.code.toLowerCase()}`,
       };
     }),
+    ...blueprintDocs.map((doc) => {
+      const blueprint = blueprintSchema.parse(doc);
+      return {
+        kind: "blueprint" as const,
+        label: blueprint.outputName,
+        detail: blueprint.category,
+        href: `/blueprints/${blueprint.slug}`,
+      };
+    }),
   ];
 
-  // Treffer am Wortanfang vor reinen Substring-Treffern, dann alphabetisch
+  // Treffer am Wortanfang vor reinen Substring-Treffern, dann Kern-Entitäten
+  // vor Blueprints, dann alphabetisch
   const startsWith = new RegExp(`^${escapeRegex(trimmed)}`, "i");
   results.sort((a, b) => {
     const aPrefix = startsWith.test(a.label) ? 0 : 1;
     const bPrefix = startsWith.test(b.label) ? 0 : 1;
-    return aPrefix - bPrefix || a.label.localeCompare(b.label);
+    return (
+      aPrefix - bPrefix ||
+      kindRank(a.kind) - kindRank(b.kind) ||
+      a.label.localeCompare(b.label)
+    );
   });
 
   return results.slice(0, limit);

@@ -63,6 +63,8 @@ export function SearchBox({
         return t(`locations.bodyType.${result.detail}`);
       case "system":
         return t("locations.systemSuffix");
+      case "blueprint":
+        return t(`blueprints.category.${result.detail}`);
     }
   }
 

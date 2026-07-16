@@ -1,7 +1,7 @@
 {
   "search": {
     "label": "Search",
-    "placeholder": "Search ores & locations…",
+    "placeholder": "Search ores, locations & blueprints…",
     "noResults": "No results"
   }
 }
