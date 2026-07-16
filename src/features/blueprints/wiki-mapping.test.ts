@@ -206,6 +206,17 @@ describe("mapWikiBlueprint", () => {
     ]);
   });
 
+  it("skips blueprints that fail the schema instead of throwing", () => {
+    // Community-API: ein einzelner kaputter Eintrag darf nie den Sync killen
+    const mapped = mapWikiBlueprint(
+      wikiBlueprint({ key: "BP-CRAFT-INVALID-CHARS" }),
+      resolve,
+      SYNCED_AT,
+    );
+
+    expect(mapped).toBeNull();
+  });
+
   it("falls back to output_class when output_name is null", () => {
     const mapped = mapWikiBlueprint(
       wikiBlueprint({ output_name: null, output: null }),
