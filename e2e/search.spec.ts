@@ -1,6 +1,7 @@
 /**
  * Slice-2c-Happy-Path: Suche mit Autocomplete.
- * Voraussetzung: docker compose up -d && pnpm seed (befüllte 'starvein'-DB).
+ * Voraussetzung: docker compose up -d && pnpm seed && pnpm sync:wiki
+ * (Blueprints kommen aus dem Wiki-Sync, nicht aus dem Seed).
  */
 import { expect, test, type Page } from "@playwright/test";
 
@@ -52,6 +53,42 @@ test("finds an ore and navigates to its detail page", async ({ page }) => {
   ).toBeVisible();
 });
 
+test("finds a blueprint and navigates to its detail page", async ({ page }) => {
+  await page.goto("/en");
+
+  await searchFor(page, "omnisky iii");
+  await page
+    .getByRole("listbox")
+    .getByRole("option", { name: /Omnisky III Cannon/ })
+    .click();
+
+  await expect(page).toHaveURL(
+    /\/en\/blueprints\/bp_craft_amrs_lasercannon_s1$/,
+  );
+  await expect(
+    page.getByRole("heading", { name: /Omnisky III Cannon/ }),
+  ).toBeVisible();
+});
+
+test("the hero search on the home page finds blueprints too", async ({
+  page,
+}) => {
+  await page.goto("/en");
+
+  const hero = page.getByRole("combobox", {
+    name: "Find ores, locations and blueprints",
+  });
+  await expect(async () => {
+    await hero.fill("");
+    await hero.fill("omnisky iii");
+    await expect(page.getByRole("listbox")).toBeVisible({ timeout: 2_000 });
+  }).toPass();
+
+  await expect(
+    page.getByRole("option", { name: /Omnisky III Cannon/ }).first(),
+  ).toBeVisible();
+});
+
 test("GET /api/search returns grouped results", async ({ request }) => {
   const response = await request.get("/api/search?q=stanton");
   expect(response.status()).toBe(200);
@@ -63,4 +100,27 @@ test("GET /api/search returns grouped results", async ({ request }) => {
         r.kind === "system" && r.label === "Stanton",
     ),
   ).toBe(true);
+});
+
+test("GET /api/search includes blueprints", async ({ request }) => {
+  const response = await request.get("/api/search?q=omnisky");
+  expect(response.status()).toBe(200);
+
+  const results = await response.json();
+  expect(
+    results.some(
+      (r: { kind: string; href: string }) =>
+        r.kind === "blueprint" && r.href.startsWith("/blueprints/"),
+    ),
+  ).toBe(true);
+});
+
+/** Die >1500 Blueprints dürfen die Kern-Entitäten nicht verdrängen. */
+test("an ore still outranks blueprints for its own name", async ({
+  request,
+}) => {
+  const response = await request.get("/api/search?q=gold");
+  const results = await response.json();
+
+  expect(results[0]).toMatchObject({ kind: "ore", label: "Gold" });
 });

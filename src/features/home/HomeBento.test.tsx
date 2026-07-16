@@ -59,6 +59,7 @@ function renderBento(showcase: LoadoutShowcase) {
       showcase={showcase}
       oreCount={40}
       locationCount={120}
+      blueprintCount={1559}
       loadoutCount={9}
       currentPatchVersion="4.7"
       viewerUserId={null}

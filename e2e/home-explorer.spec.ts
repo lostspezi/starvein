@@ -85,6 +85,18 @@ test("home shows the loadout bento with stats and CTA", async ({ page }) => {
   ).toHaveAttribute("href", "/en/loadouts");
 });
 
+test("the database tile counts the synced blueprints", async ({ page }) => {
+  await page.goto("/en");
+
+  const stats = page
+    .getByRole("heading", { name: "The database" })
+    .locator("..");
+
+  await expect(stats.getByText("Blueprints")).toBeVisible();
+  // Der Wiki-Sync liefert über 1500 Blueprints — 0 hieße: Sync nicht gelaufen.
+  await expect(stats.getByText(/^[1-9][\d,.]*$/).first()).toBeVisible();
+});
+
 test("anonymous users see no favorite stars in the table", async ({ page }) => {
   await page.goto("/en");
   await expect(page.locator("tbody tr").first()).toBeVisible();
