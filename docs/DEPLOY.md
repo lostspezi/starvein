@@ -105,7 +105,12 @@ GitHub (Profile → Packages) → Package settings → Change visibility → Pub
   `x-sync-secret: $SYNC_SECRET` (fail closed, wie `/api/sync-uex`).
 
 - **Manual seed:** `docker compose -f docker-compose.prod.yml run --rm jobs`
+- **Achtung `jobs`-Image:** Der `jobs`-Service steht hinter `profiles: ["jobs"]`.
+  Ein blankes `docker compose pull` überspringt ihn, und `run` zieht nur, wenn
+  gar kein Image da ist — ohne `--profile jobs pull` laufen Seed und Sync also
+  gegen veralteten Code. Der Deploy-Workflow macht das; bei Handarbeit auf dem
+  VPS vorher `docker compose -f docker-compose.prod.yml --profile jobs pull`.
 - **Mongo backup:** the data lives in the `starvein_mongo-data` volume;
   `docker compose -f docker-compose.prod.yml exec mongo mongodump --archive` piped
   to a dated file is the minimal backup. Schedule it before relying on
-  community submissions.
+  user-generated data (favorites, loadouts, guides).
