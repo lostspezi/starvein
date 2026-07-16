@@ -99,6 +99,24 @@ describe("mapWikiLocation", () => {
     ).toBeNull();
   });
 
+  it("rescues referenced asteroids despite a broken has_resources flag", () => {
+    // 4.9-Extrakt: has_resources ist flächendeckend false — Asteroiden, die
+    // von Mining-Daten referenziert werden, müssen trotzdem gesynct werden.
+    const asteroid = wikiLocation({
+      name: "Halo Band Alpha",
+      slug: "halo-band-alpha",
+      has_resources: false,
+      type: { name: "Asteroid", classification: "Asteroid" },
+    });
+
+    expect(
+      mapWikiLocation(asteroid, KNOWN_SYSTEMS, new Set([asteroid.uuid]))?.type,
+    ).toBe("asteroidField");
+    expect(
+      mapWikiLocation(asteroid, KNOWN_SYSTEMS, new Set(["unrelated-uuid"])),
+    ).toBeNull();
+  });
+
   it("classifies L1-L5 asteroid clusters as lagrange points", () => {
     const body = mapWikiLocation(
       wikiLocation({

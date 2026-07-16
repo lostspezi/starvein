@@ -88,6 +88,8 @@ describe("syncWikiMiningData", () => {
 
   it("reports unmapped wiki mineables instead of inventing codes", async () => {
     const summary = await syncWikiMiningData(db);
+    // Nur echte Minerale (kind=mineable) — Harvestables wie SunsetBerry
+    // sind keine Mining-Referenz-Kandidaten und erzeugen kein Log-Rauschen.
     expect(summary.skippedUnmappedOres).toEqual(["Raw_Newmineral"]);
   });
 
@@ -124,8 +126,10 @@ describe("syncWikiMiningData", () => {
     const summary = await syncWikiMiningData(db);
 
     expect(summary.occurrences).toBe(6);
-    // Lorville-Referenz (weggefilterte Location) wird übersprungen
-    expect(summary.skippedOccurrences).toBe(1);
+    // Übersprungen: Lorville (weggefilterter Typ) + Halo Band Alpha (ohne
+    // resourceLocationUuids nicht gesynct — der Rescue-Pfad läuft nur im
+    // vollen runFullWikiSync)
+    expect(summary.skippedOccurrences).toBe(2);
 
     const wala = await findOccurrencesByLocation(db, "STANTON", "wala");
     const agri = wala.find((o) => o.oreCode === "AGRI");
