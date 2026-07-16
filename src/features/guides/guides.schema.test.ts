@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   guideContentSchema,
   guideInputSchema,
+  guideSchema,
   type GuideContent,
   type GuideInput,
 } from "./guides.schema";
@@ -174,5 +175,46 @@ describe("guideInputSchema", () => {
       translations: [{ language: "en", title: "", content: validDoc }],
     };
     expect(guideInputSchema.safeParse(input).success).toBe(false);
+  });
+});
+
+describe("guideSchema votes", () => {
+  const baseGuide = {
+    id: "guide-1",
+    tags: ["mining"],
+    translations: [
+      {
+        language: "en",
+        title: "Sample guide",
+        content: { type: "doc" },
+        searchText: "sample guide",
+      },
+    ],
+    ownerUserId: "user-1",
+    isPublic: true,
+    patchVersion: "4.8.0",
+    createdAt: "2026-07-16T00:00:00.000Z",
+    updatedAt: "2026-07-16T00:00:00.000Z",
+  };
+
+  it("defaults votes and voters for documents without vote fields", () => {
+    const guide = guideSchema.parse(baseGuide);
+    expect(guide.votes).toEqual({ up: 0 });
+    expect(guide.voters).toEqual([]);
+  });
+
+  it("keeps stored votes and voters", () => {
+    const guide = guideSchema.parse({
+      ...baseGuide,
+      votes: { up: 2 },
+      voters: ["user-a", "user-b"],
+    });
+    expect(guide.votes.up).toBe(2);
+    expect(guide.voters).toEqual(["user-a", "user-b"]);
+  });
+
+  it("rejects negative vote counts", () => {
+    const result = guideSchema.safeParse({ ...baseGuide, votes: { up: -1 } });
+    expect(result.success).toBe(false);
   });
 });

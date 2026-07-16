@@ -11,6 +11,7 @@ import {
   getGuideForViewer,
   GuideNotFoundError,
   GuideValidationError,
+  toggleGuideVote,
   updateGuide,
   type GuideRequester,
 } from "./guides.service";
@@ -166,6 +167,63 @@ describe("guides service", () => {
       await expect(
         getGuideForViewer(db, created.id, OWNER),
       ).resolves.toMatchObject({ id: created.id });
+    });
+  });
+
+  describe("toggleGuideVote", () => {
+    it("adds and removes a vote on repeated calls", async () => {
+      const created = await createGuide(db, OWNER, validInput);
+
+      const voted = await toggleGuideVote(db, VISITOR, created.id);
+      expect(voted.votes.up).toBe(1);
+      expect(voted.voters).toEqual([VISITOR]);
+
+      const unvoted = await toggleGuideVote(db, VISITOR, created.id);
+      expect(unvoted.votes.up).toBe(0);
+      expect(unvoted.voters).toEqual([]);
+    });
+
+    it("rejects voting the own guide", async () => {
+      const created = await createGuide(db, OWNER, validInput);
+      await expect(toggleGuideVote(db, OWNER, created.id)).rejects.toThrow(
+        GuideValidationError,
+      );
+    });
+
+    it("throws NotFound for private guides", async () => {
+      const created = await createGuide(db, OWNER, {
+        ...validInput,
+        isPublic: false,
+      });
+      await expect(toggleGuideVote(db, VISITOR, created.id)).rejects.toThrow(
+        GuideNotFoundError,
+      );
+    });
+
+    it("throws NotFound for missing guides", async () => {
+      await expect(toggleGuideVote(db, VISITOR, "missing")).rejects.toThrow(
+        GuideNotFoundError,
+      );
+    });
+  });
+
+  describe("votes lifecycle", () => {
+    it("stamps zero votes on creation", async () => {
+      const created = await createGuide(db, OWNER, validInput);
+      expect(created.votes).toEqual({ up: 0 });
+      expect(created.voters).toEqual([]);
+    });
+
+    it("keeps votes when the guide is edited", async () => {
+      const created = await createGuide(db, OWNER, validInput);
+      await toggleGuideVote(db, VISITOR, created.id);
+
+      const updated = await updateGuide(db, OWNER, created.id, {
+        tags: ["mining", "updated"],
+      });
+
+      expect(updated.votes.up).toBe(1);
+      expect(updated.voters).toEqual([VISITOR]);
     });
   });
 

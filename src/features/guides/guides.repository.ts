@@ -38,7 +38,7 @@ function parseGuide(doc: Document): Guide {
   return guideSchema.parse(normalizeGuideDoc(doc));
 }
 
-export const GUIDE_SORTS = ["new", "title"] as const;
+export const GUIDE_SORTS = ["new", "top", "title"] as const;
 export type GuideSort = (typeof GUIDE_SORTS)[number];
 
 export type PublicGuideQuery = {
@@ -95,18 +95,24 @@ export async function listPublicGuides(
   }
 
   const docs = await db.collection(COLLECTION).find(filter, NO_ID).toArray();
-  let guides = docs.map(parseGuide);
+  const guides = docs.map(parseGuide);
 
   // Sortierung in JS über die Anzeige-Übersetzung (Titel ist pro Sprache)
   const displayLanguage = language ?? GUIDE_FALLBACK_LANGUAGE;
-  guides =
-    query.sort === "title"
-      ? guides.sort((a, b) =>
-          pickGuideTranslation(a, displayLanguage).title.localeCompare(
-            pickGuideTranslation(b, displayLanguage).title,
-          ),
-        )
-      : guides.sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
+  if (query.sort === "title") {
+    guides.sort((a, b) =>
+      pickGuideTranslation(a, displayLanguage).title.localeCompare(
+        pickGuideTranslation(b, displayLanguage).title,
+      ),
+    );
+  } else if (query.sort === "top") {
+    guides.sort(
+      (a, b) =>
+        b.votes.up - a.votes.up || b.updatedAt.localeCompare(a.updatedAt),
+    );
+  } else {
+    guides.sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
+  }
 
   return query.limit ? guides.slice(0, query.limit) : guides;
 }

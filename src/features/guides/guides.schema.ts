@@ -189,6 +189,10 @@ export const guideSchema = z.object({
     .refine(uniqueLanguages, "duplicate language"),
   ownerUserId: z.string().min(1),
   isPublic: z.boolean(),
+  // Upvote-only wie bei Loadouts: voters sind reine userIds, votes.up =
+  // voters.length. Defaults, damit Bestandsdokumente ohne Migration parsen.
+  votes: z.object({ up: z.number().int().min(0) }).default({ up: 0 }),
+  voters: z.array(z.string().min(1)).default([]),
   patchVersion: z.string().min(1),
   createdAt: z.string().min(1),
   updatedAt: z.string().min(1),
