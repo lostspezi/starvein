@@ -47,14 +47,15 @@ development — the reference data works without any credentials in `.env.local`
 
 ### Scripts
 
-| Command         | What it does                                    |
-| --------------- | ----------------------------------------------- |
-| `pnpm dev`      | dev server on :3000                             |
-| `pnpm test`     | unit + integration tests (Vitest)               |
-| `pnpm test:e2e` | Playwright e2e suite (builds + serves on :3100) |
-| `pnpm lint`     | ESLint                                          |
-| `pnpm seed`     | seed curated data into MongoDB                  |
-| `pnpm sync:uex` | pull prices/yields from the UEX API             |
+| Command          | What it does                                            |
+| ---------------- | ------------------------------------------------------- |
+| `pnpm dev`       | dev server on :3000                                     |
+| `pnpm test`      | unit + integration tests (Vitest)                       |
+| `pnpm test:e2e`  | Playwright e2e suite (builds + serves on :3100)         |
+| `pnpm lint`      | ESLint                                                  |
+| `pnpm seed`      | seed curated data into MongoDB                          |
+| `pnpm sync:uex`  | pull prices/yields from the UEX API                     |
+| `pnpm sync:wiki` | pull crafting blueprints/materials from the SC Wiki API |
 
 ## Deployment
 
