@@ -80,6 +80,27 @@ describe("ore occurrences service (joins)", () => {
         confidenceScore: 0.6,
       },
     ]);
+    // HADA hat nur einen Raw-Preis, ALUM bewusst gar keinen
+    await db.collection("priceSnapshots").insertMany([
+      {
+        oreCode: "HADA",
+        kind: "raw",
+        terminalId: 1,
+        terminalName: "Terminal 1",
+        priceBuy: 0,
+        priceSell: 8000,
+        syncedAt: "2026-07-16T10:00:00.000Z",
+      },
+      {
+        oreCode: "HADA",
+        kind: "raw",
+        terminalId: 2,
+        terminalName: "Terminal 2",
+        priceBuy: 0,
+        priceSell: 8500,
+        syncedAt: "2026-07-16T10:00:00.000Z",
+      },
+    ]);
   });
 
   afterAll(async () => {
@@ -123,6 +144,22 @@ describe("ore occurrences service (joins)", () => {
 
     const hada = results.find((o) => o.oreCode === "HADA");
     expect(hada?.signatureValue).toBe(3000);
+  });
+
+  it("attaches the best raw and refined sell prices per ore", async () => {
+    const results = await findOccurrencesByLocationWithOre(
+      db,
+      "STANTON",
+      "daymar",
+    );
+
+    const hada = results.find((o) => o.oreCode === "HADA");
+    expect(hada?.bestRawSell).toBe(8500);
+    expect(hada?.bestRefinedSell).toBeNull();
+
+    const alum = results.find((o) => o.oreCode === "ALUM");
+    expect(alum?.bestRawSell).toBeNull();
+    expect(alum?.bestRefinedSell).toBeNull();
   });
 
   it("leaves the signature undefined when no profile exists", async () => {

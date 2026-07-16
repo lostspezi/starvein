@@ -18,6 +18,8 @@ const rows: OccurrenceWithOre[] = [
     oreName: "Hadanite",
     rarityTier: "epic",
     signatureValue: 3000,
+    bestRawSell: 8500,
+    bestRefinedSell: null,
   },
 ];
 
@@ -35,6 +37,8 @@ const shipRows: OccurrenceWithOre[] = [
     oreName: "Quantainium",
     rarityTier: "legendary",
     signatureValue: 3170,
+    bestRawSell: 21000,
+    bestRefinedSell: 27625,
   },
 ];
 
@@ -79,6 +83,31 @@ describe("LocationOccurrencesTable", () => {
     );
 
     expect(screen.getByText("—")).toBeVisible();
+  });
+
+  it("shows the current best raw and refined sell prices", () => {
+    renderWithIntl(<LocationOccurrencesTable occurrences={shipRows} />, {
+      locale: "en",
+    });
+
+    expect(
+      screen.getByRole("columnheader", { name: "Sell (raw)" }),
+    ).toBeVisible();
+    expect(
+      screen.getByRole("columnheader", { name: "Sell (refined)" }),
+    ).toBeVisible();
+    expect(screen.getByText("21,000")).toBeVisible();
+    expect(screen.getByText("27,625")).toBeVisible();
+  });
+
+  it("shows a dash for missing sell prices", () => {
+    renderWithIntl(<LocationOccurrencesTable occurrences={rows} />, {
+      locale: "en",
+    });
+
+    // HADA hat nur einen Raw-Preis — die Refined-Zelle bleibt leer
+    expect(screen.getByText("8,500")).toBeVisible();
+    expect(screen.getAllByText("–").length).toBeGreaterThan(0);
   });
 
   it("notes that ground signatures only encode size when ROC/FPS rows exist", () => {

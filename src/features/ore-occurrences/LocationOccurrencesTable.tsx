@@ -1,4 +1,4 @@
-import { useTranslations } from "next-intl";
+import { useFormatter, useTranslations } from "next-intl";
 import {
   DataTable,
   DataTableHead,
@@ -28,6 +28,10 @@ export function LocationOccurrencesTable({
   occurrences: OccurrenceWithOre[];
 }) {
   const t = useTranslations();
+  const format = useFormatter();
+
+  const formatSell = (price: number | null) =>
+    price === null ? "–" : format.number(price);
 
   if (occurrences.length === 0) {
     return (
@@ -54,6 +58,12 @@ export function LocationOccurrencesTable({
             {t("occurrences.table.signature")}
           </DataTableTh>
           <DataTableTh>{t("occurrences.table.probability")}</DataTableTh>
+          <DataTableTh className="hidden text-right md:table-cell">
+            {t("occurrences.table.sellRaw")}
+          </DataTableTh>
+          <DataTableTh className="hidden text-right md:table-cell">
+            {t("occurrences.table.sellRefined")}
+          </DataTableTh>
           <DataTableTh>{t("occurrences.table.status")}</DataTableTh>
         </DataTableHead>
         <tbody>
@@ -86,6 +96,12 @@ export function LocationOccurrencesTable({
               </DataTableTd>
               <DataTableTd>
                 <ProbabilityCell percent={occurrence.probabilityPercent} />
+              </DataTableTd>
+              <DataTableTd className="hidden text-right font-mono md:table-cell">
+                {formatSell(occurrence.bestRawSell)}
+              </DataTableTd>
+              <DataTableTd className="hidden text-right font-mono md:table-cell">
+                {formatSell(occurrence.bestRefinedSell)}
               </DataTableTd>
               <DataTableTd>
                 <ConfidenceBadge occurrence={occurrence} />
