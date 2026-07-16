@@ -2,6 +2,7 @@ import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import type { Db } from "mongodb";
 import { upsertCelestialBodies } from "@/features/locations/locations.repository";
 import { upsertOres } from "@/features/ores/ores.repository";
+import { upsertSignatureProfiles } from "@/features/signature-profiles/signature-profiles.repository";
 import { closeMongo, getDb } from "@/lib/db";
 import { uniqueDbName } from "@/test/factories";
 import { upsertOreOccurrences } from "./ore-occurrences.repository";
@@ -26,6 +27,13 @@ describe("ore occurrences service (joins)", () => {
         rarityTier: "epic",
         mineableBy: { ship: false, roc: true, fps: true },
       },
+      {
+        code: "ALUM",
+        name_de: "Aluminium",
+        name_en: "Aluminum",
+        rarityTier: "common",
+        mineableBy: { ship: true, roc: false, fps: false },
+      },
     ]);
     await upsertCelestialBodies(db, [
       {
@@ -48,6 +56,28 @@ describe("ore occurrences service (joins)", () => {
         sourceType: "curated",
         confidenceScore: 0.3,
         lastVerifiedAt: "2026-07-09",
+      },
+      {
+        oreCode: "ALUM",
+        systemCode: "STANTON",
+        bodySlug: "daymar",
+        method: "ship",
+        probabilityPercent: 30,
+        patchVersion: "4.7",
+        sourceType: "wiki",
+        confidenceScore: 0.9,
+        lastVerifiedAt: "2026-07-09",
+      },
+    ]);
+    // HADA hat ein Profil (fps), ALUM bewusst keines
+    await upsertSignatureProfiles(db, [
+      {
+        oreCode: "HADA",
+        method: "fps",
+        signatureValue: 3000,
+        patchVersion: "4.7",
+        sourceType: "curated",
+        confidenceScore: 0.6,
       },
     ]);
   });
@@ -75,12 +105,36 @@ describe("ore occurrences service (joins)", () => {
       "daymar",
     );
 
-    expect(results).toHaveLength(1);
-    expect(results[0]).toMatchObject({
+    expect(results).toHaveLength(2);
+    const hada = results.find((o) => o.oreCode === "HADA");
+    expect(hada).toMatchObject({
       oreCode: "HADA",
       oreName: "Hadanite",
       rarityTier: "epic",
     });
+  });
+
+  it("attaches the signature profile matching ore and method", async () => {
+    const results = await findOccurrencesByLocationWithOre(
+      db,
+      "STANTON",
+      "daymar",
+    );
+
+    const hada = results.find((o) => o.oreCode === "HADA");
+    expect(hada?.signatureValue).toBe(3000);
+  });
+
+  it("leaves the signature undefined when no profile exists", async () => {
+    const results = await findOccurrencesByLocationWithOre(
+      db,
+      "STANTON",
+      "daymar",
+    );
+
+    const alum = results.find((o) => o.oreCode === "ALUM");
+    expect(alum?.signatureValue).toBeUndefined();
+    expect(alum?.signatureRange).toBeUndefined();
   });
 });
 

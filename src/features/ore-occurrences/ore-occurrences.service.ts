@@ -19,6 +19,10 @@ export type OccurrenceWithLocation = OreOccurrence & {
 export type OccurrenceWithOre = OreOccurrence & {
   oreName: string;
   rarityTier: RarityTier;
+  // Scan-Signatur des Erzes für diese Methode (CLAUDE.md §5):
+  // Ship identifiziert das Mineral, ROC/FPS nur die Deposit-Größe.
+  signatureValue?: number;
+  signatureRange?: { min: number; max: number };
 };
 
 /** "Erz auswählen → alle Fundorte": Vorkommen inkl. Location-Anzeige-Daten. */
@@ -69,21 +73,45 @@ export async function findOccurrencesByLocationWithOre(
   );
   if (occurrences.length === 0) return [];
 
+  const oreCodes = occurrences.map((o) => o.oreCode);
   const oreDocs = await db
     .collection("ores")
     .find(
-      { code: { $in: occurrences.map((o) => o.oreCode) } },
+      { code: { $in: oreCodes } },
       { projection: { _id: 0, code: 1, name_en: 1, rarityTier: 1 } },
     )
     .toArray();
   const ores = new Map(oreDocs.map((o) => [o.code as string, o]));
 
+  const profileDocs = await db
+    .collection("signatureProfiles")
+    .find(
+      { oreCode: { $in: oreCodes } },
+      {
+        projection: {
+          _id: 0,
+          oreCode: 1,
+          method: 1,
+          signatureValue: 1,
+          signatureRange: 1,
+        },
+      },
+    )
+    .toArray();
+  const profiles = new Map(
+    profileDocs.map((p) => [`${p.oreCode}|${p.method}`, p]),
+  );
+
   return occurrences.map((occurrence) => {
     const ore = ores.get(occurrence.oreCode);
+    const profile = profiles.get(`${occurrence.oreCode}|${occurrence.method}`);
     return {
       ...occurrence,
       oreName: (ore?.name_en as string) ?? occurrence.oreCode,
       rarityTier: (ore?.rarityTier as RarityTier) ?? "common",
+      signatureValue: profile?.signatureValue as number | undefined,
+      signatureRange: profile?.signatureRange as
+        { min: number; max: number } | undefined,
     };
   });
 }

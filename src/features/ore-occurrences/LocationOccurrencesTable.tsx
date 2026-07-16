@@ -11,6 +11,16 @@ import { RARITY_TEXT_CLASS } from "@/lib/rarity";
 import { ConfidenceBadge, ProbabilityCell } from "./OccurrenceBadges";
 import type { OccurrenceWithOre } from "./ore-occurrences.service";
 
+function formatSignature(occurrence: OccurrenceWithOre): string {
+  if (occurrence.signatureValue !== undefined) {
+    return String(occurrence.signatureValue);
+  }
+  if (occurrence.signatureRange) {
+    return `${occurrence.signatureRange.min}–${occurrence.signatureRange.max}`;
+  }
+  return "—";
+}
+
 /** "Location auswählen → alle Vorkommen dort". */
 export function LocationOccurrencesTable({
   occurrences,
@@ -27,43 +37,68 @@ export function LocationOccurrencesTable({
     );
   }
 
+  // ROC/FPS-Signaturen codieren nur die Deposit-Größe, nicht das Mineral
+  // (CLAUDE.md §5) — der Hinweis verhindert die falsche 1:1-Erwartung.
+  const hasGroundRows = occurrences.some((o) => o.method !== "ship");
+
   return (
-    <DataTable>
-      <DataTableHead>
-        <DataTableTh>{t("occurrences.table.ore")}</DataTableTh>
-        <DataTableTh className="hidden sm:table-cell">
-          {t("occurrences.table.rarity")}
-        </DataTableTh>
-        <DataTableTh>{t("occurrences.table.method")}</DataTableTh>
-        <DataTableTh>{t("occurrences.table.probability")}</DataTableTh>
-        <DataTableTh>{t("occurrences.table.status")}</DataTableTh>
-      </DataTableHead>
-      <tbody>
-        {occurrences.map((occurrence) => (
-          <DataTableRow key={`${occurrence.oreCode}-${occurrence.method}`}>
-            <DataTableTd>
-              <GlowLink href={`/ores/${occurrence.oreCode.toLowerCase()}`}>
-                {occurrence.oreName}
-              </GlowLink>
-              <span className="ml-2 font-mono text-xs text-text-muted">
-                {occurrence.oreCode}
-              </span>
-            </DataTableTd>
-            <DataTableTd
-              className={`hidden sm:table-cell ${RARITY_TEXT_CLASS[occurrence.rarityTier]}`}
-            >
-              {t(`ores.rarity.${occurrence.rarityTier}`)}
-            </DataTableTd>
-            <DataTableTd>{t(`ores.method.${occurrence.method}`)}</DataTableTd>
-            <DataTableTd>
-              <ProbabilityCell percent={occurrence.probabilityPercent} />
-            </DataTableTd>
-            <DataTableTd>
-              <ConfidenceBadge occurrence={occurrence} />
-            </DataTableTd>
-          </DataTableRow>
-        ))}
-      </tbody>
-    </DataTable>
+    <div className="flex flex-col gap-2">
+      <DataTable>
+        <DataTableHead>
+          <DataTableTh>{t("occurrences.table.ore")}</DataTableTh>
+          <DataTableTh className="hidden sm:table-cell">
+            {t("occurrences.table.rarity")}
+          </DataTableTh>
+          <DataTableTh>{t("occurrences.table.method")}</DataTableTh>
+          <DataTableTh className="hidden sm:table-cell">
+            {t("occurrences.table.signature")}
+          </DataTableTh>
+          <DataTableTh>{t("occurrences.table.probability")}</DataTableTh>
+          <DataTableTh>{t("occurrences.table.status")}</DataTableTh>
+        </DataTableHead>
+        <tbody>
+          {occurrences.map((occurrence) => (
+            <DataTableRow key={`${occurrence.oreCode}-${occurrence.method}`}>
+              <DataTableTd>
+                <GlowLink href={`/ores/${occurrence.oreCode.toLowerCase()}`}>
+                  {occurrence.oreName}
+                </GlowLink>
+                <span className="ml-2 font-mono text-xs text-text-muted">
+                  {occurrence.oreCode}
+                </span>
+              </DataTableTd>
+              <DataTableTd
+                className={`hidden sm:table-cell ${RARITY_TEXT_CLASS[occurrence.rarityTier]}`}
+              >
+                {t(`ores.rarity.${occurrence.rarityTier}`)}
+              </DataTableTd>
+              <DataTableTd>{t(`ores.method.${occurrence.method}`)}</DataTableTd>
+              <DataTableTd className="hidden sm:table-cell">
+                <span
+                  className={`font-mono ${
+                    occurrence.method === "ship"
+                      ? "text-accent-secondary"
+                      : "text-text-muted"
+                  }`}
+                >
+                  {formatSignature(occurrence)}
+                </span>
+              </DataTableTd>
+              <DataTableTd>
+                <ProbabilityCell percent={occurrence.probabilityPercent} />
+              </DataTableTd>
+              <DataTableTd>
+                <ConfidenceBadge occurrence={occurrence} />
+              </DataTableTd>
+            </DataTableRow>
+          ))}
+        </tbody>
+      </DataTable>
+      {hasGroundRows && (
+        <p className="text-xs text-text-muted">
+          {t("occurrences.signatureGroundNote")}
+        </p>
+      )}
+    </div>
   );
 }

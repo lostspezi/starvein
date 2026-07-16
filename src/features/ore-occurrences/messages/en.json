@@ -11,8 +11,10 @@
       "method": "Method",
       "probability": "Probability",
       "rarity": "Rarity",
+      "signature": "Signature",
       "status": "Status"
     },
+    "signatureGroundNote": "For ROC/FPS the scan signature only indicates the size of the deposit, not the mineral — the value is the same for all ground minerals.",
     "badge": {
       "unverified": "unverified",
       "verified": "verified"
