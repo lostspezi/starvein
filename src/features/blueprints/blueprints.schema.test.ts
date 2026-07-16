@@ -30,6 +30,22 @@ describe("blueprintSchema", () => {
     );
   });
 
+  /**
+   * Regression: seit 4.8 liefert das Wiki Keys mit >64 Zeichen — dieses
+   * echte Beispiel (66 Zeichen) crashte Sync UND /blueprints-Read-Pfad.
+   */
+  it("accepts a real-world wiki key longer than 64 characters", () => {
+    const longKey =
+      "BP_CRAFT_Carryable_2H_FL_MissionItem_prototype_ship_component_2_a";
+    const parsed = blueprintSchema.parse({
+      ...base,
+      key: longKey,
+      slug: longKey.toLowerCase(),
+    });
+    expect(parsed.key).toBe(longKey);
+    expect(parsed.slug).toBe(longKey.toLowerCase());
+  });
+
   it("rejects an uppercase slug (slug is the lowercased key)", () => {
     expect(() =>
       blueprintSchema.parse({ ...base, slug: "BP_CRAFT_AMRS" }),

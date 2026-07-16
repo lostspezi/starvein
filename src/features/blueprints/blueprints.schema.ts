@@ -16,10 +16,14 @@ export const BLUEPRINT_CATEGORIES = [
   "other",
 ] as const;
 
-/** Wiki-Key, z. B. BP_CRAFT_AMRS_LaserCannon_S1 (unique, 23–54 Zeichen). */
-const blueprintKeyRegex = /^[A-Za-z0-9_]{3,64}$/;
+/**
+ * Wiki-Key, z. B. BP_CRAFT_AMRS_LaserCannon_S1 (unique). Länge großzügig:
+ * seit 4.8 liefert das Wiki Keys mit >64 Zeichen (längster bekannter: 66) —
+ * ein zu striktes Limit crasht Sync und Read-Pfad an echten Spieldaten.
+ */
+const blueprintKeyRegex = /^[A-Za-z0-9_]{3,128}$/;
 /** URL-Slug = key.toLowerCase() (ebenfalls unique über alle Blueprints). */
-const blueprintSlugRegex = /^[a-z0-9_]{3,64}$/;
+const blueprintSlugRegex = /^[a-z0-9_]{3,128}$/;
 
 export const blueprintIngredientSchema = z.object({
   materialCode: z.string().regex(materialCodeRegex),
