@@ -29,6 +29,20 @@ test("unknown guide details return the 404 page", async ({ page }) => {
   expect(response?.status()).toBe(404);
 });
 
+test("guides list offers the top-rated sort", async ({ page }) => {
+  await page.goto("/en/guides");
+
+  const sortGroup = page.getByRole("group", { name: "Sort" });
+  await expect(
+    sortGroup.getByRole("button", { name: "Top rated" }),
+  ).toBeVisible();
+});
+
+test("guide votes require a session", async ({ request }) => {
+  const vote = await request.post("/api/guides/some-id/vote");
+  expect(vote.status()).toBe(401);
+});
+
 test("guide mutations require a session", async ({ request }) => {
   const create = await request.post("/api/guides", {
     data: {
