@@ -1,3 +1,4 @@
+import type { JSONContent } from "@tiptap/core";
 import { generateHTML } from "@tiptap/html";
 import sanitizeHtml from "sanitize-html";
 import { guideExtensions } from "./guides.extensions";
@@ -51,9 +52,6 @@ const SANITIZE_OPTIONS: sanitizeHtml.IOptions = {
 
 /** Erzeugt sicheres HTML aus einem validierten Guide-Dokument. */
 export function renderGuideHtml(content: GuideContent): string {
-  const html = generateHTML(
-    content as unknown as Parameters<typeof generateHTML>[0],
-    guideExtensions,
-  );
+  const html = generateHTML(content as unknown as JSONContent, guideExtensions);
   return sanitizeHtml(html, SANITIZE_OPTIONS);
 }
