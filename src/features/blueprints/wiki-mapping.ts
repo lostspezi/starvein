@@ -127,7 +127,10 @@ export function mapWikiBlueprint(
     wikiBlueprint.output?.class ??
     wikiBlueprint.key;
 
-  return blueprintSchema.parse({
+  // safeParse statt parse: die Wiki-API ist community-gepflegt — ein
+  // einzelner unerwarteter Eintrag darf den Sync nicht abbrechen, sondern
+  // wird geloggt und übersprungen (gleiche Policy wie unbekannte Ore-Codes).
+  const result = blueprintSchema.safeParse({
     key: wikiBlueprint.key,
     slug: wikiBlueprint.key.toLowerCase(),
     wikiUuid: wikiBlueprint.uuid,
@@ -141,6 +144,15 @@ export function mapWikiBlueprint(
     sourceType: "wiki",
     syncedAt,
   });
+  if (!result.success) {
+    console.warn(
+      `Skipping wiki blueprint "${wikiBlueprint.key}": ${result.error.issues
+        .map((issue) => `${issue.path.join(".")} ${issue.message}`)
+        .join("; ")}`,
+    );
+    return null;
+  }
+  return result.data;
 }
 
 /**
