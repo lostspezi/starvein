@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { runFullWikiSync } from "@/lib/run-wiki-sync";
 import { getDb } from "@/lib/db";
+import { revalidateAfterSync } from "@/lib/revalidate-after-sync";
 
 export const dynamic = "force-dynamic";
 
@@ -18,5 +19,7 @@ export async function POST(request: Request) {
   }
 
   const db = await getDb();
-  return NextResponse.json(await runFullWikiSync(db));
+  const summary = await runFullWikiSync(db);
+  revalidateAfterSync("wiki");
+  return NextResponse.json(summary);
 }

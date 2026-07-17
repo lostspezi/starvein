@@ -7,14 +7,14 @@ import { MINING_METHODS, RARITY_TIERS } from "./ores.schema";
 
 export function OreFilters() {
   const t = useTranslations("ores");
-  // shallow: false, damit die Server-Komponente mit neuen searchParams rendert
+  // shallow (Default): nur der Client filtert — die Listen-Seiten sind ISR-cachebar
   const [rarity, setRarity] = useQueryState(
     "rarity",
-    parseAsStringLiteral(RARITY_TIERS).withOptions({ shallow: false }),
+    parseAsStringLiteral(RARITY_TIERS),
   );
   const [method, setMethod] = useQueryState(
     "method",
-    parseAsStringLiteral(MINING_METHODS).withOptions({ shallow: false }),
+    parseAsStringLiteral(MINING_METHODS),
   );
 
   return (

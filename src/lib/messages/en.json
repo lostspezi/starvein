@@ -7,7 +7,8 @@
       "description": "All mineable Star Citizen ores at a glance: rarity, mining methods, sell prices and refinery yields."
     },
     "oreDetail": {
-      "description": "Where to find {ore} in Star Citizen: locations with spawn probability, scan signatures, sell prices and refinery yields."
+      "description": "Where to find {ore} in Star Citizen: locations with spawn probability, scan signatures, sell prices and refinery yields.",
+      "descriptionStats": "Where to find {ore} in Star Citizen: {locationCount, plural, one {# location} other {# locations}} across {systemCount, plural, one {# star system} other {# star systems}}, best chance {probability} % at {body}. Scan signatures, sell prices and refinery yields."
     },
     "locations": {
       "title": "Locations",
@@ -43,18 +44,42 @@
       "title": "Mining Guides",
       "description": "Community-written mining guides for Star Citizen: where and how to mine, with images and video walkthroughs."
     },
-    "favorites": { "title": "Favorites" },
-    "myLoadouts": { "title": "My Loadouts" },
-    "myGuides": { "title": "My Guides" },
-    "newGuide": { "title": "Write a Guide" },
-    "editGuide": { "title": "Edit Guide" },
-    "newLoadout": { "title": "New Loadout" },
-    "myWarehouse": { "title": "My Warehouse" },
-    "myRefineryJobs": { "title": "My Refinery Jobs" },
-    "newRefineryJob": { "title": "New Refinery Job" },
-    "editLoadout": { "title": "Edit Loadout" },
-    "admin": { "title": "Admin" },
-    "device": { "title": "Connect device" },
+    "favorites": {
+      "title": "Favorites"
+    },
+    "myLoadouts": {
+      "title": "My Loadouts"
+    },
+    "myGuides": {
+      "title": "My Guides"
+    },
+    "newGuide": {
+      "title": "Write a Guide"
+    },
+    "editGuide": {
+      "title": "Edit Guide"
+    },
+    "newLoadout": {
+      "title": "New Loadout"
+    },
+    "myWarehouse": {
+      "title": "My Warehouse"
+    },
+    "myRefineryJobs": {
+      "title": "My Refinery Jobs"
+    },
+    "newRefineryJob": {
+      "title": "New Refinery Job"
+    },
+    "editLoadout": {
+      "title": "Edit Loadout"
+    },
+    "admin": {
+      "title": "Admin"
+    },
+    "device": {
+      "title": "Connect device"
+    },
     "companion": {
       "title": "Companion App",
       "description": "STARVEIN Companion for Windows: capture Star Citizen refinery work orders via hotkey and text recognition — with countdown and a notification when the order is done."
@@ -81,6 +106,14 @@
         "fleet": "Fleet"
       }
     },
+    "breadcrumbs": {
+      "label": "Breadcrumb"
+    },
+    "notFound": {
+      "title": "Page not found",
+      "text": "The page you are looking for does not exist or has moved.",
+      "backHome": "Back to home"
+    },
     "disclaimer": {
       "text": "This is an unofficial Star Citizen fansite, not affiliated with the Cloud Imperium group of companies. All content on this site not authored by its host or users are property of their respective owners.",
       "rsiLinkLabel": "Official Star Citizen website"
@@ -91,7 +124,15 @@
       "reportBug": "Report a bug",
       "requestFeature": "Request a feature",
       "craftedBy": "Crafted with ♥ by",
-      "communityLogoAlt": "Star Citizen “Made by the Community” logo"
+      "communityLogoAlt": "Star Citizen “Made by the Community” logo",
+      "sectionsLabel": "Reference sections"
     }
+  },
+  "og": {
+    "kicker": "Star Citizen Mining Reference",
+    "guide": "Community guide",
+    "locations": "{count, plural, one {# location} other {# locations}}",
+    "ores": "{count, plural, one {# ore} other {# ores}}",
+    "bestChance": "best {probability}% · {body}"
   }
 }

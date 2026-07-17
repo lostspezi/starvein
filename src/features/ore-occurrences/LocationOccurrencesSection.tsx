@@ -1,0 +1,91 @@
+"use client";
+
+import { useTranslations } from "next-intl";
+import { parseAsStringLiteral, useQueryState } from "nuqs";
+import { Suspense } from "react";
+import { MINING_METHODS } from "@/features/ores/ores.schema";
+import { MethodFilter } from "./MethodFilter";
+import { LocationOccurrencesTable } from "./LocationOccurrencesTable";
+import type { OccurrenceWithOre } from "./ore-occurrences.service";
+
+/**
+ * Vorkommen einer Location mit clientseitigem Methoden-Filter (shallow-
+ * URL-State) — der Server liefert alle Methoden inkl. Parent-Roll-up,
+ * die Body-Seite bleibt dadurch ISR-cachebar.
+ *
+ * useQueryState liest useSearchParams(), was beim statischen Rendern eine
+ * Suspense-Boundary verlangt; als Fallback (und damit als statisches HTML
+ * für Crawler) dient die ungefilterte Tabelle.
+ */
+export function LocationOccurrencesSection({
+  occurrences,
+  inheritedFromName,
+}: {
+  occurrences: OccurrenceWithOre[];
+  /** Name des Parent-Bodys, wenn die Vorkommen geerbt sind (Roll-up). */
+  inheritedFromName: string | null;
+}) {
+  return (
+    <Suspense
+      fallback={
+        <SectionBody
+          occurrences={occurrences}
+          inheritedFromName={inheritedFromName}
+        />
+      }
+    >
+      <FilteredSection
+        occurrences={occurrences}
+        inheritedFromName={inheritedFromName}
+      />
+    </Suspense>
+  );
+}
+
+function FilteredSection({
+  occurrences,
+  inheritedFromName,
+}: {
+  occurrences: OccurrenceWithOre[];
+  inheritedFromName: string | null;
+}) {
+  const [method] = useQueryState(
+    "method",
+    parseAsStringLiteral(MINING_METHODS),
+  );
+  const filtered = method
+    ? occurrences.filter((o) => o.method === method)
+    : occurrences;
+
+  return (
+    <SectionBody
+      occurrences={filtered}
+      inheritedFromName={inheritedFromName}
+      withFilter
+    />
+  );
+}
+
+function SectionBody({
+  occurrences,
+  inheritedFromName,
+  withFilter = false,
+}: {
+  occurrences: OccurrenceWithOre[];
+  inheritedFromName: string | null;
+  withFilter?: boolean;
+}) {
+  const t = useTranslations("occurrences");
+
+  return (
+    <>
+      {withFilter && <MethodFilter shallow />}
+      {inheritedFromName && (
+        <p className="text-sm text-text-muted">
+          {t("inheritedFrom", { name: inheritedFromName })}
+        </p>
+      )}
+      <LocationOccurrencesTable occurrences={occurrences} />
+    </>
+  );
+}

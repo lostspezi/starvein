@@ -34,6 +34,23 @@ describe.each<AppLocale>(["de", "en"])("SiteFooter (%s)", (locale) => {
     expect(hrefs).toContain(GITHUB_FEATURE_URL);
   });
 
+  it("links internally to the core reference sections", () => {
+    renderWithIntl(<SiteFooter />, { locale });
+    const hrefs = screen
+      .getAllByRole("link")
+      .map((link) => link.getAttribute("href"));
+    for (const path of [
+      "/ores",
+      "/locations",
+      "/occurrences",
+      "/signatures",
+      "/blueprints",
+      "/guides",
+    ]) {
+      expect(hrefs).toContain(path);
+    }
+  });
+
   it("shows the Made by the Community logo next to the disclaimer", () => {
     renderWithIntl(<SiteFooter />, { locale });
     const logo = screen.getByRole("img", { name: /Made by the Community/i });

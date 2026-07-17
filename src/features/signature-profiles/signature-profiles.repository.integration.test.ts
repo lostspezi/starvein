@@ -4,6 +4,7 @@ import { closeMongo, getDb } from "@/lib/db";
 import { uniqueDbName } from "@/test/factories";
 import {
   findAllSignatureProfiles,
+  findAllSignatureProfilesCached,
   findSignatureProfilesByOre,
   upsertSignatureProfiles,
 } from "./signature-profiles.repository";
@@ -55,6 +56,12 @@ describe("signature profiles repository", () => {
   it("filters by method", async () => {
     const shipOnly = await findAllSignatureProfiles(db, "ship");
     expect(shipOnly).toEqual([quanShip]);
+  });
+
+  it("cached variant returns the same data (pass-through in tests)", async () => {
+    await expect(findAllSignatureProfilesCached(db, "ship")).resolves.toEqual(
+      await findAllSignatureProfiles(db, "ship"),
+    );
   });
 
   it("finds all profiles of one ore", async () => {

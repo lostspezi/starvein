@@ -1,6 +1,6 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { SystemList } from "@/features/locations/SystemList";
-import { findAllStarSystems } from "@/features/locations/locations.repository";
+import { findAllStarSystemsCached } from "@/features/locations/locations.repository";
 import { PageHeader } from "@/lib/components/ui/PageHeader";
 import { PageShell } from "@/lib/components/ui/PageShell";
 import { getDb } from "@/lib/db";
@@ -33,11 +33,11 @@ export default async function LocationsPage({
   setRequestLocale(locale);
 
   const t = await getTranslations("locations");
-  const systems = await findAllStarSystems(await getDb());
+  const systems = await findAllStarSystemsCached(await getDb());
 
   return (
     <PageShell>
-      <PageHeader title={t("title")} />
+      <PageHeader title={t("title")} subtitle={t("intro")} />
       <SystemList systems={systems} />
     </PageShell>
   );

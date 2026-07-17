@@ -1,6 +1,7 @@
 {
   "ores": {
     "title": "Ore Reference",
+    "intro": "All mineable ores in Star Citizen at a glance: rarity plus ship, ROC and FPS mining methods. Filter the reference and jump to spawn locations, scan signatures and sell prices per ore.",
     "empty": "No ores found — adjust filters or run the seed.",
     "table": {
       "name": "Name",
@@ -25,6 +26,10 @@
     "filter": {
       "rarityLabel": "Filter by rarity",
       "methodLabel": "Filter by mining method"
+    },
+    "detail": {
+      "summary": "Found at {locationCount, plural, one {# location} other {# locations}} across {systemCount, plural, one {# star system} other {# star systems}} — best chance {probability} % at {body} ({method} mining).",
+      "noOccurrences": "No known occurrences in the current game version."
     }
   }
 }

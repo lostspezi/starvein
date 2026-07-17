@@ -52,7 +52,7 @@ test.describe("page metadata", () => {
     );
     await expect(page.locator('meta[name="twitter:card"]')).toHaveAttribute(
       "content",
-      /summary/,
+      "summary_large_image",
     );
   });
 
@@ -98,6 +98,94 @@ test.describe("page metadata", () => {
   });
 });
 
+test.describe("structured data", () => {
+  async function readJsonLdBlocks(page: import("@playwright/test").Page) {
+    const raw = await page
+      .locator('script[type="application/ld+json"]')
+      .allTextContents();
+    return raw.map((text) => JSON.parse(text));
+  }
+
+  test("ore detail exposes a BreadcrumbList", async ({ page }) => {
+    await page.goto("/en/ores/hada");
+    const blocks = await readJsonLdBlocks(page);
+    const breadcrumbs = blocks.find((b) => b["@type"] === "BreadcrumbList");
+    expect(breadcrumbs).toBeTruthy();
+    expect(breadcrumbs.itemListElement[0]).toMatchObject({
+      position: 1,
+      name: "Ores",
+      item: `${SITE_URL}/en/ores`,
+    });
+    expect(breadcrumbs.itemListElement[1]).toMatchObject({
+      position: 2,
+      name: "Hadanite",
+    });
+  });
+
+  test("location body page exposes a BreadcrumbList", async ({ page }) => {
+    await page.goto("/en/locations/stanton/daymar");
+    const blocks = await readJsonLdBlocks(page);
+    const breadcrumbs = blocks.find((b) => b["@type"] === "BreadcrumbList");
+    expect(breadcrumbs).toBeTruthy();
+    const names = breadcrumbs.itemListElement.map(
+      (item: { name: string }) => item.name,
+    );
+    expect(names).toContain("Stanton");
+    expect(names[names.length - 1]).toBe("Daymar");
+  });
+});
+
+test.describe("open graph images", () => {
+  /** og:image trägt die Produktions-Domain (metadataBase) — gegen den lokalen Server auflösen. */
+  async function fetchOgImage(
+    page: import("@playwright/test").Page,
+    request: import("@playwright/test").APIRequestContext,
+    route: string,
+  ) {
+    await page.goto(route);
+    const ogImage = await page
+      .locator('meta[property="og:image"]')
+      .first()
+      .getAttribute("content");
+    expect(ogImage).toBeTruthy();
+    const url = new URL(ogImage!);
+    return request.get(`${url.pathname}${url.search}`);
+  }
+
+  test("ore detail serves a rendered PNG og:image", async ({
+    page,
+    request,
+  }) => {
+    const response = await fetchOgImage(page, request, "/en/ores/hada");
+    expect(response.ok()).toBe(true);
+    expect(response.headers()["content-type"]).toContain("image/png");
+    // Die segment-eigene Karte muss den Locale-Fallback verdrängen
+    expect(response.url()).toContain("/ores/hada/opengraph-image");
+  });
+
+  test("location body page serves a rendered PNG og:image", async ({
+    page,
+    request,
+  }) => {
+    const response = await fetchOgImage(
+      page,
+      request,
+      "/en/locations/stanton/daymar",
+    );
+    expect(response.ok()).toBe(true);
+    expect(response.headers()["content-type"]).toContain("image/png");
+  });
+
+  test("pages without an own card fall back to the site default image", async ({
+    page,
+    request,
+  }) => {
+    const response = await fetchOgImage(page, request, "/en/signatures");
+    expect(response.ok()).toBe(true);
+    expect(response.headers()["content-type"]).toContain("image/png");
+  });
+});
+
 test.describe("crawler endpoints", () => {
   test("robots.txt allows crawling and links the sitemap", async ({
     request,
@@ -108,6 +196,37 @@ test.describe("crawler endpoints", () => {
     const body = await response.text();
     expect(body).toContain(`Sitemap: ${SITE_URL}/sitemap.xml`);
     expect(body).toContain("Disallow: /api/");
+    // Alle NO_INDEX-Seiten müssen auch auf robots-Ebene gesperrt sein
+    for (const path of [
+      "/*/favorites",
+      "/*/admin",
+      "/*/warehouse",
+      "/*/inventory",
+      "/*/refinery-jobs",
+      "/*/device",
+      "/*/loadouts/mine",
+      "/*/loadouts/new",
+      "/*/loadouts/*/edit",
+      "/*/guides/mine",
+      "/*/guides/new",
+      "/*/guides/*/edit",
+      "/*/blueprints/craftable",
+    ]) {
+      expect(body).toContain(`Disallow: ${path}`);
+    }
+  });
+
+  test("sitemap.xml lists the crafting, guides and ships sections", async ({
+    request,
+  }) => {
+    const response = await request.get("/sitemap.xml");
+    expect(response.ok()).toBe(true);
+
+    const body = await response.text();
+    expect(body).toContain(`${SITE_URL}/en/materials`);
+    expect(body).toContain(`${SITE_URL}/en/blueprints`);
+    expect(body).toContain(`${SITE_URL}/de/guides`);
+    expect(body).toContain(`${SITE_URL}/de/ships`);
   });
 
   test("sitemap.xml lists localized routes", async ({ request }) => {
@@ -128,6 +247,27 @@ test.describe("crawler endpoints", () => {
     expect(manifest.name).toContain("STARVEIN");
     expect(manifest.background_color).toBe("#0a0e1a");
     expect(manifest.icons.length).toBeGreaterThanOrEqual(2);
+  });
+});
+
+test.describe("ISR caching", () => {
+  test("reference detail pages serve cacheable responses", async ({
+    request,
+  }) => {
+    // s-maxage beweist, dass ISR wirklich greift — ein versteckter
+    // headers()/searchParams-Zugriff würde die Seite still dynamisch machen.
+    for (const route of [
+      "/en/ores/hada",
+      "/en/locations/stanton",
+      "/en/locations/stanton/daymar",
+    ]) {
+      const response = await request.get(route);
+      expect(response.ok()).toBe(true);
+      expect(
+        response.headers()["cache-control"],
+        `cache-control of ${route}`,
+      ).toContain("s-maxage");
+    }
   });
 });
 

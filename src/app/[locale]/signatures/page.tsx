@@ -1,11 +1,11 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { findAllOres } from "@/features/ores/ores.repository";
+import { findAllOresCached } from "@/features/ores/ores.repository";
 import { GroundSignatureExplainer } from "@/features/signature-profiles/GroundSignatureExplainer";
 import {
   ShipSignatureTable,
   type ShipSignatureRow,
 } from "@/features/signature-profiles/ShipSignatureTable";
-import { findAllSignatureProfiles } from "@/features/signature-profiles/signature-profiles.repository";
+import { findAllSignatureProfilesCached } from "@/features/signature-profiles/signature-profiles.repository";
 import { PageHeader } from "@/lib/components/ui/PageHeader";
 import { PageShell } from "@/lib/components/ui/PageShell";
 import { getDb } from "@/lib/db";
@@ -41,8 +41,8 @@ export default async function SignaturesPage({
   const t = await getTranslations("signatures");
 
   const [profiles, ores] = await Promise.all([
-    findAllSignatureProfiles(db),
-    findAllOres(db),
+    findAllSignatureProfilesCached(db),
+    findAllOresCached(db),
   ]);
   const oresByCode = new Map(ores.map((ore) => [ore.code, ore]));
 
@@ -72,7 +72,7 @@ export default async function SignaturesPage({
 
   return (
     <PageShell>
-      <PageHeader title={t("title")} />
+      <PageHeader title={t("title")} subtitle={t("intro")} />
 
       <h2 className="text-lg font-medium">{t("shipTitle")}</h2>
       <p className="text-sm text-text-muted">{t("shipExplainer")}</p>

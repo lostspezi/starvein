@@ -8,7 +8,15 @@ import { ChatAside } from "@/features/chat/ChatAside";
 import { PriceTicker } from "@/features/price-ticker/PriceTicker";
 import { routing } from "@/i18n/routing";
 import { SiteFooter } from "@/lib/components/SiteFooter";
-import { localeAlternates, OG_LOCALES, SITE_NAME, SITE_URL } from "@/lib/seo";
+import { JsonLd } from "@/lib/components/JsonLd";
+import { websiteJsonLd } from "@/lib/structured-data";
+import {
+  defaultOgImage,
+  localeAlternates,
+  OG_LOCALES,
+  SITE_NAME,
+  SITE_URL,
+} from "@/lib/seo";
 import { Header } from "@/lib/components/Header";
 import { DriftingShips } from "@/lib/components/starfield/DriftingShips";
 import { Starfield } from "@/lib/components/starfield/Starfield";
@@ -59,9 +67,10 @@ export async function generateMetadata({
       alternateLocale: Object.entries(OG_LOCALES)
         .filter(([l]) => l !== locale)
         .map(([, og]) => og),
+      images: defaultOgImage(locale),
     },
     twitter: {
-      card: "summary",
+      card: "summary_large_image",
       title: t("defaultTitle"),
       description: t("description"),
     },
@@ -86,14 +95,6 @@ export default async function LocaleLayout({
   setRequestLocale(locale);
 
   const tMeta = await getTranslations({ locale, namespace: "meta" });
-  const websiteJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    name: SITE_NAME,
-    url: SITE_URL,
-    description: tMeta("description"),
-    inLanguage: routing.locales,
-  };
 
   return (
     <html
@@ -101,10 +102,7 @@ export default async function LocaleLayout({
       className={`${inter.variable} ${jetbrainsMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
-        />
+        <JsonLd data={websiteJsonLd(tMeta("description"))} />
         <NuqsAdapter>
           <NextIntlClientProvider>
             <Starfield />

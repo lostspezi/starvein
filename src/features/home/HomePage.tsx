@@ -12,8 +12,13 @@ export function HomePage() {
 
   return (
     <section className="flex flex-col justify-center gap-4 py-4 sm:py-6">
-      <h1 className="animate-reveal font-mono text-3xl font-semibold tracking-widest text-accent-ice [text-shadow:0_0_28px_rgb(94_230_255_/_0.35)] sm:text-4xl">
-        {t("title")}
+      <h1 className="animate-reveal">
+        <span className="block font-mono text-3xl font-semibold tracking-widest text-accent-ice [text-shadow:0_0_28px_rgb(94_230_255_/_0.35)] sm:text-4xl">
+          {t("title")}
+        </span>{" "}
+        <span className="mt-1 block text-sm font-normal tracking-wide text-text-muted sm:text-base">
+          {t("tagline")}
+        </span>
       </h1>
       <p
         className="animate-reveal max-w-xl text-sm text-text-muted sm:text-base"

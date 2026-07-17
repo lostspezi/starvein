@@ -1,6 +1,7 @@
 {
   "home": {
     "title": "STARVEIN",
+    "tagline": "Star-Citizen-Mining-Referenz",
     "welcome": "Willkommen bei STARVEIN, deiner freien Mining-Referenz für Star Citizen. Hier findest du alle Erze, ihre Fundorte und die Scan-Signaturen, nach denen du Ausschau halten musst. Gebaut von der Community, für die Community.",
     "searchLabel": "Erze, Fundorte, Blueprints und Signaturen finden",
     "stats": {

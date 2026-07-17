@@ -1,9 +1,9 @@
 import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { BodyList } from "@/features/locations/BodyList";
-import { Breadcrumbs } from "@/features/locations/Breadcrumbs";
+import { Breadcrumbs } from "@/lib/components/Breadcrumbs";
 import {
-  findBodiesBySystem,
+  findBodiesBySystemCached,
   findStarSystemByCode,
 } from "@/features/locations/locations.repository";
 import { BODY_TYPES } from "@/features/locations/locations.schema";
@@ -13,7 +13,15 @@ import { getDb } from "@/lib/db";
 import { pageMetadata } from "@/lib/seo";
 import type { Metadata } from "next";
 
-export const dynamic = "force-dynamic";
+// ISR: on-demand gerendert und 1h gecacht; der Wiki-Sync stößt per
+// revalidatePath einen früheren Refresh an.
+export const revalidate = 3600;
+
+// Leer: nichts wird beim Build prerendert (kein Mongo im Docker-Builder),
+// Pfade entstehen on-demand und werden dann gemaess revalidate gecacht.
+export function generateStaticParams() {
+  return [];
+}
 
 export async function generateMetadata({
   params,
@@ -52,7 +60,7 @@ export default async function SystemPage({
   }
 
   const t = await getTranslations("locations");
-  const bodies = await findBodiesBySystem(db, system.code);
+  const bodies = await findBodiesBySystemCached(db, system.code);
   const topLevel = bodies.filter((body) => body.parentSlug === null);
 
   // Nach Typ gruppieren (Planeten zuerst), leere Gruppen ausblenden
@@ -64,6 +72,7 @@ export default async function SystemPage({
   return (
     <PageShell>
       <Breadcrumbs
+        locale={locale}
         items={[
           { label: t("title"), href: "/locations" },
           { label: system.name },

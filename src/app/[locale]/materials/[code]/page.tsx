@@ -3,6 +3,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { MaterialBlueprintsPanel } from "@/features/blueprints/MaterialBlueprintsPanel";
 import { findBlueprintsByMaterialCode } from "@/features/blueprints/blueprints.repository";
 import { findMaterialByCode } from "@/features/blueprints/materials.repository";
+import { Breadcrumbs } from "@/lib/components/Breadcrumbs";
 import { GlowLink } from "@/lib/components/ui/GlowLink";
 import { PageHeader } from "@/lib/components/ui/PageHeader";
 import { PageShell } from "@/lib/components/ui/PageShell";
@@ -11,7 +12,15 @@ import { getDb } from "@/lib/db";
 import { pageMetadata } from "@/lib/seo";
 import type { Metadata } from "next";
 
-export const dynamic = "force-dynamic";
+// ISR: on-demand gerendert und 1h gecacht; der Wiki-Sync stößt per
+// revalidatePath einen früheren Refresh an.
+export const revalidate = 3600;
+
+// Leer: nichts wird beim Build prerendert (kein Mongo im Docker-Builder),
+// Pfade entstehen on-demand und werden dann gemaess revalidate gecacht.
+export function generateStaticParams() {
+  return [];
+}
 
 /** Erze speisen fast das gesamte Crafting — die Liste wird gedeckelt. */
 const PREVIEW_LIMIT = 25;
@@ -50,10 +59,18 @@ export default async function MaterialDetailPage({
 
   const t = await getTranslations("materials");
   const tBlueprints = await getTranslations("blueprints");
+  const tNav = await getTranslations("common.nav");
   const blueprints = await findBlueprintsByMaterialCode(db, material.code);
 
   return (
     <PageShell width="wide">
+      <Breadcrumbs
+        locale={locale}
+        items={[
+          { label: tNav("materials"), href: "/materials" },
+          { label: material.name },
+        ]}
+      />
       <PageHeader
         title={
           <>

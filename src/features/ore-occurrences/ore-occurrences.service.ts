@@ -6,6 +6,7 @@ import type {
 } from "@/features/locations/locations.schema";
 import type { MiningMethod, RarityTier } from "@/features/ores/ores.schema";
 import { getBestSellByOre } from "@/features/refinery-and-prices/price-summary";
+import { CACHE_TAGS, cachedQuery } from "@/lib/data-cache";
 import {
   findOccurrencesByLocation,
   findOccurrencesByOre,
@@ -16,6 +17,19 @@ export type OccurrenceWithLocation = OreOccurrence & {
   bodyName: string;
   bodyType: BodyType;
 };
+
+/** Für Seiten-Reads: gecachte Variante (Tag wiki-data, siehe data-cache.ts). */
+export function findOccurrencesByOreWithLocationCached(
+  db: Db,
+  oreCode: string,
+  method?: MiningMethod | null,
+): Promise<OccurrenceWithLocation[]> {
+  return cachedQuery(
+    CACHE_TAGS.wiki,
+    ["occurrences-by-ore", oreCode, method],
+    () => findOccurrencesByOreWithLocation(db, oreCode, method),
+  );
+}
 
 export type OccurrenceWithOre = OreOccurrence & {
   oreName: string;

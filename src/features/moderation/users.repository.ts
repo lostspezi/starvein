@@ -30,6 +30,19 @@ export async function listUsers(
   }));
 }
 
+/** Anzeigename für Attribution (z. B. Guide-Author im JSON-LD). */
+export async function findUserNameById(
+  db: Db,
+  id: string,
+): Promise<string | null> {
+  if (!ObjectId.isValid(id)) return null;
+  const doc = await db
+    .collection(COLLECTION)
+    .findOne({ _id: new ObjectId(id) }, { projection: { name: 1 } });
+  const name = typeof doc?.name === "string" ? doc.name.trim() : "";
+  return name.length > 0 ? name : null;
+}
+
 export async function getUserRole(db: Db, id: string): Promise<Role | null> {
   if (!ObjectId.isValid(id)) return null;
   const doc = await db

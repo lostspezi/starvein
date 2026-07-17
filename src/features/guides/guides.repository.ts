@@ -117,6 +117,20 @@ export async function listPublicGuides(
   return query.limit ? guides.slice(0, query.limit) : guides;
 }
 
+export type PublicGuideRef = { id: string; updatedAt: string };
+
+/** Schlanke Projektion für die Sitemap — lädt keine Guide-Inhalte. */
+export async function listPublicGuideRefs(db: Db): Promise<PublicGuideRef[]> {
+  const docs = await db
+    .collection(COLLECTION)
+    .find({ isPublic: true }, { projection: { _id: 0, id: 1, updatedAt: 1 } })
+    .toArray();
+  return docs.map((doc) => ({
+    id: String(doc.id),
+    updatedAt: String(doc.updatedAt),
+  }));
+}
+
 export async function countPublicGuides(db: Db): Promise<number> {
   return db.collection(COLLECTION).countDocuments({ isPublic: true });
 }

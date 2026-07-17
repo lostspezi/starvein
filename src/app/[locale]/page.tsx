@@ -18,7 +18,7 @@ import { findLoadoutShowcase } from "@/features/home/loadout-showcase.service";
 import { countCelestialBodies } from "@/features/locations/locations.repository";
 import { SYSTEM_CODES } from "@/features/locations/locations.schema";
 import { countPublicLoadouts } from "@/features/loadouts/loadouts.repository";
-import { findAllOres } from "@/features/ores/ores.repository";
+import { findAllOresCached } from "@/features/ores/ores.repository";
 import {
   MINING_METHODS,
   RARITY_TIERS,
@@ -50,7 +50,7 @@ export default async function Home({
   setRequestLocale(locale);
 
   const db = await getDb();
-  const ores = await findAllOres(db);
+  const ores = await findAllOresCached(db);
 
   const sp = await searchParams;
   const oreParam = typeof sp.ore === "string" ? sp.ore : null;

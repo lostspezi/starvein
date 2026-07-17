@@ -1,6 +1,6 @@
 import type { Db } from "mongodb";
 import type { OccurrenceWithLocation } from "@/features/ore-occurrences/ore-occurrences.service";
-import { findOccurrencesByOreWithLocation } from "@/features/ore-occurrences/ore-occurrences.service";
+import { findOccurrencesByOreWithLocationCached } from "@/features/ore-occurrences/ore-occurrences.service";
 import { findOreByCode } from "@/features/ores/ores.repository";
 import type { Ore } from "@/features/ores/ores.schema";
 import { getOrePriceSummary } from "@/features/refinery-and-prices/price-summary";
@@ -41,7 +41,7 @@ export async function getOreComparison(
       const [profiles, prices, occurrences] = await Promise.all([
         findSignatureProfilesByOre(db, ore.code),
         getOrePriceSummary(db, ore.code),
-        findOccurrencesByOreWithLocation(db, ore.code),
+        findOccurrencesByOreWithLocationCached(db, ore.code),
       ]);
 
       return {

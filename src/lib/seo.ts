@@ -43,6 +43,24 @@ export const NO_INDEX: Metadata["robots"] = {
 };
 
 /**
+ * Default-OG-Bild einer Locale (src/app/[locale]/opengraph-image.tsx).
+ * Muss config-seitig mitgegeben werden: Seiten, die per generateMetadata ein
+ * eigenes openGraph-Objekt setzen, ersetzen das geerbte Layout-openGraph
+ * komplett — das File-Convention-Bild des [locale]-Segments ginge verloren.
+ * Segmente mit eigener opengraph-image-Datei überschreiben diesen Fallback
+ * (file-based Metadata hat Vorrang vor config-based).
+ */
+export function defaultOgImage(locale: string) {
+  return [
+    {
+      url: `${SITE_URL}/${locale}/opengraph-image`,
+      width: 1200,
+      height: 630,
+    },
+  ];
+}
+
+/**
  * Vollständige Seiten-Metadata (Titel, Description, Canonical, hreflang,
  * Open Graph, Twitter Card) für eine lokalisierte Route. Der Seitentitel
  * läuft durch das Title-Template des Layouts ("%s · STARVEIN").
@@ -52,6 +70,11 @@ export function pageMetadata(opts: {
   path: string;
   title: string;
   description?: string;
+  /**
+   * true, wenn das Segment eine eigene opengraph-image-Datei hat: der
+   * config-basierte Locale-Fallback würde sie sonst verdrängen.
+   */
+  ownOgImage?: boolean;
 }): Metadata {
   return {
     title: opts.title,
@@ -64,9 +87,10 @@ export function pageMetadata(opts: {
       description: opts.description,
       url: `${SITE_URL}/${opts.locale}${opts.path}`,
       locale: OG_LOCALES[opts.locale],
+      ...(opts.ownOgImage ? {} : { images: defaultOgImage(opts.locale) }),
     },
     twitter: {
-      card: "summary",
+      card: "summary_large_image",
       title: `${opts.title} · ${SITE_NAME}`,
       description: opts.description,
     },

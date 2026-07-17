@@ -5,7 +5,7 @@ import { ExplorerFilters } from "@/features/home/ExplorerFilters";
 import { ExplorerTable } from "@/features/home/ExplorerTable";
 import { findExplorerRows } from "@/features/home/explorer.service";
 import { SYSTEM_CODES } from "@/features/locations/locations.schema";
-import { findAllOres } from "@/features/ores/ores.repository";
+import { findAllOresCached } from "@/features/ores/ores.repository";
 import {
   MINING_METHODS,
   RARITY_TIERS,
@@ -54,7 +54,7 @@ export default async function OccurrencesPage({
 
   const t = await getTranslations("occurrences");
   const db = await getDb();
-  const ores = await findAllOres(db);
+  const ores = await findAllOresCached(db);
 
   const sp = await searchParams;
   const oreParam = typeof sp.ore === "string" ? sp.ore : null;

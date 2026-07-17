@@ -7,19 +7,16 @@ import { MATERIAL_KINDS } from "./materials.schema";
 
 export function MaterialFilters() {
   const t = useTranslations("materials");
-  // shallow: false, damit die Server-Komponente mit neuen searchParams rendert
+  // shallow (Default): nur der Client filtert — die Listen-Seiten sind ISR-cachebar
   const [kind, setKind] = useQueryState(
     "kind",
-    parseAsStringLiteral(MATERIAL_KINDS).withOptions({ shallow: false }),
+    parseAsStringLiteral(MATERIAL_KINDS),
   );
   const [q, setQ] = useQueryState(
     "q",
-    parseAsString.withOptions({ shallow: false, throttleMs: 300 }),
+    parseAsString.withOptions({ throttleMs: 300 }),
   );
-  const [ores, setOres] = useQueryState(
-    "ores",
-    parseAsString.withOptions({ shallow: false }),
-  );
+  const [ores, setOres] = useQueryState("ores", parseAsString);
 
   return (
     <div className="flex flex-col gap-3">

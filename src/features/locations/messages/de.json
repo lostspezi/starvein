@@ -2,7 +2,6 @@
   "locations": {
     "title": "Locations",
     "empty": "Hier gibt es noch keine Locations.",
-    "breadcrumbLabel": "Brotkrumen-Navigation",
     "systemSuffix": "System",
     "bodyType": {
       "planet": "Planet",
@@ -23,6 +22,7 @@
       "asteroidBelt": "Asteroidengürtel",
       "asteroidField": "Asteroidenfelder & Mining-Bases",
       "cave": "Höhlen"
-    }
+    },
+    "intro": "Durchsuche die Sternsysteme von Star Citizen: Planeten, Monde, Lagrange-Punkte und Asteroidenfelder — mit allen bekannten Erz-Vorkommen pro Location."
   }
 }

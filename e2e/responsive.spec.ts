@@ -96,8 +96,12 @@ test.describe("sticky header", () => {
     expect(position).toBe("sticky");
 
     await page.mouse.wheel(0, 1200);
-    await expect(page.getByRole("link", { name: "Locations" })).toBeVisible();
-    await page.getByRole("link", { name: "Locations" }).click();
+    // Auf den Header scopen — der Footer verlinkt die Sektion inzwischen auch
+    const headerLink = page
+      .getByRole("banner")
+      .getByRole("link", { name: "Locations" });
+    await expect(headerLink).toBeVisible();
+    await headerLink.click();
     await expect(page).toHaveURL(/\/en\/locations$/);
   });
 });

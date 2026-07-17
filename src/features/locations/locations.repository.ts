@@ -1,4 +1,5 @@
 import type { Db } from "mongodb";
+import { CACHE_TAGS, cachedQuery } from "@/lib/data-cache";
 import {
   celestialBodySchema,
   starSystemSchema,
@@ -10,6 +11,23 @@ const SYSTEMS = "starSystems";
 const BODIES = "celestialBodies";
 
 const NO_ID = { projection: { _id: 0 } } as const;
+
+/** Für Seiten-Reads: gecachte Variante (Tag wiki-data, siehe data-cache.ts). */
+export function findAllStarSystemsCached(db: Db): Promise<StarSystem[]> {
+  return cachedQuery(CACHE_TAGS.wiki, ["star-systems", "all"], () =>
+    findAllStarSystems(db),
+  );
+}
+
+/** Für Seiten-Reads: gecachte Variante (Tag wiki-data, siehe data-cache.ts). */
+export function findBodiesBySystemCached(
+  db: Db,
+  systemCode: string,
+): Promise<CelestialBody[]> {
+  return cachedQuery(CACHE_TAGS.wiki, ["bodies", systemCode], () =>
+    findBodiesBySystem(db, systemCode),
+  );
+}
 
 export async function findAllStarSystems(db: Db): Promise<StarSystem[]> {
   const docs = await db

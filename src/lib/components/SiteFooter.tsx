@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import {
   GITHUB_BUG_URL,
   GITHUB_FEATURE_URL,
@@ -17,6 +18,16 @@ const externalProps = {
   rel: "noopener noreferrer",
 } as const;
 
+/** Interne Sektions-Links: sitewide Verlinkung auf die Kern-Referenzen. */
+const SECTION_LINKS = [
+  ["/ores", "nav.ores"],
+  ["/locations", "nav.locations"],
+  ["/occurrences", "nav.occurrences"],
+  ["/signatures", "nav.signatures"],
+  ["/blueprints", "nav.blueprints"],
+  ["/guides", "nav.guides"],
+] as const;
+
 /**
  * Site-Footer mit Projekt-Links und dem Pflicht-Disclaimer laut
  * RSI-Fansite-Policy (CLAUDE.md §2): Der englische Wortlaut ist von RSI
@@ -29,6 +40,16 @@ export function SiteFooter() {
 
   return (
     <footer className="border-t border-glass-border bg-glass px-4 py-6 text-sm text-text-muted backdrop-blur-md sm:px-6">
+      <nav
+        aria-label={t("footer.sectionsLabel")}
+        className="mb-6 flex flex-wrap gap-x-5 gap-y-2"
+      >
+        {SECTION_LINKS.map(([href, labelKey]) => (
+          <Link key={href} href={href} className={linkClasses}>
+            {t(labelKey)}
+          </Link>
+        ))}
+      </nav>
       <div className="flex flex-col gap-6 md:grid md:grid-cols-3 md:items-center md:gap-8">
         <div className="flex items-center gap-4">
           {/* Offizielles Fankit-Logo — laut RSI-Vorgabe mind. 50 % Deckkraft */}

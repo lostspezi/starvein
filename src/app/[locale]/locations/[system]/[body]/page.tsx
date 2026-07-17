@@ -1,19 +1,10 @@
-import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { FavoriteButton } from "@/features/favorites/FavoriteButton";
-import { isFavorite } from "@/features/favorites/favorites.repository";
-import { getSessionUserId } from "@/lib/session";
-import { LocationOccurrencesTable } from "@/features/ore-occurrences/LocationOccurrencesTable";
-import { MethodFilter } from "@/features/ore-occurrences/MethodFilter";
+import { LocationOccurrencesSection } from "@/features/ore-occurrences/LocationOccurrencesSection";
 import { findOccurrencesWithInheritance } from "@/features/ore-occurrences/ore-occurrences.service";
-import { MINING_METHODS, type MiningMethod } from "@/features/ores/ores.schema";
-import { parseEnumParam } from "@/lib/search-params";
 import { BodyList } from "@/features/locations/BodyList";
-import {
-  Breadcrumbs,
-  type BreadcrumbItem,
-} from "@/features/locations/Breadcrumbs";
+import { Breadcrumbs, type BreadcrumbItem } from "@/lib/components/Breadcrumbs";
 import {
   findBodyBySlug,
   findChildBodies,
@@ -24,7 +15,17 @@ import { getDb } from "@/lib/db";
 import { pageMetadata } from "@/lib/seo";
 import type { Metadata } from "next";
 
-export const dynamic = "force-dynamic";
+// ISR: on-demand gerendert und 1h gecacht; der Wiki-Sync stößt per
+// revalidatePath einen früheren Refresh an. Favoriten-State und
+// Methoden-Filter laufen clientseitig (self-managed FavoriteButton,
+// LocationOccurrencesSection) — die Seite selbst ist nutzerneutral.
+export const revalidate = 3600;
+
+// Leer: nichts wird beim Build prerendert (kein Mongo im Docker-Builder),
+// Pfade entstehen on-demand und werden dann gemaess revalidate gecacht.
+export function generateStaticParams() {
+  return [];
+}
 
 export async function generateMetadata({
   params,
@@ -50,15 +51,14 @@ export async function generateMetadata({
       body: body.name,
       system: system.name,
     }),
+    ownOgImage: true,
   });
 }
 
 export default async function BodyPage({
   params,
-  searchParams,
 }: {
   params: Promise<{ locale: string; system: string; body: string }>;
-  searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
   const { locale, system: systemParam, body: bodySlug } = await params;
   setRequestLocale(locale);
@@ -99,33 +99,21 @@ export default async function BodyPage({
 
   const children = await findChildBodies(db, system.code, body.slug);
 
-  const sp = await searchParams;
-  const method = parseEnumParam<MiningMethod>(sp.method, MINING_METHODS);
-  // Outposts/Höhlen haben keine eigenen Vorkommen — Roll-up vom Parent-Body
+  // Outposts/Höhlen haben keine eigenen Vorkommen — Roll-up vom Parent-Body.
+  // Ohne Methoden-Filter geladen; gefiltert wird clientseitig in der Section.
   const { occurrences, inheritedFrom } = await findOccurrencesWithInheritance(
     db,
     system.code,
     body,
-    method,
   );
-
-  const userId = await getSessionUserId(await headers());
-  const favorited = userId
-    ? await isFavorite(db, userId, system.code, body.slug)
-    : false;
 
   return (
     <PageShell width="wide">
-      <Breadcrumbs items={crumbs} />
+      <Breadcrumbs locale={locale} items={crumbs} />
       <div className="animate-reveal">
         <div className="flex items-center gap-2">
           <h1 className="text-2xl font-semibold">{body.name}</h1>
-          <FavoriteButton
-            systemCode={system.code}
-            bodySlug={body.slug}
-            initialIsFavorite={favorited}
-            isAuthenticated={userId !== null}
-          />
+          <FavoriteButton systemCode={system.code} bodySlug={body.slug} />
         </div>
         <p className="text-sm text-text-muted">
           {t(`locations.bodyType.${body.type}`)}
@@ -133,13 +121,10 @@ export default async function BodyPage({
       </div>
 
       <h2 className="text-lg font-medium">{t("occurrences.atLocation")}</h2>
-      <MethodFilter />
-      {inheritedFrom && (
-        <p className="text-sm text-text-muted">
-          {t("occurrences.inheritedFrom", { name: inheritedFrom.name })}
-        </p>
-      )}
-      <LocationOccurrencesTable occurrences={occurrences} />
+      <LocationOccurrencesSection
+        occurrences={occurrences}
+        inheritedFromName={inheritedFrom?.name ?? null}
+      />
       <p className="text-xs text-text-muted">{t("occurrences.disclaimer")}</p>
 
       {children.length > 0 && (

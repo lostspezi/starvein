@@ -12,6 +12,7 @@
     "bestRaw": "Best sell (raw)",
     "bestRefined": "Best sell (refined)",
     "topLocations": "Top locations",
-    "noData": "–"
+    "noData": "–",
+    "intro": "Compare ores side by side: rarity, mining methods, scan signatures, best sell prices and refinery yields."
   }
 }

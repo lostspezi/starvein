@@ -19,6 +19,20 @@ export async function countBlueprints(db: Db): Promise<number> {
   return db.collection(COLLECTION).countDocuments();
 }
 
+export type BlueprintRef = { slug: string; syncedAt: string };
+
+/** Schlanke Projektion für die Sitemap — lädt keine Zutatenlisten. */
+export async function findAllBlueprintRefs(db: Db): Promise<BlueprintRef[]> {
+  const docs = await db
+    .collection(COLLECTION)
+    .find({}, { projection: { _id: 0, slug: 1, syncedAt: 1 } })
+    .toArray();
+  return docs.map((doc) => ({
+    slug: String(doc.slug),
+    syncedAt: String(doc.syncedAt),
+  }));
+}
+
 export async function findBlueprintBySlug(
   db: Db,
   slug: string,
