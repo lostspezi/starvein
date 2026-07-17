@@ -37,7 +37,7 @@ export default async function LocationsPage({
 
   return (
     <PageShell>
-      <PageHeader title={t("title")} />
+      <PageHeader title={t("title")} subtitle={t("intro")} />
       <SystemList systems={systems} />
     </PageShell>
   );

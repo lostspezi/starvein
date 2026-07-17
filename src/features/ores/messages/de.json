@@ -1,6 +1,7 @@
 {
   "ores": {
     "title": "Erz-Referenz",
+    "intro": "Alle minebaren Erze in Star Citizen im Überblick: Seltenheit plus Ship-, ROC- und FPS-Mining. Filtere die Referenz und spring pro Erz zu Fundorten, Scan-Signaturen und Verkaufspreisen.",
     "empty": "Keine Erze gefunden — Filter anpassen oder Seed ausführen.",
     "table": {
       "name": "Name",
@@ -25,6 +26,10 @@
     "filter": {
       "rarityLabel": "Nach Seltenheit filtern",
       "methodLabel": "Nach Mining-Methode filtern"
+    },
+    "detail": {
+      "summary": "Kommt an {locationCount, plural, one {# Fundort} other {# Fundorten}} in {systemCount, plural, one {# Sternsystem} other {# Sternsystemen}} vor — beste Chance {probability} % auf {body} ({method}-Mining).",
+      "noOccurrences": "Keine bekannten Vorkommen in der aktuellen Spielversion."
     }
   }
 }

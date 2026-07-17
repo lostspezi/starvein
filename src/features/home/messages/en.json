@@ -1,6 +1,7 @@
 {
   "home": {
     "title": "STARVEIN",
+    "tagline": "Star Citizen Mining Reference",
     "welcome": "Welcome to STARVEIN, your free mining reference for Star Citizen. Find every ore, where it spawns and which scan signature to look out for. Built by the community, for the community.",
     "searchLabel": "Find ores, locations, blueprints and signatures",
     "stats": {

@@ -4,10 +4,13 @@ import { renderWithIntl } from "@/test/render";
 import { HomePage } from "./HomePage";
 
 describe("HomePage", () => {
-  it("shows the app title as heading", () => {
+  it("shows the app title with a descriptive tagline as heading", () => {
     renderWithIntl(<HomePage />, { locale: "en" });
     expect(
-      screen.getByRole("heading", { level: 1, name: "STARVEIN" }),
+      screen.getByRole("heading", {
+        level: 1,
+        name: "STARVEIN Star Citizen Mining Reference",
+      }),
     ).toBeVisible();
   });
 

@@ -40,7 +40,7 @@ export default async function OresPage({
 
   return (
     <PageShell>
-      <PageHeader title={t("title")} />
+      <PageHeader title={t("title")} subtitle={t("intro")} />
       <OreListSection ores={ores} />
     </PageShell>
   );

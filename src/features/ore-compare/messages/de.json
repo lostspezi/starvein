@@ -12,6 +12,7 @@
     "bestRaw": "Bester Verkauf (roh)",
     "bestRefined": "Bester Verkauf (raffiniert)",
     "topLocations": "Top-Fundorte",
-    "noData": "–"
+    "noData": "–",
+    "intro": "Vergleiche Erze nebeneinander: Seltenheit, Mining-Methoden, Scan-Signaturen, beste Verkaufspreise und Refinery-Yields."
   }
 }

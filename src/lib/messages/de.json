@@ -7,7 +7,8 @@
       "description": "Alle minebaren Star-Citizen-Erze im Überblick: Seltenheit, Mining-Methoden, Verkaufspreise und Refinery-Yields."
     },
     "oreDetail": {
-      "description": "Wo {ore} in Star Citizen zu finden ist: Fundorte mit Wahrscheinlichkeit, Scan-Signaturen, Verkaufspreise und Refinery-Yields."
+      "description": "Wo {ore} in Star Citizen zu finden ist: Fundorte mit Wahrscheinlichkeit, Scan-Signaturen, Verkaufspreise und Refinery-Yields.",
+      "descriptionStats": "Wo {ore} in Star Citizen zu finden ist: {locationCount, plural, one {# Fundort} other {# Fundorte}} in {systemCount, plural, one {# Sternsystem} other {# Sternsystemen}}, beste Chance {probability} % auf {body}. Scan-Signaturen, Verkaufspreise und Refinery-Yields."
     },
     "locations": {
       "title": "Locations",
@@ -43,18 +44,42 @@
       "title": "Mining-Guides",
       "description": "Community-Mining-Guides für Star Citizen: wo und wie man mint, mit Bildern und Video-Walkthroughs."
     },
-    "favorites": { "title": "Favoriten" },
-    "myLoadouts": { "title": "Meine Loadouts" },
-    "myGuides": { "title": "Meine Guides" },
-    "newGuide": { "title": "Guide schreiben" },
-    "editGuide": { "title": "Guide bearbeiten" },
-    "newLoadout": { "title": "Neues Loadout" },
-    "myWarehouse": { "title": "Mein Lager" },
-    "myRefineryJobs": { "title": "Meine Raffinerie-Jobs" },
-    "newRefineryJob": { "title": "Neuer Raffinerie-Job" },
-    "editLoadout": { "title": "Loadout bearbeiten" },
-    "admin": { "title": "Admin" },
-    "device": { "title": "Gerät verbinden" },
+    "favorites": {
+      "title": "Favoriten"
+    },
+    "myLoadouts": {
+      "title": "Meine Loadouts"
+    },
+    "myGuides": {
+      "title": "Meine Guides"
+    },
+    "newGuide": {
+      "title": "Guide schreiben"
+    },
+    "editGuide": {
+      "title": "Guide bearbeiten"
+    },
+    "newLoadout": {
+      "title": "Neues Loadout"
+    },
+    "myWarehouse": {
+      "title": "Mein Lager"
+    },
+    "myRefineryJobs": {
+      "title": "Meine Raffinerie-Jobs"
+    },
+    "newRefineryJob": {
+      "title": "Neuer Raffinerie-Job"
+    },
+    "editLoadout": {
+      "title": "Loadout bearbeiten"
+    },
+    "admin": {
+      "title": "Admin"
+    },
+    "device": {
+      "title": "Gerät verbinden"
+    },
     "companion": {
       "title": "Companion-App",
       "description": "STARVEIN Companion für Windows: Refinery-Work-Orders in Star Citizen per Hotkey und Texterkennung erfassen — mit Countdown und Benachrichtigung, wenn der Auftrag fertig ist."
@@ -99,7 +124,8 @@
       "reportBug": "Bug melden",
       "requestFeature": "Feature vorschlagen",
       "craftedBy": "Crafted with ♥ by",
-      "communityLogoAlt": "Star Citizen „Made by the Community“-Logo"
+      "communityLogoAlt": "Star Citizen „Made by the Community“-Logo",
+      "sectionsLabel": "Referenz-Bereiche"
     }
   },
   "og": {

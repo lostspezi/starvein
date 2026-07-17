@@ -53,7 +53,7 @@ export default async function ComparePage({
 
   return (
     <PageShell width="wide">
-      <PageHeader title={t("title")} />
+      <PageHeader title={t("title")} subtitle={t("intro")} />
       <CompareSelect ores={ores} />
       <CompareGrid columns={columns} />
     </PageShell>

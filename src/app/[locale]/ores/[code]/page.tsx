@@ -1,8 +1,10 @@
 import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import { cache } from "react";
 import { OreBlueprintsPanel } from "@/features/blueprints/OreBlueprintsPanel";
 import { findBlueprintsUsingOre } from "@/features/blueprints/blueprints.service";
 import { OreOccurrencesSection } from "@/features/ore-occurrences/OreOccurrencesSection";
+import { buildOreOccurrenceStats } from "@/features/ore-occurrences/occurrence-stats";
 import { findOccurrencesByOreWithLocationCached } from "@/features/ore-occurrences/ore-occurrences.service";
 import { findOreByCode } from "@/features/ores/ores.repository";
 import { MINING_METHODS } from "@/features/ores/ores.schema";
@@ -36,6 +38,11 @@ export function generateStaticParams() {
  */
 const BLUEPRINT_PREVIEW_LIMIT = 10;
 
+/** generateMetadata und Page teilen sich dieselbe Occurrence-Query pro Request. */
+const getOccurrences = cache((oreCode: string) =>
+  getDb().then((db) => findOccurrencesByOreWithLocationCached(db, oreCode)),
+);
+
 export async function generateMetadata({
   params,
 }: {
@@ -47,11 +54,25 @@ export async function generateMetadata({
     return {};
   }
   const t = await getTranslations({ locale, namespace: "meta" });
+  const stats = buildOreOccurrenceStats(await getOccurrences(ore.code));
+
+  // Description mit echten Daten (Fundort-Zahl, beste Chance) — deutlich
+  // aussagekräftiger im SERP-Snippet als der generische Satz.
+  const description = stats.best
+    ? t("oreDetail.descriptionStats", {
+        ore: ore.name_en,
+        locationCount: stats.locationCount,
+        systemCount: stats.systemCount,
+        probability: Math.round(stats.best.probabilityPercent),
+        body: stats.best.bodyName,
+      })
+    : t("oreDetail.description", { ore: ore.name_en });
+
   return pageMetadata({
     locale,
     path: `/ores/${ore.code.toLowerCase()}`,
     title: ore.name_en,
-    description: t("oreDetail.description", { ore: ore.name_en }),
+    description,
     ownOgImage: true,
   });
 }
@@ -78,12 +99,13 @@ export default async function OreDetailPage({
     refineryYields,
     blueprintsUsingOre,
   ] = await Promise.all([
-    findOccurrencesByOreWithLocationCached(db, ore.code),
+    getOccurrences(ore.code),
     findSignatureProfilesByOre(db, ore.code),
     getCachedOrePriceSummary(db, ore.code),
     findRefineryYieldsByOre(db, ore.code),
     findBlueprintsUsingOre(db, ore.code),
   ]);
+  const stats = buildOreOccurrenceStats(occurrences);
 
   return (
     <PageShell>
@@ -112,6 +134,18 @@ export default async function OreDetailPage({
           </span>
         }
       />
+
+      <p className="max-w-3xl text-sm text-text-muted">
+        {stats.best
+          ? t("ores.detail.summary", {
+              locationCount: stats.locationCount,
+              systemCount: stats.systemCount,
+              probability: Math.round(stats.best.probabilityPercent),
+              body: stats.best.bodyName,
+              method: t(`ores.method.${stats.best.method}`),
+            })
+          : t("ores.detail.noOccurrences")}
+      </p>
 
       <OreSignatureInfo profiles={signatureProfiles} />
 

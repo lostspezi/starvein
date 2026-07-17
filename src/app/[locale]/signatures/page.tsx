@@ -72,7 +72,7 @@ export default async function SignaturesPage({
 
   return (
     <PageShell>
-      <PageHeader title={t("title")} />
+      <PageHeader title={t("title")} subtitle={t("intro")} />
 
       <h2 className="text-lg font-medium">{t("shipTitle")}</h2>
       <p className="text-sm text-text-muted">{t("shipExplainer")}</p>
