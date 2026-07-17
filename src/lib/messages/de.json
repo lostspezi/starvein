@@ -84,6 +84,11 @@
     "breadcrumbs": {
       "label": "Brotkrumen-Navigation"
     },
+    "notFound": {
+      "title": "Seite nicht gefunden",
+      "text": "Die gesuchte Seite existiert nicht oder ist umgezogen.",
+      "backHome": "Zurück zur Startseite"
+    },
     "disclaimer": {
       "text": "This is an unofficial Star Citizen fansite, not affiliated with the Cloud Imperium group of companies. All content on this site not authored by its host or users are property of their respective owners.",
       "rsiLinkLabel": "Offizielle Star-Citizen-Website"
