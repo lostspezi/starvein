@@ -3,7 +3,7 @@ import { SITE_URL } from "@/lib/seo";
 
 export const OG_SIZE = { width: 1200, height: 630 };
 
-/** Rarity-Farbtokens aus dem Design-System (globals.css @theme). */
+/** Rarity-Farbtokens aus dem Design-System (globals.css `@theme`). */
 export const RARITY_COLORS: Record<RarityTier, string> = {
   common: "#8b95b0",
   uncommon: "#4c9ef0",
