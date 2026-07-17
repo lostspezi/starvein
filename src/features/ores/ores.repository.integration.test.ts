@@ -2,7 +2,12 @@ import { afterAll, beforeEach, describe, expect, it } from "vitest";
 import type { Db } from "mongodb";
 import { closeMongo, getDb } from "@/lib/db";
 import { uniqueDbName } from "@/test/factories";
-import { findAllOres, findOreByCode, upsertOres } from "./ores.repository";
+import {
+  findAllOres,
+  findAllOresCached,
+  findOreByCode,
+  upsertOres,
+} from "./ores.repository";
 import type { Ore } from "./ores.schema";
 
 const quan: Ore = {
@@ -58,6 +63,11 @@ describe("ores repository", () => {
     await upsertOres(db, [quan, hada]);
     await expect(findOreByCode(db, "HADA")).resolves.toEqual(hada);
     await expect(findOreByCode(db, "NOPE")).resolves.toBeNull();
+  });
+
+  it("cached variant returns the same data (pass-through in tests)", async () => {
+    await upsertOres(db, [quan, hada]);
+    await expect(findAllOresCached(db)).resolves.toEqual(await findAllOres(db));
   });
 
   it("strips mongo _id from results", async () => {

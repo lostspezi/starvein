@@ -3,7 +3,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { BodyList } from "@/features/locations/BodyList";
 import { Breadcrumbs } from "@/lib/components/Breadcrumbs";
 import {
-  findBodiesBySystem,
+  findBodiesBySystemCached,
   findStarSystemByCode,
 } from "@/features/locations/locations.repository";
 import { BODY_TYPES } from "@/features/locations/locations.schema";
@@ -52,7 +52,7 @@ export default async function SystemPage({
   }
 
   const t = await getTranslations("locations");
-  const bodies = await findBodiesBySystem(db, system.code);
+  const bodies = await findBodiesBySystemCached(db, system.code);
   const topLevel = bodies.filter((body) => body.parentSlug === null);
 
   // Nach Typ gruppieren (Planeten zuerst), leere Gruppen ausblenden

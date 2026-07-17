@@ -4,7 +4,7 @@ import { OreBlueprintsPanel } from "@/features/blueprints/OreBlueprintsPanel";
 import { findBlueprintsUsingOre } from "@/features/blueprints/blueprints.service";
 import { MethodFilter } from "@/features/ore-occurrences/MethodFilter";
 import { OreOccurrencesTable } from "@/features/ore-occurrences/OreOccurrencesTable";
-import { findOccurrencesByOreWithLocation } from "@/features/ore-occurrences/ore-occurrences.service";
+import { findOccurrencesByOreWithLocationCached } from "@/features/ore-occurrences/ore-occurrences.service";
 import { findOreByCode } from "@/features/ores/ores.repository";
 import { MINING_METHODS, type MiningMethod } from "@/features/ores/ores.schema";
 import { PriceAndYieldPanel } from "@/features/refinery-and-prices/PriceAndYieldPanel";
@@ -77,7 +77,7 @@ export default async function OreDetailPage({
     refineryYields,
     blueprintsUsingOre,
   ] = await Promise.all([
-    findOccurrencesByOreWithLocation(db, ore.code, method),
+    findOccurrencesByOreWithLocationCached(db, ore.code, method),
     findSignatureProfilesByOre(db, ore.code),
     getCachedOrePriceSummary(db, ore.code),
     findRefineryYieldsByOre(db, ore.code),

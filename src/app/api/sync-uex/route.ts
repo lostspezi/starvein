@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { syncUex } from "@/features/refinery-and-prices/sync.service";
 import { getDb } from "@/lib/db";
+import { revalidateAfterSync } from "@/lib/revalidate-after-sync";
 
 export const dynamic = "force-dynamic";
 
@@ -18,5 +19,7 @@ export async function POST(request: Request) {
   }
 
   const db = await getDb();
-  return NextResponse.json(await syncUex(db));
+  const summary = await syncUex(db);
+  revalidateAfterSync("uex");
+  return NextResponse.json(summary);
 }

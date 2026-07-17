@@ -2,7 +2,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { OreFilters } from "@/features/ores/OreFilters";
 import { OreList } from "@/features/ores/OreList";
 import { filterOres } from "@/features/ores/ores.filter";
-import { findAllOres } from "@/features/ores/ores.repository";
+import { findAllOresCached } from "@/features/ores/ores.repository";
 import {
   MINING_METHODS,
   RARITY_TIERS,
@@ -48,7 +48,7 @@ export default async function OresPage({
   const method = parseEnumParam<MiningMethod>(sp.method, MINING_METHODS);
 
   const t = await getTranslations("ores");
-  const ores = filterOres(await findAllOres(await getDb()), {
+  const ores = filterOres(await findAllOresCached(await getDb()), {
     rarity,
     method,
   });

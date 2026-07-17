@@ -5,7 +5,7 @@ import {
   MAX_COMPARE_ORES,
   getOreComparison,
 } from "@/features/ore-compare/compare.service";
-import { findAllOres } from "@/features/ores/ores.repository";
+import { findAllOresCached } from "@/features/ores/ores.repository";
 import { PageHeader } from "@/lib/components/ui/PageHeader";
 import { PageShell } from "@/lib/components/ui/PageShell";
 import { getDb } from "@/lib/db";
@@ -40,7 +40,7 @@ export default async function ComparePage({
   setRequestLocale(locale);
 
   const db = await getDb();
-  const ores = await findAllOres(db);
+  const ores = await findAllOresCached(db);
   const known = new Set(ores.map((ore) => ore.code));
 
   const sp = await searchParams;

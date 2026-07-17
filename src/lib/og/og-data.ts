@@ -6,7 +6,7 @@ import {
 import type { CelestialBody } from "@/features/locations/locations.schema";
 import {
   findOccurrencesByLocationWithOre,
-  findOccurrencesByOreWithLocation,
+  findOccurrencesByOreWithLocationCached,
   type OccurrenceWithLocation,
 } from "@/features/ore-occurrences/ore-occurrences.service";
 import { findOreByCode } from "@/features/ores/ores.repository";
@@ -26,7 +26,10 @@ export async function loadOreCardData(
   const ore = await findOreByCode(db, code.toUpperCase());
   if (!ore) return null;
 
-  const occurrences = await findOccurrencesByOreWithLocation(db, ore.code);
+  const occurrences = await findOccurrencesByOreWithLocationCached(
+    db,
+    ore.code,
+  );
   const locations = new Set(
     occurrences.map((o) => `${o.systemCode}|${o.bodySlug}`),
   );

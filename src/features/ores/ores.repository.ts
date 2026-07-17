@@ -1,7 +1,13 @@
 import type { Db } from "mongodb";
+import { CACHE_TAGS, cachedQuery } from "@/lib/data-cache";
 import { oreSchema, type Ore } from "./ores.schema";
 
 const COLLECTION = "ores";
+
+/** Für Seiten-Reads: gecachte Variante (Tag wiki-data, siehe data-cache.ts). */
+export function findAllOresCached(db: Db): Promise<Ore[]> {
+  return cachedQuery(CACHE_TAGS.wiki, ["ores", "all"], () => findAllOres(db));
+}
 
 export async function findAllOres(db: Db): Promise<Ore[]> {
   const docs = await db

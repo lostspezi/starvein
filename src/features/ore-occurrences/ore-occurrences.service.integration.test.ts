@@ -9,6 +9,7 @@ import { upsertOreOccurrences } from "./ore-occurrences.repository";
 import {
   findOccurrencesByLocationWithOre,
   findOccurrencesByOreWithLocation,
+  findOccurrencesByOreWithLocationCached,
   findOccurrencesWithInheritance,
 } from "./ore-occurrences.service";
 import type { OreOccurrence } from "./ore-occurrences.schema";
@@ -117,6 +118,12 @@ describe("ore occurrences service (joins)", () => {
       bodyType: "moon",
       probabilityPercent: 20,
     });
+  });
+
+  it("cached variant returns the same data (pass-through in tests)", async () => {
+    await expect(
+      findOccurrencesByOreWithLocationCached(db, "HADA", null),
+    ).resolves.toEqual(await findOccurrencesByOreWithLocation(db, "HADA"));
   });
 
   it("joins occurrences at a location with ore name and rarity", async () => {

@@ -4,10 +4,10 @@ import { findAllBlueprintRefs } from "@/features/blueprints/blueprints.repositor
 import { findAllMaterials } from "@/features/blueprints/materials.repository";
 import { listPublicGuideRefs } from "@/features/guides/guides.repository";
 import {
-  findAllStarSystems,
-  findBodiesBySystem,
+  findAllStarSystemsCached,
+  findBodiesBySystemCached,
 } from "@/features/locations/locations.repository";
-import { findAllOres } from "@/features/ores/ores.repository";
+import { findAllOresCached } from "@/features/ores/ores.repository";
 import { routing } from "@/i18n/routing";
 import { SITE_URL } from "@/lib/seo";
 
@@ -69,8 +69,8 @@ export async function buildSitemapEntries(
   const [wikiSyncedAt, ores, systems, materials, blueprintRefs, guideRefs] =
     await Promise.all([
       findWikiSyncedAt(db),
-      findAllOres(db),
-      findAllStarSystems(db),
+      findAllOresCached(db),
+      findAllStarSystemsCached(db),
       findAllMaterials(db),
       findAllBlueprintRefs(db),
       listPublicGuideRefs(db),
@@ -87,7 +87,7 @@ export async function buildSitemapEntries(
   for (const system of systems) {
     const systemPath = `/locations/${system.code.toLowerCase()}`;
     entries.push(...localizedEntries(systemPath, 0.6, wikiSyncedAt));
-    const bodies = await findBodiesBySystem(db, system.code);
+    const bodies = await findBodiesBySystemCached(db, system.code);
     for (const body of bodies) {
       entries.push(
         ...localizedEntries(`${systemPath}/${body.slug}`, 0.6, wikiSyncedAt),

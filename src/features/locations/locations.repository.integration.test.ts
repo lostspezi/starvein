@@ -6,7 +6,9 @@ import {
   countCelestialBodies,
   findAllCelestialBodies,
   findAllStarSystems,
+  findAllStarSystemsCached,
   findBodiesBySystem,
+  findBodiesBySystemCached,
   findBodyBySlug,
   findChildBodies,
   findStarSystemByCode,
@@ -87,6 +89,15 @@ describe("locations repository", () => {
   it("returns bodies of a system sorted by name", async () => {
     const bodies = await findBodiesBySystem(db, "STANTON");
     expect(bodies.map((b) => b.slug)).toEqual(["crusader", "cru-l1", "yela"]);
+  });
+
+  it("cached variants return the same data (pass-through in tests)", async () => {
+    await expect(findAllStarSystemsCached(db)).resolves.toEqual(
+      await findAllStarSystems(db),
+    );
+    await expect(findBodiesBySystemCached(db, "STANTON")).resolves.toEqual(
+      await findBodiesBySystem(db, "STANTON"),
+    );
   });
 
   it("finds a body by system and slug", async () => {
