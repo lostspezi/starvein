@@ -45,6 +45,7 @@ export async function generateMetadata({
     path: `/ores/${ore.code.toLowerCase()}`,
     title: ore.name_en,
     description: t("oreDetail.description", { ore: ore.name_en }),
+    ownOgImage: true,
   });
 }
 

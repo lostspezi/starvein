@@ -52,7 +52,7 @@ test.describe("page metadata", () => {
     );
     await expect(page.locator('meta[name="twitter:card"]')).toHaveAttribute(
       "content",
-      /summary/,
+      "summary_large_image",
     );
   });
 
@@ -95,6 +95,57 @@ test.describe("page metadata", () => {
       const robots = page.locator('meta[name="robots"]');
       await expect(robots).toHaveAttribute("content", /noindex/);
     }
+  });
+});
+
+test.describe("open graph images", () => {
+  /** og:image trägt die Produktions-Domain (metadataBase) — gegen den lokalen Server auflösen. */
+  async function fetchOgImage(
+    page: import("@playwright/test").Page,
+    request: import("@playwright/test").APIRequestContext,
+    route: string,
+  ) {
+    await page.goto(route);
+    const ogImage = await page
+      .locator('meta[property="og:image"]')
+      .first()
+      .getAttribute("content");
+    expect(ogImage).toBeTruthy();
+    const url = new URL(ogImage!);
+    return request.get(`${url.pathname}${url.search}`);
+  }
+
+  test("ore detail serves a rendered PNG og:image", async ({
+    page,
+    request,
+  }) => {
+    const response = await fetchOgImage(page, request, "/en/ores/hada");
+    expect(response.ok()).toBe(true);
+    expect(response.headers()["content-type"]).toContain("image/png");
+    // Die segment-eigene Karte muss den Locale-Fallback verdrängen
+    expect(response.url()).toContain("/ores/hada/opengraph-image");
+  });
+
+  test("location body page serves a rendered PNG og:image", async ({
+    page,
+    request,
+  }) => {
+    const response = await fetchOgImage(
+      page,
+      request,
+      "/en/locations/stanton/daymar",
+    );
+    expect(response.ok()).toBe(true);
+    expect(response.headers()["content-type"]).toContain("image/png");
+  });
+
+  test("pages without an own card fall back to the site default image", async ({
+    page,
+    request,
+  }) => {
+    const response = await fetchOgImage(page, request, "/en/signatures");
+    expect(response.ok()).toBe(true);
+    expect(response.headers()["content-type"]).toContain("image/png");
   });
 });
 

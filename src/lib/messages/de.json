@@ -93,5 +93,12 @@
       "craftedBy": "Crafted with ♥ by",
       "communityLogoAlt": "Star Citizen „Made by the Community“-Logo"
     }
+  },
+  "og": {
+    "kicker": "Star-Citizen-Mining-Referenz",
+    "guide": "Community-Guide",
+    "locations": "{count, plural, one {# Fundort} other {# Fundorte}}",
+    "ores": "{count, plural, one {# Erz} other {# Erze}}",
+    "bestChance": "beste Chance {probability} % · {body}"
   }
 }

@@ -8,7 +8,13 @@ import { ChatAside } from "@/features/chat/ChatAside";
 import { PriceTicker } from "@/features/price-ticker/PriceTicker";
 import { routing } from "@/i18n/routing";
 import { SiteFooter } from "@/lib/components/SiteFooter";
-import { localeAlternates, OG_LOCALES, SITE_NAME, SITE_URL } from "@/lib/seo";
+import {
+  defaultOgImage,
+  localeAlternates,
+  OG_LOCALES,
+  SITE_NAME,
+  SITE_URL,
+} from "@/lib/seo";
 import { Header } from "@/lib/components/Header";
 import { DriftingShips } from "@/lib/components/starfield/DriftingShips";
 import { Starfield } from "@/lib/components/starfield/Starfield";
@@ -59,9 +65,10 @@ export async function generateMetadata({
       alternateLocale: Object.entries(OG_LOCALES)
         .filter(([l]) => l !== locale)
         .map(([, og]) => og),
+      images: defaultOgImage(locale),
     },
     twitter: {
-      card: "summary",
+      card: "summary_large_image",
       title: t("defaultTitle"),
       description: t("description"),
     },

@@ -23,6 +23,12 @@ STARVEIN baut auf Daten und Vorarbeiten der Star-Citizen-Community auf:
   Loadout-Katalog (`data/curated/mining-*.json`), gegengeprüft mit UEX und
   dem [Star Citizen Wiki](https://starcitizen.tools) (CC BY-SA 4.0).
 
+Die Schriftdateien in `public/og-fonts/` für die generierten
+Social-Preview-Bilder stammen aus [Fontsource](https://fontsource.org/):
+**[Inter](https://github.com/rsms/inter)** (© Rasmus Andersson) und
+**[JetBrains Mono](https://github.com/JetBrains/JetBrainsMono)** (© JetBrains) —
+beide unter der [SIL Open Font License 1.1](https://openfontlicense.org/).
+
 Das „Made by the Community"-Logo im Footer ist das offizielle Fankit-Asset von
 Cloud Imperium Games (Quelle: [RSI Knowledge Base — Star Citizen Fankit and
 Fandom FAQ](https://support.robertsspaceindustries.com/hc/en-us/articles/360006895793))

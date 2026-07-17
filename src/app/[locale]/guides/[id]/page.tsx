@@ -38,6 +38,7 @@ export async function generateMetadata({
     path: `/guides/${id}`,
     title: translation.title,
     description: translation.description,
+    ownOgImage: true,
   });
 }
 

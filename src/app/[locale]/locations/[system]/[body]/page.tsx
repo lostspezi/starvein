@@ -50,6 +50,7 @@ export async function generateMetadata({
       body: body.name,
       system: system.name,
     }),
+    ownOgImage: true,
   });
 }
 
