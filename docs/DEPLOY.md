@@ -86,10 +86,14 @@ GitHub (Profile → Packages) → Package settings → Change visibility → Pub
 - **Deploy:** push to `main` (CI must be green) or trigger "Deploy" manually in
   the Actions tab.
 - **Logs:** `docker compose -f /opt/starvein/docker-compose.prod.yml logs -f app`
-- **UEX price sync (cron on the VPS):**
+- **UEX price sync (cron on the VPS):** must go through the API route — the
+  route invalidates the Next.js data cache and the ISR pages after a
+  successful sync (`revalidateAfterSync`). Running the tsx script instead
+  bypasses the app process, so pages would serve stale data until their
+  revalidate TTL expires:
 
   ```
-  */30 * * * * cd /opt/starvein && docker compose -f docker-compose.prod.yml run --rm jobs pnpm exec tsx scripts/sync-uex.ts >> /var/log/starvein-sync.log 2>&1
+  */30 * * * * curl -sf -X POST https://starvein.app/api/sync-uex -H "x-sync-secret: $(grep ^SYNC_SECRET= /opt/starvein/.env | cut -d= -f2)" >> /var/log/starvein-sync.log 2>&1
   ```
 
 - **SC-Wiki sync (cron on the VPS):** Erze, Locations, Vorkommen,
@@ -98,14 +102,16 @@ GitHub (Profile → Packages) → Package settings → Change visibility → Pub
   (der Seed liefert nur Sternsysteme, Signatur-Fallbacks und Equipment).
   Achtung: Der erste Lauf entfernt alte kuratierte/community-Occurrence-Rows
   (die Collections sind vollständig wiki-geführt, Prune bei jedem Sync).
-  Die Daten ändern sich nur mit einem Game-Patch, täglich reicht:
+  Die Daten ändern sich nur mit einem Game-Patch, täglich reicht — ebenfalls
+  über die Route (Cache-Invalidierung, siehe oben):
 
   ```
-  17 4 * * * cd /opt/starvein && docker compose -f docker-compose.prod.yml run --rm jobs pnpm exec tsx scripts/sync-wiki.ts >> /var/log/starvein-sync.log 2>&1
+  17 4 * * * curl -sf -X POST https://starvein.app/api/sync-wiki -H "x-sync-secret: $(grep ^SYNC_SECRET= /opt/starvein/.env | cut -d= -f2)" >> /var/log/starvein-sync.log 2>&1
   ```
 
-  Alternativ per Route-Handler mit Secret: `POST /api/sync-wiki` mit Header
-  `x-sync-secret: $SYNC_SECRET` (fail closed, wie `/api/sync-uex`).
+  Beide Routen sind fail closed (401 ohne konfiguriertes/korrektes
+  `SYNC_SECRET`). Die tsx-Skripte (`pnpm sync:uex`, `pnpm sync:wiki`) bleiben
+  für lokale Läufe und One-offs über den `jobs`-Container erhalten.
 
 - **Manual seed:** `docker compose -f docker-compose.prod.yml run --rm jobs`
 - **Achtung `jobs`-Image:** Der `jobs`-Service steht hinter `profiles: ["jobs"]`.
