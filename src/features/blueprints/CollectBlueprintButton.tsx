@@ -2,12 +2,17 @@
 
 import { BookmarkCheck } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useSession } from "@/lib/auth-client";
 
 /**
  * Toggle "Blueprint gesammelt". Rendert nichts für anonyme Nutzer —
  * Browsen bleibt ohne Account möglich, der Login wird nur fürs Speichern
  * gebraucht (CLAUDE.md §2/§8).
+ *
+ * Ohne initialIsCollected/isAuthenticated-Props ermittelt der Button
+ * Session und Zustand selbst (self-managed) — so bleibt die
+ * Blueprint-Detailseite ISR-cachebar (siehe FavoriteButton).
  */
 export function CollectBlueprintButton({
   blueprintKey,
@@ -15,14 +20,34 @@ export function CollectBlueprintButton({
   isAuthenticated,
 }: {
   blueprintKey: string;
-  initialIsCollected: boolean;
-  isAuthenticated: boolean;
+  initialIsCollected?: boolean;
+  isAuthenticated?: boolean;
 }) {
   const t = useTranslations("blueprints.collect");
-  const [isCollected, setIsCollected] = useState(initialIsCollected);
+  const selfManaged = isAuthenticated === undefined;
+  const { data: session } = useSession();
+  const [isCollected, setIsCollected] = useState(initialIsCollected ?? false);
   const [busy, setBusy] = useState(false);
 
-  if (!isAuthenticated) {
+  const sessionUserId = session?.user?.id ?? null;
+  const authenticated = selfManaged ? sessionUserId !== null : isAuthenticated;
+
+  useEffect(() => {
+    if (!selfManaged || sessionUserId === null) return;
+    let cancelled = false;
+    void (async () => {
+      const response = await fetch("/api/blueprint-collection");
+      if (!response.ok || cancelled) return;
+      const entries: { blueprintKey: string }[] = await response.json();
+      if (cancelled) return;
+      setIsCollected(entries.some((e) => e.blueprintKey === blueprintKey));
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [selfManaged, sessionUserId, blueprintKey]);
+
+  if (!authenticated) {
     return null;
   }
 

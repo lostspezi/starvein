@@ -1,8 +1,20 @@
 import { screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { renderWithIntl } from "@/test/render";
 import { CollectBlueprintButton } from "./CollectBlueprintButton";
+
+const { useSessionMock } = vi.hoisted(() => ({
+  useSessionMock: vi.fn(),
+}));
+
+vi.mock("@/lib/auth-client", () => ({
+  useSession: useSessionMock,
+}));
+
+beforeEach(() => {
+  useSessionMock.mockReturnValue({ data: null, isPending: false });
+});
 
 afterEach(() => {
   vi.unstubAllGlobals();
@@ -73,6 +85,41 @@ describe("CollectBlueprintButton", () => {
       "/api/blueprint-collection",
       expect.objectContaining({ method: "DELETE" }),
     );
+  });
+
+  it("self-managed: renders nothing without a client session", () => {
+    stubFetch();
+    const { container } = renderWithIntl(
+      <CollectBlueprintButton blueprintKey="BP_CRAFT_AMRS_LaserCannon_S1" />,
+      { locale: "en" },
+    );
+    expect(container).toBeEmptyDOMElement();
+  });
+
+  it("self-managed: loads the collected state for signed-in users", async () => {
+    useSessionMock.mockReturnValue({
+      data: { user: { id: "user-1" } },
+      isPending: false,
+    });
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () => ({
+        ok: true,
+        json: async () => [{ blueprintKey: "BP_CRAFT_AMRS_LaserCannon_S1" }],
+      })),
+    );
+
+    renderWithIntl(
+      <CollectBlueprintButton blueprintKey="BP_CRAFT_AMRS_LaserCannon_S1" />,
+      { locale: "en" },
+    );
+
+    expect(
+      await screen.findByRole("button", {
+        name: "Remove blueprint from collection",
+      }),
+    ).toHaveAttribute("aria-pressed", "true");
+    expect(fetch).toHaveBeenCalledWith("/api/blueprint-collection");
   });
 
   it("keeps the previous state when the request fails", async () => {

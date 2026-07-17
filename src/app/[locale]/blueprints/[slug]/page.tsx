@@ -1,9 +1,7 @@
-import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { BlueprintComponentsTable } from "@/features/blueprints/BlueprintComponentsTable";
 import { CollectBlueprintButton } from "@/features/blueprints/CollectBlueprintButton";
-import { isBlueprintCollected } from "@/features/blueprints/blueprint-collection.repository";
 import { findBlueprintBySlug } from "@/features/blueprints/blueprints.repository";
 import { findAllMaterials } from "@/features/blueprints/materials.repository";
 import type { Material } from "@/features/blueprints/materials.schema";
@@ -14,10 +12,18 @@ import { PageShell } from "@/lib/components/ui/PageShell";
 import { Panel } from "@/lib/components/ui/Panel";
 import { getDb } from "@/lib/db";
 import { pageMetadata } from "@/lib/seo";
-import { getSessionUserId } from "@/lib/session";
 import type { Metadata } from "next";
 
-export const dynamic = "force-dynamic";
+// ISR: on-demand gerendert und 1h gecacht; der Wiki-Sync stößt per
+// revalidatePath einen früheren Refresh an. Der Sammel-State kommt
+// clientseitig (self-managed CollectBlueprintButton).
+export const revalidate = 3600;
+
+// Leer: nichts wird beim Build prerendert (kein Mongo im Docker-Builder),
+// Pfade entstehen on-demand und werden dann gemaess revalidate gecacht.
+export function generateStaticParams() {
+  return [];
+}
 
 /** Wiki liefert Sekunden; für die Anzeige in Minuten aufrunden. */
 function craftMinutes(seconds: number): number {
@@ -61,11 +67,7 @@ export default async function BlueprintDetailPage({
 
   const t = await getTranslations("blueprints");
   const tNav = await getTranslations("common.nav");
-  const userId = await getSessionUserId(await headers());
-  const [materials, collected] = await Promise.all([
-    findAllMaterials(db),
-    userId ? isBlueprintCollected(db, userId, blueprint.key) : false,
-  ]);
+  const materials = await findAllMaterials(db);
   const materialsByCode: Record<string, Material> = Object.fromEntries(
     materials.map((m) => [m.code, m]),
   );
@@ -83,11 +85,7 @@ export default async function BlueprintDetailPage({
         title={
           <span className="inline-flex items-center gap-2">
             {blueprint.outputName}
-            <CollectBlueprintButton
-              blueprintKey={blueprint.key}
-              initialIsCollected={collected}
-              isAuthenticated={userId !== null}
-            />
+            <CollectBlueprintButton blueprintKey={blueprint.key} />
           </span>
         }
         subtitle={

@@ -12,7 +12,15 @@ import { getDb } from "@/lib/db";
 import { pageMetadata } from "@/lib/seo";
 import type { Metadata } from "next";
 
-export const dynamic = "force-dynamic";
+// ISR: on-demand gerendert und 1h gecacht; der Wiki-Sync stößt per
+// revalidatePath einen früheren Refresh an.
+export const revalidate = 3600;
+
+// Leer: nichts wird beim Build prerendert (kein Mongo im Docker-Builder),
+// Pfade entstehen on-demand und werden dann gemaess revalidate gecacht.
+export function generateStaticParams() {
+  return [];
+}
 
 /** Erze speisen fast das gesamte Crafting — die Liste wird gedeckelt. */
 const PREVIEW_LIMIT = 25;

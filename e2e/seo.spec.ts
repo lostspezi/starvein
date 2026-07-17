@@ -250,6 +250,27 @@ test.describe("crawler endpoints", () => {
   });
 });
 
+test.describe("ISR caching", () => {
+  test("reference detail pages serve cacheable responses", async ({
+    request,
+  }) => {
+    // s-maxage beweist, dass ISR wirklich greift — ein versteckter
+    // headers()/searchParams-Zugriff würde die Seite still dynamisch machen.
+    for (const route of [
+      "/en/ores/hada",
+      "/en/locations/stanton",
+      "/en/locations/stanton/daymar",
+    ]) {
+      const response = await request.get(route);
+      expect(response.ok()).toBe(true);
+      expect(
+        response.headers()["cache-control"],
+        `cache-control of ${route}`,
+      ).toContain("s-maxage");
+    }
+  });
+});
+
 test.describe("favicon set", () => {
   test("serves SVG icon, apple touch icon and favicon.ico", async ({
     page,

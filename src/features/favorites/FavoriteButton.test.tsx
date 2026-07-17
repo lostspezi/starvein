@@ -4,7 +4,16 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { renderWithIntl } from "@/test/render";
 import { FavoriteButton } from "./FavoriteButton";
 
+const { useSessionMock } = vi.hoisted(() => ({
+  useSessionMock: vi.fn(),
+}));
+
+vi.mock("@/lib/auth-client", () => ({
+  useSession: useSessionMock,
+}));
+
 beforeEach(() => {
+  useSessionMock.mockReturnValue({ data: null, isPending: false });
   vi.stubGlobal(
     "fetch",
     vi.fn(async () => ({ ok: true, json: async () => ({ ok: true }) })),
@@ -53,6 +62,37 @@ describe("FavoriteButton", () => {
     expect(
       screen.getByRole("button", { name: "Remove favorite" }),
     ).toHaveAttribute("aria-pressed", "true");
+  });
+
+  it("self-managed: renders nothing without a client session", () => {
+    const { container } = renderWithIntl(
+      <FavoriteButton systemCode="STANTON" bodySlug="daymar" />,
+      { locale: "en" },
+    );
+    expect(container).toBeEmptyDOMElement();
+  });
+
+  it("self-managed: loads the favorite state for signed-in users", async () => {
+    useSessionMock.mockReturnValue({
+      data: { user: { id: "user-1" } },
+      isPending: false,
+    });
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () => ({
+        ok: true,
+        json: async () => [{ systemCode: "STANTON", bodySlug: "daymar" }],
+      })),
+    );
+
+    renderWithIntl(<FavoriteButton systemCode="STANTON" bodySlug="daymar" />, {
+      locale: "en",
+    });
+
+    expect(
+      await screen.findByRole("button", { name: "Remove favorite" }),
+    ).toHaveAttribute("aria-pressed", "true");
+    expect(fetch).toHaveBeenCalledWith("/api/favorites");
   });
 
   it("removes a favorite on second click", async () => {
