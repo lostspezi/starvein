@@ -4,6 +4,10 @@
     "locales": {
       "de": "Deutsch",
       "en": "English"
+    },
+    "short": {
+      "de": "DE",
+      "en": "EN"
     }
   }
 }

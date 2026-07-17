@@ -33,7 +33,7 @@ export function MaterialList({ materials }: { materials: Material[] }) {
           <DataTableRow
             key={material.code}
             id={material.code}
-            className="scroll-mt-40 sm:scroll-mt-24"
+            className="scroll-mt-40 sm:scroll-mt-32 xl:scroll-mt-24"
           >
             <DataTableTd>
               <GlowLink href={`/materials/${material.code.toLowerCase()}`}>

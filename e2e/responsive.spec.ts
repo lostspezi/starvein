@@ -1,9 +1,10 @@
 /**
  * PERMANENTER Responsive-Test (Mobile-first-Vorgabe).
  *
- * Prüft jede geroutete Seite bei Mobile- (375px) und Tablet-Breite (768px):
- * kein horizontales Überlaufen des Dokuments. Neue Slices werden über
- * e2e/routes.ts automatisch mitgeprüft. Nicht schwächen oder skippen.
+ * Prüft jede geroutete Seite bei Mobile- (375px), Tablet- (768px),
+ * Desktop- (1280px) und WQHD-Breite (2560px): kein horizontales Überlaufen
+ * des Dokuments. Neue Slices werden über e2e/routes.ts automatisch
+ * mitgeprüft. Nicht schwächen oder skippen.
  */
 import { expect, test } from "@playwright/test";
 import { ROUTES } from "./routes";
@@ -11,6 +12,8 @@ import { ROUTES } from "./routes";
 const VIEWPORTS = [
   { name: "mobile", width: 375, height: 812 },
   { name: "tablet", width: 768, height: 1024 },
+  { name: "desktop", width: 1280, height: 800 },
+  { name: "wqhd", width: 2560, height: 1200 },
 ] as const;
 
 for (const viewport of VIEWPORTS) {
@@ -50,6 +53,37 @@ test.describe("mobile header", () => {
     ).toBeVisible();
     await expect(header.getByRole("button", { name: "English" })).toBeVisible();
   });
+});
+
+test.describe("desktop header", () => {
+  // Ab xl (1280px) muss der Header bis WQHD einzeilig bleiben: eine
+  // umgebrochene zweite Zeile hebt die Banner-Höhe auf ~90px+, einzeilig
+  // sind es ~60px. Deutsche Labels + ausgeloggter Discord-Button sind der
+  // breiteste Fall.
+  for (const viewport of [
+    { name: "desktop", width: 1280, height: 800 },
+    { name: "wqhd", width: 2560, height: 1200 },
+  ] as const) {
+    test.describe(`${viewport.name} (${viewport.width}px)`, () => {
+      test.use({
+        viewport: { width: viewport.width, height: viewport.height },
+      });
+
+      test("keeps the nav in a single row", async ({ page }) => {
+        await page.goto("/de");
+
+        // Erst nach der Hydration messen: der User-Cluster (Discord-Button)
+        // rendert client-seitig und ist Teil des Breiten-Budgets.
+        await expect(
+          page.getByRole("button", { name: "Mit Discord anmelden" }),
+        ).toBeVisible();
+
+        const box = await page.getByRole("banner").boundingBox();
+        expect(box).not.toBeNull();
+        expect(box?.height).toBeLessThan(80);
+      });
+    });
+  }
 });
 
 test.describe("sticky header", () => {
