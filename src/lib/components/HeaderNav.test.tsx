@@ -37,15 +37,22 @@ describe("HeaderNav", () => {
     expect(toggle).toHaveAttribute("aria-controls", nav.id);
   });
 
-  it("wraps as its own full-width row on tablet and inlines only from lg", () => {
-    // 10 Nav-Einträge passen bei 768px nicht mehr neben Wortmarke + Suche in
-    // eine Zeile (CI-Fontmetriken: ~25px Overflow) — ab sm eigene, umbruch-
-    // fähige Zeile, erst ab lg wieder inline im Header.
+  it("wraps as its own full-width row on tablet and inlines only from xl", () => {
+    // 6 Top-Level-Einträge + Suche + User-Cluster brauchen einzeilig ~1200px
+    // (deutsche Labels, ausgeloggt) — ab sm eigene, umbruchfähige Zeile,
+    // erst ab xl (1280px) wieder inline im Header.
     renderWithIntl(<HeaderNav />, { locale: "en" });
 
     const nav = screen.getByRole("navigation");
     expect(nav).toHaveClass("sm:order-5", "sm:w-full", "sm:flex-wrap");
-    expect(nav).toHaveClass("lg:order-2", "lg:w-auto", "lg:flex-nowrap");
+    expect(nav).toHaveClass("xl:order-2", "xl:w-auto", "xl:flex-nowrap");
+  });
+
+  it("scales the nav type up for large screens", () => {
+    renderWithIntl(<HeaderNav />, { locale: "en" });
+
+    const nav = screen.getByRole("navigation");
+    expect(nav).toHaveClass("text-sm", "lg:text-[15px]", "2xl:text-base");
   });
 
   it("expands the nav when the toggle is clicked", async () => {
@@ -92,6 +99,43 @@ describe("HeaderNav", () => {
     expect(toggle).toHaveAttribute("aria-expanded", "false");
     expect(screen.getByRole("navigation")).toHaveClass("hidden");
     expect(toggle).toHaveFocus();
+  });
+
+  it("renders group section labels in the drawer for mobile only", async () => {
+    const user = userEvent.setup();
+    renderWithIntl(<HeaderNav />, { locale: "en" });
+
+    await user.click(screen.getByRole("button", { name: "Navigation" }));
+
+    const label = screen
+      .getAllByText("Mining")
+      .find((element) => element.tagName === "SPAN");
+    expect(label).toBeDefined();
+    expect(label).toHaveClass("sm:hidden");
+    expect(screen.getByRole("link", { name: "Ores" })).toHaveAttribute(
+      "href",
+      "/ores",
+    );
+  });
+
+  it("keeps the drawer open when Escape only closes a group panel", async () => {
+    const user = userEvent.setup();
+    renderWithIntl(<HeaderNav />, { locale: "en" });
+
+    await user.click(screen.getByRole("button", { name: "Navigation" }));
+    await user.click(screen.getByRole("button", { name: "Mining" }));
+    await user.keyboard("{Escape}");
+
+    expect(screen.getByRole("button", { name: "Mining" })).toHaveAttribute(
+      "aria-expanded",
+      "false",
+    );
+    expect(screen.getByRole("button", { name: "Navigation" })).toHaveAttribute(
+      "aria-expanded",
+      "true",
+    );
+    expect(screen.getByRole("navigation")).not.toHaveClass("hidden");
+    expect(screen.getByRole("button", { name: "Mining" })).toHaveFocus();
   });
 
   it("shows the locale switcher inside the panel for mobile only", async () => {

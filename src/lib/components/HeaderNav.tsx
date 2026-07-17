@@ -54,11 +54,12 @@ export function HeaderNav() {
         id={navId}
         className={cn(
           // Ab sm eine eigene, umbruchfähige volle Zeile unter dem Header —
-          // 10 Einträge passen bei Tablet-Breite nicht mehr neben Wortmarke
-          // und Suche. Erst ab lg wieder inline in der Header-Zeile.
-          "order-4 col-span-full w-full flex-col gap-3 text-sm",
+          // die 6 Top-Level-Einträge brauchen neben Wortmarke, Suche und
+          // User-Cluster einzeilig ~1200px (deutsche Labels, ausgeloggt).
+          // Erst ab xl (1280px) wieder inline in der Header-Zeile.
+          "order-4 col-span-full w-full flex-col gap-4 text-sm lg:text-[15px] 2xl:text-base",
           "sm:order-5 sm:flex sm:w-full sm:flex-row sm:flex-wrap sm:gap-x-4 sm:gap-y-2",
-          "lg:order-2 lg:w-auto lg:flex-nowrap",
+          "xl:order-2 xl:w-auto xl:flex-nowrap",
           open ? "flex animate-reveal" : "hidden",
         )}
       >
