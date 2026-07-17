@@ -41,7 +41,7 @@ export function BlueprintList({
           <DataTableRow
             key={blueprint.key}
             id={blueprint.slug}
-            className="scroll-mt-40 sm:scroll-mt-24"
+            className="scroll-mt-40 sm:scroll-mt-32 xl:scroll-mt-24"
           >
             <DataTableTd>
               <span className="inline-flex items-center gap-2">

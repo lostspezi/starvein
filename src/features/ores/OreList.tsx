@@ -32,7 +32,7 @@ export function OreList({ ores }: { ores: Ore[] }) {
           <DataTableRow
             key={ore.code}
             id={ore.code}
-            className="scroll-mt-40 sm:scroll-mt-24"
+            className="scroll-mt-40 sm:scroll-mt-32 xl:scroll-mt-24"
           >
             <DataTableTd>
               <GlowLink href={`/ores/${ore.code.toLowerCase()}`}>

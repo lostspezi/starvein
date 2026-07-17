@@ -31,9 +31,14 @@ describe("OreList", () => {
 
   it("anchors each row by ore code and links to the ore detail page", () => {
     renderWithIntl(<OreList ores={ores} />, { locale: "en" });
-    expect(screen.getByText("Quantainium").closest("tr")).toHaveAttribute(
-      "id",
-      "QUAN",
+    const row = screen.getByText("Quantainium").closest("tr");
+    expect(row).toHaveAttribute("id", "QUAN");
+    // Scroll-Offsets decken den Sticky-Header ab: ~120px (2 Zeilen, sm–xl),
+    // ~60px einzeilig ab xl, ~135px mobil (siehe MASTER.md §7).
+    expect(row).toHaveClass(
+      "scroll-mt-40",
+      "sm:scroll-mt-32",
+      "xl:scroll-mt-24",
     );
     expect(screen.getByRole("link", { name: "Quantainium" })).toHaveAttribute(
       "href",
