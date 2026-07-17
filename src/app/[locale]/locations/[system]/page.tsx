@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { BodyList } from "@/features/locations/BodyList";
-import { Breadcrumbs } from "@/features/locations/Breadcrumbs";
+import { Breadcrumbs } from "@/lib/components/Breadcrumbs";
 import {
   findBodiesBySystem,
   findStarSystemByCode,
@@ -64,6 +64,7 @@ export default async function SystemPage({
   return (
     <PageShell>
       <Breadcrumbs
+        locale={locale}
         items={[
           { label: t("title"), href: "/locations" },
           { label: system.name },

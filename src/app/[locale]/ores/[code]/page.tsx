@@ -14,6 +14,7 @@ import {
 } from "@/features/refinery-and-prices/price-summary";
 import { OreSignatureInfo } from "@/features/signature-profiles/OreSignatureInfo";
 import { findSignatureProfilesByOre } from "@/features/signature-profiles/signature-profiles.repository";
+import { Breadcrumbs } from "@/lib/components/Breadcrumbs";
 import { PageHeader } from "@/lib/components/ui/PageHeader";
 import { PageShell } from "@/lib/components/ui/PageShell";
 import { getDb } from "@/lib/db";
@@ -85,6 +86,13 @@ export default async function OreDetailPage({
 
   return (
     <PageShell>
+      <Breadcrumbs
+        locale={locale}
+        items={[
+          { label: t("common.nav.ores"), href: "/ores" },
+          { label: ore.name_en },
+        ]}
+      />
       <PageHeader
         title={
           <>

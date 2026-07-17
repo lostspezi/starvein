@@ -2,7 +2,6 @@
   "locations": {
     "title": "Locations",
     "empty": "No locations here yet.",
-    "breadcrumbLabel": "Breadcrumb",
     "systemSuffix": "system",
     "bodyType": {
       "planet": "Planet",

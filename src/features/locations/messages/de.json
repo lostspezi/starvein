@@ -2,7 +2,6 @@
   "locations": {
     "title": "Locations",
     "empty": "Hier gibt es noch keine Locations.",
-    "breadcrumbLabel": "Brotkrumen-Navigation",
     "systemSuffix": "System",
     "bodyType": {
       "planet": "Planet",

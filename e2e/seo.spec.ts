@@ -98,6 +98,43 @@ test.describe("page metadata", () => {
   });
 });
 
+test.describe("structured data", () => {
+  async function readJsonLdBlocks(page: import("@playwright/test").Page) {
+    const raw = await page
+      .locator('script[type="application/ld+json"]')
+      .allTextContents();
+    return raw.map((text) => JSON.parse(text));
+  }
+
+  test("ore detail exposes a BreadcrumbList", async ({ page }) => {
+    await page.goto("/en/ores/hada");
+    const blocks = await readJsonLdBlocks(page);
+    const breadcrumbs = blocks.find((b) => b["@type"] === "BreadcrumbList");
+    expect(breadcrumbs).toBeTruthy();
+    expect(breadcrumbs.itemListElement[0]).toMatchObject({
+      position: 1,
+      name: "Ores",
+      item: `${SITE_URL}/en/ores`,
+    });
+    expect(breadcrumbs.itemListElement[1]).toMatchObject({
+      position: 2,
+      name: "Hadanite",
+    });
+  });
+
+  test("location body page exposes a BreadcrumbList", async ({ page }) => {
+    await page.goto("/en/locations/stanton/daymar");
+    const blocks = await readJsonLdBlocks(page);
+    const breadcrumbs = blocks.find((b) => b["@type"] === "BreadcrumbList");
+    expect(breadcrumbs).toBeTruthy();
+    const names = breadcrumbs.itemListElement.map(
+      (item: { name: string }) => item.name,
+    );
+    expect(names).toContain("Stanton");
+    expect(names[names.length - 1]).toBe("Daymar");
+  });
+});
+
 test.describe("open graph images", () => {
   /** og:image trägt die Produktions-Domain (metadataBase) — gegen den lokalen Server auflösen. */
   async function fetchOgImage(

@@ -3,6 +3,7 @@ import { ObjectId, type Db } from "mongodb";
 import { closeMongo, getDb } from "@/lib/db";
 import { uniqueDbName } from "@/test/factories";
 import {
+  findUserNameById,
   getUserRole,
   listUsers,
   setUserRole,
@@ -78,6 +79,28 @@ describe("users repository", () => {
     await setUserRole(db, id, "moderator");
 
     await expect(getUserRole(db, id)).resolves.toBe("moderator");
+  });
+
+  it("reads a display name by hex id", async () => {
+    const id = await insertUser(db, {
+      name: "Miner Joe",
+      email: "joe@example.com",
+    });
+
+    await expect(findUserNameById(db, id)).resolves.toBe("Miner Joe");
+  });
+
+  it("returns null names for invalid, unknown or empty-name users", async () => {
+    await expect(findUserNameById(db, "not-an-objectid")).resolves.toBeNull();
+    await expect(
+      findUserNameById(db, new ObjectId().toHexString()),
+    ).resolves.toBeNull();
+
+    const blankId = await insertUser(db, {
+      name: "   ",
+      email: "blank@example.com",
+    });
+    await expect(findUserNameById(db, blankId)).resolves.toBeNull();
   });
 
   it("sets a role by email and reports whether a user matched", async () => {

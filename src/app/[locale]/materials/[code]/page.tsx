@@ -3,6 +3,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { MaterialBlueprintsPanel } from "@/features/blueprints/MaterialBlueprintsPanel";
 import { findBlueprintsByMaterialCode } from "@/features/blueprints/blueprints.repository";
 import { findMaterialByCode } from "@/features/blueprints/materials.repository";
+import { Breadcrumbs } from "@/lib/components/Breadcrumbs";
 import { GlowLink } from "@/lib/components/ui/GlowLink";
 import { PageHeader } from "@/lib/components/ui/PageHeader";
 import { PageShell } from "@/lib/components/ui/PageShell";
@@ -50,10 +51,18 @@ export default async function MaterialDetailPage({
 
   const t = await getTranslations("materials");
   const tBlueprints = await getTranslations("blueprints");
+  const tNav = await getTranslations("common.nav");
   const blueprints = await findBlueprintsByMaterialCode(db, material.code);
 
   return (
     <PageShell width="wide">
+      <Breadcrumbs
+        locale={locale}
+        items={[
+          { label: tNav("materials"), href: "/materials" },
+          { label: material.name },
+        ]}
+      />
       <PageHeader
         title={
           <>

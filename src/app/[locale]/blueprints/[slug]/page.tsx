@@ -7,6 +7,7 @@ import { isBlueprintCollected } from "@/features/blueprints/blueprint-collection
 import { findBlueprintBySlug } from "@/features/blueprints/blueprints.repository";
 import { findAllMaterials } from "@/features/blueprints/materials.repository";
 import type { Material } from "@/features/blueprints/materials.schema";
+import { Breadcrumbs } from "@/lib/components/Breadcrumbs";
 import { GlowLink } from "@/lib/components/ui/GlowLink";
 import { PageHeader } from "@/lib/components/ui/PageHeader";
 import { PageShell } from "@/lib/components/ui/PageShell";
@@ -59,6 +60,7 @@ export default async function BlueprintDetailPage({
   }
 
   const t = await getTranslations("blueprints");
+  const tNav = await getTranslations("common.nav");
   const userId = await getSessionUserId(await headers());
   const [materials, collected] = await Promise.all([
     findAllMaterials(db),
@@ -70,6 +72,13 @@ export default async function BlueprintDetailPage({
 
   return (
     <PageShell>
+      <Breadcrumbs
+        locale={locale}
+        items={[
+          { label: tNav("blueprints"), href: "/blueprints" },
+          { label: blueprint.outputName },
+        ]}
+      />
       <PageHeader
         title={
           <span className="inline-flex items-center gap-2">

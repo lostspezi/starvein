@@ -11,7 +11,10 @@ import { getGuideForViewer } from "@/features/guides/guides.service";
 import { pickGuideTranslation } from "@/features/guides/guides.schema";
 import { GuideVoteButton } from "@/features/guides/GuideVoteButton";
 import { OwnerActions } from "@/features/guides/OwnerActions";
+import { findUserNameById } from "@/features/moderation/users.repository";
 import { Link } from "@/i18n/navigation";
+import { Breadcrumbs } from "@/lib/components/Breadcrumbs";
+import { JsonLd } from "@/lib/components/JsonLd";
 import { Badge } from "@/lib/components/ui/Badge";
 import { PageHeader } from "@/lib/components/ui/PageHeader";
 import { PageShell } from "@/lib/components/ui/PageShell";
@@ -19,6 +22,7 @@ import { getDb } from "@/lib/db";
 import { CURRENT_PATCH_VERSION } from "@/lib/patch";
 import { getSessionUser } from "@/lib/session";
 import { pageMetadata } from "@/lib/seo";
+import { articleJsonLd } from "@/lib/structured-data";
 import { cn } from "@/lib/cn";
 import type { Metadata } from "next";
 
@@ -53,6 +57,7 @@ export default async function GuideDetailPage({
   setRequestLocale(locale);
 
   const t = await getTranslations("guides");
+  const tNav = await getTranslations("common.nav");
   const db = await getDb();
   const user = await getSessionUser(await headers());
 
@@ -74,8 +79,35 @@ export default async function GuideDetailPage({
   const canDelete = isOwner || isAdmin;
   const outdated = guide.patchVersion !== CURRENT_PATCH_VERSION;
 
+  // Article-JSON-LD nur für öffentliche Guides — private sind noindex
+  const authorName = guide.isPublic
+    ? await findUserNameById(db, guide.ownerUserId)
+    : null;
+
   return (
     <PageShell width="wide">
+      {guide.isPublic && (
+        <JsonLd
+          data={articleJsonLd({
+            locale,
+            path: `/guides/${guide.id}`,
+            title: translation.title,
+            description: translation.description,
+            language: translation.language,
+            datePublished: guide.createdAt,
+            dateModified: guide.updatedAt,
+            authorName: authorName ?? undefined,
+            tags: guide.tags,
+          })}
+        />
+      )}
+      <Breadcrumbs
+        locale={locale}
+        items={[
+          { label: tNav("guides"), href: "/guides" },
+          { label: translation.title },
+        ]}
+      />
       <div className="flex flex-wrap items-start justify-between gap-3">
         <PageHeader
           title={translation.title}

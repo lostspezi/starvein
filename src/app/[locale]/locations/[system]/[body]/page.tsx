@@ -10,10 +10,7 @@ import { findOccurrencesWithInheritance } from "@/features/ore-occurrences/ore-o
 import { MINING_METHODS, type MiningMethod } from "@/features/ores/ores.schema";
 import { parseEnumParam } from "@/lib/search-params";
 import { BodyList } from "@/features/locations/BodyList";
-import {
-  Breadcrumbs,
-  type BreadcrumbItem,
-} from "@/features/locations/Breadcrumbs";
+import { Breadcrumbs, type BreadcrumbItem } from "@/lib/components/Breadcrumbs";
 import {
   findBodyBySlug,
   findChildBodies,
@@ -117,7 +114,7 @@ export default async function BodyPage({
 
   return (
     <PageShell width="wide">
-      <Breadcrumbs items={crumbs} />
+      <Breadcrumbs locale={locale} items={crumbs} />
       <div className="animate-reveal">
         <div className="flex items-center gap-2">
           <h1 className="text-2xl font-semibold">{body.name}</h1>
