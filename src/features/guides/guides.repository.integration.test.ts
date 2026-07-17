@@ -11,6 +11,7 @@ import {
   insertGuide,
   listGuidesByOwner,
   listPublicGuideLanguages,
+  listPublicGuideRefs,
   listPublicGuides,
   listPublicGuideTags,
   replaceGuide,
@@ -263,6 +264,16 @@ describe("guides repository", () => {
     await insertGuide(db, makeGuide({ isPublic: false }));
 
     expect(await countPublicGuides(db)).toBe(2);
+  });
+
+  it("lists lean public guide refs for the sitemap", async () => {
+    const guide = makeGuide({ isPublic: true, updatedAt: "2026-07-10" });
+    await insertGuide(db, guide);
+    await insertGuide(db, makeGuide({ isPublic: false }));
+
+    const refs = await listPublicGuideRefs(db);
+
+    expect(refs).toEqual([{ id: guide.id, updatedAt: "2026-07-10" }]);
   });
 
   it("defaults votes for documents without vote fields", async () => {

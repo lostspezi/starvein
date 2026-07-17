@@ -196,6 +196,37 @@ test.describe("crawler endpoints", () => {
     const body = await response.text();
     expect(body).toContain(`Sitemap: ${SITE_URL}/sitemap.xml`);
     expect(body).toContain("Disallow: /api/");
+    // Alle NO_INDEX-Seiten müssen auch auf robots-Ebene gesperrt sein
+    for (const path of [
+      "/*/favorites",
+      "/*/admin",
+      "/*/warehouse",
+      "/*/inventory",
+      "/*/refinery-jobs",
+      "/*/device",
+      "/*/loadouts/mine",
+      "/*/loadouts/new",
+      "/*/loadouts/*/edit",
+      "/*/guides/mine",
+      "/*/guides/new",
+      "/*/guides/*/edit",
+      "/*/blueprints/craftable",
+    ]) {
+      expect(body).toContain(`Disallow: ${path}`);
+    }
+  });
+
+  test("sitemap.xml lists the crafting, guides and ships sections", async ({
+    request,
+  }) => {
+    const response = await request.get("/sitemap.xml");
+    expect(response.ok()).toBe(true);
+
+    const body = await response.text();
+    expect(body).toContain(`${SITE_URL}/en/materials`);
+    expect(body).toContain(`${SITE_URL}/en/blueprints`);
+    expect(body).toContain(`${SITE_URL}/de/guides`);
+    expect(body).toContain(`${SITE_URL}/de/ships`);
   });
 
   test("sitemap.xml lists localized routes", async ({ request }) => {

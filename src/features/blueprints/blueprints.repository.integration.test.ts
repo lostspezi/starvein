@@ -5,6 +5,7 @@ import { uniqueDbName } from "@/test/factories";
 import {
   countBlueprints,
   ensureBlueprintIndexes,
+  findAllBlueprintRefs,
   findAllBlueprints,
   findBlueprintByKey,
   findBlueprintBySlug,
@@ -121,6 +122,20 @@ describe("blueprints repository", () => {
   it("returns an empty array when asked for no material codes", async () => {
     await upsertBlueprints(db, [laser]);
     await expect(findBlueprintsByMaterialCodes(db, [])).resolves.toEqual([]);
+  });
+
+  it("lists lean blueprint refs for the sitemap", async () => {
+    await upsertBlueprints(db, [laser, helmet]);
+
+    const refs = await findAllBlueprintRefs(db);
+
+    expect(refs).toEqual(
+      expect.arrayContaining([
+        { slug: laser.slug, syncedAt: laser.syncedAt },
+        { slug: helmet.slug, syncedAt: helmet.syncedAt },
+      ]),
+    );
+    expect(refs).toHaveLength(2);
   });
 
   it("prunes blueprints the current sync no longer provides", async () => {
