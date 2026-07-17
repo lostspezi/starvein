@@ -74,7 +74,12 @@
       "loadouts": "Loadouts",
       "ships": "Schiffe",
       "guides": "Guides",
-      "companion": "Companion"
+      "companion": "Companion",
+      "groups": {
+        "mining": "Mining",
+        "crafting": "Crafting",
+        "fleet": "Flotte"
+      }
     },
     "disclaimer": {
       "text": "This is an unofficial Star Citizen fansite, not affiliated with the Cloud Imperium group of companies. All content on this site not authored by its host or users are property of their respective owners.",

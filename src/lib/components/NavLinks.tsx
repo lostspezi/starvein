@@ -1,47 +1,45 @@
 "use client";
 
+import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { Link, usePathname } from "@/i18n/navigation";
-import { cn } from "@/lib/cn";
+import { NavDropdown } from "./NavDropdown";
+import { isRouteActive, NAV_ITEMS, navTriggerClasses } from "./nav-items";
 
-const ROUTES = [
-  { href: "/ores", key: "ores" },
-  { href: "/blueprints", key: "blueprints" },
-  { href: "/materials", key: "materials" },
-  { href: "/locations", key: "locations" },
-  { href: "/occurrences", key: "occurrences" },
-  { href: "/signatures", key: "signatures" },
-  { href: "/compare", key: "compare" },
-  { href: "/loadouts", key: "loadouts" },
-  { href: "/ships", key: "ships" },
-  { href: "/guides", key: "guides" },
-  { href: "/companion", key: "companion" },
-] as const;
-
-/** Primärnavigation mit Glow-Indikator auf der aktiven Route (HUD-Stil). */
+/**
+ * Primärnavigation: Direktlinks mit Glow-Indikator auf der aktiven Route
+ * plus Disclosure-Gruppen (NavDropdown). Es ist immer höchstens ein Panel
+ * offen — der State liegt deshalb hier und nicht in den Gruppen.
+ */
 export function NavLinks({ onNavigate }: { onNavigate?: () => void }) {
   const t = useTranslations("common");
   const pathname = usePathname();
+  const [openGroup, setOpenGroup] = useState<string | null>(null);
 
   return (
     <>
-      {ROUTES.map(({ href, key }) => {
-        const isActive = pathname === href || pathname.startsWith(`${href}/`);
+      {NAV_ITEMS.map((item) => {
+        if (item.kind === "group") {
+          return (
+            <NavDropdown
+              key={item.key}
+              item={item}
+              open={openGroup === item.key}
+              onOpenChange={(open) => setOpenGroup(open ? item.key : null)}
+              onNavigate={onNavigate}
+            />
+          );
+        }
+        const isActive = isRouteActive(pathname, item.href);
         return (
           <Link
-            key={href}
-            href={href}
+            key={item.href}
+            href={item.href}
             aria-current={isActive ? "page" : undefined}
             onClick={onNavigate}
-            className={cn(
-              "relative py-0.5 transition-colors duration-150",
-              "after:absolute after:inset-x-0 after:-bottom-0.5 after:h-px after:rounded-full after:transition-opacity after:duration-150",
-              isActive
-                ? "text-accent-cyan after:bg-accent-cyan after:opacity-100 after:shadow-glow-sm"
-                : "text-text-muted after:opacity-0 hover:text-text-primary",
-            )}
+            className={navTriggerClasses(isActive)}
           >
-            {t(`nav.${key}`)}
+            {t(`nav.${item.key}`)}
           </Link>
         );
       })}
