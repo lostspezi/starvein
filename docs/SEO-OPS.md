@@ -55,14 +55,15 @@ the site — real referral traffic in 2026), keep blocking training crawlers.
 - Watch index coverage per section over the first weeks — especially whether
   the ~3,100 blueprint pages earn impressions or should be pruned later.
 
-## 5. Switch the VPS sync cron to the API routes (prerequisite for cache invalidation)
+## 5. Switch the VPS sync cron to the API routes — DONE (2026-07-17)
 
-The crontab on the VPS still runs the tsx scripts inside the `jobs`
-container. Those run **outside the app process** and can never invalidate the
-Next.js data cache or the ISR pages — after the ISR release, pages would stay
-stale for up to an hour after every sync. Replace both lines with the
-`curl`-based variants documented in [DEPLOY.md](DEPLOY.md) (section "UEX
-price sync" / "SC-Wiki sync").
+The tsx-script cron ran **outside the app process** and could never
+invalidate the Next.js data cache or the ISR pages. The crontab now calls the
+API routes via `curl --resolve starvein.app:443:127.0.0.1` (bypasses
+Cloudflare, immune to bot rules) with the secret read from
+`/opt/starvein/.env`; verified end-to-end against `/api/sync-uex`. Backup of
+the old crontab: `/root/crontab.backup-2026-07-17`. Reference lines in
+[DEPLOY.md](DEPLOY.md).
 
 ## 6. Optional: persist the ISR cache across container restarts
 

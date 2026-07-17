@@ -93,8 +93,11 @@ GitHub (Profile → Packages) → Package settings → Change visibility → Pub
   revalidate TTL expires:
 
   ```
-  */30 * * * * curl -sf -X POST https://starvein.app/api/sync-uex -H "x-sync-secret: $(grep ^SYNC_SECRET= /opt/starvein/.env | cut -d= -f2)" >> /var/log/starvein-sync.log 2>&1
+  */30 * * * * s=$(grep -m1 "^SYNC_SECRET=" /opt/starvein/.env | cut -d= -f2-); echo "$(date -Is) sync-uex: $(curl -sS --max-time 900 --resolve starvein.app:443:127.0.0.1 -X POST https://starvein.app/api/sync-uex -H "x-sync-secret: $s" 2>&1)" >> /var/log/starvein-sync.log
   ```
+
+  (`--resolve …:127.0.0.1` geht direkt auf Caddy, vorbei an Cloudflare —
+  unabhängig von Bot-Regeln.)
 
 - **SC-Wiki sync (cron on the VPS):** Erze, Locations, Vorkommen,
   Signaturwerte, Blueprints und der Materialkatalog kommen ausschließlich aus
@@ -106,7 +109,7 @@ GitHub (Profile → Packages) → Package settings → Change visibility → Pub
   über die Route (Cache-Invalidierung, siehe oben):
 
   ```
-  17 4 * * * curl -sf -X POST https://starvein.app/api/sync-wiki -H "x-sync-secret: $(grep ^SYNC_SECRET= /opt/starvein/.env | cut -d= -f2)" >> /var/log/starvein-sync.log 2>&1
+  17 4 * * * s=$(grep -m1 "^SYNC_SECRET=" /opt/starvein/.env | cut -d= -f2-); echo "$(date -Is) sync-wiki: $(curl -sS --max-time 1800 --resolve starvein.app:443:127.0.0.1 -X POST https://starvein.app/api/sync-wiki -H "x-sync-secret: $s" 2>&1)" >> /var/log/starvein-sync.log
   ```
 
   Beide Routen sind fail closed (401 ohne konfiguriertes/korrektes
