@@ -1,7 +1,7 @@
 {
   "search": {
     "label": "Suche",
-    "placeholder": "Erze, Locations, Blueprints oder Scan-Signatur…",
+    "placeholder": "Erze, Locations, Signaturen…",
     "noResults": "Keine Treffer",
     "signature": "Signatur {value}"
   }
