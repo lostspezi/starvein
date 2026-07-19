@@ -141,11 +141,22 @@ is hit directly (past Cloudflare).
 
 With the domain proxied (orange cloud), add in the dashboard:
 
-- **Rate limiting rules** (Security → WAF → Rate limiting rules):
-  - `/api/*` → e.g. **60 requests / minute per IP**, action _Block_ (or Managed
-    Challenge) for the window. Covers the open read endpoints.
-  - `/api/auth/*` → stricter, e.g. **10 requests / minute per IP** (login/OAuth
-    brute-force).
+- **Rate limiting rule** (Security → WAF → Rate limiting rules):
+  - `/api/*` → **10 requests / 10 s per IP** (≈ 60/min), action _Block_ for the
+    window. Covers all API endpoints including `/api/auth/*`. This is the current
+    live rule on starvein.app.
+  - **Free-plan constraints** (what the current zone actually allows): exactly
+    **one** rate-limiting rule per zone; `period` is fixed to **10 s**; counting
+    happens at the colocation level, so `cf.colo.id` is a required characteristic
+    (the rule counts per IP _and_ data center, not purely per IP). That is why the
+    two-rule design below (separate stricter `/api/auth/*`) is not deployed —
+    login/OAuth brute-force is instead covered by the broad `/api/*` rule plus
+    Better Auth's own rate limiter (which now sees the real client IP via
+    `advanced.ipAddress.ipAddressHeaders`).
+  - **On Pro or higher**, add the intended two-rule setup: keep `/api/*` at
+    ~60/min and prepend a stricter `/api/auth/*` at **10 requests / minute per
+    IP**, with longer periods, true per-IP counting and _Managed Challenge_ as an
+    option.
 - **WAF Managed Rules** enabled; **Bot Fight Mode** on to deter scrapers.
 - **Cache rules:** cache `/_next/static/*` long/immutable; **cache the dynamic
   OG images** (`/*/opengraph-image*`) with a sensible TTL (they are per-slug
