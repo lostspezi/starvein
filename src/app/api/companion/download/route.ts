@@ -13,10 +13,11 @@ export async function GET(request: Request) {
   if (!release) {
     return NextResponse.json({ error: "release unavailable" }, { status: 503 });
   }
-  const installer = new URL(request.url).searchParams.get("installer");
+  // "msi" schaltet auf die MSI-Variante; jeder andere/fehlende Wert → Default
+  // (setup.exe). Der Parameter wird ausschließlich verglichen und fließt nie in
+  // die Ziel-URL (die stammt aus der GitHub-Release-API) — kein SSRF/Injection.
+  const wantsMsi = new URL(request.url).searchParams.get("installer") === "msi";
   const target =
-    installer === "msi" && release.msiUrl !== null
-      ? release.msiUrl
-      : release.setupExeUrl;
+    wantsMsi && release.msiUrl !== null ? release.msiUrl : release.setupExeUrl;
   return NextResponse.redirect(target, 302);
 }

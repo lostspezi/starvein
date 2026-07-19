@@ -12,6 +12,8 @@ const gold: Ore = {
   mineableBy: { ship: true, roc: false, fps: false },
 };
 
+const req = () => new Request("http://localhost/api/ores");
+
 describe("GET /api/ores", () => {
   beforeEach(async () => {
     const db = await getDb();
@@ -23,7 +25,7 @@ describe("GET /api/ores", () => {
   });
 
   it("returns an empty array when no ores exist", async () => {
-    const response = await GET();
+    const response = await GET(req());
     expect(response.status).toBe(200);
     await expect(response.json()).resolves.toEqual([]);
   });
@@ -31,7 +33,7 @@ describe("GET /api/ores", () => {
   it("returns seeded ores", async () => {
     await upsertOres(await getDb(), [gold]);
 
-    const response = await GET();
+    const response = await GET(req());
     expect(response.status).toBe(200);
 
     const body = await response.json();

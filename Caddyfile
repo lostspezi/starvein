@@ -3,6 +3,17 @@
 starvein.app {
 	reverse_proxy app:3000
 	encode gzip zstd
+
+	# Security-Header am TLS-Terminator (Defense in Depth zu next.config.ts).
+	# HSTS gehört hierher, weil Caddy TLS terminiert; CSP/X-Frame-Options setzt
+	# die App pro Response.
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+		X-Content-Type-Options "nosniff"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		# Server-Version nicht preisgeben
+		-Server
+	}
 }
 
 www.starvein.app {

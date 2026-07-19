@@ -41,6 +41,16 @@ function parseGuide(doc: Document): Guide {
 export const GUIDE_SORTS = ["new", "top", "title"] as const;
 export type GuideSort = (typeof GUIDE_SORTS)[number];
 
+/**
+ * Anti-Abuse-Backstop: maximale Anzahl Dokumente, die ein öffentlicher
+ * Guide-Read scannt. Bounded gegen unbegrenztes Wachstum user-generierter
+ * Guides (sonst lädt GET /api/guides alle Dokumente inkl. Content in den
+ * Speicher). Es werden die zuletzt aktualisierten behalten; für realistische
+ * Datenmengen (< Cap) ändert sich nichts. Echte Pagination bleibt ein
+ * separates Feature (out of scope v1).
+ */
+export const MAX_PUBLIC_GUIDE_SCAN = 500;
+
 export type PublicGuideQuery = {
   q?: string;
   /** Tag-Filter mit ODER-Semantik: Guide muss mind. einen Tag enthalten. */
@@ -94,7 +104,15 @@ export async function listPublicGuides(
     filter["translations.searchText"] = regex;
   }
 
-  const docs = await db.collection(COLLECTION).find(filter, NO_ID).toArray();
+  // Scan-Cap: DB-seitig auf die zuletzt aktualisierten Dokumente begrenzt,
+  // unabhängig von query.limit (das erst nach dem JS-Sort greift), damit
+  // "top"/"title" weiterhin über die volle realistische Menge sortieren.
+  const docs = await db
+    .collection(COLLECTION)
+    .find(filter, NO_ID)
+    .sort({ updatedAt: -1 })
+    .limit(MAX_PUBLIC_GUIDE_SCAN)
+    .toArray();
   const guides = docs.map(parseGuide);
 
   // Sortierung in JS über die Anzeige-Übersetzung (Titel ist pro Sprache)

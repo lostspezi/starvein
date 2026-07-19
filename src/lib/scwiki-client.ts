@@ -7,6 +7,8 @@
  * Öffentliche Endpunkte brauchen keinen Key. Basis-URL überschreibbar für Tests.
  * Doku: https://docs.star-citizen.wiki
  */
+import { readJsonCapped, safeFetch } from "@/lib/safe-fetch";
+
 function baseUrl(): string {
   return process.env.SCWIKI_API_BASE_URL ?? "https://api.star-citizen.wiki";
 }
@@ -17,13 +19,15 @@ const PAGE_SIZE = 200;
 const MAX_PAGES = 100;
 
 async function fetchJson<T>(path: string): Promise<T> {
-  const response = await fetch(`${baseUrl()}${path}`, {
+  // safeFetch (Timeout) + readJsonCapped (Byte-Cap): ein hängender oder
+  // übergroßer Wiki-Response darf den Sync-Job nicht blockieren/OOM auslösen.
+  const response = await safeFetch(`${baseUrl()}${path}`, {
     headers: { accept: "application/json" },
   });
   if (!response.ok) {
     throw new Error(`SC Wiki request failed: ${path} -> ${response.status}`);
   }
-  return (await response.json()) as T;
+  return readJsonCapped<T>(response);
 }
 
 export type ScWikiGameVersion = {

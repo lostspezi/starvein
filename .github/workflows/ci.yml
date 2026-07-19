@@ -75,6 +75,21 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm test
 
+  audit:
+    name: audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      # Nur Runtime-Deps, nur High/Critical: ergänzt CodeQL + dependency-review
+      # um bekannte CVEs in installierten Paketen (CLAUDE.md-Härtung Juli 2026).
+      - run: pnpm audit --prod --audit-level high
+
   e2e:
     name: e2e
     runs-on: ubuntu-latest
@@ -97,11 +112,15 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - name: Write .env.local for seed and Next.js server
         run: |
+          # next start läuft als production → src/lib/env.ts erzwingt starke,
+          # nicht-Platzhalter-Secrets (>=16 Zeichen). Deshalb hier valide
+          # Wegwerf-Secrets statt "ci-only-secret".
           cat > .env.local <<'EOF'
           MONGODB_URI=mongodb://localhost:27017/starvein
           REDIS_URL=redis://localhost:6379
           BETTER_AUTH_URL=http://localhost:3100
-          BETTER_AUTH_SECRET=ci-only-secret
+          BETTER_AUTH_SECRET=ci-only-secret-0123456789abcdef
+          SYNC_SECRET=ci-only-sync-secret-0123456789
           EOF
       - run: pnpm seed
       # Blueprints/Materialien liefert nicht der Seed, sondern der Wiki-Sync
