@@ -1,0 +1,9 @@
+{
+  "locationGuides": {
+    "heading": "How to get there",
+    "from": "From",
+    "to": "To",
+    "dropAt": "Drop out at",
+    "km": "{distance} km"
+  }
+}

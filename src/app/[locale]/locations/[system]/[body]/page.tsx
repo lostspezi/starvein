@@ -4,6 +4,8 @@ import { FavoriteButton } from "@/features/favorites/FavoriteButton";
 import { LocationOccurrencesSection } from "@/features/ore-occurrences/LocationOccurrencesSection";
 import { findOccurrencesWithInheritance } from "@/features/ore-occurrences/ore-occurrences.service";
 import { BodyList } from "@/features/locations/BodyList";
+import { LocationGuideSection } from "@/features/location-guides/LocationGuideSection";
+import { resolveLocationGuide } from "@/features/location-guides/location-guides.service";
 import { Breadcrumbs, type BreadcrumbItem } from "@/lib/components/Breadcrumbs";
 import {
   findBodyBySlug,
@@ -98,6 +100,7 @@ export default async function BodyPage({
   ];
 
   const children = await findChildBodies(db, system.code, body.slug);
+  const guide = await resolveLocationGuide(db, body);
 
   // Outposts/Höhlen haben keine eigenen Vorkommen — Roll-up vom Parent-Body.
   // Ohne Methoden-Filter geladen; gefiltert wird clientseitig in der Section.
@@ -119,6 +122,8 @@ export default async function BodyPage({
           {t(`locations.bodyType.${body.type}`)}
         </p>
       </div>
+
+      {guide && <LocationGuideSection guide={guide} locale={locale} />}
 
       <h2 className="text-lg font-medium">{t("occurrences.atLocation")}</h2>
       <LocationOccurrencesSection
