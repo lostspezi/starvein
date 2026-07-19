@@ -1,6 +1,7 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { OreListSection } from "@/features/ores/OreListSection";
-import { findAllOresCached } from "@/features/ores/ores.repository";
+import { findAllOresWithSignaturesCached } from "@/features/ores/ores.service";
+import { getBestSellByOreCached } from "@/features/refinery-and-prices/price-summary";
 import { PageHeader } from "@/lib/components/ui/PageHeader";
 import { PageShell } from "@/lib/components/ui/PageShell";
 import { getDb } from "@/lib/db";
@@ -36,12 +37,26 @@ export default async function OresPage({
   setRequestLocale(locale);
 
   const t = await getTranslations("ores");
-  const ores = await findAllOresCached(await getDb());
+  const db = await getDb();
+  // Signaturen wiki-gecacht, Preise uex-gecacht (frisch) — auf der Seite
+  // gemerged, damit Preise nicht im wiki-Cache veralten.
+  const [ores, bestSellByOre] = await Promise.all([
+    findAllOresWithSignaturesCached(db),
+    getBestSellByOreCached(db),
+  ]);
+  const rows = ores.map((ore) => {
+    const bestSell = bestSellByOre.get(ore.code);
+    return {
+      ...ore,
+      bestRawSell: bestSell?.raw ?? null,
+      bestRefinedSell: bestSell?.refined ?? null,
+    };
+  });
 
   return (
     <PageShell>
       <PageHeader title={t("title")} subtitle={t("intro")} />
-      <OreListSection ores={ores} />
+      <OreListSection ores={rows} />
     </PageShell>
   );
 }

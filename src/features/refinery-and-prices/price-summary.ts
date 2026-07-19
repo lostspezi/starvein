@@ -1,4 +1,5 @@
 import type { Db } from "mongodb";
+import { CACHE_TAGS, cachedQuery } from "@/lib/data-cache";
 import { getRedis } from "@/lib/redis";
 import {
   priceSnapshotSchema,
@@ -106,6 +107,24 @@ export async function getBestSellByOre(
     map.set(entry._id.oreCode, prices);
   }
   return map;
+}
+
+/**
+ * Wie {@link getBestSellByOre}, aber durch den uex-Data-Cache (Tag uex, kurze
+ * TTL). Für Seiten-Reads, die Preise mit wiki-gecachten Daten kombinieren:
+ * Preise gehören NIE in den wiki-Cache (der uex-Sync invalidiert nur den
+ * uex-Tag). unstable_cache serialisiert per JSON — deshalb wird die Map als
+ * Entry-Array gecacht und danach wieder aufgebaut.
+ */
+export async function getBestSellByOreCached(
+  db: Db,
+): Promise<Map<string, BestSellPrices>> {
+  const entries = await cachedQuery(
+    CACHE_TAGS.uex,
+    ["best-sell-by-ore-v1"],
+    async () => [...(await getBestSellByOre(db)).entries()],
+  );
+  return new Map(entries);
 }
 
 export async function findRefineryYieldsByOre(

@@ -14,7 +14,9 @@
       "signature": "Signatur",
       "sellRaw": "Verkauf (roh)",
       "sellRefined": "Verkauf (raffiniert)",
-      "status": "Status"
+      "status": "Status",
+      "expand": "Signatur-Cluster und Preise anzeigen",
+      "collapse": "Signatur-Cluster und Preise ausblenden"
     },
     "signatureGroundNote": "Bei ROC/FPS zeigt die Scan-Signatur nur die Größe des Deposits an, nicht das Mineral — der Wert gilt für alle Ground-Minerale gleichermaßen.",
     "badge": {

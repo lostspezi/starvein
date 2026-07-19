@@ -5,7 +5,10 @@ import type {
   CelestialBody,
 } from "@/features/locations/locations.schema";
 import type { MiningMethod, RarityTier } from "@/features/ores/ores.schema";
-import { getBestSellByOre } from "@/features/refinery-and-prices/price-summary";
+import {
+  getBestSellByOre,
+  getBestSellByOreCached,
+} from "@/features/refinery-and-prices/price-summary";
 import { CACHE_TAGS, cachedQuery } from "@/lib/data-cache";
 import {
   findOccurrencesByLocation,
@@ -16,19 +19,55 @@ import type { OreOccurrence } from "./ore-occurrences.schema";
 export type OccurrenceWithLocation = OreOccurrence & {
   bodyName: string;
   bodyType: BodyType;
+  // Scan-Signatur des Erzes für diese Methode (CLAUDE.md §5):
+  // Ship identifiziert das Mineral, ROC/FPS nur die Deposit-Größe.
+  signatureValue?: number;
+  signatureRange?: { min: number; max: number };
+  // Bester aktueller Verkaufspreis (aUEC/SCU) aus dem UEX-Sync
+  bestRawSell: number | null;
+  bestRefinedSell: number | null;
 };
 
-/** Für Seiten-Reads: gecachte Variante (Tag wiki-data, siehe data-cache.ts). */
+/**
+ * Für Seiten-Reads: gecachte Variante (Tag wiki-data). Enthält bewusst KEINE
+ * Preise (bestRawSell/bestRefinedSell bleiben null) — der uex-Sync
+ * invalidiert nur den uex-Tag, Preise im wiki-Cache würden bis zur
+ * wiki-TTL veralten. Preise ergänzt {@link findOccurrencesByOreWithLocationAndPrices}.
+ */
 export function findOccurrencesByOreWithLocationCached(
   db: Db,
   oreCode: string,
   method?: MiningMethod | null,
 ): Promise<OccurrenceWithLocation[]> {
+  // v2: DTO um Signatur erweitert — Key-Version verhindert, dass beim Deploy
+  // alte, formveraltete Cache-Einträge gelesen werden.
   return cachedQuery(
     CACHE_TAGS.wiki,
-    ["occurrences-by-ore", oreCode, method],
+    ["occurrences-by-ore-v2", oreCode, method],
     () => findOccurrencesByOreWithLocation(db, oreCode, method),
   );
+}
+
+/**
+ * Seiten-Read für die Erz-Detailseite: wiki-gecachte Vorkommen + Signaturen,
+ * kombiniert mit uex-gecachten Preisen (frisch, kurze TTL). Alle Zeilen
+ * betreffen dasselbe Erz — der beste Roh-/Refined-Preis gilt daher für jede.
+ */
+export async function findOccurrencesByOreWithLocationAndPrices(
+  db: Db,
+  oreCode: string,
+  method?: MiningMethod | null,
+): Promise<OccurrenceWithLocation[]> {
+  const [rows, bestSellByOre] = await Promise.all([
+    findOccurrencesByOreWithLocationCached(db, oreCode, method),
+    getBestSellByOreCached(db),
+  ]);
+  const bestSell = bestSellByOre.get(oreCode);
+  return rows.map((row) => ({
+    ...row,
+    bestRawSell: bestSell?.raw ?? null,
+    bestRefinedSell: bestSell?.refined ?? null,
+  }));
 }
 
 export type OccurrenceWithOre = OreOccurrence & {
@@ -52,26 +91,51 @@ export async function findOccurrencesByOreWithLocation(
   const occurrences = await findOccurrencesByOre(db, oreCode, method);
   if (occurrences.length === 0) return [];
 
-  const bodyDocs = await db
-    .collection("celestialBodies")
-    .find(
-      {
-        $or: occurrences.map((o) => ({
-          systemCode: o.systemCode,
-          slug: o.bodySlug,
-        })),
-      },
-      { projection: { _id: 0, systemCode: 1, slug: 1, name: 1, type: 1 } },
-    )
-    .toArray();
+  // Nur wiki-Daten (Bodies + Signaturen); Preise werden bewusst NICHT hier
+  // gejoint, damit dieser Read wiki-cachebar bleibt (siehe Cached-Variante).
+  const [bodyDocs, profileDocs] = await Promise.all([
+    db
+      .collection("celestialBodies")
+      .find(
+        {
+          $or: occurrences.map((o) => ({
+            systemCode: o.systemCode,
+            slug: o.bodySlug,
+          })),
+        },
+        { projection: { _id: 0, systemCode: 1, slug: 1, name: 1, type: 1 } },
+      )
+      .toArray(),
+    db
+      .collection("signatureProfiles")
+      .find(
+        { oreCode },
+        {
+          projection: {
+            _id: 0,
+            method: 1,
+            signatureValue: 1,
+            signatureRange: 1,
+          },
+        },
+      )
+      .toArray(),
+  ]);
   const bodies = new Map(bodyDocs.map((b) => [`${b.systemCode}|${b.slug}`, b]));
+  const profiles = new Map(profileDocs.map((p) => [p.method as string, p]));
 
   return occurrences.map((occurrence) => {
     const body = bodies.get(`${occurrence.systemCode}|${occurrence.bodySlug}`);
+    const profile = profiles.get(occurrence.method);
     return {
       ...occurrence,
       bodyName: (body?.name as string) ?? occurrence.bodySlug,
       bodyType: (body?.type as BodyType) ?? "planet",
+      signatureValue: profile?.signatureValue as number | undefined,
+      signatureRange: profile?.signatureRange as
+        { min: number; max: number } | undefined,
+      bestRawSell: null,
+      bestRefinedSell: null,
     };
   });
 }

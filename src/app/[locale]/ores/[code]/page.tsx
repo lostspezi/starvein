@@ -5,7 +5,10 @@ import { OreBlueprintsPanel } from "@/features/blueprints/OreBlueprintsPanel";
 import { findBlueprintsUsingOre } from "@/features/blueprints/blueprints.service";
 import { OreOccurrencesSection } from "@/features/ore-occurrences/OreOccurrencesSection";
 import { buildOreOccurrenceStats } from "@/features/ore-occurrences/occurrence-stats";
-import { findOccurrencesByOreWithLocationCached } from "@/features/ore-occurrences/ore-occurrences.service";
+import {
+  findOccurrencesByOreWithLocationAndPrices,
+  findOccurrencesByOreWithLocationCached,
+} from "@/features/ore-occurrences/ore-occurrences.service";
 import { findOreByCode } from "@/features/ores/ores.repository";
 import { MINING_METHODS } from "@/features/ores/ores.schema";
 import { PriceAndYieldPanel } from "@/features/refinery-and-prices/PriceAndYieldPanel";
@@ -94,12 +97,14 @@ export default async function OreDetailPage({
   const t = await getTranslations();
   const [
     occurrences,
+    pricedOccurrences,
     signatureProfiles,
     priceSummary,
     refineryYields,
     blueprintsUsingOre,
   ] = await Promise.all([
     getOccurrences(ore.code),
+    findOccurrencesByOreWithLocationAndPrices(db, ore.code),
     findSignatureProfilesByOre(db, ore.code),
     getCachedOrePriceSummary(db, ore.code),
     findRefineryYieldsByOre(db, ore.code),
@@ -152,7 +157,7 @@ export default async function OreDetailPage({
       <PriceAndYieldPanel summary={priceSummary} yields={refineryYields} />
 
       <h2 className="text-lg font-medium">{t("occurrences.whereToFind")}</h2>
-      <OreOccurrencesSection occurrences={occurrences} />
+      <OreOccurrencesSection occurrences={pricedOccurrences} />
       <p className="text-xs text-text-muted">{t("occurrences.disclaimer")}</p>
 
       <OreBlueprintsPanel

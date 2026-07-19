@@ -14,7 +14,9 @@
       "signature": "Signature",
       "sellRaw": "Sell (raw)",
       "sellRefined": "Sell (refined)",
-      "status": "Status"
+      "status": "Status",
+      "expand": "Show signature cluster and prices",
+      "collapse": "Hide signature cluster and prices"
     },
     "signatureGroundNote": "For ROC/FPS the scan signature only indicates the size of the deposit, not the mineral — the value is the same for all ground minerals.",
     "badge": {

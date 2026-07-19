@@ -7,7 +7,11 @@
       "name": "Name",
       "code": "Code",
       "rarity": "Rarity",
-      "methods": "Methods"
+      "methods": "Methods",
+      "sellRefined": "Sell (refined)",
+      "expand": "Show signature cluster and prices",
+      "collapse": "Hide signature cluster and prices",
+      "noSignature": "No scan signature on record for this ore."
     },
     "rarity": {
       "all": "All",

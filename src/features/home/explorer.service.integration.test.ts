@@ -3,6 +3,7 @@ import type { Db } from "mongodb";
 import { upsertCelestialBodies } from "@/features/locations/locations.repository";
 import { upsertOreOccurrences } from "@/features/ore-occurrences/ore-occurrences.repository";
 import { upsertOres } from "@/features/ores/ores.repository";
+import { upsertSignatureProfiles } from "@/features/signature-profiles/signature-profiles.repository";
 import { closeMongo, getDb } from "@/lib/db";
 import { uniqueDbName } from "@/test/factories";
 import {
@@ -77,15 +78,37 @@ describe("explorer service", () => {
         lastVerifiedAt: "2026-07-09",
       },
     ]);
-    await db.collection("priceSnapshots").insertOne({
-      oreCode: "GOLD",
-      kind: "refined",
-      terminalId: 12,
-      terminalName: "TDD Area 18",
-      priceBuy: 0,
-      priceSell: 28000,
-      syncedAt: "2026-07-09T10:00:00.000Z",
-    });
+    await db.collection("priceSnapshots").insertMany([
+      {
+        oreCode: "GOLD",
+        kind: "refined",
+        terminalId: 12,
+        terminalName: "TDD Area 18",
+        priceBuy: 0,
+        priceSell: 28000,
+        syncedAt: "2026-07-09T10:00:00.000Z",
+      },
+      {
+        oreCode: "GOLD",
+        kind: "raw",
+        terminalId: 12,
+        terminalName: "TDD Area 18",
+        priceBuy: 0,
+        priceSell: 19000,
+        syncedAt: "2026-07-09T10:00:00.000Z",
+      },
+    ]);
+    await upsertSignatureProfiles(db, [
+      {
+        oreCode: "GOLD",
+        method: "ship",
+        signatureValue: 3585,
+        dominantCompositionRange: { min: 40, max: 80 },
+        patchVersion: "4.7",
+        sourceType: "curated",
+        confidenceScore: 0.6,
+      },
+    ]);
   });
 
   afterAll(async () => {
@@ -113,6 +136,21 @@ describe("explorer service", () => {
       bodyName: "Daymar",
       bestRefinedSell: null,
     });
+  });
+
+  it("attaches raw sell price and the method's signature to each row", async () => {
+    const { rows } = await findExplorerRows(db, NO_FILTERS);
+
+    const gold = rows.find((row) => row.oreCode === "GOLD");
+    expect(gold).toMatchObject({
+      bestRawSell: 19000,
+      signatureValue: 3585,
+    });
+
+    // HADA has no signature profile and no price snapshot
+    const hada = rows.find((row) => row.oreCode === "HADA");
+    expect(hada?.bestRawSell).toBeNull();
+    expect(hada?.signatureValue).toBeUndefined();
   });
 
   it("sorts by probability desc", async () => {

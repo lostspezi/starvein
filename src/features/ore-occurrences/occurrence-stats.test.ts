@@ -17,6 +17,8 @@ function occurrence(
     lastVerifiedAt: "2026-07-09",
     bodyName: "Daymar",
     bodyType: "moon",
+    bestRawSell: null,
+    bestRefinedSell: null,
     ...overrides,
   };
 }

@@ -12,6 +12,14 @@
     "oreInfoTitle": "Scan signature",
     "oreGroundNote": "The signature does not identify the mineral — check the location's mineral list instead.",
     "oreClusterHint": "Cluster: {x2} (×2) · {x3} (×3) · {x4} (×4) — the scanner shows base signature × rock count.",
+    "cluster": {
+      "shipTitle": "Signature cluster (identifies mineral)",
+      "depositTitle": "Deposit size (not mineral-specific)",
+      "multiplier": "{n}×",
+      "groundNote": "Mineral depends on the location, not this signature.",
+      "sellRaw": "Sell raw",
+      "sellRefined": "Sell refined"
+    },
     "table": {
       "mineral": "Mineral",
       "signature": "Signature",

@@ -3,7 +3,7 @@ import type { BodyType } from "@/features/locations/locations.schema";
 import { findAllOccurrences } from "@/features/ore-occurrences/ore-occurrences.repository";
 import type { OreOccurrence } from "@/features/ore-occurrences/ore-occurrences.schema";
 import type { MiningMethod, RarityTier } from "@/features/ores/ores.schema";
-import { getBestRefinedSellByOre } from "@/features/refinery-and-prices/price-summary";
+import { getBestSellByOre } from "@/features/refinery-and-prices/price-summary";
 
 export type ExplorerFilters = {
   method: MiningMethod | null;
@@ -17,6 +17,11 @@ export type ExplorerRow = OreOccurrence & {
   rarityTier: RarityTier;
   bodyName: string;
   bodyType: BodyType;
+  // Scan-Signatur des Erzes für diese Methode (CLAUDE.md §5)
+  signatureValue?: number;
+  signatureRange?: { min: number; max: number };
+  // Bester aktueller Verkaufspreis (aUEC/SCU) aus dem UEX-Sync
+  bestRawSell: number | null;
   bestRefinedSell: number | null;
 };
 
@@ -52,7 +57,7 @@ export async function findExplorerRows(
       systemCode: filters.system,
       oreCode: filters.ore,
     }),
-    getBestRefinedSellByOre(db),
+    getBestSellByOre(db),
   ]);
   if (occurrences.length === 0) return { rows: [], total: 0 };
 
@@ -66,7 +71,7 @@ export async function findExplorerRows(
     ).values(),
   ];
 
-  const [oreDocs, bodyDocs] = await Promise.all([
+  const [oreDocs, bodyDocs, profileDocs] = await Promise.all([
     db
       .collection("ores")
       .find(
@@ -81,21 +86,45 @@ export async function findExplorerRows(
         { projection: { _id: 0, systemCode: 1, slug: 1, name: 1, type: 1 } },
       )
       .toArray(),
+    db
+      .collection("signatureProfiles")
+      .find(
+        { oreCode: { $in: oreCodes } },
+        {
+          projection: {
+            _id: 0,
+            oreCode: 1,
+            method: 1,
+            signatureValue: 1,
+            signatureRange: 1,
+          },
+        },
+      )
+      .toArray(),
   ]);
 
   const ores = new Map(oreDocs.map((o) => [o.code as string, o]));
   const bodies = new Map(bodyDocs.map((b) => [`${b.systemCode}|${b.slug}`, b]));
+  const profiles = new Map(
+    profileDocs.map((p) => [`${p.oreCode}|${p.method}`, p]),
+  );
 
   const rows = occurrences.map((occurrence) => {
     const ore = ores.get(occurrence.oreCode);
     const body = bodies.get(`${occurrence.systemCode}|${occurrence.bodySlug}`);
+    const profile = profiles.get(`${occurrence.oreCode}|${occurrence.method}`);
+    const bestSell = priceMap.get(occurrence.oreCode);
     return {
       ...occurrence,
       oreName: (ore?.name_en as string) ?? occurrence.oreCode,
       rarityTier: (ore?.rarityTier as RarityTier) ?? "common",
       bodyName: (body?.name as string) ?? occurrence.bodySlug,
       bodyType: (body?.type as BodyType) ?? "planet",
-      bestRefinedSell: priceMap.get(occurrence.oreCode) ?? null,
+      signatureValue: profile?.signatureValue as number | undefined,
+      signatureRange: profile?.signatureRange as
+        { min: number; max: number } | undefined,
+      bestRawSell: bestSell?.raw ?? null,
+      bestRefinedSell: bestSell?.refined ?? null,
     };
   });
 

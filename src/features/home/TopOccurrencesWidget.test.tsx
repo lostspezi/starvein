@@ -19,6 +19,7 @@ const rows: ExplorerRow[] = [
     rarityTier: "epic",
     bodyName: "Daymar",
     bodyType: "moon",
+    bestRawSell: null,
     bestRefinedSell: null,
   },
   {
@@ -35,6 +36,7 @@ const rows: ExplorerRow[] = [
     rarityTier: "rare",
     bodyName: "Monox",
     bodyType: "planet",
+    bestRawSell: 19000,
     bestRefinedSell: 28000,
   },
 ];

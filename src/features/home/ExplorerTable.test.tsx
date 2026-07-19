@@ -1,4 +1,4 @@
-import { screen } from "@testing-library/react";
+import { fireEvent, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { renderWithIntl } from "@/test/render";
 import { ExplorerTable } from "./ExplorerTable";
@@ -19,6 +19,8 @@ const rows: ExplorerRow[] = [
     rarityTier: "rare",
     bodyName: "Monox",
     bodyType: "planet",
+    signatureValue: 3585,
+    bestRawSell: 19000,
     bestRefinedSell: 28000,
   },
   {
@@ -35,6 +37,7 @@ const rows: ExplorerRow[] = [
     rarityTier: "epic",
     bodyName: "Daymar",
     bodyType: "moon",
+    bestRawSell: null,
     bestRefinedSell: null,
   },
 ];
@@ -60,7 +63,7 @@ describe("ExplorerTable", () => {
     );
   });
 
-  it("shows probability and best refined sell, dash without price", () => {
+  it("shows probability, raw and refined sell, dash without price", () => {
     renderWithIntl(
       <ExplorerTable
         rows={rows}
@@ -72,7 +75,33 @@ describe("ExplorerTable", () => {
 
     expect(screen.getByText("12%")).toBeVisible();
     expect(screen.getByText(/28[,.]000/)).toBeVisible();
-    expect(screen.getByText("–")).toBeVisible();
+    expect(screen.getByText(/19[,.]000/)).toBeVisible();
+    // HADA has neither raw nor refined price → two dashes
+    expect(screen.getAllByText("–").length).toBeGreaterThanOrEqual(2);
+  });
+
+  it("shows the base signature and reveals the cluster on expand", () => {
+    renderWithIntl(
+      <ExplorerTable
+        rows={rows}
+        favoriteKeys={new Set()}
+        isAuthenticated={false}
+      />,
+      { locale: "en" },
+    );
+
+    expect(screen.getByText("3585")).toBeVisible();
+
+    fireEvent.click(
+      screen.getAllByRole("button", {
+        name: "Show signature cluster and prices",
+      })[0],
+    );
+    expect(
+      screen.getByText("Signature cluster (identifies mineral)"),
+    ).toBeVisible();
+    // 2× of 3585
+    expect(screen.getByText("7,170")).toBeVisible();
   });
 
   it("hides the method column below sm", () => {

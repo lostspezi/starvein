@@ -9,6 +9,7 @@ import { upsertOreOccurrences } from "./ore-occurrences.repository";
 import {
   findOccurrencesByLocationWithOre,
   findOccurrencesByOreWithLocation,
+  findOccurrencesByOreWithLocationAndPrices,
   findOccurrencesByOreWithLocationCached,
   findOccurrencesWithInheritance,
 } from "./ore-occurrences.service";
@@ -117,6 +118,28 @@ describe("ore occurrences service (joins)", () => {
       bodyName: "Daymar",
       bodyType: "moon",
       probabilityPercent: 20,
+    });
+  });
+
+  it("attaches the method signature to an ore's occurrences (no prices in the wiki read)", async () => {
+    const results = await findOccurrencesByOreWithLocation(db, "HADA");
+
+    expect(results[0]).toMatchObject({
+      oreCode: "HADA",
+      signatureValue: 3000,
+      bestRawSell: null,
+      bestRefinedSell: null,
+    });
+  });
+
+  it("merges the best sell prices via the priced ore read", async () => {
+    const results = await findOccurrencesByOreWithLocationAndPrices(db, "HADA");
+
+    expect(results[0]).toMatchObject({
+      oreCode: "HADA",
+      signatureValue: 3000,
+      bestRawSell: 8500,
+      bestRefinedSell: null,
     });
   });
 

@@ -30,7 +30,9 @@ test("signature reference shows ship table and ground explainer", async ({
 test("ship ore detail shows its per-mineral signature", async ({ page }) => {
   await page.goto("/en/ores/quan");
 
-  await expect(page.getByText("3170")).toBeVisible();
+  // Der Signaturwert steht jetzt sowohl im Signatur-Panel als auch in der
+  // Signatur-Spalte der Fundort-Tabelle — .first() trifft das Panel oben.
+  await expect(page.getByText("3170").first()).toBeVisible();
   await expect(page.getByText("40–80%")).toBeVisible();
 });
 
