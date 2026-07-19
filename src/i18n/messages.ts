@@ -27,8 +27,6 @@ import deLoadouts from "@/features/loadouts/messages/de.json";
 import enLoadouts from "@/features/loadouts/messages/en.json";
 import deLocations from "@/features/locations/messages/de.json";
 import enLocations from "@/features/locations/messages/en.json";
-import deLocationGuides from "@/features/location-guides/messages/de.json";
-import enLocationGuides from "@/features/location-guides/messages/en.json";
 import deOccurrences from "@/features/ore-occurrences/messages/de.json";
 import enOccurrences from "@/features/ore-occurrences/messages/en.json";
 import dePrices from "@/features/refinery-and-prices/messages/de.json";
@@ -59,7 +57,6 @@ const messages = {
     ...deSwitcher,
     ...deOres,
     ...deLocations,
-    ...deLocationGuides,
     ...deSearch,
     ...deOccurrences,
     ...deSignatures,
@@ -85,7 +82,6 @@ const messages = {
     ...enSwitcher,
     ...enOres,
     ...enLocations,
-    ...enLocationGuides,
     ...enSearch,
     ...enOccurrences,
     ...enSignatures,
