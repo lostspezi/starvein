@@ -20,11 +20,15 @@ describe("refinery catalog routes", () => {
   });
 
   it("returns empty arrays when nothing is synced", async () => {
-    const terminals = await GET_TERMINALS();
+    const terminals = await GET_TERMINALS(
+      new Request("http://localhost/api/refinery-terminals"),
+    );
     expect(terminals.status).toBe(200);
     await expect(terminals.json()).resolves.toEqual([]);
 
-    const methods = await GET_METHODS();
+    const methods = await GET_METHODS(
+      new Request("http://localhost/api/refinery-methods"),
+    );
     expect(methods.status).toBe(200);
     await expect(methods.json()).resolves.toEqual([]);
   });
@@ -48,7 +52,11 @@ describe("refinery catalog routes", () => {
       syncedAt: "2026-07-14T08:00:00.000Z",
     });
 
-    const terminals = await (await GET_TERMINALS()).json();
+    const terminals = await (
+      await GET_TERMINALS(
+        new Request("http://localhost/api/refinery-terminals"),
+      )
+    ).json();
     expect(terminals).toEqual([
       {
         terminalId: 32,
@@ -57,7 +65,9 @@ describe("refinery catalog routes", () => {
       },
     ]);
 
-    const methods = await (await GET_METHODS()).json();
+    const methods = await (
+      await GET_METHODS(new Request("http://localhost/api/refinery-methods"))
+    ).json();
     expect(methods).toHaveLength(1);
     expect(methods[0]).toMatchObject({
       code: "DINYX",

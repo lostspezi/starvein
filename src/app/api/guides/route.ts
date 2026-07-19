@@ -7,11 +7,15 @@ import {
 import { listPublicGuides } from "@/features/guides/guides.repository";
 import { getDb } from "@/lib/db";
 import { checkRateLimit } from "@/lib/rate-limit";
+import { enforceReadRateLimit } from "@/lib/read-rate-limit";
 import { getSessionUserId } from "@/lib/session";
 
 export const dynamic = "force-dynamic";
 
-export async function GET() {
+export async function GET(request: Request) {
+  const limited = await enforceReadRateLimit(request, "guides");
+  if (limited) return limited;
+
   const db = await getDb();
   return NextResponse.json(await listPublicGuides(db));
 }

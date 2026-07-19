@@ -14,6 +14,7 @@ import {
   listPublicGuideRefs,
   listPublicGuides,
   listPublicGuideTags,
+  MAX_PUBLIC_GUIDE_SCAN,
   replaceGuide,
 } from "./guides.repository";
 import type { Guide } from "./guides.schema";
@@ -256,6 +257,24 @@ describe("guides repository", () => {
       "tie-older",
       "low-but-new",
     ]);
+  });
+
+  it("caps a public guide read at MAX_PUBLIC_GUIDE_SCAN, keeping the newest", async () => {
+    const overflow = MAX_PUBLIC_GUIDE_SCAN + 1;
+    const docs = Array.from({ length: overflow }, (_, i) => ({
+      ...makeGuide({
+        id: `bulk-${i}`,
+        // aufsteigende Zeitstempel: bulk-0 ist der älteste
+        updatedAt: new Date(Date.UTC(2020, 0, 1) + i * 60_000).toISOString(),
+      }),
+    }));
+    await db.collection("guides").insertMany(docs as never[]);
+
+    const guides = await listPublicGuides(db);
+    expect(guides).toHaveLength(MAX_PUBLIC_GUIDE_SCAN);
+    // Der älteste (bulk-0) muss durch den Cap herausfallen.
+    expect(guides.some((g) => g.id === "bulk-0")).toBe(false);
+    expect(guides.some((g) => g.id === `bulk-${overflow - 1}`)).toBe(true);
   });
 
   it("counts only public guides", async () => {

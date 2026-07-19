@@ -20,7 +20,9 @@ describe("price ticker route", () => {
   });
 
   it("returns an empty array when nothing is synced", async () => {
-    const response = await GET();
+    const response = await GET(
+      new Request("http://localhost/api/price-ticker"),
+    );
     expect(response.status).toBe(200);
     await expect(response.json()).resolves.toEqual([]);
   });
@@ -50,7 +52,9 @@ describe("price ticker route", () => {
       syncedAt: "2000-01-01T23:30:00.000Z",
     });
 
-    const entries = await (await GET()).json();
+    const entries = await (
+      await GET(new Request("http://localhost/api/price-ticker"))
+    ).json();
 
     expect(entries).toEqual([
       {

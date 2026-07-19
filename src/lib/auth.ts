@@ -3,6 +3,7 @@ import { mongodbAdapter } from "better-auth/adapters/mongodb";
 import { nextCookies } from "better-auth/next-js";
 import { bearer, deviceAuthorization } from "better-auth/plugins";
 import { MongoClient } from "mongodb";
+import { resolveTrustedOrigins } from "@/lib/auth-config";
 
 /** Einzige Client-ID, die den Device-Flow nutzen darf (Desktop-Companion). */
 export const DEVICE_CLIENT_ID = "starvein-companion";
@@ -19,6 +20,17 @@ const client = new MongoClient(
 
 export const auth = betterAuth({
   database: mongodbAdapter(client.db()),
+  // CSRF-/Open-Redirect-Schutz: neben der Base-URL erlaubte Origins.
+  // Erweiterbar über BETTER_AUTH_TRUSTED_ORIGINS (siehe auth-config.ts).
+  trustedOrigins: resolveTrustedOrigins(),
+  advanced: {
+    ipAddress: {
+      // Hinter Cloudflare/Caddy die echte Client-IP auflösen, damit das
+      // Better-Auth-Rate-Limit pro IP greift (sonst teilen sich alle Nutzer
+      // einen Bucket = die Proxy-IP).
+      ipAddressHeaders: ["cf-connecting-ip", "x-forwarded-for"],
+    },
+  },
   socialProviders: {
     discord: {
       clientId: process.env.DISCORD_CLIENT_ID ?? "",

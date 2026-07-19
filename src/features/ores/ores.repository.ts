@@ -4,6 +4,13 @@ import { oreSchema, type Ore } from "./ores.schema";
 
 const COLLECTION = "ores";
 
+/**
+ * Backstop gegen unbegrenzte Ergebnismengen bei GET /api/ores. Der Erz-
+ * Katalog ist klein und wiki-geführt (Dutzende Einträge); der Cap greift
+ * nur im pathologischen Fall und bleibt weit über der realen Anzahl.
+ */
+export const MAX_ORES = 1000;
+
 /** Für Seiten-Reads: gecachte Variante (Tag wiki-data, siehe data-cache.ts). */
 export function findAllOresCached(db: Db): Promise<Ore[]> {
   return cachedQuery(CACHE_TAGS.wiki, ["ores", "all"], () => findAllOres(db));
@@ -14,6 +21,7 @@ export async function findAllOres(db: Db): Promise<Ore[]> {
     .collection(COLLECTION)
     .find({}, { projection: { _id: 0 } })
     .sort({ name_en: 1 })
+    .limit(MAX_ORES)
     .toArray();
 
   return docs.map((doc) => oreSchema.parse(doc));

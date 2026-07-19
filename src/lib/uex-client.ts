@@ -1,7 +1,11 @@
+import { readJsonCapped, safeFetch } from "@/lib/safe-fetch";
+
 /**
  * Dünner Client für die UEX Corp API 2.0 (verifiziert 2026-07-09).
  * Öffentliche Endpunkte brauchen keinen Key; UEX_API_KEY wird — falls
- * gesetzt — als Bearer-Token mitgeschickt.
+ * gesetzt — als Bearer-Token mitgeschickt. Alle Requests laufen über
+ * safeFetch (Timeout) + readJsonCapped (Byte-Cap), damit ein langsamer
+ * oder übergroßer UEX-Response den Sync-Job nicht aufhängt/OOM auslöst.
  */
 function baseUrl(): string {
   return process.env.UEX_API_BASE_URL ?? "https://api.uexcorp.space/2.0";
@@ -13,12 +17,12 @@ async function fetchUex<T>(path: string): Promise<T[]> {
     headers.Authorization = `Bearer ${process.env.UEX_API_KEY}`;
   }
 
-  const response = await fetch(`${baseUrl()}/${path}`, { headers });
+  const response = await safeFetch(`${baseUrl()}/${path}`, { headers });
   if (!response.ok) {
     throw new Error(`UEX request failed: ${path} -> ${response.status}`);
   }
 
-  const body = (await response.json()) as { data: T[] };
+  const body = await readJsonCapped<{ data: T[] }>(response);
   return body.data ?? [];
 }
 

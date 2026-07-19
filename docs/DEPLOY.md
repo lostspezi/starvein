@@ -30,7 +30,9 @@ certificates:
 | A    | `www` | `<VPS-IPv4>` |
 
 (Optional later: put Cloudflare in front — proxied records, SSL mode
-**Full (strict)**, cache `/_next/static/*` long, never cache `/api/*`.)
+**Full (strict)**, cache `/_next/static/*` long, never cache `/api/*`. See
+[Security & edge hardening](#security--edge-hardening) for the rate-limit/WAF
+rules that make the open reference APIs abuse-resistant.)
 
 ### 2. VPS directory and environment
 
@@ -126,3 +128,53 @@ GitHub (Profile → Packages) → Package settings → Change visibility → Pub
   `docker compose -f docker-compose.prod.yml exec mongo mongodump --archive` piped
   to a dated file is the minimal backup. Schedule it before relying on
   user-generated data (favorites, loadouts, guides).
+
+## Security & edge hardening
+
+STARVEIN exposes intentionally open, unauthenticated read APIs (`/api/ores`,
+`/api/search`, `/api/guides`, `/api/price-ticker`, …). Defense in depth: the
+**edge (Cloudflare) is the primary brake** against abuse/DoS — blocking there
+costs no Node/Mongo resources — and the app carries backstops in case the origin
+is hit directly (past Cloudflare).
+
+### Cloudflare (edge — primary defense)
+
+With the domain proxied (orange cloud), add in the dashboard:
+
+- **Rate limiting rules** (Security → WAF → Rate limiting rules):
+  - `/api/*` → e.g. **60 requests / minute per IP**, action _Block_ (or Managed
+    Challenge) for the window. Covers the open read endpoints.
+  - `/api/auth/*` → stricter, e.g. **10 requests / minute per IP** (login/OAuth
+    brute-force).
+- **WAF Managed Rules** enabled; **Bot Fight Mode** on to deter scrapers.
+- **Cache rules:** cache `/_next/static/*` long/immutable; **cache the dynamic
+  OG images** (`/*/opengraph-image*`) with a sensible TTL (they are per-slug
+  ISR-rendered, so they are safe to cache and expensive to regenerate); **never
+  cache `/api/*`** (dynamic; Redis/Next handle server-side caching).
+- SSL/TLS mode **Full (strict)** so Cloudflare ↔ Caddy stays encrypted.
+
+Note: the sync crons use `--resolve …:127.0.0.1` to reach Caddy directly, so the
+rate-limit/WAF rules above never interfere with them.
+
+### App-level backstops (already in code)
+
+- **Read rate limit** on the open JSON endpoints (`src/lib/read-rate-limit.ts`),
+  keyed by `cf-connecting-ip`. **Fail-open**: if Redis is unreachable the limit
+  does not block (a Redis outage must not take the public reference down) — this
+  is why the Cloudflare rule above is the primary brake, not optional.
+- **Security headers** set in `next.config.ts` (`src/lib/security-headers.ts`,
+  incl. a production CSP) and at Caddy (HSTS). Verify after deploy with
+  `curl -sI https://starvein.app` and a scan on
+  [securityheaders.com](https://securityheaders.com) / Mozilla Observatory.
+- **Sync endpoints** are fail-closed with a timing-safe secret compare
+  (`src/lib/sync-auth.ts`).
+- **Env validation** at boot (`src/lib/env.ts` via `src/instrumentation.ts`)
+  rejects missing/placeholder secrets in production — a misconfigured container
+  fails fast instead of running insecurely.
+- **Better Auth** resolves the real client IP behind Cloudflare
+  (`advanced.ipAddress.ipAddressHeaders`) and enforces `trustedOrigins`
+  (extend via `BETTER_AUTH_TRUSTED_ORIGINS`). Its rate limiter uses the default
+  in-memory store — fine for the single-instance VPS; switch to a shared store
+  (`secondaryStorage`/database) if scaling to multiple app replicas.
+- **Outbound calls** to UEX/SC-Wiki have a request timeout + response size cap
+  (`src/lib/safe-fetch.ts`) so a slow/huge upstream can't hang or OOM a sync.
