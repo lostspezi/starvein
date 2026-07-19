@@ -1,4 +1,4 @@
-import { screen } from "@testing-library/react";
+import { fireEvent, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { renderWithIntl } from "@/test/render";
 import { LocationOccurrencesTable } from "./LocationOccurrencesTable";
@@ -128,6 +128,25 @@ describe("LocationOccurrencesTable", () => {
     expect(
       screen.queryByText(/signature only indicates the size/i),
     ).not.toBeInTheDocument();
+  });
+
+  it("reveals the full 1×–4× signature cluster when a row is expanded", () => {
+    renderWithIntl(<LocationOccurrencesTable occurrences={shipRows} />, {
+      locale: "en",
+    });
+
+    fireEvent.click(
+      screen.getByRole("button", {
+        name: "Show signature cluster and prices",
+      }),
+    );
+
+    expect(
+      screen.getByText("Signature cluster (identifies mineral)"),
+    ).toBeVisible();
+    // 2× of 3170 only appears inside the expanded cluster panel
+    expect(screen.getByText("6,340")).toBeVisible();
+    expect(screen.getByText("12,680")).toBeVisible();
   });
 
   it("shows an empty state", () => {

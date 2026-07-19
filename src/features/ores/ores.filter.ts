@@ -5,7 +5,10 @@ export type OreFilter = {
   method?: MiningMethod | null;
 };
 
-export function filterOres(ores: Ore[], { rarity, method }: OreFilter): Ore[] {
+export function filterOres<T extends Ore>(
+  ores: T[],
+  { rarity, method }: OreFilter,
+): T[] {
   return ores.filter(
     (ore) =>
       (!rarity || ore.rarityTier === rarity) &&

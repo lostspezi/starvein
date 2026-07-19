@@ -1,5 +1,6 @@
 import { useFormatter, useTranslations } from "next-intl";
 import { Panel } from "@/lib/components/ui/Panel";
+import { signatureClusters } from "./signature-cluster";
 import type { SignatureProfile } from "./signature-profiles.schema";
 
 function formatSignature(profile: SignatureProfile): string {
@@ -65,9 +66,9 @@ export function OreSignatureInfo({
         // Der In-Game-Scanner zeigt die Summe des Clusters (Basis × Rocks)
         <p className="text-sm text-text-muted">
           {t("signatures.oreClusterHint", {
-            x2: format.number(ship.signatureValue * 2),
-            x3: format.number(ship.signatureValue * 3),
-            x4: format.number(ship.signatureValue * 4),
+            x2: format.number(signatureClusters(ship)[1].value!),
+            x3: format.number(signatureClusters(ship)[2].value!),
+            x4: format.number(signatureClusters(ship)[3].value!),
           })}
         </p>
       )}

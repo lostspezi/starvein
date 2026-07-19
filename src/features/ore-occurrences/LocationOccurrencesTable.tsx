@@ -1,8 +1,8 @@
 import { useFormatter, useTranslations } from "next-intl";
+import { SignatureExpandRow } from "@/features/signature-profiles/SignatureExpandRow";
 import {
   DataTable,
   DataTableHead,
-  DataTableRow,
   DataTableTd,
   DataTableTh,
 } from "@/lib/components/ui/DataTable";
@@ -44,6 +44,8 @@ export function LocationOccurrencesTable({
   // ROC/FPS-Signaturen codieren nur die Deposit-Größe, nicht das Mineral
   // (CLAUDE.md §5) — der Hinweis verhindert die falsche 1:1-Erwartung.
   const hasGroundRows = occurrences.some((o) => o.method !== "ship");
+  // Ore + Rarity + Method + Signature + Probability + Raw + Refined + Status + Chevron
+  const colSpan = 9;
 
   return (
     <div className="flex flex-col gap-2">
@@ -65,48 +67,70 @@ export function LocationOccurrencesTable({
             {t("occurrences.table.sellRefined")}
           </DataTableTh>
           <DataTableTh>{t("occurrences.table.status")}</DataTableTh>
+          <DataTableTh className="w-8" />
         </DataTableHead>
         <tbody>
           {occurrences.map((occurrence) => (
-            <DataTableRow key={`${occurrence.oreCode}-${occurrence.method}`}>
-              <DataTableTd>
-                <GlowLink href={`/ores/${occurrence.oreCode.toLowerCase()}`}>
-                  {occurrence.oreName}
-                </GlowLink>
-                <span className="ml-2 font-mono text-xs text-text-muted">
-                  {occurrence.oreCode}
-                </span>
-              </DataTableTd>
-              <DataTableTd
-                className={`hidden sm:table-cell ${RARITY_TEXT_CLASS[occurrence.rarityTier]}`}
-              >
-                {t(`ores.rarity.${occurrence.rarityTier}`)}
-              </DataTableTd>
-              <DataTableTd>{t(`ores.method.${occurrence.method}`)}</DataTableTd>
-              <DataTableTd className="hidden sm:table-cell">
-                <span
-                  className={`font-mono ${
-                    occurrence.method === "ship"
-                      ? "text-accent-secondary"
-                      : "text-text-muted"
-                  }`}
-                >
-                  {formatSignature(occurrence)}
-                </span>
-              </DataTableTd>
-              <DataTableTd>
-                <ProbabilityCell percent={occurrence.probabilityPercent} />
-              </DataTableTd>
-              <DataTableTd className="hidden text-right font-mono md:table-cell">
-                {formatSell(occurrence.bestRawSell)}
-              </DataTableTd>
-              <DataTableTd className="hidden text-right font-mono md:table-cell">
-                {formatSell(occurrence.bestRefinedSell)}
-              </DataTableTd>
-              <DataTableTd>
-                <ConfidenceBadge occurrence={occurrence} />
-              </DataTableTd>
-            </DataTableRow>
+            <SignatureExpandRow
+              key={`${occurrence.oreCode}-${occurrence.method}`}
+              colSpan={colSpan}
+              expandLabel={t("occurrences.table.expand")}
+              collapseLabel={t("occurrences.table.collapse")}
+              panels={[
+                {
+                  method: occurrence.method,
+                  signatureValue: occurrence.signatureValue,
+                  signatureRange: occurrence.signatureRange,
+                },
+              ]}
+              rawSell={occurrence.bestRawSell}
+              refinedSell={occurrence.bestRefinedSell}
+              summary={
+                <>
+                  <DataTableTd>
+                    <GlowLink
+                      href={`/ores/${occurrence.oreCode.toLowerCase()}`}
+                    >
+                      {occurrence.oreName}
+                    </GlowLink>
+                    <span className="ml-2 font-mono text-xs text-text-muted">
+                      {occurrence.oreCode}
+                    </span>
+                  </DataTableTd>
+                  <DataTableTd
+                    className={`hidden sm:table-cell ${RARITY_TEXT_CLASS[occurrence.rarityTier]}`}
+                  >
+                    {t(`ores.rarity.${occurrence.rarityTier}`)}
+                  </DataTableTd>
+                  <DataTableTd>
+                    {t(`ores.method.${occurrence.method}`)}
+                  </DataTableTd>
+                  <DataTableTd className="hidden sm:table-cell">
+                    <span
+                      className={`font-mono ${
+                        occurrence.method === "ship"
+                          ? "text-accent-secondary"
+                          : "text-text-muted"
+                      }`}
+                    >
+                      {formatSignature(occurrence)}
+                    </span>
+                  </DataTableTd>
+                  <DataTableTd>
+                    <ProbabilityCell percent={occurrence.probabilityPercent} />
+                  </DataTableTd>
+                  <DataTableTd className="hidden text-right font-mono md:table-cell">
+                    {formatSell(occurrence.bestRawSell)}
+                  </DataTableTd>
+                  <DataTableTd className="hidden text-right font-mono md:table-cell">
+                    {formatSell(occurrence.bestRefinedSell)}
+                  </DataTableTd>
+                  <DataTableTd>
+                    <ConfidenceBadge occurrence={occurrence} />
+                  </DataTableTd>
+                </>
+              }
+            />
           ))}
         </tbody>
       </DataTable>

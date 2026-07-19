@@ -38,6 +38,25 @@ test("method filter shows only FPS minables", async ({ page }) => {
   await expect(main.getByText("Quantainium")).not.toBeVisible();
 });
 
+test("expanding an ore row reveals the full signature cluster and prices", async ({
+  page,
+}) => {
+  await page.goto("/en/ores");
+
+  const main = page.getByRole("main");
+  const quanRow = main.locator("tr", { hasText: "Quantainium" }).first();
+  await quanRow
+    .getByRole("button", { name: "Show signature cluster and prices" })
+    .click();
+
+  // Quantainium is ship-mined: the panel identifies the mineral and shows the
+  // 1×–4× cluster sums plus the raw/refined sell prices.
+  await expect(
+    main.getByText("Signature cluster (identifies mineral)"),
+  ).toBeVisible();
+  await expect(main.getByText("Sell refined").first()).toBeVisible();
+});
+
 test("GET /api/ores returns the seeded dataset", async ({ request }) => {
   const response = await request.get("/api/ores");
   expect(response.status()).toBe(200);

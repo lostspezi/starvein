@@ -38,6 +38,8 @@ const quanColumn: OreComparisonColumn = {
       lastVerifiedAt: "2026-07-09",
       bodyName: "Aaron Halo",
       bodyType: "asteroidBelt",
+      bestRawSell: null,
+      bestRefinedSell: null,
     },
   ],
 };

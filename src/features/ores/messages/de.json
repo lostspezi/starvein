@@ -7,7 +7,11 @@
       "name": "Name",
       "code": "Code",
       "rarity": "Seltenheit",
-      "methods": "Methoden"
+      "methods": "Methoden",
+      "sellRefined": "Verkauf (raffiniert)",
+      "expand": "Signatur-Cluster und Preise anzeigen",
+      "collapse": "Signatur-Cluster und Preise ausblenden",
+      "noSignature": "Für dieses Erz ist keine Scan-Signatur hinterlegt."
     },
     "rarity": {
       "all": "Alle",
