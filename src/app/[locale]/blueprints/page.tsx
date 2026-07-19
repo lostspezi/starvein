@@ -12,6 +12,7 @@ import {
   type BlueprintCategory,
 } from "@/features/blueprints/blueprints.schema";
 import { findAllMaterials } from "@/features/blueprints/materials.repository";
+import { GlowLink } from "@/lib/components/ui/GlowLink";
 import { PageHeader } from "@/lib/components/ui/PageHeader";
 import { PageShell } from "@/lib/components/ui/PageShell";
 import { getDb } from "@/lib/db";
@@ -80,6 +81,11 @@ export default async function BlueprintsPage({
   return (
     <PageShell width="wide">
       <PageHeader title={t("title")} subtitle={t("subtitle")} />
+      {userId && (
+        <p>
+          <GlowLink href="/blueprints/collected">{t("collectedLink")}</GlowLink>
+        </p>
+      )}
       <BlueprintFilters
         materials={materials.map((m) => ({ code: m.code, name: m.name }))}
         isAuthenticated={userId !== null}

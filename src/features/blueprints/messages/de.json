@@ -50,6 +50,7 @@
       "remove": "Blueprint aus Sammlung entfernen",
       "collected": "Gesammelt"
     },
+    "collectedLink": "Meine gesammelten Blueprints",
     "usedIn": {
       "heading": "Damit craftbar",
       "empty": "Kein Blueprint verwendet dieses Material."
@@ -137,6 +138,21 @@
       "usedInCount": "{count} Blueprints",
       "backToList": "Alle Materialien",
       "none": "—"
+    }
+  },
+  "collectedBlueprints": {
+    "title": "Meine gesammelten Blueprints",
+    "subtitle": "Deine gesammelten Blueprints, abgeglichen mit deinem Lagerbestand.",
+    "loginRequired": "Melde dich an, um deine gesammelten Blueprints und deren Craftbarkeit zu sehen.",
+    "warehouseLink": "Mein Lager verwalten",
+    "blueprintsLink": "Alle Blueprints",
+    "empty": "Keine gesammelten Blueprints passen zu den Filtern — sammle Blueprints oder passe die Filter an.",
+    "filter": {
+      "searchLabel": "Gesammelte Blueprints suchen",
+      "searchPlaceholder": "Nach hergestelltem Item suchen…",
+      "categoryLabel": "Nach Kategorie filtern",
+      "statusLabel": "Nach Status filtern",
+      "statusAll": "Alle"
     }
   }
 }
