@@ -50,6 +50,7 @@
       "remove": "Remove blueprint from collection",
       "collected": "Collected"
     },
+    "collectedLink": "My collected blueprints",
     "usedIn": {
       "heading": "Craftable with this material",
       "empty": "No blueprint uses this material."
@@ -137,6 +138,21 @@
       "usedInCount": "{count} blueprints",
       "backToList": "All materials",
       "none": "—"
+    }
+  },
+  "collectedBlueprints": {
+    "title": "My Collected Blueprints",
+    "subtitle": "Blueprints you've collected, matched against your warehouse stock.",
+    "loginRequired": "Sign in to see your collected blueprints and what you can craft.",
+    "warehouseLink": "Manage my warehouse",
+    "blueprintsLink": "All blueprints",
+    "empty": "No collected blueprints match your filters — collect blueprints or adjust the filters.",
+    "filter": {
+      "searchLabel": "Search collected blueprints",
+      "searchPlaceholder": "Search by produced item…",
+      "categoryLabel": "Filter by category",
+      "statusLabel": "Filter by status",
+      "statusAll": "All"
     }
   }
 }
