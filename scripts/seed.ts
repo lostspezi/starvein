@@ -5,6 +5,15 @@
 import { loadCuratedStarSystems } from "@/features/locations/curated-locations";
 import { upsertStarSystems } from "@/features/locations/locations.repository";
 import {
+  loadCuratedLocationAreaGuides,
+  loadCuratedLocationGuides,
+} from "@/features/location-guides/curated-location-guides";
+import {
+  ensureLocationGuideIndexes,
+  upsertLocationAreaGuides,
+  upsertLocationGuides,
+} from "@/features/location-guides/location-guides.repository";
+import {
   loadCuratedMiningGadgets,
   loadCuratedMiningLasers,
   loadCuratedMiningModules,
@@ -30,6 +39,15 @@ async function main() {
   const signatureProfiles = loadCuratedSignatureProfiles();
   await upsertSignatureProfiles(db, signatureProfiles);
   console.log(`Seeded ${signatureProfiles.length} signature profiles`);
+
+  const locationGuides = loadCuratedLocationGuides();
+  const locationAreaGuides = loadCuratedLocationAreaGuides();
+  await ensureLocationGuideIndexes(db);
+  await upsertLocationGuides(db, locationGuides);
+  await upsertLocationAreaGuides(db, locationAreaGuides);
+  console.log(
+    `Seeded ${locationGuides.length} location guides + ${locationAreaGuides.length} area guides`,
+  );
 
   const vehicles = loadCuratedMiningVehicles();
   await upsertMiningVehicles(db, vehicles);

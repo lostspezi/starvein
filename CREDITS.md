@@ -18,6 +18,10 @@ STARVEIN baut auf Daten und Vorarbeiten der Star-Citizen-Community auf:
   Materialkatalog abgeleitet. Wird per `pnpm sync:wiki` synchronisiert.
 - **[RainbowRamen/sc-mining-hud](https://github.com/RainbowRamen/sc-mining-hud)** —
   Referenz für RS-Wert-Tabellen.
+- **[Star Citizen Wiki (starcitizen.tools)](https://starcitizen.tools)** (CC BY-SA 4.0) —
+  Grundlage für die kuratierten Anreise-Hinweise zu Asteroiden-Feldern/-Gürteln
+  (`data/curated/location-guides.json`), paraphrasiert aus den System-/Location-Artikeln
+  (z. B. Nyx system, Glaciem Ring). Keine Texte 1:1 übernommen.
 - **[RegolithCo/RegolithCo-Common](https://github.com/RegolithCo/RegolithCo-Common)** (MIT-Lizenz) —
   Grundlage für die Stat-Tabellen der Mining-Laser, -Module und -Gadgets im
   Loadout-Katalog (`data/curated/mining-*.json`), gegengeprüft mit UEX und
