@@ -1,9 +1,0 @@
-{
-  "locationGuides": {
-    "heading": "Anreise",
-    "from": "Von",
-    "to": "Nach",
-    "dropAt": "Aussteigen bei",
-    "km": "{distance} km"
-  }
-}
