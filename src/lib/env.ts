@@ -38,7 +38,11 @@ const REQUIRED_KEYS = [
 ] as const;
 
 /** Hoch-sensible Secrets, die in Prod nicht schwach/Platzhalter sein dürfen. */
-const SECRET_KEYS = ["BETTER_AUTH_SECRET", "SYNC_SECRET"] as const;
+const SECRET_KEYS = [
+  "BETTER_AUTH_SECRET",
+  "SYNC_SECRET",
+  "CLOUDFLARE_API_TOKEN",
+] as const;
 
 function isBlank(value: string | undefined): boolean {
   return value === undefined || value.trim() === "";

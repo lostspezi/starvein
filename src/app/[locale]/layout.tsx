@@ -4,6 +4,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import { notFound } from "next/navigation";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
+import Script from "next/script";
 import { ChatAside } from "@/features/chat/ChatAside";
 import { PriceTicker } from "@/features/price-ticker/PriceTicker";
 import { routing } from "@/i18n/routing";
@@ -103,6 +104,18 @@ export default async function LocaleLayout({
     >
       <body className="min-h-full flex flex-col">
         <JsonLd data={websiteJsonLd(tMeta("description"))} />
+        {process.env.NEXT_PUBLIC_CF_BEACON_TOKEN ? (
+          // Cookieloses Cloudflare-Web-Analytics-Beacon (RUM) — nur wenn ein
+          // Token gesetzt ist. Speist die Länder-/Referrer-/Top-Seiten-Daten
+          // des SEO-Dashboards, ohne Consent-Banner (keine Cookies).
+          <Script
+            src="https://static.cloudflareinsights.com/beacon.min.js"
+            strategy="afterInteractive"
+            data-cf-beacon={JSON.stringify({
+              token: process.env.NEXT_PUBLIC_CF_BEACON_TOKEN,
+            })}
+          />
+        ) : null}
         <NuqsAdapter>
           <NextIntlClientProvider>
             <Starfield />

@@ -15,6 +15,8 @@ import deDeviceAuth from "@/features/device-auth/messages/de.json";
 import enDeviceAuth from "@/features/device-auth/messages/en.json";
 import deModeration from "@/features/moderation/messages/de.json";
 import enModeration from "@/features/moderation/messages/en.json";
+import deAdminDashboard from "@/features/admin-dashboard/messages/de.json";
+import enAdminDashboard from "@/features/admin-dashboard/messages/en.json";
 import deFavorites from "@/features/favorites/messages/de.json";
 import enFavorites from "@/features/favorites/messages/en.json";
 import deGuides from "@/features/guides/messages/de.json";
@@ -69,6 +71,7 @@ const messages = {
     ...deCompare,
     ...deChat,
     ...deModeration,
+    ...deAdminDashboard,
     ...deLoadouts,
     ...deGuides,
     ...deWarehouse,
@@ -94,6 +97,7 @@ const messages = {
     ...enCompare,
     ...enChat,
     ...enModeration,
+    ...enAdminDashboard,
     ...enLoadouts,
     ...enGuides,
     ...enWarehouse,
