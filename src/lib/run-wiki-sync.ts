@@ -13,6 +13,7 @@ import {
   syncWikiMiningData,
   type MiningDataSyncSummary,
 } from "@/features/ores/mining-data.sync";
+import { coreIndexNowUrls, submitUrls } from "@/lib/indexnow";
 
 export type FullWikiSyncSummary = {
   locations: LocationsSyncSummary;
@@ -56,6 +57,10 @@ export async function runFullWikiSync(db: Db): Promise<FullWikiSyncSummary> {
     },
     { upsert: true },
   );
+
+  // Bing/Yandex/DuckDuckGo sofort über die frischen Daten informieren.
+  // submitUrls wirft nie und ist ohne INDEXNOW_KEY ein No-op.
+  await submitUrls(coreIndexNowUrls());
 
   return { locations, miningData, blueprints };
 }

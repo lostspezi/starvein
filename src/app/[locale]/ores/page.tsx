@@ -2,10 +2,12 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { OreListSection } from "@/features/ores/OreListSection";
 import { findAllOresWithSignaturesCached } from "@/features/ores/ores.service";
 import { getBestSellByOreCached } from "@/features/refinery-and-prices/price-summary";
+import { JsonLd } from "@/lib/components/JsonLd";
 import { PageHeader } from "@/lib/components/ui/PageHeader";
 import { PageShell } from "@/lib/components/ui/PageShell";
 import { getDb } from "@/lib/db";
 import { pageMetadata } from "@/lib/seo";
+import { datasetJsonLd } from "@/lib/structured-data";
 import type { Metadata } from "next";
 
 // Param-lose Seite: bleibt dynamisch, weil der Docker-Build ohne Mongo läuft
@@ -37,6 +39,7 @@ export default async function OresPage({
   setRequestLocale(locale);
 
   const t = await getTranslations("ores");
+  const tMeta = await getTranslations("meta");
   const db = await getDb();
   // Signaturen wiki-gecacht, Preise uex-gecacht (frisch) — auf der Seite
   // gemerged, damit Preise nicht im wiki-Cache veralten.
@@ -55,6 +58,15 @@ export default async function OresPage({
 
   return (
     <PageShell>
+      <JsonLd
+        data={datasetJsonLd({
+          locale,
+          path: "/ores",
+          name: tMeta("ores.title"),
+          description: tMeta("ores.description"),
+          keywords: ["Star Citizen", "mining", "ores"],
+        })}
+      />
       <PageHeader title={t("title")} subtitle={t("intro")} />
       <OreListSection ores={rows} />
     </PageShell>

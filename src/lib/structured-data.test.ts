@@ -2,6 +2,8 @@ import { describe, expect, it } from "vitest";
 import {
   articleJsonLd,
   breadcrumbJsonLd,
+  datasetJsonLd,
+  faqPageJsonLd,
   websiteJsonLd,
 } from "./structured-data";
 
@@ -82,5 +84,70 @@ describe("articleJsonLd", () => {
     expect(jsonLd).not.toHaveProperty("author");
     expect(jsonLd).not.toHaveProperty("keywords");
     expect(jsonLd).not.toHaveProperty("description");
+  });
+});
+
+describe("datasetJsonLd", () => {
+  it("describes a reference dataset with absolute localized URL and creator", () => {
+    expect(
+      datasetJsonLd({
+        locale: "en",
+        path: "/occurrences",
+        name: "Star Citizen ore occurrences",
+        description: "Every known ore occurrence with probability and method.",
+        keywords: ["star citizen", "mining"],
+      }),
+    ).toEqual({
+      "@context": "https://schema.org",
+      "@type": "Dataset",
+      name: "Star Citizen ore occurrences",
+      description: "Every known ore occurrence with probability and method.",
+      url: "https://starvein.app/en/occurrences",
+      inLanguage: ["de", "en"],
+      isAccessibleForFree: true,
+      creator: {
+        "@type": "Organization",
+        name: "STARVEIN",
+        url: "https://starvein.app",
+      },
+      keywords: ["star citizen", "mining"],
+    });
+  });
+
+  it("omits keywords when none are given", () => {
+    const jsonLd = datasetJsonLd({
+      locale: "de",
+      path: "/ores",
+      name: "Erze",
+      description: "Alle abbaubaren Erze.",
+    });
+    expect(jsonLd).not.toHaveProperty("keywords");
+    expect(jsonLd.url).toBe("https://starvein.app/de/ores");
+  });
+});
+
+describe("faqPageJsonLd", () => {
+  it("maps question/answer pairs to a FAQPage", () => {
+    expect(
+      faqPageJsonLd([
+        { question: "Where can I find Hadanite?", answer: "At Daymar." },
+        { question: "How rare is it?", answer: "It is common." },
+      ]),
+    ).toEqual({
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      mainEntity: [
+        {
+          "@type": "Question",
+          name: "Where can I find Hadanite?",
+          acceptedAnswer: { "@type": "Answer", text: "At Daymar." },
+        },
+        {
+          "@type": "Question",
+          name: "How rare is it?",
+          acceptedAnswer: { "@type": "Answer", text: "It is common." },
+        },
+      ],
+    });
   });
 });
