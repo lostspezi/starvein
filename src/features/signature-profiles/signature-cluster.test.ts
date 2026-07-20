@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { CLUSTER_COUNTS, signatureClusters } from "./signature-cluster";
+import {
+  clusterDepthForRarity,
+  CLUSTER_COUNTS,
+  signatureClusters,
+} from "./signature-cluster";
 
 describe("signatureClusters", () => {
   it("covers 1× through 4× rock/deposit counts", () => {
@@ -32,5 +36,23 @@ describe("signatureClusters", () => {
 
   it("returns nothing when neither value nor range is known", () => {
     expect(signatureClusters({})).toEqual([]);
+  });
+
+  it("extends the cluster depth when maxCount is given", () => {
+    const clusters = signatureClusters({ signatureValue: 4300 }, 6);
+
+    expect(clusters.map((c) => c.value)).toEqual([
+      4300, 8600, 12900, 17200, 21500, 25800,
+    ]);
+  });
+});
+
+describe("clusterDepthForRarity", () => {
+  it("gives rarer minerals fewer cluster steps than common ones", () => {
+    expect(clusterDepthForRarity("legendary")).toBe(2);
+    expect(clusterDepthForRarity("epic")).toBe(3);
+    expect(clusterDepthForRarity("rare")).toBe(4);
+    expect(clusterDepthForRarity("uncommon")).toBe(5);
+    expect(clusterDepthForRarity("common")).toBe(6);
   });
 });
