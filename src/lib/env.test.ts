@@ -106,4 +106,18 @@ describe("validateServerEnv", () => {
     expect(result.ok).toBe(false);
     expect(keys(result)).toContain("SYNC_SECRET");
   });
+
+  it("does not require CLOUDFLARE_API_TOKEN (SEO dashboard degrades gracefully)", () => {
+    const result = validateServerEnv(completeProdEnv, "production");
+    expect(result.ok).toBe(true);
+  });
+
+  it("flags a weak CLOUDFLARE_API_TOKEN when it is set in production", () => {
+    const result = validateServerEnv(
+      { ...completeProdEnv, CLOUDFLARE_API_TOKEN: "short" },
+      "production",
+    );
+    expect(result.ok).toBe(false);
+    expect(keys(result)).toContain("CLOUDFLARE_API_TOKEN");
+  });
 });

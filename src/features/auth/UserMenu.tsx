@@ -1,6 +1,12 @@
 "use client";
 
-import { useId, useRef, useState, useSyncExternalStore } from "react";
+import {
+  useEffect,
+  useId,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from "react";
 import { ChevronDown } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { toRole } from "@/features/moderation/roles";
@@ -58,6 +64,26 @@ export function UserMenu() {
     () => true,
     () => false,
   );
+
+  // Dashboard-Admin wird per Discord-ID in der Env definiert (nicht über die
+  // Session-Rolle) — der Link erscheint nur, wenn der Server das bestätigt.
+  const [dashboardAllowed, setDashboardAllowed] = useState(false);
+  const userId = session?.user?.id;
+  useEffect(() => {
+    if (!userId) return;
+    let cancelled = false;
+    fetch("/api/admin/dashboard/access")
+      .then((res) => (res.ok ? res.json() : { allowed: false }))
+      .then((data: { allowed?: boolean }) => {
+        if (!cancelled) setDashboardAllowed(Boolean(data.allowed));
+      })
+      .catch(() => {
+        if (!cancelled) setDashboardAllowed(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [userId]);
 
   if (!hydrated || isPending) {
     return null;
@@ -118,6 +144,15 @@ export function UserMenu() {
             "absolute right-0 top-full z-10 mt-2 w-44 animate-reveal py-1 shadow-lg",
           )}
         >
+          {dashboardAllowed && (
+            <Link
+              href="/admin/dashboard"
+              className={itemClasses}
+              onClick={() => setOpen(false)}
+            >
+              {t("dashboardLink")}
+            </Link>
+          )}
           {isAdmin && (
             <Link
               href="/admin"

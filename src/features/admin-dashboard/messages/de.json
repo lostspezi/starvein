@@ -1,0 +1,38 @@
+{
+  "adminDashboard": {
+    "metaTitle": "Admin-Dashboard",
+    "title": "Admin-Dashboard",
+    "registrations": {
+      "title": "Registrierungen",
+      "total": "Nutzer gesamt",
+      "new24h": "Neu (24 Std.)",
+      "new7d": "Neu (7 Tage)",
+      "new30d": "Neu (30 Tage)",
+      "activeSessions": "Aktive Sessions",
+      "byProvider": "Nach Provider",
+      "trend": "Registrierungen (letzte 30 Tage)",
+      "recent": "Letzte Anmeldungen",
+      "colName": "Name",
+      "colProvider": "Provider",
+      "colDate": "Registriert",
+      "noneRecent": "Noch keine Anmeldungen.",
+      "unknownProvider": "—"
+    },
+    "seo": {
+      "title": "Traffic & SEO",
+      "notConfigured": "Cloudflare-Analytics ist nicht konfiguriert.",
+      "unavailable": "Cloudflare-Analytics ist derzeit nicht erreichbar.",
+      "countries": "Top-Länder",
+      "referrers": "Top-Referrer",
+      "topPages": "Top-Seiten",
+      "pageViews": "Seitenaufrufe (letzte 30 Tage)",
+      "colCountry": "Land",
+      "colReferrer": "Referrer",
+      "colPage": "Seite",
+      "colViews": "Aufrufe",
+      "colRequests": "Requests",
+      "empty": "Keine Daten im gewählten Zeitraum.",
+      "source": "Quelle: Cloudflare Analytics"
+    }
+  }
+}

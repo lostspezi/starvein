@@ -1,0 +1,38 @@
+{
+  "adminDashboard": {
+    "metaTitle": "Admin dashboard",
+    "title": "Admin dashboard",
+    "registrations": {
+      "title": "Registrations",
+      "total": "Total users",
+      "new24h": "New (24h)",
+      "new7d": "New (7d)",
+      "new30d": "New (30d)",
+      "activeSessions": "Active sessions",
+      "byProvider": "By provider",
+      "trend": "Signups (last 30 days)",
+      "recent": "Recent signups",
+      "colName": "Name",
+      "colProvider": "Provider",
+      "colDate": "Registered",
+      "noneRecent": "No signups yet.",
+      "unknownProvider": "—"
+    },
+    "seo": {
+      "title": "Traffic & SEO",
+      "notConfigured": "Cloudflare analytics are not configured.",
+      "unavailable": "Cloudflare analytics are currently unavailable.",
+      "countries": "Top countries",
+      "referrers": "Top referrers",
+      "topPages": "Top pages",
+      "pageViews": "Page views (last 30 days)",
+      "colCountry": "Country",
+      "colReferrer": "Referrer",
+      "colPage": "Page",
+      "colViews": "Views",
+      "colRequests": "Requests",
+      "empty": "No data in the selected window.",
+      "source": "Source: Cloudflare Analytics"
+    }
+  }
+}
