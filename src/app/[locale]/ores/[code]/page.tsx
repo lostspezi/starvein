@@ -113,7 +113,7 @@ export default async function OreDetailPage({
   const stats = buildOreOccurrenceStats(occurrences);
 
   return (
-    <PageShell>
+    <PageShell width="wide">
       <Breadcrumbs
         locale={locale}
         items={[
