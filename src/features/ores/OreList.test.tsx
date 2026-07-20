@@ -60,38 +60,49 @@ describe("OreList", () => {
     expect(hadaRow).not.toHaveTextContent("Ship");
   });
 
-  it("reveals per-method signatures and the ore's prices on expand", () => {
-    const enriched: OreListDisplayRow[] = [
-      {
-        code: "GOLD",
-        name_de: "Gold",
-        name_en: "Gold",
-        rarityTier: "rare",
-        mineableBy: { ship: true, roc: true, fps: false },
-        bestRawSell: 19000,
-        bestRefinedSell: 28000,
-        signatures: [
-          {
-            oreCode: "GOLD",
-            method: "ship",
-            signatureValue: 3585,
-            dominantCompositionRange: { min: 40, max: 80 },
-            patchVersion: "4.7",
-            sourceType: "curated",
-            confidenceScore: 0.6,
-          },
-          {
-            oreCode: "GOLD",
-            method: "roc",
-            signatureValue: 4000,
-            patchVersion: "4.7",
-            sourceType: "curated",
-            confidenceScore: 0.6,
-          },
-        ],
-      },
-    ];
+  const enriched: OreListDisplayRow[] = [
+    {
+      code: "GOLD",
+      name_de: "Gold",
+      name_en: "Gold",
+      rarityTier: "rare",
+      mineableBy: { ship: true, roc: true, fps: false },
+      bestRawSell: 19000,
+      bestRefinedSell: 28000,
+      signatures: [
+        {
+          oreCode: "GOLD",
+          method: "ship",
+          signatureValue: 3585,
+          dominantCompositionRange: { min: 40, max: 80 },
+          patchVersion: "4.7",
+          sourceType: "curated",
+          confidenceScore: 0.6,
+        },
+        {
+          oreCode: "GOLD",
+          method: "roc",
+          signatureValue: 4000,
+          patchVersion: "4.7",
+          sourceType: "curated",
+          confidenceScore: 0.6,
+        },
+      ],
+    },
+  ];
 
+  it("shows base signatures and both sell prices inline in the summary", () => {
+    renderWithIntl(<OreList ores={enriched} />, { locale: "en" });
+
+    // No expand needed: ship + ROC base signatures and both prices are columns
+    const row = screen.getByText("Gold").closest("tr")!;
+    expect(row).toHaveTextContent("3585");
+    expect(row).toHaveTextContent("4000");
+    expect(row).toHaveTextContent("19,000");
+    expect(row).toHaveTextContent("28,000");
+  });
+
+  it("reveals per-method signatures and the ore's prices on expand", () => {
     renderWithIntl(<OreList ores={enriched} />, { locale: "en" });
 
     fireEvent.click(
@@ -110,8 +121,8 @@ describe("OreList", () => {
     // 2× of 3585 (ship) and 2× of 4000 (roc)
     expect(screen.getByText("7,170")).toBeVisible();
     expect(screen.getByText("8,000")).toBeVisible();
-    // Raw price appears in the expanded detail; refined shows in summary + detail
-    expect(screen.getByText("19,000")).toBeVisible();
+    // Raw now shows inline and again in the detail; refined in summary + detail
+    expect(screen.getAllByText("19,000").length).toBeGreaterThanOrEqual(1);
     expect(screen.getAllByText(/28[,.]000/).length).toBeGreaterThanOrEqual(1);
   });
 

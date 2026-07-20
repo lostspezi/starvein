@@ -8,6 +8,8 @@
       "code": "Code",
       "rarity": "Rarity",
       "methods": "Methods",
+      "signature": "Signature",
+      "sellRaw": "Sell (raw)",
       "sellRefined": "Sell (refined)",
       "expand": "Show signature cluster and prices",
       "collapse": "Hide signature cluster and prices",
