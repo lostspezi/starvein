@@ -8,6 +8,8 @@
       "code": "Code",
       "rarity": "Seltenheit",
       "methods": "Methoden",
+      "signature": "Signatur",
+      "sellRaw": "Verkauf (roh)",
       "sellRefined": "Verkauf (raffiniert)",
       "expand": "Signatur-Cluster und Preise anzeigen",
       "collapse": "Signatur-Cluster und Preise ausblenden",
