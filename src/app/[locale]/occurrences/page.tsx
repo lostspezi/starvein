@@ -12,12 +12,14 @@ import {
   type MiningMethod,
   type RarityTier,
 } from "@/features/ores/ores.schema";
+import { JsonLd } from "@/lib/components/JsonLd";
 import { PageHeader } from "@/lib/components/ui/PageHeader";
 import { PageShell } from "@/lib/components/ui/PageShell";
 import { getDb } from "@/lib/db";
 import { parseEnumParam } from "@/lib/search-params";
 import { getSessionUserId } from "@/lib/session";
 import { pageMetadata } from "@/lib/seo";
+import { datasetJsonLd } from "@/lib/structured-data";
 import type { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
@@ -53,6 +55,7 @@ export default async function OccurrencesPage({
   setRequestLocale(locale);
 
   const t = await getTranslations("occurrences");
+  const tMeta = await getTranslations("meta");
   const db = await getDb();
   const ores = await findAllOresCached(db);
 
@@ -76,6 +79,15 @@ export default async function OccurrencesPage({
 
   return (
     <PageShell width="wide">
+      <JsonLd
+        data={datasetJsonLd({
+          locale,
+          path: "/occurrences",
+          name: tMeta("occurrences.title"),
+          description: tMeta("occurrences.description"),
+          keywords: ["Star Citizen", "mining", "ore occurrences"],
+        })}
+      />
       <PageHeader title={t("page.title")} subtitle={t("page.subtitle")} />
       <ExplorerFilters ores={ores} />
       <ExplorerTable

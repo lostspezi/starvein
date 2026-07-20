@@ -36,6 +36,13 @@
     "detail": {
       "summary": "Kommt an {locationCount, plural, one {# Fundort} other {# Fundorten}} in {systemCount, plural, one {# Sternsystem} other {# Sternsystemen}} vor — beste Chance {probability} % auf {body} ({method}-Mining).",
       "noOccurrences": "Keine bekannten Vorkommen in der aktuellen Spielversion."
+    },
+    "faq": {
+      "heading": "Häufige Fragen",
+      "whereQuestion": "Wo finde ich {ore} in Star Citizen?",
+      "whereAnswer": "{ore} kommt an {locationCount, plural, one {# Fundort} other {# Fundorten}} in {systemCount, plural, one {# Sternsystem} other {# Sternsystemen}} vor. Die beste Chance ist {probability} % auf {body} per {method}-Mining.",
+      "rarityQuestion": "Wie selten ist {ore} und wie wird es abgebaut?",
+      "rarityAnswer": "{ore} ist ein Erz der Seltenheitsstufe {rarity}. Abbaubar per {methods}."
     }
   }
 }

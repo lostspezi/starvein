@@ -12,10 +12,12 @@ import {
   chartAxisMax,
 } from "@/features/signature-profiles/signature-chart.model";
 import { findAllSignatureProfilesCached } from "@/features/signature-profiles/signature-profiles.repository";
+import { JsonLd } from "@/lib/components/JsonLd";
 import { PageHeader } from "@/lib/components/ui/PageHeader";
 import { PageShell } from "@/lib/components/ui/PageShell";
 import { getDb } from "@/lib/db";
 import { pageMetadata } from "@/lib/seo";
+import { datasetJsonLd } from "@/lib/structured-data";
 import type { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
@@ -45,6 +47,7 @@ export default async function SignaturesPage({
 
   const db = await getDb();
   const t = await getTranslations("signatures");
+  const tMeta = await getTranslations("meta");
 
   const [profiles, ores, bestSellByOre] = await Promise.all([
     findAllSignatureProfilesCached(db),
@@ -91,6 +94,15 @@ export default async function SignaturesPage({
 
   return (
     <PageShell width="wide">
+      <JsonLd
+        data={datasetJsonLd({
+          locale,
+          path: "/signatures",
+          name: tMeta("signatures.title"),
+          description: tMeta("signatures.description"),
+          keywords: ["Star Citizen", "mining", "scan signatures"],
+        })}
+      />
       <PageHeader title={t("title")} subtitle={t("intro")} />
 
       <SignatureChart

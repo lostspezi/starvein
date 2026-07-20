@@ -133,6 +133,31 @@ test.describe("structured data", () => {
     expect(names).toContain("Stanton");
     expect(names[names.length - 1]).toBe("Daymar");
   });
+
+  test("ore detail exposes a FAQPage mirroring the visible FAQ", async ({
+    page,
+  }) => {
+    await page.goto("/en/ores/hada");
+    const blocks = await readJsonLdBlocks(page);
+    const faq = blocks.find((b) => b["@type"] === "FAQPage");
+    expect(faq).toBeTruthy();
+    expect(faq.mainEntity.length).toBeGreaterThan(0);
+    const firstQuestion = faq.mainEntity[0].name as string;
+    // Google verlangt, dass die Q&A auch sichtbar auf der Seite stehen.
+    await expect(
+      page.getByRole("heading", { name: /frequently asked questions/i }),
+    ).toBeVisible();
+    await expect(page.getByText(firstQuestion)).toBeVisible();
+  });
+
+  test("reference list pages expose a Dataset", async ({ page }) => {
+    await page.goto("/en/occurrences");
+    const blocks = await readJsonLdBlocks(page);
+    const dataset = blocks.find((b) => b["@type"] === "Dataset");
+    expect(dataset).toBeTruthy();
+    expect(dataset.url).toBe(`${SITE_URL}/en/occurrences`);
+    expect(dataset.isAccessibleForFree).toBe(true);
+  });
 });
 
 test.describe("open graph images", () => {

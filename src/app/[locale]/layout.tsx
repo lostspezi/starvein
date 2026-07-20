@@ -57,6 +57,15 @@ export async function generateMetadata({
     },
     description: t("description"),
     applicationName: SITE_NAME,
+    // Search-Console-Verifizierung (env-gesteuert): Next.js rendert daraus
+    // <meta name="google-site-verification"> bzw. <meta name="msvalidate.01">.
+    // Tokens sind öffentlich (stehen ohnehin im HTML) → NEXT_PUBLIC_*.
+    verification: {
+      google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,
+      other: process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION
+        ? { "msvalidate.01": process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION }
+        : {},
+    },
     alternates: localeAlternates(locale),
     openGraph: {
       type: "website",

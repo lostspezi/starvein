@@ -5,6 +5,7 @@ import { OreBlueprintsPanel } from "@/features/blueprints/OreBlueprintsPanel";
 import { findBlueprintsUsingOre } from "@/features/blueprints/blueprints.service";
 import { OreOccurrencesSection } from "@/features/ore-occurrences/OreOccurrencesSection";
 import { buildOreOccurrenceStats } from "@/features/ore-occurrences/occurrence-stats";
+import { OreFaq, type FaqItem } from "@/features/ores/OreFaq";
 import {
   findOccurrencesByOreWithLocationAndPrices,
   findOccurrencesByOreWithLocationCached,
@@ -112,6 +113,34 @@ export default async function OreDetailPage({
   ]);
   const stats = buildOreOccurrenceStats(occurrences);
 
+  const methodsList = MINING_METHODS.filter((m) => ore.mineableBy[m])
+    .map((m) => t(`ores.method.${m}`))
+    .join(", ");
+  // Sichtbare, datengetriebene FAQ → doppelter Nutzen: Leser-Antwort auf die
+  // häufigste Suchintention ("Wo finde ich X?") plus FAQPage-Rich-Result.
+  const faqItems: FaqItem[] = [];
+  if (stats.best) {
+    faqItems.push({
+      question: t("ores.faq.whereQuestion", { ore: ore.name_en }),
+      answer: t("ores.faq.whereAnswer", {
+        ore: ore.name_en,
+        locationCount: stats.locationCount,
+        systemCount: stats.systemCount,
+        probability: Math.round(stats.best.probabilityPercent),
+        body: stats.best.bodyName,
+        method: t(`ores.method.${stats.best.method}`),
+      }),
+    });
+  }
+  faqItems.push({
+    question: t("ores.faq.rarityQuestion", { ore: ore.name_en }),
+    answer: t("ores.faq.rarityAnswer", {
+      ore: ore.name_en,
+      rarity: t(`ores.rarity.${ore.rarityTier}`),
+      methods: methodsList,
+    }),
+  });
+
   return (
     <PageShell width="wide">
       <Breadcrumbs
@@ -171,6 +200,8 @@ export default async function OreDetailPage({
           ),
         ]}
       />
+
+      <OreFaq heading={t("ores.faq.heading")} items={faqItems} />
     </PageShell>
   );
 }

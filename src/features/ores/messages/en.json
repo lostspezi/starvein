@@ -36,6 +36,13 @@
     "detail": {
       "summary": "Found at {locationCount, plural, one {# location} other {# locations}} across {systemCount, plural, one {# star system} other {# star systems}} — best chance {probability} % at {body} ({method} mining).",
       "noOccurrences": "No known occurrences in the current game version."
+    },
+    "faq": {
+      "heading": "Frequently asked questions",
+      "whereQuestion": "Where can I find {ore} in Star Citizen?",
+      "whereAnswer": "{ore} occurs at {locationCount, plural, one {# location} other {# locations}} across {systemCount, plural, one {# star system} other {# star systems}}. The best chance is {probability} % at {body} via {method} mining.",
+      "rarityQuestion": "How rare is {ore} and how do you mine it?",
+      "rarityAnswer": "{ore} is a {rarity} ore. It can be mined by {methods}."
     }
   }
 }
