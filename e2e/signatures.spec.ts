@@ -4,6 +4,41 @@
  */
 import { expect, test } from "@playwright/test";
 
+test("signature cluster chart maps a scanned value to its cluster step", async ({
+  page,
+}) => {
+  await page.goto("/en/signatures");
+
+  await expect(
+    page.getByRole("heading", { name: "Scan signature identifier" }),
+  ).toBeVisible();
+  // Generic ground tracks (size only, not per mineral)
+  await expect(page.getByText("ROC Mineables")).toBeVisible();
+  await expect(page.getByText("FPS Mineables")).toBeVisible();
+
+  // Quantainium base 3170 → ×2 cluster = 6340; the row lights up as a match.
+  await page.getByLabel("Scan value").fill("6340");
+  await expect(page.getByText("×2").first()).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "Show details for Quantainium" }),
+  ).toHaveAttribute("data-matched", "true");
+});
+
+test("signature chart row expands to cluster and composition detail", async ({
+  page,
+}) => {
+  await page.goto("/en/signatures");
+
+  await page
+    .getByRole("button", { name: "Show details for Quantainium" })
+    .click();
+
+  await expect(
+    page.getByText("Signature cluster (identifies mineral)").first(),
+  ).toBeVisible();
+  await expect(page.getByText("40–80%").first()).toBeVisible();
+});
+
 test("signature reference shows ship table and ground explainer", async ({
   page,
 }) => {

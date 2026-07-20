@@ -26,6 +26,22 @@
       "composition": "Dominanter Anteil",
       "secondaries": "Sekundärminerale"
     },
-    "intro": "Worauf du beim Scannen in Star Citizen achten musst: Gesteins-Signaturen fürs Ship-Mining und Deposit-Größen für ROC- und FPS-Mining — mit community-verifizierten In-Game-RS-Werten."
+    "intro": "Worauf du beim Scannen in Star Citizen achten musst: Gesteins-Signaturen fürs Ship-Mining und Deposit-Größen für ROC- und FPS-Mining — mit community-verifizierten In-Game-RS-Werten.",
+    "chart": {
+      "title": "Scan-Signatur-Identifikator",
+      "subtitle": "Lies deinen Scanner-Wert ab und finde, welches Mineral und welche Cluster-Größe ihn erzeugt hat — jede Zeile zeigt die Signatur-Summen von einem einzelnen Rock bis zum vollen Cluster.",
+      "scanLabel": "Scan-Wert",
+      "scanPlaceholder": "z. B. 18000, ~7200 oder 12000-20000",
+      "scanHelp": "Exakter Wert, ~Wert für ±10 % Toleranz oder min-max für einen Bereich. Klick auf eine Zeile für Details.",
+      "invalidInput": "Gib eine Zahl, ~Zahl oder einen min-max-Bereich ein.",
+      "noMatch": "Kein Cluster erzeugt diesen Wert.",
+      "matchSummary": "{count} mögliche Quelle(n) hervorgehoben.",
+      "axisLabel": "Signal RS",
+      "rocTrack": "ROC Mineables",
+      "fpsTrack": "FPS Mineables",
+      "groundCaption": "Ground-Deposits — nur Größe, Mineral hängt von der Location ab",
+      "rowLabel": "Details für {name} anzeigen",
+      "viewOre": "Erz-Details ansehen"
+    }
   }
 }

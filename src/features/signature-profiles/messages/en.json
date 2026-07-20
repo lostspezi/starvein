@@ -26,6 +26,22 @@
       "composition": "Dominant share",
       "secondaries": "Secondary minerals"
     },
-    "intro": "What to look for when scanning in Star Citizen: rock signatures for ship mining and deposit sizes for ROC and FPS mining — with community-verified in-game RS values."
+    "intro": "What to look for when scanning in Star Citizen: rock signatures for ship mining and deposit sizes for ROC and FPS mining — with community-verified in-game RS values.",
+    "chart": {
+      "title": "Scan signature identifier",
+      "subtitle": "Read off your scanner value and find which mineral and cluster size produced it — each row plots the signature sums from a single rock up to a full cluster.",
+      "scanLabel": "Scan value",
+      "scanPlaceholder": "e.g. 18000, ~7200, or 12000-20000",
+      "scanHelp": "Exact value, ~value for ±10% tolerance, or min-max for a range. Click a row for details.",
+      "invalidInput": "Enter a number, ~number, or a min-max range.",
+      "noMatch": "No cluster produces that value.",
+      "matchSummary": "{count} possible source(s) highlighted.",
+      "axisLabel": "Signal RS",
+      "rocTrack": "ROC Mineables",
+      "fpsTrack": "FPS Mineables",
+      "groundCaption": "Ground deposits — size only, mineral depends on location",
+      "rowLabel": "Show details for {name}",
+      "viewOre": "View ore details"
+    }
   }
 }

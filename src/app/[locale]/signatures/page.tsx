@@ -1,10 +1,16 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { findAllOresCached } from "@/features/ores/ores.repository";
+import { getBestSellByOreCached } from "@/features/refinery-and-prices/price-summary";
 import { GroundSignatureExplainer } from "@/features/signature-profiles/GroundSignatureExplainer";
+import { SignatureChart } from "@/features/signature-profiles/SignatureChart";
 import {
   ShipSignatureTable,
   type ShipSignatureRow,
 } from "@/features/signature-profiles/ShipSignatureTable";
+import {
+  buildChartRows,
+  chartAxisMax,
+} from "@/features/signature-profiles/signature-chart.model";
 import { findAllSignatureProfilesCached } from "@/features/signature-profiles/signature-profiles.repository";
 import { PageHeader } from "@/lib/components/ui/PageHeader";
 import { PageShell } from "@/lib/components/ui/PageShell";
@@ -40,11 +46,24 @@ export default async function SignaturesPage({
   const db = await getDb();
   const t = await getTranslations("signatures");
 
-  const [profiles, ores] = await Promise.all([
+  const [profiles, ores, bestSellByOre] = await Promise.all([
     findAllSignatureProfilesCached(db),
     findAllOresCached(db),
+    getBestSellByOreCached(db),
   ]);
   const oresByCode = new Map(ores.map((ore) => [ore.code, ore]));
+
+  const chartRows = buildChartRows(profiles, ores);
+  const pricesByCode: Record<
+    string,
+    { raw: number | null; refined: number | null }
+  > = {};
+  for (const [code, best] of bestSellByOre) {
+    pricesByCode[code] = {
+      raw: best.raw ?? null,
+      refined: best.refined ?? null,
+    };
+  }
 
   const shipRows: ShipSignatureRow[] = profiles
     .filter((profile) => profile.method === "ship")
@@ -71,8 +90,14 @@ export default async function SignaturesPage({
     .sort((a, b) => a.name.localeCompare(b.name));
 
   return (
-    <PageShell>
+    <PageShell width="wide">
       <PageHeader title={t("title")} subtitle={t("intro")} />
+
+      <SignatureChart
+        rows={chartRows}
+        axisMax={chartAxisMax(chartRows)}
+        pricesByCode={pricesByCode}
+      />
 
       <h2 className="text-lg font-medium">{t("shipTitle")}</h2>
       <p className="text-sm text-text-muted">{t("shipExplainer")}</p>
