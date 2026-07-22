@@ -119,8 +119,9 @@ export function ExplorerTable({
                         className={`ml-2 hidden text-xs sm:inline ${RARITY_TEXT_CLASS[row.rarityTier]}`}
                       >
                         {t(`ores.rarity.${row.rarityTier}`)}
-                      </span>
-                      <span className="ml-2">
+                      </span>{" "}
+                      {/* Leerraum = Soft-Wrap-Punkt (siehe OreOccurrencesTable) */}
+                      <span className="ml-1">
                         <DepositBadge depositType={row.depositType} />
                       </span>
                     </DataTableTd>

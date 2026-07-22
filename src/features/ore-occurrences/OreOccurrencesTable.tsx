@@ -97,8 +97,11 @@ export function OreOccurrencesTable({
                   </Link>
                   <span className="ml-2 text-xs text-text-muted">
                     {t(`locations.bodyType.${occurrence.bodyType}`)}
-                  </span>
-                  <span className="ml-2">
+                  </span>{" "}
+                  {/* Leerraum = Soft-Wrap-Punkt: ohne ihn wird Name+Typ+Badge
+                      EIN unbrechbarer Inline-Run und die Tabelle scrollt
+                      horizontal (Regression 2026-07-22) */}
+                  <span className="ml-1">
                     <DepositBadge depositType={occurrence.depositType} />
                   </span>
                 </DataTableTd>
