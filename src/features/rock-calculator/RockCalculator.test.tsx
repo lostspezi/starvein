@@ -47,7 +47,10 @@ const sabir: MiningGadget = {
   patchVersion,
 };
 
-function renderCalculator(searchParams = "") {
+function renderCalculator(
+  searchParams = "",
+  overrides: Partial<React.ComponentProps<typeof RockCalculator>> = {},
+) {
   const onUrlUpdate = vi.fn<(event: UrlUpdateEvent) => void>();
   renderWithIntl(
     <NuqsTestingAdapter searchParams={searchParams} onUrlUpdate={onUrlUpdate}>
@@ -57,6 +60,7 @@ function renderCalculator(searchParams = "") {
         gadgets={[sabir]}
         loadouts={null}
         vehicles={[]}
+        {...overrides}
       />
     </NuqsTestingAdapter>,
   );
@@ -96,6 +100,34 @@ describe("RockCalculator", () => {
     expect(onUrlUpdate).toHaveBeenCalled();
     const event = onUrlUpdate.mock.calls.at(-1)?.[0];
     expect(event?.searchParams.get("mass")).toBe("5");
+  });
+
+  it("judges saved loadouts against the entered rock", () => {
+    renderCalculator("?mass=30000&res=30", {
+      loadouts: [
+        {
+          id: "loadout-1",
+          name: "Break-MOLE",
+          method: "ship",
+          vehicleCode: "mole",
+          hardpoints: [
+            { hardpointIndex: 0, laserCode: "helix-ii", moduleCodes: [] },
+            { hardpointIndex: 1, laserCode: "helix-ii", moduleCodes: [] },
+            { hardpointIndex: 2, laserCode: "helix-ii", moduleCodes: [] },
+          ],
+          gadgetCodes: [],
+          ownerUserId: "user-1",
+          isPublic: false,
+          votes: { up: 0 },
+          voters: [],
+          patchVersion,
+          createdAt: "2026-07-22T00:00:00.000Z",
+          updatedAt: "2026-07-22T00:00:00.000Z",
+        },
+      ],
+    });
+    expect(screen.getByText("Break-MOLE")).toBeInTheDocument();
+    expect(screen.getByText("Breaks the rock")).toBeInTheDocument();
   });
 
   it("shows a sign-in hint instead of loadout checks for anonymous users", () => {

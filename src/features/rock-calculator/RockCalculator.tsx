@@ -20,6 +20,7 @@ import { LaserBreakTable } from "./LaserBreakTable";
 import { ModuleGadgetPicker } from "./ModuleGadgetPicker";
 import { MAX_GLOBAL_MODULES } from "./rock-break";
 import { RockInputs } from "./RockInputs";
+import { SavedLoadoutChecks } from "./SavedLoadoutChecks";
 
 /**
  * Rechner-Wurzel: hält Masse/Resistenz/Module/Gadget als teilbare
@@ -100,7 +101,7 @@ export function RockCalculator({
             {t("loadouts.loginRequired")}
           </p>
         ) : (
-          <SavedLoadoutSection
+          <SavedLoadoutChecks
             loadouts={loadouts}
             vehicles={vehicles}
             lasers={lasers}
@@ -113,17 +114,4 @@ export function RockCalculator({
       </section>
     </div>
   );
-}
-
-/** Platzhalter bis WP4 — wird durch SavedLoadoutChecks ersetzt. */
-function SavedLoadoutSection(_props: {
-  loadouts: Loadout[];
-  vehicles: MiningVehicle[];
-  lasers: MiningLaser[];
-  modules: MiningModule[];
-  gadget: MiningGadget | null;
-  mass: number | null;
-  resistancePct: number | null;
-}) {
-  return null;
 }
