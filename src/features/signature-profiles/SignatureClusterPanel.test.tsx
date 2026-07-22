@@ -52,6 +52,84 @@ describe("SignatureClusterPanel", () => {
     expect(screen.getAllByText("–").length).toBeGreaterThanOrEqual(2);
   });
 
+  it("shows the rock composition breakdown with the byproduct relation", () => {
+    renderWithIntl(
+      <SignatureClusterPanel
+        method="ship"
+        signatureValue={3600}
+        rawSell={null}
+        refinedSell={null}
+        deposit={{
+          type: "secondary",
+          byproductOf: ["BEXA", "GOLD"],
+          rocks: [
+            {
+              rockLabel: "Bexalite",
+              isPrimary: false,
+              oreCompositionPercent: { min: 2, max: 5 },
+              dominantMaterialName: "Bexalite (Raw)",
+              dominantMaterialOreCode: "BEXA",
+            },
+          ],
+        }}
+      />,
+      { locale: "en" },
+    );
+
+    expect(screen.getByText("Rock composition")).toBeVisible();
+    expect(screen.getByText(/Bexalite: 2–5\s?%/)).toBeVisible();
+    expect(screen.getByText(/dominant: Bexalite \(Raw\)/)).toBeVisible();
+    expect(
+      screen.getByText(/Occurs here only as a byproduct of BEXA, GOLD/),
+    ).toBeVisible();
+  });
+
+  it("shows the byproduct sentence without a rock list (explorer rows)", () => {
+    renderWithIntl(
+      <SignatureClusterPanel
+        method="ship"
+        signatureValue={3600}
+        rawSell={null}
+        refinedSell={null}
+        deposit={{ type: "secondary", byproductOf: ["BEXA"], rocks: [] }}
+      />,
+      { locale: "en" },
+    );
+
+    expect(
+      screen.getByText(/Occurs here only as a byproduct of BEXA/),
+    ).toBeVisible();
+    expect(screen.queryByText("Rock composition")).not.toBeInTheDocument();
+  });
+
+  it("omits the byproduct sentence for primary deposits", () => {
+    renderWithIntl(
+      <SignatureClusterPanel
+        method="ship"
+        signatureValue={3600}
+        rawSell={null}
+        refinedSell={null}
+        deposit={{
+          type: "primary",
+          byproductOf: [],
+          rocks: [
+            {
+              rockLabel: "Borase",
+              isPrimary: true,
+              oreCompositionPercent: { min: 24.3, max: 74.3 },
+              dominantMaterialName: "Borase (Ore)",
+              dominantMaterialOreCode: "BORA",
+            },
+          ],
+        }}
+      />,
+      { locale: "en" },
+    );
+
+    expect(screen.getByText("Rock composition")).toBeVisible();
+    expect(screen.queryByText(/byproduct of/i)).not.toBeInTheDocument();
+  });
+
   it("scales a signature range across the cluster counts", () => {
     renderWithIntl(
       <SignatureClusterPanel

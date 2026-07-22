@@ -88,6 +88,10 @@ export type MiningDataSyncSummary = {
   occurrences: number;
   skippedOccurrences: number;
   prunedOccurrences: number;
+  /** Resource-Gruppen ohne Methoden-Mapping (neue Mining-Methode im Patch?). */
+  unknownResourceGroups: string[];
+  /** Dominante Rock-Materialien ohne ore-codes-Eintrag (Mapping erweitern). */
+  unmappedByproductKeys: string[];
   syncedAt: string;
 };
 
@@ -138,8 +142,13 @@ export async function syncWikiMiningData(
   const patchVersion = shortGameVersion(defaultVersion.code);
 
   const uuidMap = buildUuidToBodyMap(bodies);
+  const oreCodeByWikiKey = new Map(
+    [...byWikiKey].map(([wikiKey, entry]) => [wikiKey, entry.code]),
+  );
   const rows: OreOccurrence[] = [];
   let skippedOccurrences = 0;
+  const unknownResourceGroups = new Set<string>();
+  const unmappedByproductKeys = new Set<string>();
   for (const { commodity, ore } of mapped) {
     const detail = details.get(commodity.slug);
     const result = mapWikiOccurrences({
@@ -148,9 +157,16 @@ export async function syncWikiMiningData(
       uuidMap,
       patchVersion,
       syncedAt,
+      oreCodeByWikiKey,
     });
     rows.push(...result.occurrences);
     skippedOccurrences += result.skipped;
+    for (const group of result.unknownResourceGroups) {
+      unknownResourceGroups.add(group);
+    }
+    for (const key of result.unmappedByproductKeys) {
+      unmappedByproductKeys.add(key);
+    }
   }
 
   await upsertOreOccurrences(db, rows);
@@ -166,6 +182,8 @@ export async function syncWikiMiningData(
     occurrences: rows.length,
     skippedOccurrences,
     prunedOccurrences,
+    unknownResourceGroups: [...unknownResourceGroups].sort(),
+    unmappedByproductKeys: [...unmappedByproductKeys].sort(),
     syncedAt,
   };
 }

@@ -7,7 +7,12 @@ import {
   DataTableTd,
   DataTableTh,
 } from "@/lib/components/ui/DataTable";
-import { ConfidenceBadge, ProbabilityCell } from "./OccurrenceBadges";
+import {
+  ConfidenceBadge,
+  DepositBadge,
+  ProbabilityCell,
+  toDepositPanelData,
+} from "./OccurrenceBadges";
 import type { OccurrenceWithLocation } from "./ore-occurrences.service";
 
 function formatSignature(occurrence: OccurrenceWithLocation): string {
@@ -76,6 +81,7 @@ export function OreOccurrencesTable({
                 method: occurrence.method,
                 signatureValue: occurrence.signatureValue,
                 signatureRange: occurrence.signatureRange,
+                deposit: toDepositPanelData(occurrence),
               },
             ]}
             rawSell={occurrence.bestRawSell}
@@ -91,6 +97,9 @@ export function OreOccurrencesTable({
                   </Link>
                   <span className="ml-2 text-xs text-text-muted">
                     {t(`locations.bodyType.${occurrence.bodyType}`)}
+                  </span>
+                  <span className="ml-2">
+                    <DepositBadge depositType={occurrence.depositType} />
                   </span>
                 </DataTableTd>
                 <DataTableTd className="hidden text-text-muted sm:table-cell">

@@ -62,3 +62,31 @@ test("unknown ore returns 404", async ({ page }) => {
   const response = await page.goto("/en/ores/unobtanium");
   expect(response?.status()).toBe(404);
 });
+
+/**
+ * Haupt-/Nebenvorkommen: Borase ist der Referenzfall aus dem
+ * Community-Feedback (Hauptvorkommen an HUR L1/L4, Nebenprodukt von
+ * Bexalite an CRU L1). Strukturelle Assertions, keine Literal-Locations.
+ */
+test("deposit filter narrows to primary deposits with rock breakdown", async ({
+  page,
+}) => {
+  await page.goto("/en/ores/bora");
+  const table = page.getByRole("table", { name: "Where to find" });
+  const rows = table.locator("tbody tr");
+  await expect(rows.first()).toBeVisible();
+  const unfilteredCount = await rows.count();
+
+  await page.goto("/en/ores/bora?deposit=primary");
+  await expect(rows.first()).toBeVisible();
+  const texts = await rows.allTextContents();
+  expect(texts.some((tx) => tx.includes("Byproduct"))).toBe(false);
+  expect(await rows.count()).toBeLessThanOrEqual(unfilteredCount);
+
+  // Erste Zeile aufklappen -> Gesteins-Zusammensetzung im Detail-Panel
+  await table
+    .getByRole("button", { name: "Show signature cluster and prices" })
+    .first()
+    .click();
+  await expect(page.getByText("Rock composition")).toBeVisible();
+});

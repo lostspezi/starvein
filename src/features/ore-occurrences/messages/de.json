@@ -23,6 +23,18 @@
       "unverified": "unbestätigt",
       "verified": "bestätigt"
     },
+    "deposit": {
+      "primary": "Haupt",
+      "secondary": "Neben",
+      "primaryLong": "Hauptvorkommen",
+      "secondaryLong": "Nur Nebenprodukt",
+      "filterLabel": "Nach Vorkommens-Typ filtern",
+      "filterAll": "Alle",
+      "rocksTitle": "Gesteins-Zusammensetzung",
+      "rockLine": "{rock}: {min}–{max} %",
+      "dominant": "dominant: {name}",
+      "byproductOf": "Kommt hier nur als Nebenprodukt von {ores} vor."
+    },
     "disclaimer": "Wahrscheinlichkeiten stammen aus den Spieldaten (Star Citizen Wiki) und können sich mit jedem Patch ändern.",
     "page": {
       "title": "Vorkommen",

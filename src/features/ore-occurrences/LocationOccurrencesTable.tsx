@@ -8,7 +8,12 @@ import {
 } from "@/lib/components/ui/DataTable";
 import { GlowLink } from "@/lib/components/ui/GlowLink";
 import { RARITY_TEXT_CLASS } from "@/lib/rarity";
-import { ConfidenceBadge, ProbabilityCell } from "./OccurrenceBadges";
+import {
+  ConfidenceBadge,
+  DepositBadge,
+  ProbabilityCell,
+  toDepositPanelData,
+} from "./OccurrenceBadges";
 import type { OccurrenceWithOre } from "./ore-occurrences.service";
 
 function formatSignature(occurrence: OccurrenceWithOre): string {
@@ -81,6 +86,7 @@ export function LocationOccurrencesTable({
                   method: occurrence.method,
                   signatureValue: occurrence.signatureValue,
                   signatureRange: occurrence.signatureRange,
+                  deposit: toDepositPanelData(occurrence),
                 },
               ]}
               rawSell={occurrence.bestRawSell}
@@ -95,6 +101,9 @@ export function LocationOccurrencesTable({
                     </GlowLink>
                     <span className="ml-2 font-mono text-xs text-text-muted">
                       {occurrence.oreCode}
+                    </span>
+                    <span className="ml-2">
+                      <DepositBadge depositType={occurrence.depositType} />
                     </span>
                   </DataTableTd>
                   <DataTableTd

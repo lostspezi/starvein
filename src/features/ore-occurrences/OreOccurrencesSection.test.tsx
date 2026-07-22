@@ -27,8 +27,14 @@ function occurrence(
 }
 
 const occurrences = [
+  // bewusst OHNE depositType (Legacy) — darf beim primary-Filter nicht verschwinden
   occurrence({ bodySlug: "daymar", bodyName: "Daymar", method: "fps" }),
-  occurrence({ bodySlug: "lyria", bodyName: "Lyria", method: "roc" }),
+  occurrence({
+    bodySlug: "lyria",
+    bodyName: "Lyria",
+    method: "roc",
+    depositType: "secondary",
+  }),
 ];
 
 function renderSection(searchParams = "") {
@@ -54,5 +60,11 @@ describe("OreOccurrencesSection", () => {
     renderSection("?method=roc");
     expect(screen.getByText("Lyria")).toBeVisible();
     expect(screen.queryByText("Daymar")).not.toBeInTheDocument();
+  });
+
+  it("filters client-side by deposit type keeping legacy rows", () => {
+    renderSection("?deposit=primary");
+    expect(screen.getByText("Daymar")).toBeVisible();
+    expect(screen.queryByText("Lyria")).not.toBeInTheDocument();
   });
 });

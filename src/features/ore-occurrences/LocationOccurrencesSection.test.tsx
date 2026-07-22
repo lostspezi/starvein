@@ -26,7 +26,12 @@ function occurrence(overrides: Partial<OccurrenceWithOre>): OccurrenceWithOre {
 
 const occurrences = [
   occurrence({ oreCode: "HADA", oreName: "Hadanite", method: "fps" }),
-  occurrence({ oreCode: "QUAN", oreName: "Quantainium", method: "ship" }),
+  occurrence({
+    oreCode: "QUAN",
+    oreName: "Quantainium",
+    method: "ship",
+    depositType: "secondary",
+  }),
 ];
 
 function renderSection(
@@ -60,5 +65,11 @@ describe("LocationOccurrencesSection", () => {
   it("shows the inheritance note when occurrences come from a parent body", () => {
     renderSection("", "Daymar");
     expect(screen.getByText(/Daymar/)).toBeVisible();
+  });
+
+  it("filters client-side by deposit type keeping legacy rows", () => {
+    renderSection("?deposit=primary");
+    expect(screen.getByText("Hadanite")).toBeVisible();
+    expect(screen.queryByText("Quantainium")).not.toBeInTheDocument();
   });
 });

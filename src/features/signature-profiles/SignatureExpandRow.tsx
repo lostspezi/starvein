@@ -5,13 +5,18 @@ import { useId, useState, type ReactNode } from "react";
 import type { MiningMethod } from "@/features/ores/ores.schema";
 import { cn } from "@/lib/cn";
 import { DataTableRow, DataTableTd } from "@/lib/components/ui/DataTable";
-import { SignatureClusterPanel } from "./SignatureClusterPanel";
+import {
+  SignatureClusterPanel,
+  type DepositPanelData,
+} from "./SignatureClusterPanel";
 
 export type ClusterPanelData = {
   method: MiningMethod;
   signatureValue?: number;
   signatureRange?: { min: number; max: number };
   dominantCompositionRange?: { min: number; max: number };
+  /** Haupt-/Nebenvorkommen inkl. Rock-Aufschlüsselung (nur Vorkommen-Zeilen). */
+  deposit?: DepositPanelData;
 };
 
 /**
@@ -123,6 +128,7 @@ export function SignatureExpandRow({
                       signatureValue={panel.signatureValue}
                       signatureRange={panel.signatureRange}
                       dominantCompositionRange={panel.dominantCompositionRange}
+                      deposit={panel.deposit}
                       rawSell={pricesInPanel ? rawSell : null}
                       refinedSell={pricesInPanel ? refinedSell : null}
                       showPrices={pricesInPanel}

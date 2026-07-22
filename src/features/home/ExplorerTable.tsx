@@ -7,6 +7,10 @@ import {
   DataTableTd,
   DataTableTh,
 } from "@/lib/components/ui/DataTable";
+import {
+  DepositBadge,
+  toDepositPanelData,
+} from "@/features/ore-occurrences/OccurrenceBadges";
 import { GlowLink } from "@/lib/components/ui/GlowLink";
 import { RARITY_TEXT_CLASS } from "@/lib/rarity";
 import type { ExplorerRow } from "./explorer.service";
@@ -100,6 +104,7 @@ export function ExplorerTable({
                     method: row.method,
                     signatureValue: row.signatureValue,
                     signatureRange: row.signatureRange,
+                    deposit: toDepositPanelData(row),
                   },
                 ]}
                 rawSell={row.bestRawSell}
@@ -114,6 +119,9 @@ export function ExplorerTable({
                         className={`ml-2 hidden text-xs sm:inline ${RARITY_TEXT_CLASS[row.rarityTier]}`}
                       >
                         {t(`ores.rarity.${row.rarityTier}`)}
+                      </span>
+                      <span className="ml-2">
+                        <DepositBadge depositType={row.depositType} />
                       </span>
                     </DataTableTd>
                     <DataTableTd className="px-3 sm:px-4">

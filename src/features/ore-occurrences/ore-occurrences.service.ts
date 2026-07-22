@@ -39,11 +39,12 @@ export function findOccurrencesByOreWithLocationCached(
   oreCode: string,
   method?: MiningMethod | null,
 ): Promise<OccurrenceWithLocation[]> {
-  // v2: DTO um Signatur erweitert — Key-Version verhindert, dass beim Deploy
-  // alte, formveraltete Cache-Einträge gelesen werden.
+  // v3: DTO um Deposit-Felder erweitert (v2: Signatur) — Key-Version
+  // verhindert, dass beim Deploy alte, formveraltete Cache-Einträge
+  // gelesen werden (DTO-Shape-Regel, Prod-Vorfall 2026-07-16).
   return cachedQuery(
     CACHE_TAGS.wiki,
-    ["occurrences-by-ore-v2", oreCode, method],
+    ["occurrences-by-ore-v3", oreCode, method],
     () => findOccurrencesByOreWithLocation(db, oreCode, method),
   );
 }

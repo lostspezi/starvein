@@ -302,7 +302,14 @@ export const scWikiFixtures = {
       methods: [],
     },
   ],
-  /** Commodity-Details (nur Mineables werden vom Sync abgefragt). */
+  /**
+   * Commodity-Details (nur Mineables werden vom Sync abgefragt).
+   * resources[] deckt die Haupt-/Nebenvorkommen-Ableitung ab: eigener Rock
+   * mit Multi-Quality-Bändern (Wala/AGRI), Beiprodukt-Rock inkl. unmapped
+   * dominantem Mineral (HUR L1/AGRI), unbekannte Gruppe (Aberdeen/QUAN),
+   * FPS-Einzelmaterial (Wala/HADA) und Legacy-Eintrag ohne resources
+   * (Halo Band).
+   */
   commodityLocations: {
     "agricium-ore": [
       {
@@ -313,6 +320,37 @@ export const scWikiFixtures = {
         parent_uuid: LOC_UUIDS.arccorp,
         group_probability_percent: 20,
         relative_probability_percent: 10,
+        resources: [
+          {
+            key: "MineableRock_SurfaceUncommon_Agricium",
+            label: "Agricium",
+            group_name: "SpaceShip_Mineables",
+            materials: [
+              {
+                key: "Ore_Agricium",
+                name: "Agricium (Ore)",
+                is_current: true,
+                min_percentage: 30,
+                max_percentage: 70,
+              },
+              // zweites Quality-Band desselben Materials -> Dedupe-Pfad
+              {
+                key: "Ore_Agricium",
+                name: "Agricium (Ore)",
+                is_current: true,
+                min_percentage: 10,
+                max_percentage: 15,
+              },
+              {
+                key: "Raw_Quantainium",
+                name: "Quantainium (Raw)",
+                is_current: false,
+                min_percentage: 2,
+                max_percentage: 5,
+              },
+            ],
+          },
+        ],
       },
       {
         uuid: LOC_UUIDS.hurL1,
@@ -322,8 +360,54 @@ export const scWikiFixtures = {
         parent_uuid: null,
         group_probability_percent: 12,
         relative_probability_percent: 4,
+        resources: [
+          {
+            key: "MineableRock_AsteroidRare_Quantainium",
+            label: "Quantainium",
+            group_name: "SpaceShip_Mineables",
+            materials: [
+              {
+                key: "Raw_Quantainium",
+                name: "Quantainium (Raw)",
+                is_current: false,
+                min_percentage: 28.3,
+                max_percentage: 78.3,
+              },
+              {
+                key: "Ore_Agricium",
+                name: "Agricium (Ore)",
+                is_current: true,
+                min_percentage: 2,
+                max_percentage: 5,
+              },
+            ],
+          },
+          // Dominantes Mineral ohne ore-codes-Mapping -> Diagnostik, kein Raten
+          {
+            key: "MineableRock_AsteroidRare_Newmineral",
+            label: "Newmineral",
+            group_name: "SpaceShip_Mineables",
+            materials: [
+              {
+                key: "Raw_Newmineral",
+                name: "Newmineral (Raw)",
+                is_current: false,
+                min_percentage: 30,
+                max_percentage: 80,
+              },
+              {
+                key: "Ore_Agricium",
+                name: "Agricium (Ore)",
+                is_current: true,
+                min_percentage: 1,
+                max_percentage: 3,
+              },
+            ],
+          },
+        ],
       },
-      // Referenziert den Asteroiden mit kaputtem has_resources-Flag.
+      // Referenziert den Asteroiden mit kaputtem has_resources-Flag —
+      // bewusst OHNE resources (Legacy-Antwortform).
       {
         uuid: LOC_UUIDS.haloBand,
         name: "Halo Band Alpha",
@@ -343,6 +427,23 @@ export const scWikiFixtures = {
         parent_uuid: LOC_UUIDS.hurston,
         group_probability_percent: 6,
         relative_probability_percent: 2,
+        // Unbekannte Wiki-Gruppe -> Row bleibt neutral, Gruppe wird gemeldet
+        resources: [
+          {
+            key: "MineableRock_Hover_Quantainium",
+            label: "Quantainium",
+            group_name: "Hover_Mineables",
+            materials: [
+              {
+                key: "Raw_Quantainium",
+                name: "Quantainium (Raw)",
+                is_current: true,
+                min_percentage: 20,
+                max_percentage: 60,
+              },
+            ],
+          },
+        ],
       },
       // Zeigt auf eine weggefilterte Location -> muss geskippt werden.
       {
@@ -364,6 +465,22 @@ export const scWikiFixtures = {
         parent_uuid: LOC_UUIDS.arccorp,
         group_probability_percent: 25,
         relative_probability_percent: 6,
+        resources: [
+          {
+            key: "MineableRock_FPS_Hadanite",
+            label: "Hadanite",
+            group_name: "FPS_Mineables",
+            materials: [
+              {
+                key: "Hadanite",
+                name: "Hadanite",
+                is_current: true,
+                min_percentage: 50,
+                max_percentage: 100,
+              },
+            ],
+          },
+        ],
       },
     ],
     carinite: [
@@ -387,6 +504,18 @@ export const scWikiFixtures = {
       parent_uuid: string | null;
       group_probability_percent: number | null;
       relative_probability_percent: number | null;
+      resources?: Array<{
+        key: string;
+        label: string | null;
+        group_name: string | null;
+        materials: Array<{
+          key: string;
+          name: string;
+          is_current: boolean;
+          min_percentage: number | null;
+          max_percentage: number | null;
+        }> | null;
+      }>;
     }>
   >,
   blueprints: [

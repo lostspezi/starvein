@@ -69,6 +69,18 @@ describe("ore occurrences service (joins)", () => {
         sourceType: "wiki",
         confidenceScore: 0.9,
         lastVerifiedAt: "2026-07-09",
+        depositType: "secondary",
+        compositionPercent: { min: 2, max: 5 },
+        byproductOf: ["QUAN"],
+        rockBreakdown: [
+          {
+            rockLabel: "Quantainium",
+            isPrimary: false,
+            oreCompositionPercent: { min: 2, max: 5 },
+            dominantMaterialName: "Quantainium (Raw)",
+            dominantMaterialOreCode: "QUAN",
+          },
+        ],
       },
     ]);
     // HADA hat ein Profil (fps), ALUM bewusst keines
@@ -130,6 +142,32 @@ describe("ore occurrences service (joins)", () => {
       bestRawSell: null,
       bestRefinedSell: null,
     });
+  });
+
+  it("carries the deposit fields through both joins", async () => {
+    const byOre = await findOccurrencesByOreWithLocation(db, "ALUM");
+    expect(byOre[0]).toMatchObject({
+      depositType: "secondary",
+      compositionPercent: { min: 2, max: 5 },
+      byproductOf: ["QUAN"],
+      rockBreakdown: [
+        { rockLabel: "Quantainium", dominantMaterialOreCode: "QUAN" },
+      ],
+    });
+
+    const byLocation = await findOccurrencesByLocationWithOre(
+      db,
+      "STANTON",
+      "daymar",
+    );
+    const alum = byLocation.find((o) => o.oreCode === "ALUM");
+    expect(alum).toMatchObject({
+      depositType: "secondary",
+      byproductOf: ["QUAN"],
+    });
+    // Row ohne Deposit-Daten bleibt neutral
+    const hada = byLocation.find((o) => o.oreCode === "HADA");
+    expect(hada).not.toHaveProperty("depositType");
   });
 
   it("merges the best sell prices via the priced ore read", async () => {
