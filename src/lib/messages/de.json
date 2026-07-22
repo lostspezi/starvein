@@ -32,6 +32,10 @@
       "title": "Erz-Vergleich",
       "description": "Star-Citizen-Erze im direkten Vergleich: Preise, Refinery-Yields und die besten Fundorte."
     },
+    "calculator": {
+      "title": "Rock-Rechner",
+      "description": "Star-Citizen-Mining-Rechner: Masse und Resistenz eingeben und sehen, welcher Mining-Laser den Stein knackt und wie viele Köpfe nötig sind."
+    },
     "loadouts": {
       "title": "Mining-Loadouts",
       "description": "Community-Mining-Loadouts für Star Citizen: Laser, Module und Gadgets für Prospector, MOLE und mehr."
@@ -96,6 +100,7 @@
       "occurrences": "Vorkommen",
       "signatures": "Signaturen",
       "compare": "Vergleich",
+      "calculator": "Rechner",
       "loadouts": "Loadouts",
       "ships": "Schiffe",
       "guides": "Guides",

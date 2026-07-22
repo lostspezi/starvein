@@ -1,0 +1,128 @@
+$ next build && next start -p 3100
+⚠ Warning: Next.js inferred your workspace root, but it may not be correct.
+ We detected multiple lockfiles and selected the directory of P:\projekte\starvein\starvein\pnpm-workspace.yaml as the root directory.
+ To silence this warning, set `turbopack.root` in your Next.js config, or consider removing one of the lockfiles if it's not needed.
+   See https://nextjs.org/docs/app/api-reference/config/next-config-js/turbopack#root-directory for more information.
+ Detected additional lockfiles: 
+   * P:\projekte\starvein\starvein\.claude\worktrees\feat-deposit-type\pnpm-workspace.yaml
+
+▲ Next.js 16.2.10 (Turbopack)
+- Environments: .env.local
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 8.5s
+  Running TypeScript ...
+  Finished TypeScript in 13.9s ...
+  Collecting page data using 15 workers ...
+  Generating static pages using 15 workers (0/60) ...
+  Generating static pages using 15 workers (15/60) 
+  Generating static pages using 15 workers (30/60) 
+  Generating static pages using 15 workers (45/60) 
+✓ Generating static pages using 15 workers (60/60) in 438ms
+  Finalizing page optimization ...
+
+Route (app)                              Revalidate  Expire
+┌ ○ /_not-found
+├ ƒ /[locale]
+├ ƒ /[locale]/[...rest]
+├ ƒ /[locale]/admin
+├ ƒ /[locale]/admin/dashboard
+├ ƒ /[locale]/blueprints
+├ ● /[locale]/blueprints/[slug]
+├ ƒ /[locale]/blueprints/collected
+├ ƒ /[locale]/blueprints/craftable
+├ ● /[locale]/companion                          5m      1y
+│ ├ /de/companion                                5m      1y
+│ └ /en/companion                                5m      1y
+├ ƒ /[locale]/compare
+├ ƒ /[locale]/device
+├ ƒ /[locale]/favorites
+├ ƒ /[locale]/guides
+├ ƒ /[locale]/guides/[id]
+├ ƒ /[locale]/guides/[id]/edit
+├ ƒ /-/guides/-/opengraph-image
+├ ƒ /[locale]/guides/mine
+├ ƒ /[locale]/guides/new
+├ ƒ /[locale]/inventory
+├ ƒ /[locale]/loadouts
+├ ƒ /[locale]/loadouts/[id]
+├ ƒ /[locale]/loadouts/[id]/edit
+├ ƒ /[locale]/loadouts/mine
+├ ƒ /[locale]/loadouts/new
+├ ƒ /[locale]/locations
+├ ● /[locale]/locations/[system]
+├ ● /[locale]/locations/[system]/[body]
+├ ƒ /-/locations/-/-/opengraph-image
+├ ƒ /[locale]/materials
+├ ● /[locale]/materials/[code]
+├ ƒ /[locale]/occurrences
+├ ƒ /-/opengraph-image
+├ ƒ /[locale]/ores
+├ ● /[locale]/ores/[code]
+├ ƒ /-/ores/-/opengraph-image
+├ ƒ /[locale]/refinery-jobs
+├ ƒ /[locale]/refinery-jobs/new
+├ ƒ /[locale]/ships
+├ ƒ /[locale]/signatures
+├ ƒ /[locale]/warehouse
+├ ƒ /api/admin/dashboard/access
+├ ƒ /api/admin/users/[id]/role
+├ ƒ /api/auth/[...all]
+├ ƒ /api/blueprint-collection
+├ ƒ /api/chat/messages
+├ ƒ /api/chat/messages/[id]
+├ ƒ /api/chat/timeouts
+├ ƒ /api/chat/timeouts/[userId]
+├ ƒ /api/companion/download
+├ ƒ /api/companion/latest.json
+├ ƒ /api/favorites
+├ ƒ /api/guides
+├ ƒ /api/guides/[id]
+├ ƒ /api/guides/[id]/vote
+├ ƒ /api/guides/images
+├ ƒ /api/guides/images/[id]
+├ ƒ /api/health
+├ ƒ /api/loadouts
+├ ƒ /api/loadouts/[id]
+├ ƒ /api/loadouts/[id]/vote
+├ ƒ /api/material-inventory
+├ ƒ /api/ores
+├ ƒ /api/price-ticker
+├ ƒ /api/refinery-jobs
+├ ƒ /api/refinery-jobs/[id]
+├ ƒ /api/refinery-jobs/[id]/collect
+├ ƒ /api/refinery-methods
+├ ƒ /api/refinery-terminals
+├ ƒ /api/search
+├ ƒ /api/sync-uex
+├ ƒ /api/sync-wiki
+├ ƒ /api/warehouse
+├ ƒ /api/warehouse/[id]
+├ ƒ /api/warehouse/[id]/move
+├ ○ /apple-icon.png
+├ ○ /icon.svg
+├ ƒ /indexnow-key.txt
+├ ○ /manifest.webmanifest
+├ ○ /robots.txt
+└ ƒ /sitemap.xml
+
+
+ƒ Proxy (Middleware)
+
+○  (Static)   prerendered as static content
+●  (SSG)      prerendered as static HTML (uses generateStaticParams)
+ƒ  (Dynamic)  server-rendered on demand
+
+▲ Next.js 16.2.10
+- Local:         http://localhost:3100
+- Network:       http://169.254.83.107:3100
+✓ Ready in 244ms
+⚠ Warning: Next.js inferred your workspace root, but it may not be correct.
+ We detected multiple lockfiles and selected the directory of P:\projekte\starvein\starvein\pnpm-workspace.yaml as the root directory.
+ To silence this warning, set `outputFileTracingRoot` in your Next.js config, or consider removing one of the lockfiles if it's not needed.
+   See https://nextjs.org/docs/app/api-reference/config/next-config-js/output#caveats for more information.
+ Detected additional lockfiles: 
+   * P:\projekte\starvein\starvein\.claude\worktrees\feat-deposit-type\pnpm-workspace.yaml
+
+⚠ "next start" does not work with "output: standalone" configuration. Use "node .next/standalone/server.js" instead.
+[ELIFECYCLE] Command failed with exit code 4294967295.

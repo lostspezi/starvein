@@ -22,6 +22,10 @@ STARVEIN baut auf Daten und Vorarbeiten der Star-Citizen-Community auf:
   Grundlage für die Stat-Tabellen der Mining-Laser, -Module und -Gadgets im
   Loadout-Katalog (`data/curated/mining-*.json`), gegengeprüft mit UEX und
   dem [Star Citizen Wiki](https://starcitizen.tools) (CC BY-SA 4.0).
+- **[mort13/BreakabilityChart](https://github.com/mort13/BreakabilityChart)** (MIT-Lizenz) —
+  Grundlage der Break-Formel des Rock-Rechners
+  (`requiredPower = Masse × 0.2 × (1 + Resistenz/100) × Widerstands-Modifikatoren`),
+  Stand Patch 4.x.
 
 Die Schriftdateien in `public/og-fonts/` für die generierten
 Social-Preview-Bilder stammen aus [Fontsource](https://fontsource.org/):
