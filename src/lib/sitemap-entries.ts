@@ -19,6 +19,7 @@ const STATIC_PATHS = [
   "/occurrences",
   "/signatures",
   "/compare",
+  "/calculator",
   "/loadouts",
   "/companion",
   "/guides",

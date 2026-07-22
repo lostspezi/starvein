@@ -1,0 +1,39 @@
+{
+  "calculator": {
+    "title": "Rock Calculator",
+    "subtitle": "Enter a scanned rock's mass and resistance — the calculator shows which laser cracks it and how many heads you need.",
+    "inputs": {
+      "massLabel": "Mass",
+      "massPlaceholder": "e.g. 30000",
+      "resistanceLabel": "Resistance (%)"
+    },
+    "modules": {
+      "label": "Modules (global)",
+      "gadgetLabel": "Gadget",
+      "none": "None",
+      "slot": "Module slot {index}",
+      "hint": "Modules apply to every laser as far as its slots allow; the gadget affects the rock once.",
+      "activeHint": "Active modules are treated as switched on (best case)."
+    },
+    "table": {
+      "laser": "Laser",
+      "size": "Size",
+      "power": "Power (effective)",
+      "modules": "Modules",
+      "heads": "Heads needed",
+      "headsValue": "{heads}×",
+      "notBreakable": "Not breakable",
+      "empty": "Enter mass and resistance"
+    },
+    "loadouts": {
+      "title": "Your loadouts",
+      "loginRequired": "Sign in to check your saved loadouts against this rock.",
+      "empty": "No loadouts saved yet.",
+      "notShipMining": "Not ship mining",
+      "breaks": "Breaks the rock",
+      "breaksNot": "Not enough",
+      "gadgetNote": "Saved loadout gadgets are ignored — the gadget selection above applies. Active modules count as switched on."
+    },
+    "attribution": "Break formula community-calibrated after mort13/BreakabilityChart (MIT) — no guarantee, CIG rebalances mining regularly."
+  }
+}

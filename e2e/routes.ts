@@ -44,6 +44,8 @@ export const ROUTES: string[] = [
   "/en/favorites",
   "/de/compare",
   "/en/compare",
+  "/de/calculator",
+  "/en/calculator",
   "/de/loadouts",
   "/en/loadouts",
   "/de/loadouts/new",

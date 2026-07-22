@@ -48,6 +48,7 @@ describe("buildStaticEntries", () => {
       "/occurrences",
       "/signatures",
       "/compare",
+      "/calculator",
       "/loadouts",
       "/companion",
       "/guides",

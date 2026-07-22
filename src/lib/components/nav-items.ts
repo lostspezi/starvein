@@ -24,6 +24,7 @@ export const NAV_ITEMS: readonly NavItem[] = [
       { href: "/occurrences", key: "occurrences" },
       { href: "/signatures", key: "signatures" },
       { href: "/compare", key: "compare" },
+      { href: "/calculator", key: "calculator" },
     ],
   },
   { kind: "link", href: "/locations", key: "locations" },

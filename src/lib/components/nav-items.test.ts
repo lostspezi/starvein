@@ -28,6 +28,7 @@ describe("NAV_ITEMS", () => {
       "/occurrences",
       "/signatures",
       "/compare",
+      "/calculator",
     ]);
   });
 
@@ -48,7 +49,7 @@ describe("NAV_ITEMS", () => {
     ).toEqual(["/ships", "/loadouts"]);
   });
 
-  it("covers exactly the previous eleven routes without duplicates", () => {
+  it("covers exactly the expected routes without duplicates", () => {
     const hrefs = NAV_ITEMS.flatMap((item) =>
       item.kind === "group"
         ? item.children.map((child) => child.href)
@@ -64,6 +65,7 @@ describe("NAV_ITEMS", () => {
         "/occurrences",
         "/signatures",
         "/compare",
+        "/calculator",
         "/loadouts",
         "/ships",
         "/guides",

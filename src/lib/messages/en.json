@@ -32,6 +32,10 @@
       "title": "Compare Ores",
       "description": "Compare Star Citizen ores side by side: prices, refinery yields and the best mining locations."
     },
+    "calculator": {
+      "title": "Rock Calculator",
+      "description": "Star Citizen mining calculator: enter mass and resistance to see which mining laser breaks the rock and how many heads you need."
+    },
     "loadouts": {
       "title": "Mining Loadouts",
       "description": "Community mining loadouts for Star Citizen: lasers, modules and gadgets for Prospector, MOLE and more."
@@ -96,6 +100,7 @@
       "occurrences": "Occurrences",
       "signatures": "Signatures",
       "compare": "Compare",
+      "calculator": "Calculator",
       "loadouts": "Loadouts",
       "ships": "Ships",
       "guides": "Guides",
