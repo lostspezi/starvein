@@ -123,7 +123,8 @@ export async function findExplorerRows(
     // Liste blähen das SSR/RSC-Payload wieder Richtung e2e-"load"-Timeout
     // auf (siehe EXPLORER_ROW_LIMIT). Badge + byproductOf reichen hier;
     // die volle Aufschlüsselung zeigen die Erz-/Location-Detailseiten.
-    const { rockBreakdown: _rockBreakdown, ...slim } = occurrence;
+    const slim = { ...occurrence };
+    delete slim.rockBreakdown;
     return {
       ...slim,
       oreName: (ore?.name_en as string) ?? occurrence.oreCode,

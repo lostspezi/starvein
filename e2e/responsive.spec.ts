@@ -34,6 +34,30 @@ for (const viewport of VIEWPORTS) {
   });
 }
 
+test.describe("occurrences table width", () => {
+  // Regression (User-Report 2026-07-22): Name, Code und Deposit-Badge in der
+  // Erz-Zelle waren ohne Whitespace dazwischen EIN unbrechbarer Inline-Run —
+  // die Tabelle scrollte horizontal im eigenen overflow-x-Wrapper (DE mit
+  // dem breiten "Wahrscheinlichkeit"-Header am knappsten).
+  test.use({ viewport: { width: 1280, height: 800 } });
+
+  for (const locale of ["de", "en"] as const) {
+    test(`table needs no inner horizontal scroll on /${locale}/occurrences`, async ({
+      page,
+    }) => {
+      await page.goto(`/${locale}/occurrences`);
+      await expect(page.locator("main tbody tr").first()).toBeVisible();
+
+      const overflow = await page.evaluate(() => {
+        const table = document.querySelector("main table");
+        const wrap = table?.parentElement;
+        return wrap ? wrap.scrollWidth - wrap.clientWidth : -1;
+      });
+      expect(overflow).toBeLessThanOrEqual(1);
+    });
+  }
+});
+
 test.describe("mobile header", () => {
   test.use({ viewport: { width: 375, height: 812 } });
 

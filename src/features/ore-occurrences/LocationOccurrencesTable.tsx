@@ -101,8 +101,9 @@ export function LocationOccurrencesTable({
                     </GlowLink>
                     <span className="ml-2 font-mono text-xs text-text-muted">
                       {occurrence.oreCode}
-                    </span>
-                    <span className="ml-2">
+                    </span>{" "}
+                    {/* Leerraum = Soft-Wrap-Punkt (siehe OreOccurrencesTable) */}
+                    <span className="ml-1">
                       <DepositBadge depositType={occurrence.depositType} />
                     </span>
                   </DataTableTd>
