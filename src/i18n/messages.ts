@@ -51,6 +51,8 @@ import deBlueprints from "@/features/blueprints/messages/de.json";
 import enBlueprints from "@/features/blueprints/messages/en.json";
 import deShips from "@/features/ships/messages/de.json";
 import enShips from "@/features/ships/messages/en.json";
+import deRockCalculator from "@/features/rock-calculator/messages/de.json";
+import enRockCalculator from "@/features/rock-calculator/messages/en.json";
 
 const messages = {
   de: {
@@ -78,6 +80,7 @@ const messages = {
     ...deRefineryJobs,
     ...deBlueprints,
     ...deShips,
+    ...deRockCalculator,
   },
   en: {
     ...enCommon,
@@ -104,6 +107,7 @@ const messages = {
     ...enRefineryJobs,
     ...enBlueprints,
     ...enShips,
+    ...enRockCalculator,
   },
 };
 

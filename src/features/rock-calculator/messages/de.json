@@ -1,0 +1,39 @@
+{
+  "calculator": {
+    "title": "Rock-Rechner",
+    "subtitle": "Masse und Resistenz eines gescannten Steins eingeben — der Rechner zeigt, welcher Laser ihn knackt und wie viele Köpfe nötig sind.",
+    "inputs": {
+      "massLabel": "Masse",
+      "massPlaceholder": "z. B. 30000",
+      "resistanceLabel": "Resistenz (%)"
+    },
+    "modules": {
+      "label": "Module (global)",
+      "gadgetLabel": "Gadget",
+      "none": "Ohne",
+      "slot": "Modul-Slot {index}",
+      "hint": "Module gelten für jeden Laser, soweit seine Slots reichen; das Gadget wirkt einmal auf den Stein.",
+      "activeHint": "Aktive Module werden als eingeschaltet gerechnet (Optimalfall)."
+    },
+    "table": {
+      "laser": "Laser",
+      "size": "Größe",
+      "power": "Power (effektiv)",
+      "modules": "Module",
+      "heads": "Köpfe nötig",
+      "headsValue": "{heads}×",
+      "notBreakable": "Nicht knackbar",
+      "empty": "Masse und Resistenz eingeben"
+    },
+    "loadouts": {
+      "title": "Deine Loadouts",
+      "loginRequired": "Melde dich an, um deine gespeicherten Loadouts gegen den Stein zu prüfen.",
+      "empty": "Noch keine Loadouts gespeichert.",
+      "notShipMining": "Kein Ship-Mining",
+      "breaks": "Knackt den Stein",
+      "breaksNot": "Reicht nicht",
+      "gadgetNote": "Gespeicherte Gadgets der Loadouts werden ignoriert — es gilt die Gadget-Auswahl oben. Aktive Module zählen als eingeschaltet."
+    },
+    "attribution": "Break-Formel community-kalibriert nach mort13/BreakabilityChart (MIT) — Werte ohne Gewähr, CIG rebalanct Mining regelmäßig."
+  }
+}
