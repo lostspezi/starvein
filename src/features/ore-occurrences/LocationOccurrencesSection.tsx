@@ -4,8 +4,11 @@ import { useTranslations } from "next-intl";
 import { parseAsStringLiteral, useQueryState } from "nuqs";
 import { Suspense } from "react";
 import { MINING_METHODS } from "@/features/ores/ores.schema";
+import { DepositFilter } from "./DepositFilter";
+import { matchesDepositFilter } from "./deposit-filter";
 import { MethodFilter } from "./MethodFilter";
 import { LocationOccurrencesTable } from "./LocationOccurrencesTable";
+import { DEPOSIT_TYPES } from "./ore-occurrences.schema";
 import type { OccurrenceWithOre } from "./ore-occurrences.service";
 
 /**
@@ -53,9 +56,15 @@ function FilteredSection({
     "method",
     parseAsStringLiteral(MINING_METHODS),
   );
-  const filtered = method
-    ? occurrences.filter((o) => o.method === method)
-    : occurrences;
+  const [deposit] = useQueryState(
+    "deposit",
+    parseAsStringLiteral(DEPOSIT_TYPES),
+  );
+  const filtered = occurrences.filter(
+    (o) =>
+      (!method || o.method === method) &&
+      matchesDepositFilter(o.depositType, deposit),
+  );
 
   return (
     <SectionBody
@@ -79,7 +88,12 @@ function SectionBody({
 
   return (
     <>
-      {withFilter && <MethodFilter shallow />}
+      {withFilter && (
+        <div className="flex flex-col gap-2 lg:flex-row lg:items-center lg:justify-between">
+          <MethodFilter shallow />
+          <DepositFilter shallow />
+        </div>
+      )}
       {inheritedFromName && (
         <p className="text-sm text-text-muted">
           {t("inheritedFrom", { name: inheritedFromName })}

@@ -147,6 +147,51 @@ describe("syncWikiMiningData", () => {
     expect(hurL1.map((o) => o.oreCode)).toEqual(["AGRI"]);
   });
 
+  it("derives deposit types from the wiki rock composition", async () => {
+    const summary = await syncWikiMiningData(db);
+
+    // Wala: AGRI dominiert den eigenen Rock (Bänder 30-70 und 10-15 gemerged)
+    const wala = await findOccurrencesByLocation(db, "STANTON", "wala");
+    expect(wala.find((o) => o.oreCode === "AGRI")).toMatchObject({
+      depositType: "primary",
+      compositionPercent: { min: 10, max: 70 },
+      rockBreakdown: [
+        {
+          rockLabel: "Agricium",
+          isPrimary: true,
+          oreCompositionPercent: { min: 10, max: 70 },
+          dominantMaterialName: "Agricium (Ore)",
+          dominantMaterialOreCode: "AGRI",
+        },
+      ],
+    });
+
+    // HUR L1: AGRI nur Beiprodukt; QUAN aufgelöst, Newmineral unmapped
+    const hurL1 = await findOccurrencesByLocation(db, "STANTON", "hur-l1");
+    const agriAtL1 = hurL1.find((o) => o.oreCode === "AGRI");
+    expect(agriAtL1).toMatchObject({
+      depositType: "secondary",
+      compositionPercent: { min: 1, max: 5 },
+      byproductOf: ["QUAN"],
+    });
+    expect(agriAtL1?.rockBreakdown).toHaveLength(2);
+
+    // FPS-Deposit: 100 % Einzelmineral -> primary
+    expect(wala.find((o) => o.oreCode === "HADA")).toMatchObject({
+      depositType: "primary",
+      compositionPercent: { min: 50, max: 100 },
+    });
+
+    // Unbekannte Wiki-Gruppe -> Row bleibt neutral
+    const aberdeen = await findOccurrencesByLocation(db, "STANTON", "aberdeen");
+    expect(aberdeen.find((o) => o.oreCode === "QUAN")).not.toHaveProperty(
+      "depositType",
+    );
+
+    expect(summary.unknownResourceGroups).toEqual(["Hover_Mineables"]);
+    expect(summary.unmappedByproductKeys).toEqual(["Raw_Newmineral"]);
+  });
+
   it("prunes occurrences the wiki no longer provides", async () => {
     await upsertOreOccurrences(db, [
       {

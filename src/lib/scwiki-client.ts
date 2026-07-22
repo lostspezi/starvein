@@ -97,6 +97,34 @@ export type ScWikiCommodity = {
   methods: string[];
 };
 
+/**
+ * Material-Eintrag eines Rock-Typs. Materialien erscheinen mehrfach —
+ * ein Eintrag pro Quality-Band mit unterschiedlichen Prozentbereichen
+ * (verifiziert 2026-07-22, z. B. Borase 24.3–74.3 % und 9.7–15.7 %).
+ */
+export type ScWikiResourceMaterial = {
+  /** Entspricht exakt dem wikiKey in data/curated/ore-codes.json (z. B. "Ore_Borase"). */
+  key: string;
+  name: string;
+  /** true, wenn das Material das abgefragte Commodity selbst ist. */
+  is_current: boolean;
+  min_percentage: number | null;
+  max_percentage: number | null;
+};
+
+/**
+ * Rock-/Deposit-Typ an einer Location (z. B. "MineableRock_AsteroidRare_Borase").
+ * Keine Inert-/Füllmaterialien in materials (live geprüft 2026-07-22) —
+ * das Material mit dem höchsten max_percentage ist das dominante Mineral.
+ */
+export type ScWikiLocationResource = {
+  key: string;
+  label: string | null;
+  /** "SpaceShip_Mineables" | "GroundVehicle_Mineables" | "FPS_Mineables". */
+  group_name: string | null;
+  materials: ScWikiResourceMaterial[] | null;
+};
+
 /** Fundort-Eintrag im Commodity-Detail (GET /api/commodities/{slug}). */
 export type ScWikiCommodityLocation = {
   /** Starmap-UUID der Location — Join-Schlüssel zu celestialBodies.wikiUuid. */
@@ -109,6 +137,8 @@ export type ScWikiCommodityLocation = {
   group_probability_percent: number | null;
   /** Anteil dieses Erzes unter allen Erzen der Location. */
   relative_probability_percent: number | null;
+  /** Rock-Typen mit Zusammensetzung — Quelle für Haupt-/Nebenvorkommen. */
+  resources?: ScWikiLocationResource[] | null;
 };
 
 export type ScWikiCommodityDetail = ScWikiCommodity & {

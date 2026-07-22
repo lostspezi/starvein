@@ -161,4 +161,44 @@ describe("ExplorerTable", () => {
       screen.getByText("No occurrences match these filters."),
     ).toBeVisible();
   });
+
+  it("shows the deposit badge and rock breakdown for enriched rows", () => {
+    const enriched: ExplorerRow[] = [
+      {
+        ...rows[0],
+        depositType: "secondary",
+        compositionPercent: { min: 2, max: 5 },
+        byproductOf: ["BEXA"],
+        rockBreakdown: [
+          {
+            rockLabel: "Bexalite",
+            isPrimary: false,
+            oreCompositionPercent: { min: 2, max: 5 },
+            dominantMaterialName: "Bexalite (Raw)",
+            dominantMaterialOreCode: "BEXA",
+          },
+        ],
+      },
+      rows[1],
+    ];
+    renderWithIntl(
+      <ExplorerTable
+        rows={enriched}
+        favoriteKeys={new Set()}
+        isAuthenticated={false}
+      />,
+      { locale: "en" },
+    );
+
+    expect(screen.getByText("Byproduct")).toBeVisible();
+    // Legacy-Zeile ohne Deposit-Daten bekommt kein Badge
+    expect(screen.queryByText("Primary")).not.toBeInTheDocument();
+
+    fireEvent.click(
+      screen.getAllByRole("button", {
+        name: "Show signature cluster and prices",
+      })[0],
+    );
+    expect(screen.getByText("Rock composition")).toBeVisible();
+  });
 });

@@ -2,6 +2,7 @@ import type { Db } from "mongodb";
 import type { MiningMethod } from "@/features/ores/ores.schema";
 import {
   oreOccurrenceSchema,
+  type DepositType,
   type OreOccurrence,
 } from "./ore-occurrences.schema";
 
@@ -20,6 +21,7 @@ export type OccurrenceQueryFilter = {
   method?: MiningMethod | null;
   systemCode?: string | null;
   oreCode?: string | null;
+  deposit?: DepositType | null;
 };
 
 /** Alle Vorkommen (für den Startseiten-Explorer), optional vorgefiltert. */
@@ -31,6 +33,13 @@ export async function findAllOccurrences(
   if (filter.method) query.method = filter.method;
   if (filter.systemCode) query.systemCode = filter.systemCode;
   if (filter.oreCode) query.oreCode = filter.oreCode;
+  // "primary" schließt nur explizite secondary aus: Docs ohne depositType
+  // (Alt-Bestand, unbekannte Wiki-Gruppen) dürfen nicht verschwinden.
+  if (filter.deposit === "primary") {
+    query.depositType = { $ne: "secondary" };
+  } else if (filter.deposit === "secondary") {
+    query.depositType = "secondary";
+  }
 
   const docs = await db
     .collection(COLLECTION)

@@ -23,6 +23,18 @@
       "unverified": "unverified",
       "verified": "verified"
     },
+    "deposit": {
+      "primary": "Primary",
+      "secondary": "Byproduct",
+      "primaryLong": "Primary deposit",
+      "secondaryLong": "Byproduct only",
+      "filterLabel": "Filter by deposit type",
+      "filterAll": "All",
+      "rocksTitle": "Rock composition",
+      "rockLine": "{rock}: {min}–{max} %",
+      "dominant": "dominant: {name}",
+      "byproductOf": "Occurs here only as a byproduct of {ores}."
+    },
     "disclaimer": "Probabilities are derived from game data (Star Citizen Wiki) and may change with each patch.",
     "page": {
       "title": "Occurrences",

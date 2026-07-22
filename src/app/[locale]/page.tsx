@@ -17,6 +17,10 @@ import { findTopOreRows } from "@/features/home/explorer.service";
 import { findLoadoutShowcase } from "@/features/home/loadout-showcase.service";
 import { countCelestialBodies } from "@/features/locations/locations.repository";
 import { SYSTEM_CODES } from "@/features/locations/locations.schema";
+import {
+  DEPOSIT_TYPES,
+  type DepositType,
+} from "@/features/ore-occurrences/ore-occurrences.schema";
 import { countPublicLoadouts } from "@/features/loadouts/loadouts.repository";
 import { findAllOresCached } from "@/features/ores/ores.repository";
 import {
@@ -59,6 +63,7 @@ export default async function Home({
     system: parseEnumParam(sp.system, SYSTEM_CODES),
     rarity: parseEnumParam<RarityTier>(sp.rarity, RARITY_TIERS),
     ore: ores.some((ore) => ore.code === oreParam) ? oreParam : null,
+    deposit: parseEnumParam<DepositType>(sp.deposit, DEPOSIT_TYPES),
   };
 
   const userId = await getSessionUserId(await headers());

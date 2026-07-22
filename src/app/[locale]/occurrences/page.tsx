@@ -5,6 +5,10 @@ import { ExplorerFilters } from "@/features/home/ExplorerFilters";
 import { ExplorerTable } from "@/features/home/ExplorerTable";
 import { findExplorerRows } from "@/features/home/explorer.service";
 import { SYSTEM_CODES } from "@/features/locations/locations.schema";
+import {
+  DEPOSIT_TYPES,
+  type DepositType,
+} from "@/features/ore-occurrences/ore-occurrences.schema";
 import { findAllOresCached } from "@/features/ores/ores.repository";
 import {
   MINING_METHODS,
@@ -66,6 +70,7 @@ export default async function OccurrencesPage({
     system: parseEnumParam(sp.system, SYSTEM_CODES),
     rarity: parseEnumParam<RarityTier>(sp.rarity, RARITY_TIERS),
     ore: ores.some((ore) => ore.code === oreParam) ? oreParam : null,
+    deposit: parseEnumParam<DepositType>(sp.deposit, DEPOSIT_TYPES),
   };
 
   const userId = await getSessionUserId(await headers());

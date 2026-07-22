@@ -12,7 +12,13 @@ import {
   findTopOreRows,
 } from "./explorer.service";
 
-const NO_FILTERS = { method: null, system: null, ore: null, rarity: null };
+const NO_FILTERS = {
+  method: null,
+  system: null,
+  ore: null,
+  rarity: null,
+  deposit: null,
+};
 
 describe("explorer service", () => {
   let db: Db;
@@ -76,6 +82,18 @@ describe("explorer service", () => {
         sourceType: "curated",
         confidenceScore: 0.3,
         lastVerifiedAt: "2026-07-09",
+        depositType: "secondary",
+        compositionPercent: { min: 2, max: 5 },
+        byproductOf: ["QUAN"],
+        rockBreakdown: [
+          {
+            rockLabel: "Quantainium",
+            isPrimary: false,
+            oreCompositionPercent: { min: 2, max: 5 },
+            dominantMaterialName: "Quantainium (Raw)",
+            dominantMaterialOreCode: "QUAN",
+          },
+        ],
       },
     ]);
     await db.collection("priceSnapshots").insertMany([
@@ -185,6 +203,30 @@ describe("explorer service", () => {
       ore: "HADA",
     });
     expect(hada.map((row) => row.oreCode)).toEqual(["HADA"]);
+  });
+
+  it("filters by deposit type and keeps rows without deposit data", async () => {
+    // HADA-Row hat kein depositType-Feld -> zählt bei "primary" mit
+    const { rows: primary } = await findExplorerRows(db, {
+      ...NO_FILTERS,
+      deposit: "primary",
+    });
+    expect(primary.map((row) => row.oreCode)).toEqual(["HADA"]);
+
+    const { rows: secondary } = await findExplorerRows(db, {
+      ...NO_FILTERS,
+      deposit: "secondary",
+    });
+    expect(secondary.map((row) => row.oreCode)).toEqual(["GOLD"]);
+    // Deposit-Felder kommen im Explorer-Row-DTO an …
+    expect(secondary[0]).toMatchObject({
+      depositType: "secondary",
+      compositionPercent: { min: 2, max: 5 },
+      byproductOf: ["QUAN"],
+    });
+    // … aber OHNE rockBreakdown: 200 Rows × Rock-Liste würden die Seite
+    // wieder in Richtung der e2e-"load"-Timeouts treiben (siehe Row-Cap).
+    expect(secondary[0]).not.toHaveProperty("rockBreakdown");
   });
 
   /**

@@ -65,4 +65,19 @@ describe("ExplorerFilters", () => {
     const event = onUrlUpdate.mock.calls.at(-1)?.[0];
     expect(event?.searchParams.get("ore")).toBe("GOLD");
   });
+
+  it("sets the deposit query param", async () => {
+    const user = userEvent.setup();
+    const { onUrlUpdate } = renderFilters();
+
+    const depositGroup = screen.getByRole("group", {
+      name: "Filter by deposit type",
+    });
+    await user.click(
+      within(depositGroup).getByRole("button", { name: "Byproduct only" }),
+    );
+
+    const event = onUrlUpdate.mock.calls.at(-1)?.[0];
+    expect(event?.searchParams.get("deposit")).toBe("secondary");
+  });
 });

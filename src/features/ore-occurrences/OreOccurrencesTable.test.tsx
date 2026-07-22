@@ -23,6 +23,37 @@ const rows: OccurrenceWithLocation[] = [
   },
 ];
 
+const depositRows: OccurrenceWithLocation[] = [
+  {
+    oreCode: "BORA",
+    systemCode: "STANTON",
+    bodySlug: "hur-l1",
+    method: "ship",
+    probabilityPercent: 10,
+    patchVersion: "4.8.2",
+    sourceType: "wiki",
+    confidenceScore: 0.9,
+    lastVerifiedAt: "2026-07-22",
+    bodyName: "HUR L1",
+    bodyType: "lagrangePoint",
+    signatureValue: 3600,
+    bestRawSell: null,
+    bestRefinedSell: null,
+    depositType: "primary",
+    compositionPercent: { min: 24.3, max: 74.3 },
+    rockBreakdown: [
+      {
+        rockLabel: "Borase",
+        isPrimary: true,
+        oreCompositionPercent: { min: 24.3, max: 74.3 },
+        dominantMaterialName: "Borase (Ore)",
+        dominantMaterialOreCode: "BORA",
+      },
+    ],
+  },
+  ...rows,
+];
+
 describe("OreOccurrencesTable", () => {
   it("links the location and shows probability, method and body type", () => {
     renderWithIntl(<OreOccurrencesTable occurrences={rows} />, {
@@ -76,5 +107,23 @@ describe("OreOccurrencesTable", () => {
   it("shows an empty state", () => {
     renderWithIntl(<OreOccurrencesTable occurrences={[]} />, { locale: "en" });
     expect(screen.getByText("No known occurrences yet.")).toBeVisible();
+  });
+
+  it("shows the deposit badge inline and the rock breakdown on expand", () => {
+    renderWithIntl(<OreOccurrencesTable occurrences={depositRows} />, {
+      locale: "en",
+    });
+
+    // Nur die angereicherte Zeile trägt ein Badge, die Legacy-Zeile keins
+    expect(screen.getByText("Primary")).toBeVisible();
+    expect(screen.queryByText("Byproduct")).not.toBeInTheDocument();
+
+    fireEvent.click(
+      screen.getAllByRole("button", {
+        name: "Show signature cluster and prices",
+      })[0],
+    );
+    expect(screen.getByText("Rock composition")).toBeVisible();
+    expect(screen.getByText(/Borase: 24.3–74.3\s?%/)).toBeVisible();
   });
 });

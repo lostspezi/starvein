@@ -42,6 +42,27 @@ const shipRows: OccurrenceWithOre[] = [
   },
 ];
 
+const secondaryRows: OccurrenceWithOre[] = [
+  {
+    ...shipRows[0],
+    oreCode: "BORA",
+    oreName: "Borase",
+    rarityTier: "rare",
+    depositType: "secondary",
+    compositionPercent: { min: 2, max: 5 },
+    byproductOf: ["BEXA"],
+    rockBreakdown: [
+      {
+        rockLabel: "Bexalite",
+        isPrimary: false,
+        oreCompositionPercent: { min: 2, max: 5 },
+        dominantMaterialName: "Bexalite (Raw)",
+        dominantMaterialOreCode: "BEXA",
+      },
+    ],
+  },
+];
+
 describe("LocationOccurrencesTable", () => {
   it("links the ore detail page and shows probability and method", () => {
     renderWithIntl(<LocationOccurrencesTable occurrences={rows} />, {
@@ -154,5 +175,23 @@ describe("LocationOccurrencesTable", () => {
       locale: "en",
     });
     expect(screen.getByText("No known occurrences yet.")).toBeVisible();
+  });
+
+  it("marks byproduct rows and explains the relation on expand", () => {
+    renderWithIntl(<LocationOccurrencesTable occurrences={secondaryRows} />, {
+      locale: "en",
+    });
+
+    expect(screen.getByText("Byproduct")).toBeVisible();
+
+    fireEvent.click(
+      screen.getByRole("button", {
+        name: "Show signature cluster and prices",
+      }),
+    );
+    expect(screen.getByText("Rock composition")).toBeVisible();
+    expect(
+      screen.getByText(/Occurs here only as a byproduct of BEXA/),
+    ).toBeVisible();
   });
 });

@@ -1,7 +1,10 @@
 import type { Db } from "mongodb";
 import type { BodyType } from "@/features/locations/locations.schema";
 import { findAllOccurrences } from "@/features/ore-occurrences/ore-occurrences.repository";
-import type { OreOccurrence } from "@/features/ore-occurrences/ore-occurrences.schema";
+import type {
+  DepositType,
+  OreOccurrence,
+} from "@/features/ore-occurrences/ore-occurrences.schema";
 import type { MiningMethod, RarityTier } from "@/features/ores/ores.schema";
 import { getBestSellByOre } from "@/features/refinery-and-prices/price-summary";
 
@@ -10,6 +13,7 @@ export type ExplorerFilters = {
   system: string | null;
   ore: string | null;
   rarity: RarityTier | null;
+  deposit: DepositType | null;
 };
 
 export type ExplorerRow = OreOccurrence & {
@@ -56,6 +60,7 @@ export async function findExplorerRows(
       method: filters.method,
       systemCode: filters.system,
       oreCode: filters.ore,
+      deposit: filters.deposit,
     }),
     getBestSellByOre(db),
   ]);
@@ -114,8 +119,13 @@ export async function findExplorerRows(
     const body = bodies.get(`${occurrence.systemCode}|${occurrence.bodySlug}`);
     const profile = profiles.get(`${occurrence.oreCode}|${occurrence.method}`);
     const bestSell = priceMap.get(occurrence.oreCode);
+    // rockBreakdown bewusst NICHT in die Explorer-Rows: 200 Zeilen × Rock-
+    // Liste blähen das SSR/RSC-Payload wieder Richtung e2e-"load"-Timeout
+    // auf (siehe EXPLORER_ROW_LIMIT). Badge + byproductOf reichen hier;
+    // die volle Aufschlüsselung zeigen die Erz-/Location-Detailseiten.
+    const { rockBreakdown: _rockBreakdown, ...slim } = occurrence;
     return {
-      ...occurrence,
+      ...slim,
       oreName: (ore?.name_en as string) ?? occurrence.oreCode,
       rarityTier: (ore?.rarityTier as RarityTier) ?? "common",
       bodyName: (body?.name as string) ?? occurrence.bodySlug,

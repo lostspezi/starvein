@@ -103,6 +103,34 @@ describe("ore occurrences repository", () => {
     expect(doliFps[0].oreCode).toBe("DOLI");
   });
 
+  it("filters all occurrences by deposit type", async () => {
+    await upsertOreOccurrences(db, [
+      occurrence({
+        oreCode: "BORA",
+        bodySlug: "hur-l1",
+        method: "ship",
+        probabilityPercent: 10,
+        depositType: "primary",
+      }),
+      occurrence({
+        oreCode: "BORA",
+        bodySlug: "cru-l1",
+        method: "ship",
+        probabilityPercent: 30,
+        depositType: "secondary",
+      }),
+    ]);
+
+    // primary schließt nur explizite secondary aus — Docs ohne Feld bleiben
+    const primary = await findAllOccurrences(db, { deposit: "primary" });
+    expect(primary.some((o) => o.depositType === "secondary")).toBe(false);
+    expect(primary).toHaveLength(5);
+
+    const secondary = await findAllOccurrences(db, { deposit: "secondary" });
+    expect(secondary).toHaveLength(1);
+    expect(secondary[0].bodySlug).toBe("cru-l1");
+  });
+
   it("upserts idempotently by ore+location+method+patch", async () => {
     await upsertOreOccurrences(db, [
       occurrence({ bodySlug: "daymar", probabilityPercent: 99 }),

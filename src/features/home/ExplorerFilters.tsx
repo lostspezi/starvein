@@ -3,6 +3,7 @@
 import { useTranslations } from "next-intl";
 import { parseAsString, parseAsStringLiteral, useQueryState } from "nuqs";
 import { SYSTEM_CODES } from "@/features/locations/locations.schema";
+import { DEPOSIT_TYPES } from "@/features/ore-occurrences/ore-occurrences.schema";
 import {
   MINING_METHODS,
   RARITY_TIERS,
@@ -27,6 +28,10 @@ export function ExplorerFilters({ ores }: { ores: Ore[] }) {
   const [ore, setOre] = useQueryState(
     "ore",
     parseAsString.withOptions({ shallow: false }),
+  );
+  const [deposit, setDeposit] = useQueryState(
+    "deposit",
+    parseAsStringLiteral(DEPOSIT_TYPES).withOptions({ shallow: false }),
   );
 
   return (
@@ -57,6 +62,20 @@ export function ExplorerFilters({ ores }: { ores: Ore[] }) {
           onChange={setRarity}
           optionLabel={(tier) => t(`ores.rarity.${tier}`)}
           allLabel={t("ores.rarity.all")}
+        />
+        <FilterGroup
+          label={t("occurrences.deposit.filterLabel")}
+          options={DEPOSIT_TYPES}
+          value={deposit}
+          onChange={setDeposit}
+          optionLabel={(type) =>
+            t(
+              type === "primary"
+                ? "occurrences.deposit.primaryLong"
+                : "occurrences.deposit.secondaryLong",
+            )
+          }
+          allLabel={t("occurrences.deposit.filterAll")}
         />
         <div className="flex items-center gap-2 text-sm text-text-muted">
           <label htmlFor="explorer-ore-select">
