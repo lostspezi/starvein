@@ -43,6 +43,7 @@ export function LoadoutShowcasePanel({
             laserSummary={showcase.feature.laserSummary}
             currentPatchVersion={currentPatchVersion}
             viewerUserId={viewerUserId}
+            breakabilityMass={showcase.feature.breakabilityMass}
           />
         </div>
       ) : (
@@ -57,16 +58,19 @@ export function LoadoutShowcasePanel({
           <h3 className="text-sm font-medium text-text-muted">
             {t("newestHeading")}
           </h3>
-          {showcase.newest.map(({ loadout, vehicleName, laserSummary }) => (
-            <LoadoutCard
-              key={loadout.id}
-              loadout={loadout}
-              vehicleName={vehicleName}
-              laserSummary={laserSummary}
-              currentPatchVersion={currentPatchVersion}
-              viewerUserId={viewerUserId}
-            />
-          ))}
+          {showcase.newest.map(
+            ({ loadout, vehicleName, laserSummary, breakabilityMass }) => (
+              <LoadoutCard
+                key={loadout.id}
+                loadout={loadout}
+                vehicleName={vehicleName}
+                laserSummary={laserSummary}
+                currentPatchVersion={currentPatchVersion}
+                viewerUserId={viewerUserId}
+                breakabilityMass={breakabilityMass}
+              />
+            ),
+          )}
         </div>
       )}
     </section>

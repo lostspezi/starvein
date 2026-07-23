@@ -1,4 +1,4 @@
-import { useTranslations } from "next-intl";
+import { useFormatter, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { Badge } from "@/lib/components/ui/Badge";
 import { panelClasses } from "@/lib/components/ui/Panel";
@@ -15,14 +15,17 @@ export function LoadoutCard({
   laserSummary,
   currentPatchVersion,
   viewerUserId,
+  breakabilityMass,
 }: {
   loadout: Loadout;
   vehicleName: string;
   laserSummary: string;
   currentPatchVersion: string;
   viewerUserId: string | null;
+  breakabilityMass?: number | null;
 }) {
   const t = useTranslations("loadouts");
+  const format = useFormatter();
   const isOwner = viewerUserId !== null && viewerUserId === loadout.ownerUserId;
 
   return (
@@ -48,6 +51,17 @@ export function LoadoutCard({
           </>
         )}
       </p>
+
+      {breakabilityMass != null && (
+        <p className="font-mono text-xs text-accent-secondary">
+          {t("card.cracksUpTo", {
+            mass: format.number(breakabilityMass, {
+              notation: "compact",
+              maximumFractionDigits: 1,
+            }),
+          })}
+        </p>
+      )}
 
       <div className="mt-auto flex items-center justify-between gap-2 pt-1">
         {loadout.patchVersion !== currentPatchVersion ? (

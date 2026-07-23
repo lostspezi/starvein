@@ -86,6 +86,34 @@ describe("aggregateHardpointStats", () => {
     expect(stats.laserPower).toBeCloseTo(4000 * 1.1 * 1.2);
   });
 
+  it("scales the laser power base by a crafted bonus before the factors", () => {
+    const stats = aggregateHardpointStats(
+      laser({ modifiers: { laserPower: 1.1 } }),
+      [module_({ modifiers: { laserPower: 1.2 } })],
+      29,
+    );
+    expect(stats.laserPower).toBeCloseTo(4000 * 1.29 * 1.1 * 1.2);
+    // Extraktionsleistung ist vom Craft-Bonus unberührt
+    expect(stats.extractionLaserPower).toBe(800);
+  });
+
+  it("keeps power null for size-0 lasers even with a crafted bonus", () => {
+    const stats = aggregateHardpointStats(
+      laser({
+        size: 0,
+        stats: {
+          laserPower: null,
+          extractionLaserPower: null,
+          optimalRange: 5,
+          maxRange: 15,
+        },
+      }),
+      [],
+      50,
+    );
+    expect(stats.laserPower).toBeNull();
+  });
+
   it("keeps power null for size-0 vehicle lasers", () => {
     const stats = aggregateHardpointStats(
       laser({

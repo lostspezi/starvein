@@ -1,5 +1,5 @@
 import { Trophy } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useFormatter, useTranslations } from "next-intl";
 import type { Loadout } from "@/features/loadouts/loadouts.schema";
 import { VoteButton } from "@/features/loadouts/VoteButton";
 import { Link } from "@/i18n/navigation";
@@ -17,15 +17,18 @@ export function FeatureLoadoutTile({
   laserSummary,
   currentPatchVersion,
   viewerUserId,
+  breakabilityMass,
 }: {
   loadout: Loadout;
   vehicleName: string;
   laserSummary: string;
   currentPatchVersion: string;
   viewerUserId: string | null;
+  breakabilityMass?: number | null;
 }) {
   const t = useTranslations("home.loadouts");
   const tLoadouts = useTranslations("loadouts");
+  const format = useFormatter();
   const isOwner = viewerUserId !== null && viewerUserId === loadout.ownerUserId;
 
   return (
@@ -65,6 +68,17 @@ export function FeatureLoadoutTile({
           </>
         )}
       </p>
+
+      {breakabilityMass != null && (
+        <p className="font-mono text-xs text-accent-secondary">
+          {tLoadouts("card.cracksUpTo", {
+            mass: format.number(breakabilityMass, {
+              notation: "compact",
+              maximumFractionDigits: 1,
+            }),
+          })}
+        </p>
+      )}
 
       <div className="mt-auto flex items-center justify-between gap-2 pt-1">
         {loadout.patchVersion !== currentPatchVersion ? (

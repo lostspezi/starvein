@@ -28,7 +28,8 @@
       "votes": "{count} Stimmen",
       "outdated": "Patch {patchVersion}",
       "private": "Privat",
-      "public": "Öffentlich"
+      "public": "Öffentlich",
+      "cracksUpTo": "knackt bis {mass} Masse"
     },
     "vote": {
       "upvote": "Loadout upvoten",
@@ -46,6 +47,10 @@
       "moduleLabel": "Modul-Slot {slot} an Hardpoint {index}",
       "moduleNone": "— leerer Slot —",
       "gadgetsLegend": "Gadgets (werden am Gestein platziert)",
+      "craftedLabel": "Selbst hergestellter Laser",
+      "craftedCheckboxLabel": "Selbst hergestellter Laser an Hardpoint {index}",
+      "craftedBonusLabel": "Craft-Bonus Laser-Power (%) für Hardpoint {index}",
+      "craftedHint": "Wirkt auf die Basis-Power dieses Lasers, bevor Module greifen (−50 bis +100 %).",
       "nameLabel": "Loadout-Name",
       "descriptionLabel": "Beschreibung (optional)",
       "isPublicLabel": "Loadout öffentlich machen",
@@ -58,6 +63,7 @@
     },
     "detail": {
       "hardpointHeading": "Hardpoint {index}",
+      "crafted": "Selbst hergestellt ({bonus} %)",
       "modulesHeading": "Module",
       "noModules": "Keine Module verbaut",
       "gadgetsHeading": "Gadgets",
@@ -70,6 +76,12 @@
       "normalizedPower": "Fahrzeug-Laser — Power-Werte sind nicht mit Schiffs-Lasern vergleichbar.",
       "byOwner": "Geteiltes Loadout",
       "notFound": "Loadout nicht gefunden"
+    },
+    "breakability": {
+      "heading": "Maximale knackbare Masse",
+      "resistanceHeader": "Resistenz",
+      "massHeader": "Max. Masse",
+      "gadgetNote": "Mit {name} einmal am Stein platziert (Best Case, Verbrauchsgegenstand)."
     },
     "stats": {
       "laserPower": "Laserleistung",

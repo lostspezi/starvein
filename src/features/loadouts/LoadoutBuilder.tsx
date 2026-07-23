@@ -19,14 +19,24 @@ import {
 } from "./equipment.schema";
 import { HardpointBreakdown } from "./HardpointBreakdown";
 import { aggregateHardpointStats } from "./loadout-stats";
-import type { LoadoutInput } from "./loadouts.schema";
+import {
+  CRAFTED_BONUS_MAX_PCT,
+  CRAFTED_BONUS_MIN_PCT,
+  type LoadoutInput,
+} from "./loadouts.schema";
 
 const MAX_GADGETS = 3;
 
 type Assignment = {
   laserCode: string;
   moduleCodes: string[];
+  crafted: boolean;
+  craftedBonusPct: number | null;
 };
+
+function clampBonus(pct: number): number {
+  return Math.min(CRAFTED_BONUS_MAX_PCT, Math.max(CRAFTED_BONUS_MIN_PCT, pct));
+}
 
 const inputClass =
   "w-full rounded border border-bg-nebula-2 bg-bg-void px-3 py-1.5 text-sm transition-all duration-150 placeholder:text-text-muted focus:border-accent-primary focus:outline-none";
@@ -45,6 +55,8 @@ function initialAssignments(
       return {
         laserCode: fromExisting.laserCode,
         moduleCodes: [...fromExisting.moduleCodes],
+        crafted: fromExisting.craftedBonusPct !== undefined,
+        craftedBonusPct: fromExisting.craftedBonusPct ?? null,
       };
     }
     // Werks-Laser vorauswählen, sofern er auf diesen Hardpoint passt
@@ -52,7 +64,12 @@ function initialAssignments(
       (laser) =>
         laser.code === vehicle.stockLaserCode && laser.size === hardpoint.size,
     );
-    return { laserCode: stock?.code ?? "", moduleCodes: [] };
+    return {
+      laserCode: stock?.code ?? "",
+      moduleCodes: [],
+      crafted: false,
+      craftedBonusPct: null,
+    };
   });
 }
 
@@ -122,7 +139,36 @@ export function LoadoutBuilder({
   function setLaser(index: number, laserCode: string) {
     setAssignments((current) =>
       current.map((assignment, i) =>
-        i === index ? { laserCode, moduleCodes: [] } : assignment,
+        i === index
+          ? {
+              laserCode,
+              moduleCodes: [],
+              crafted: false,
+              craftedBonusPct: null,
+            }
+          : assignment,
+      ),
+    );
+  }
+
+  function toggleCrafted(index: number) {
+    setAssignments((current) =>
+      current.map((assignment, i) =>
+        i === index
+          ? {
+              ...assignment,
+              crafted: !assignment.crafted,
+              craftedBonusPct: null,
+            }
+          : assignment,
+      ),
+    );
+  }
+
+  function setCraftedBonus(index: number, value: number | null) {
+    setAssignments((current) =>
+      current.map((assignment, i) =>
+        i === index ? { ...assignment, craftedBonusPct: value } : assignment,
       ),
     );
   }
@@ -159,6 +205,9 @@ export function LoadoutBuilder({
           hardpointIndex: index,
           laserCode: assignment.laserCode,
           moduleCodes: assignment.moduleCodes.filter(Boolean),
+          ...(assignment.crafted
+            ? { craftedBonusPct: clampBonus(assignment.craftedBonusPct ?? 0) }
+            : {}),
         }))
         .filter((assignment) => assignment.laserCode !== ""),
       gadgetCodes,
@@ -288,6 +337,52 @@ export function LoadoutBuilder({
               </select>
             </div>
 
+            {laser && (
+              <div className="flex flex-col gap-2">
+                <label className="flex items-center gap-2 text-sm">
+                  <input
+                    type="checkbox"
+                    checked={assignment?.crafted ?? false}
+                    onChange={() => toggleCrafted(index)}
+                    aria-label={t("craftedCheckboxLabel", { index: index + 1 })}
+                  />
+                  {t("craftedLabel")}
+                </label>
+                {assignment?.crafted && (
+                  <div className="flex flex-col gap-1">
+                    <label
+                      htmlFor={`${formId}-crafted-${index}`}
+                      className="text-xs text-text-muted"
+                    >
+                      {t("craftedBonusLabel", { index: index + 1 })}
+                    </label>
+                    <input
+                      id={`${formId}-crafted-${index}`}
+                      type="number"
+                      inputMode="numeric"
+                      min={CRAFTED_BONUS_MIN_PCT}
+                      max={CRAFTED_BONUS_MAX_PCT}
+                      placeholder="0"
+                      value={assignment.craftedBonusPct ?? ""}
+                      onChange={(event) => {
+                        const parsed = Number.parseFloat(event.target.value);
+                        // sofort klemmen, sonst blockiert die native
+                        // min/max-Validation den Submit
+                        setCraftedBonus(
+                          index,
+                          Number.isFinite(parsed) ? clampBonus(parsed) : null,
+                        );
+                      }}
+                      className={cn(inputClass, "font-mono sm:max-w-48")}
+                    />
+                    <p className="text-xs text-text-muted">
+                      {t("craftedHint")}
+                    </p>
+                  </div>
+                )}
+              </div>
+            )}
+
             {laser && laser.moduleSlots > 0 && (
               <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
                 {Array.from({ length: laser.moduleSlots }, (_, slot) => {
@@ -369,13 +464,21 @@ export function LoadoutBuilder({
               .filter(Boolean)
               .map((code) => modulesByCode.get(code))
               .filter((module) => module !== undefined);
+            const craftedBonusPct = assignment.crafted
+              ? clampBonus(assignment.craftedBonusPct ?? 0)
+              : undefined;
             return (
               <HardpointBreakdown
                 key={index}
                 index={index + 1}
                 laser={laser}
                 modules={modules}
-                stats={aggregateHardpointStats(laser, modules)}
+                stats={aggregateHardpointStats(
+                  laser,
+                  modules,
+                  craftedBonusPct ?? 0,
+                )}
+                craftedBonusPct={craftedBonusPct}
               />
             );
           })}

@@ -51,6 +51,52 @@ describe("HardpointBreakdown", () => {
     expect(screen.getByText("×0.70")).toBeVisible();
   });
 
+  it("shows a crafted badge with the signed bonus", () => {
+    renderWithIntl(
+      <HardpointBreakdown
+        index={1}
+        laser={laser}
+        modules={[]}
+        stats={aggregateHardpointStats(laser, [], 29)}
+        craftedBonusPct={29}
+      />,
+      { locale: "en" },
+    );
+
+    expect(screen.getByText(/Crafted \(\+29\s?%\)/)).toBeVisible();
+    // 4000 × 1.29
+    expect(screen.getByText("5160")).toBeVisible();
+  });
+
+  it("shows the sign for a negative crafted bonus", () => {
+    renderWithIntl(
+      <HardpointBreakdown
+        index={1}
+        laser={laser}
+        modules={[]}
+        stats={aggregateHardpointStats(laser, [], -25)}
+        craftedBonusPct={-25}
+      />,
+      { locale: "en" },
+    );
+
+    expect(screen.getByText(/Crafted \(-25\s?%\)/)).toBeVisible();
+  });
+
+  it("shows no crafted badge without a bonus", () => {
+    renderWithIntl(
+      <HardpointBreakdown
+        index={1}
+        laser={laser}
+        modules={[]}
+        stats={aggregateHardpointStats(laser, [])}
+      />,
+      { locale: "en" },
+    );
+
+    expect(screen.queryByText(/Crafted/)).toBeNull();
+  });
+
   it("hides neutral factors and null power values", () => {
     const s0: MiningLaser = {
       ...laser,

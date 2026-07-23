@@ -32,7 +32,10 @@ const loadout: Loadout = {
   updatedAt: "2026-07-13T08:00:00.000Z",
 };
 
-function renderTile(overrides: Partial<Loadout> = {}) {
+function renderTile(
+  overrides: Partial<Loadout> = {},
+  breakabilityMass?: number | null,
+) {
   renderWithIntl(
     <FeatureLoadoutTile
       loadout={{ ...loadout, ...overrides }}
@@ -40,6 +43,7 @@ function renderTile(overrides: Partial<Loadout> = {}) {
       laserSummary="3× Helix II"
       currentPatchVersion="4.7"
       viewerUserId={null}
+      breakabilityMass={breakabilityMass}
     />,
     { locale: "en" },
   );
@@ -70,5 +74,15 @@ describe("FeatureLoadoutTile", () => {
   it("marks loadouts from older patches", () => {
     renderTile({ patchVersion: "4.5" });
     expect(screen.getByText("Patch 4.5")).toBeVisible();
+  });
+
+  it("shows the breakability stat when provided and hides it otherwise", () => {
+    renderTile({}, 45230);
+    expect(screen.getByText("cracks up to 45.2K mass")).toBeVisible();
+  });
+
+  it("hides the breakability stat when not computable", () => {
+    renderTile({}, null);
+    expect(screen.queryByText(/cracks up to/)).toBeNull();
   });
 });

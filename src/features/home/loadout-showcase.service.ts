@@ -1,16 +1,16 @@
 import type { Db } from "mongodb";
-import {
-  findAllMiningLasers,
-  findAllMiningVehicles,
-} from "@/features/loadouts/equipment.repository";
+import { loadEquipmentCatalog } from "@/features/loadouts/equipment.repository";
 import { summarizeLasers } from "@/features/loadouts/loadout-summary";
 import { listPublicLoadouts } from "@/features/loadouts/loadouts.repository";
 import type { Loadout } from "@/features/loadouts/loadouts.schema";
+import { bestCaseBreakableMass } from "@/features/rock-calculator/rock-break";
 
 export type ShowcaseLoadout = {
   loadout: Loadout;
   vehicleName: string;
   laserSummary: string;
+  /** Max. knackbare Masse bei 0 % Resistenz; null = nicht berechenbar (ROC). */
+  breakabilityMass: number | null;
 };
 
 export type LoadoutShowcase = {
@@ -29,19 +29,28 @@ const NEWEST_COUNT = 4;
  * damit ein junger Datenbestand keine leeren Spalten erzeugt.
  */
 export async function findLoadoutShowcase(db: Db): Promise<LoadoutShowcase> {
-  const [topRaw, newestRaw, vehicles, lasers] = await Promise.all([
+  const [topRaw, newestRaw, catalog] = await Promise.all([
     listPublicLoadouts(db, { sort: "top", limit: TOP_COUNT + 1 }),
     listPublicLoadouts(db, { sort: "new", limit: NEWEST_COUNT + 1 }),
-    findAllMiningVehicles(db),
-    findAllMiningLasers(db),
+    loadEquipmentCatalog(db),
   ]);
 
-  const vehicleNames = new Map(vehicles.map((v) => [v.code, v.name]));
-  const laserNames = new Map(lasers.map((l) => [l.code, l.name]));
+  const vehicleNames = new Map(catalog.vehicles.map((v) => [v.code, v.name]));
+  const laserNames = new Map(catalog.lasers.map((l) => [l.code, l.name]));
+  const catalogIndex = {
+    lasersByCode: new Map(catalog.lasers.map((l) => [l.code, l])),
+    modulesByCode: new Map(catalog.modules.map((m) => [m.code, m])),
+  };
+  const gadgetsByCode = new Map(catalog.gadgets.map((g) => [g.code, g]));
   const decorate = (loadout: Loadout): ShowcaseLoadout => ({
     loadout,
     vehicleName: vehicleNames.get(loadout.vehicleCode) ?? loadout.vehicleCode,
     laserSummary: summarizeLasers(loadout.hardpoints, laserNames),
+    breakabilityMass: bestCaseBreakableMass(
+      loadout,
+      catalogIndex,
+      gadgetsByCode,
+    ),
   });
 
   const feature = topRaw[0] ?? null;

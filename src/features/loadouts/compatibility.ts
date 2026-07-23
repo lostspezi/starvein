@@ -20,6 +20,7 @@ export type LoadoutContent = {
     hardpointIndex: number;
     laserCode: string;
     moduleCodes: string[];
+    craftedBonusPct?: number;
   }[];
   gadgetCodes: string[];
 };

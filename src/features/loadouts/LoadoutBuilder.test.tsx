@@ -245,6 +245,180 @@ describe("LoadoutBuilder", () => {
     expect(pushMock).toHaveBeenCalledWith("/loadouts/new-loadout");
   });
 
+  it("reveals the crafted bonus input only after checking the crafted box", async () => {
+    const user = userEvent.setup();
+    renderBuilder();
+
+    await user.click(
+      screen.getByRole("button", { name: "MOLE — Argo Astronautics" }),
+    );
+
+    const crafted = screen.getByRole("checkbox", {
+      name: "Crafted laser on hardpoint 1",
+    });
+    expect(crafted).not.toBeChecked();
+    expect(
+      screen.queryByRole("spinbutton", {
+        name: "Crafted laser power bonus (%) for hardpoint 1",
+      }),
+    ).toBeNull();
+
+    await user.click(crafted);
+    expect(
+      screen.getByRole("spinbutton", {
+        name: "Crafted laser power bonus (%) for hardpoint 1",
+      }),
+    ).toBeVisible();
+  });
+
+  it("submits the crafted bonus per hardpoint and omits it when unchecked", async () => {
+    fetchMock.mockResolvedValue(
+      new Response(JSON.stringify({ id: "new-loadout" }), { status: 200 }),
+    );
+    const user = userEvent.setup();
+    renderBuilder();
+
+    await user.click(
+      screen.getByRole("button", { name: "MOLE — Argo Astronautics" }),
+    );
+    await user.click(
+      screen.getByRole("checkbox", { name: "Crafted laser on hardpoint 1" }),
+    );
+    await user.type(
+      screen.getByRole("spinbutton", {
+        name: "Crafted laser power bonus (%) for hardpoint 1",
+      }),
+      "29",
+    );
+    await user.type(
+      screen.getByRole("textbox", { name: "Loadout name" }),
+      "Craft-MOLE",
+    );
+    await user.click(screen.getByRole("button", { name: "Save loadout" }));
+
+    const body = JSON.parse(
+      (fetchMock.mock.calls[0]?.[1] as RequestInit).body as string,
+    );
+    expect(body.hardpoints[0]).toEqual({
+      hardpointIndex: 0,
+      laserCode: "arbor-mh2",
+      moduleCodes: [],
+      craftedBonusPct: 29,
+    });
+    // nicht angehakte Hardpoints tragen das Feld gar nicht
+    expect(body.hardpoints[1]).toEqual({
+      hardpointIndex: 1,
+      laserCode: "arbor-mh2",
+      moduleCodes: [],
+    });
+  });
+
+  it("clamps out-of-range input and defaults an empty bonus to 0", async () => {
+    fetchMock.mockResolvedValue(
+      new Response(JSON.stringify({ id: "new-loadout" }), { status: 200 }),
+    );
+    const user = userEvent.setup();
+    renderBuilder();
+
+    await user.click(
+      screen.getByRole("button", { name: "MOLE — Argo Astronautics" }),
+    );
+    await user.click(
+      screen.getByRole("checkbox", { name: "Crafted laser on hardpoint 1" }),
+    );
+    await user.type(
+      screen.getByRole("spinbutton", {
+        name: "Crafted laser power bonus (%) for hardpoint 1",
+      }),
+      "150",
+    );
+    // Hardpoint 2: Checkbox an, Input leer lassen
+    await user.click(
+      screen.getByRole("checkbox", { name: "Crafted laser on hardpoint 2" }),
+    );
+    await user.type(
+      screen.getByRole("textbox", { name: "Loadout name" }),
+      "Clamp-MOLE",
+    );
+    await user.click(screen.getByRole("button", { name: "Save loadout" }));
+
+    const body = JSON.parse(
+      (fetchMock.mock.calls[0]?.[1] as RequestInit).body as string,
+    );
+    expect(body.hardpoints[0].craftedBonusPct).toBe(100);
+    expect(body.hardpoints[1].craftedBonusPct).toBe(0);
+  });
+
+  it("resets the crafted state when the laser changes", async () => {
+    const user = userEvent.setup();
+    renderBuilder();
+
+    await user.click(
+      screen.getByRole("button", { name: "MOLE — Argo Astronautics" }),
+    );
+    await user.click(
+      screen.getByRole("checkbox", { name: "Crafted laser on hardpoint 1" }),
+    );
+    await user.type(
+      screen.getByRole("spinbutton", {
+        name: "Crafted laser power bonus (%) for hardpoint 1",
+      }),
+      "29",
+    );
+
+    await user.selectOptions(
+      screen.getByRole("combobox", { name: "Laser for hardpoint 1" }),
+      "helix-ii",
+    );
+
+    expect(
+      screen.getByRole("checkbox", { name: "Crafted laser on hardpoint 1" }),
+    ).not.toBeChecked();
+    expect(
+      screen.queryByRole("spinbutton", {
+        name: "Crafted laser power bonus (%) for hardpoint 1",
+      }),
+    ).toBeNull();
+  });
+
+  it("prefills the crafted state in edit mode", () => {
+    renderWithIntl(
+      <LoadoutBuilder
+        catalog={catalog}
+        loadoutId="loadout-1"
+        initialValue={{
+          name: "Craft-MOLE",
+          method: "ship",
+          vehicleCode: "mole",
+          hardpoints: [
+            {
+              hardpointIndex: 0,
+              laserCode: "arbor-mh2",
+              moduleCodes: [],
+              craftedBonusPct: 15,
+            },
+            { hardpointIndex: 1, laserCode: "arbor-mh2", moduleCodes: [] },
+          ],
+          gadgetCodes: [],
+          isPublic: false,
+        }}
+      />,
+      { locale: "en" },
+    );
+
+    expect(
+      screen.getByRole("checkbox", { name: "Crafted laser on hardpoint 1" }),
+    ).toBeChecked();
+    expect(
+      screen.getByRole("spinbutton", {
+        name: "Crafted laser power bonus (%) for hardpoint 1",
+      }),
+    ).toHaveValue(15);
+    expect(
+      screen.getByRole("checkbox", { name: "Crafted laser on hardpoint 2" }),
+    ).not.toBeChecked();
+  });
+
   it("disables submit until the loadout is complete", async () => {
     const user = userEvent.setup();
     renderBuilder();

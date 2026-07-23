@@ -181,6 +181,14 @@ describe("findLoadoutShowcase", () => {
       ]);
     });
 
+    it("computes the best-case breakability stat per loadout", async () => {
+      const showcase = await findLoadoutShowcase(db);
+      // 2× Helix II (4000, headRes 1): 8000 / 0.2 = 40000 bei 0 % Resistenz
+      expect(showcase.feature?.breakabilityMass).toBeCloseTo(40000);
+      const unknown = showcase.newest.find((s) => s.loadout.id === "l-new1");
+      expect(unknown?.breakabilityMass).toBeNull();
+    });
+
     it("falls back to raw codes for unknown vehicles and lasers", async () => {
       const showcase = await findLoadoutShowcase(db);
       const unknown = showcase.newest.find((s) => s.loadout.id === "l-new1");

@@ -22,7 +22,7 @@ describe("CraftedBonusInput", () => {
     ).toBeVisible();
     expect(
       screen.getByText(
-        "Applies to every laser in the table — saved loadouts are unaffected.",
+        "Applies to every laser in the table — saved loadouts use their own stored crafted bonuses instead.",
       ),
     ).toBeVisible();
   });
