@@ -104,7 +104,7 @@ describe("SavedLoadoutChecks", () => {
   });
 
   it("honors stored crafted bonuses when judging", () => {
-    // Solo-Helix: required(30000, 30 %) = 5460 > 4080 — ohne Bonus zu schwach
+    // Solo-Helix: required(30000, 30 %) = 6000/0.79 = 7594.94 > 4080
     const solo = (craftedBonusPct?: number) =>
       loadout({
         name: "Solo-Prospector",
@@ -121,8 +121,8 @@ describe("SavedLoadoutChecks", () => {
     renderChecks({ loadouts: [solo()] });
     expect(screen.getByText("Not enough")).toBeInTheDocument();
 
-    // Mit +50 % Craft-Bonus: 6120 ≥ 5460
-    renderChecks({ loadouts: [solo(50)] });
+    // Mit +90 % Craft-Bonus: 7752 ≥ 7594.94
+    renderChecks({ loadouts: [solo(90)] });
     expect(screen.getByText("Breaks the rock")).toBeInTheDocument();
   });
 
@@ -139,9 +139,14 @@ describe("SavedLoadoutChecks", () => {
     expect(screen.getByText("No loadouts saved yet.")).toBeInTheDocument();
   });
 
-  it("waits for a valid rock before judging", () => {
+  it("lists the loadouts without a verdict until the rock is valid", () => {
     renderChecks({ mass: null });
+    // Loadouts sind sofort sichtbar (Feedback: "hier fehlt mein Loadout")
+    expect(screen.getByText("Break-MOLE")).toBeInTheDocument();
+    expect(screen.getByText("ARGO MOLE")).toBeInTheDocument();
+    // Verdict erst mit gültigem Stein
     expect(screen.queryByText("Breaks the rock")).not.toBeInTheDocument();
+    expect(screen.queryByText("Not enough")).not.toBeInTheDocument();
     expect(screen.getByText("Enter mass and resistance")).toBeInTheDocument();
   });
 });

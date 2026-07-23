@@ -88,8 +88,9 @@ describe("RockCalculator", () => {
   });
 
   it("applies a deep-linked crafted-laser bonus", () => {
-    // Helix II: required(1) = 5460 > 4080, mit +40 % aber 5712 ≥ 5460
-    renderCalculator("?mass=30000&res=30&bonus=40");
+    // Helix II: required(1) = 6000/0.79 = 7594.94 > 4080,
+    // mit +90 % aber 7752 ≥ 7594.94
+    renderCalculator("?mass=30000&res=30&bonus=90");
     expect(within(rowOf("Helix II")).getByText("1×")).toBeInTheDocument();
   });
 
@@ -100,9 +101,10 @@ describe("RockCalculator", () => {
   });
 
   it("clamps out-of-range resistance values", () => {
-    // Unclamped res=250 ergäbe 3×, clamped auf 100 % ergibt 2×
+    // Unclamped res=250 ergäbe effRes ≥ 1 (unknackbar); clamped auf 100 %:
+    // effRes(3) = 1 × 0.343 → required 9132.42 ≤ 12240 → 3×
     renderCalculator("?mass=30000&res=250");
-    expect(within(rowOf("Helix II")).getByText("2×")).toBeInTheDocument();
+    expect(within(rowOf("Helix II")).getByText("3×")).toBeInTheDocument();
   });
 
   it("writes the mass to the URL", async () => {

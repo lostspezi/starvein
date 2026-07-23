@@ -62,7 +62,6 @@ export default async function MyLoadoutsPage({
     lasersByCode: new Map(catalog.lasers.map((l) => [l.code, l])),
     modulesByCode: new Map(catalog.modules.map((m) => [m.code, m])),
   };
-  const gadgetsByCode = new Map(catalog.gadgets.map((g) => [g.code, g]));
 
   return (
     <PageShell width="wide">
@@ -81,7 +80,6 @@ export default async function MyLoadoutsPage({
             const breakabilityMass = bestCaseBreakableMass(
               loadout,
               catalogIndex,
-              gadgetsByCode,
             );
             return (
               <li

@@ -203,19 +203,30 @@ describe("headStats", () => {
 });
 
 describe("requiredPower", () => {
-  it("scales with mass, resistance and per-head resistance modifiers", () => {
-    // 30000 × 0.2 × 1.3 × 0.7 = 5460
+  it("scales the rock resistance by the modifiers, not the power directly", () => {
+    // effRes = 0.30 × 0.7 = 0.21 → 30000 × 0.2 / (1 − 0.21) = 7594.94
     expect(
       requiredPower({
         mass: 30000,
         resistancePct: 30,
         headResistanceModifiers: [0.7],
       }),
-    ).toBeCloseTo(5460);
+    ).toBeCloseTo(7594.94, 1);
+  });
+
+  it("is unaffected by modifiers at 0 % rock resistance", () => {
+    // effRes = 0 × x = 0 → Modifikatoren wirkungslos
+    expect(
+      requiredPower({
+        mass: 30000,
+        resistancePct: 0,
+        headResistanceModifiers: [0.7, 0.7, 0.7],
+      }),
+    ).toBeCloseTo(6000);
   });
 
   it("applies the gadget modifier ONCE, not per head", () => {
-    // 10000 × 0.2 × 1.2 × 1.25² × 0.5 = 1875 (per-head würde ×0.25 = 937.5 ergeben)
+    // effRes = 0.20 × 1.25² × 0.5 = 0.15625 → 2000 / 0.84375 = 2370.37
     expect(
       requiredPower({
         mass: 10000,
@@ -223,7 +234,29 @@ describe("requiredPower", () => {
         headResistanceModifiers: [1.25, 1.25],
         gadgetResistanceModifier: 0.5,
       }),
-    ).toBeCloseTo(1875);
+    ).toBeCloseTo(2370.37, 1);
+  });
+
+  it("returns Infinity when the effective resistance reaches 100 %", () => {
+    // 0.95 × 1.25 = 1.1875 → clamp auf 1 → unknackbar
+    expect(
+      requiredPower({
+        mass: 1000,
+        resistancePct: 95,
+        headResistanceModifiers: [1.25],
+      }),
+    ).toBe(Infinity);
+  });
+
+  it("clamps negative effective resistance to 0", () => {
+    // Erz-Resistenzen können negativ sein (z. B. Kupfer −70 %)
+    expect(
+      requiredPower({
+        mass: 1000,
+        resistancePct: -70,
+        headResistanceModifiers: [0.7],
+      }),
+    ).toBeCloseTo(200);
   });
 });
 
@@ -231,16 +264,18 @@ describe("headsNeeded", () => {
   const rock = { mass: 30000, resistancePct: 30, modules: [], gadget: null };
 
   it("finds the minimal head count for a bare laser", () => {
-    // Helix II: required(1) = 5460 > 4080; required(2) = 3822 ≤ 8160
+    // Helix II: required(1) = 6000/0.79 = 7594.94 > 4080;
+    // required(2) = 6000/0.853 = 7034.00 ≤ 8160
     const result = headsNeeded(laser(), rock);
     expect(result.canBreak).toBe(true);
     expect(result.heads).toBe(2);
-    expect(result.requiredAtHeads).toBeCloseTo(3822);
+    expect(result.requiredAtHeads).toBeCloseTo(7034.0, 1);
     expect(result.availableAtHeads).toBeCloseTo(8160);
   });
 
   it("lets modules reduce the head count", () => {
-    // Helix II + 2× Surge: Power 8160, headRes 0.49 → required(1) = 3822 ≤ 8160
+    // Helix II + 2× Surge: Power 8160, headRes 0.49 →
+    // required(1) = 6000/0.853 = 7034.00 ≤ 8160
     const result = headsNeeded(laser(), {
       ...rock,
       modules: [surge(), surge()],
@@ -251,14 +286,14 @@ describe("headsNeeded", () => {
 
   it("lets a gadget flip an unbreakable rock to breakable", () => {
     const smallRock = {
-      mass: 10000,
+      mass: 8000,
       resistancePct: 20,
       modules: [],
       gadget: null,
     };
-    // Arbor MH1: required(1) = 3000 > 1890
+    // Arbor MH1: required(1) = 1600/0.75 = 2133.33 > 1890
     expect(headsNeeded(arborMh1(), smallRock).heads).not.toBe(1);
-    // Mit Sabir (0.5): required(1) = 1500 ≤ 1890
+    // Mit Sabir (0.5): effRes 0.125 → required(1) = 1828.57 ≤ 1890
     const withGadget = headsNeeded(arborMh1(), {
       ...smallRock,
       gadget: sabir(),
@@ -274,9 +309,9 @@ describe("headsNeeded", () => {
       modules: [],
       gadget: null,
     };
-    // Arbor MH1: required(1) = 3000 > 1890
+    // Arbor MH1: required(1) = 2000/0.75 = 2666.67 > 1890
     expect(headsNeeded(arborMh1(), smallRock).heads).not.toBe(1);
-    // Mit +60 % Craft-Bonus: 1890 × 1.6 = 3024 ≥ 3000
+    // Mit +60 % Craft-Bonus: 1890 × 1.6 = 3024 ≥ 2666.67
     const boosted = headsNeeded(arborMh1(), {
       ...smallRock,
       laserPowerBonusPct: 60,
@@ -286,7 +321,8 @@ describe("headsNeeded", () => {
   });
 
   it("caps at MAX_HEADS and reports unbreakable rocks", () => {
-    // Arbor MH1, Masse 100000, Res 50 %: required(3) = 58593.75 > 3×1890
+    // Arbor MH1, 100000/50 %: effRes(3) = 0.5 × 1.25³ = 0.9766 →
+    // required(3) = 20000/0.0234375 = 853333.33 > 3×1890
     const result = headsNeeded(arborMh1(), {
       mass: 100000,
       resistancePct: 50,
@@ -295,7 +331,7 @@ describe("headsNeeded", () => {
     });
     expect(result.canBreak).toBe(false);
     expect(result.heads).toBeNull();
-    expect(result.requiredAtHeads).toBeCloseTo(58593.75);
+    expect(result.requiredAtHeads).toBeCloseTo(853333.33, 1);
     expect(result.availableAtHeads).toBeCloseTo(5670);
   });
 
@@ -319,16 +355,18 @@ describe("checkLoadout", () => {
   const rock = { mass: 30000, resistancePct: 30, gadget: null };
 
   it("sums power and multiplies resistance across equipped hardpoints", () => {
-    // MOLE 3× Helix II: required = 30000×0.2×1.3×0.7³ = 2675.4 ≤ 12240
+    // MOLE 3× Helix II: effRes = 0.3 × 0.343 = 0.1029 →
+    // required = 6000/0.8971 = 6688.22 ≤ 12240
     const result = checkLoadout(loadout(), catalog(), rock);
     expect(result.shipMining).toBe(true);
     expect(result.canBreak).toBe(true);
-    expect(result.required).toBeCloseTo(2675.4);
+    expect(result.required).toBeCloseTo(6688.22, 1);
     expect(result.available).toBeCloseTo(12240);
   });
 
   it("applies per-hardpoint modules from the loadout", () => {
-    // 1× Helix II + 2× Surge: Power 8160, headRes 0.49 → required 3822
+    // 1× Helix II + 2× Surge: Power 8160, headRes 0.49 →
+    // required = 6000/0.853 = 7034.00
     const single = loadout({
       hardpoints: [
         {
@@ -340,7 +378,7 @@ describe("checkLoadout", () => {
     });
     const result = checkLoadout(single, catalog(), rock);
     expect(result.canBreak).toBe(true);
-    expect(result.required).toBeCloseTo(3822);
+    expect(result.required).toBeCloseTo(7034.0, 1);
     expect(result.available).toBeCloseTo(8160);
   });
 
@@ -366,7 +404,7 @@ describe("checkLoadout", () => {
 
   it("applies stored crafted bonuses per hardpoint", () => {
     // 1 von 3 Köpfen gecraftet (+50 %): 4080 + 4080 + 6120 = 14280;
-    // required bleibt 2675.4 (Bonus ändert die Resistenz nicht)
+    // required bleibt 6688.22 (Bonus ändert die Resistenz nicht)
     const crafted = loadout({
       hardpoints: [
         {
@@ -381,7 +419,7 @@ describe("checkLoadout", () => {
     });
     const result = checkLoadout(crafted, catalog(), rock);
     expect(result.available).toBeCloseTo(14280);
-    expect(result.required).toBeCloseTo(2675.4);
+    expect(result.required).toBeCloseTo(6688.22, 1);
   });
 
   it("clamps stored out-of-range bonuses (legacy/foreign data)", () => {
@@ -416,10 +454,10 @@ describe("checkLoadout", () => {
           },
         ],
       });
-    // required(1 Kopf) = 5460 > 4080 — ohne Bonus unknackbar
+    // required(1 Kopf) = 6000/0.79 = 7594.94 > 4080 — ohne Bonus unknackbar
     expect(checkLoadout(single(), catalog(), rock).canBreak).toBe(false);
-    // +50 %: 6120 ≥ 5460
-    expect(checkLoadout(single(50), catalog(), rock).canBreak).toBe(true);
+    // +90 %: 7752 ≥ 7594.94
+    expect(checkLoadout(single(90), catalog(), rock).canBreak).toBe(true);
   });
 });
 
@@ -444,9 +482,9 @@ describe("maxBreakableMass", () => {
   const noRock = { resistancePct: 0, gadget: null };
 
   it("inverts the break inequality for a full loadout", () => {
-    // 3× Helix II: 12240 / (0.2 × 1 × 0.7³) ≈ 178425.66
+    // 3× Helix II bei 0 %: effRes = 0 → 12240 × 1 / 0.2 = 61200
     const maxMass = maxBreakableMass(loadout(), catalog(), noRock);
-    expect(maxMass).toBeCloseTo(178425.66, 1);
+    expect(maxMass).toBeCloseTo(61200);
   });
 
   it("is consistent with checkLoadout at the boundary", () => {
@@ -464,21 +502,52 @@ describe("maxBreakableMass", () => {
   });
 
   it("scales down with rock resistance", () => {
+    // effRes(50 %) = 0.5 × 0.343 = 0.1715 → Faktor 0.8285
     const atZero = maxBreakableMass(loadout(), catalog(), noRock);
     const atFifty = maxBreakableMass(loadout(), catalog(), {
       resistancePct: 50,
       gadget: null,
     });
-    expect(atFifty).toBeCloseTo((atZero ?? 0) / 1.5, 5);
+    expect(atFifty).toBeCloseTo((atZero ?? 0) * 0.8285, 5);
   });
 
-  it("doubles with a resistance-halving gadget", () => {
+  it("lets a gadget soften the rock resistance, but not below 0 %", () => {
+    // Bei 50 %: effRes mit Sabir = 0.5 × 0.343 × 0.5 = 0.08575
     const withGadget = maxBreakableMass(loadout(), catalog(), {
-      resistancePct: 0,
+      resistancePct: 50,
       gadget: sabir(),
     });
-    const without = maxBreakableMass(loadout(), catalog(), noRock);
-    expect(withGadget).toBeCloseTo((without ?? 0) * 2, 5);
+    const without = maxBreakableMass(loadout(), catalog(), {
+      resistancePct: 50,
+      gadget: null,
+    });
+    expect(withGadget).toBeCloseTo(((without ?? 0) * 0.91425) / 0.8285, 5);
+    // Bei 0 % gibt es nichts zu senken — Gadget wirkungslos
+    expect(
+      maxBreakableMass(loadout(), catalog(), {
+        resistancePct: 0,
+        gadget: sabir(),
+      }),
+    ).toBeCloseTo(61200);
+  });
+
+  it("returns 0 when the effective resistance reaches 100 %", () => {
+    // Arbor-Katalog: headRes 1.25, Erz 95 % → effRes 1.1875 → clamp 1
+    const arborCatalog = {
+      lasersByCode: new Map([["arbor-mh1", arborMh1()]]),
+      modulesByCode: new Map<string, MiningModule>(),
+    };
+    const arborLoadout = loadout({
+      hardpoints: [
+        { hardpointIndex: 0, laserCode: "arbor-mh1", moduleCodes: [] },
+      ],
+    });
+    expect(
+      maxBreakableMass(arborLoadout, arborCatalog, {
+        resistancePct: 95,
+        gadget: null,
+      }),
+    ).toBe(0);
   });
 
   it("grows proportionally with stored crafted bonuses", () => {
@@ -522,33 +591,13 @@ describe("maxBreakableMass", () => {
 });
 
 describe("bestCaseBreakableMass", () => {
-  const gadgetsByCode = new Map([
-    ["okunis", okunis()],
-    ["sabir", sabir()],
-  ]);
-
-  it("uses 0 % resistance and the best stored gadget", () => {
-    const withGadgets = loadout({ gadgetCodes: ["okunis", "sabir"] });
-    expect(
-      bestCaseBreakableMass(withGadgets, catalog(), gadgetsByCode),
-    ).toBeCloseTo(
-      (maxBreakableMass(loadout(), catalog(), {
-        resistancePct: 0,
-        gadget: null,
-      }) ?? 0) * 2,
-      5,
-    );
-  });
-
-  it("matches maxBreakableMass at 0 % without effective gadgets", () => {
-    expect(
-      bestCaseBreakableMass(loadout(), catalog(), gadgetsByCode),
-    ).toBeCloseTo(178425.66, 1);
+  it("equals maxBreakableMass at 0 % resistance", () => {
+    // Bei 0 % wirken weder Widerstands-Modifikatoren noch Gadgets
+    expect(bestCaseBreakableMass(loadout(), catalog())).toBeCloseTo(61200);
     expect(
       bestCaseBreakableMass(
         loadout({ method: "roc", vehicleCode: "roc" }),
         catalog(),
-        gadgetsByCode,
       ),
     ).toBeNull();
   });
@@ -598,19 +647,22 @@ describe("oreBreakabilityRows", () => {
     const rows = oreBreakabilityRows(ores, loadout(), catalog(), null);
 
     expect(rows.map((row) => row.oreCode)).toEqual(["QUAN", "GOLD", "COPP"]);
-    const base = 178425.655; // 3× Helix II bei 0 % Resistenz
+    const base = 61200; // 3× Helix II bei 0 % Resistenz
     expect(rows[0]).toMatchObject({ oreName: "Quantanium", resistancePct: 90 });
-    expect(rows[0]?.maxMass).toBeCloseTo(base / 1.9, 1);
-    expect(rows[1]?.maxMass).toBeCloseTo(base / 1.25, 1);
-    // negative Resistenz (Kupfer) senkt die Anforderung
-    expect(rows[2]?.maxMass).toBeCloseTo(base / 0.3, 1);
+    // effRes = 0.9 × 0.343 = 0.3087
+    expect(rows[0]?.maxMass).toBeCloseTo(base * (1 - 0.3087), 1);
+    // effRes = 0.25 × 0.343 = 0.08575
+    expect(rows[1]?.maxMass).toBeCloseTo(base * (1 - 0.08575), 1);
+    // negative Erz-Resistenz (Kupfer) clampt auf 0 % — wie ein neutraler Stein
+    expect(rows[2]?.maxMass).toBeCloseTo(base, 1);
   });
 
   it("applies the gadget to every ore row", () => {
     const withGadget = oreBreakabilityRows(ores, loadout(), catalog(), sabir());
     const without = oreBreakabilityRows(ores, loadout(), catalog(), null);
+    // QUAN: effRes mit Sabir = 0.9 × 0.343 × 0.5 = 0.15435
     expect(withGadget[0]?.maxMass).toBeCloseTo(
-      (without[0]?.maxMass ?? 0) * 2,
+      ((without[0]?.maxMass ?? 0) * (1 - 0.15435)) / (1 - 0.3087),
       5,
     );
   });

@@ -39,10 +39,9 @@ export function SavedLoadoutChecks({
   if (loadouts.length === 0) {
     return <p className="text-sm text-text-muted">{t("loadouts.empty")}</p>;
   }
-  if (mass === null || mass <= 0 || resistancePct === null) {
-    return <p className="text-sm text-text-muted">{t("table.empty")}</p>;
-  }
 
+  // Loadouts immer auflisten; das Verdict kommt erst mit gültigem Stein
+  const hasRock = mass !== null && mass > 0 && resistancePct !== null;
   const catalog = {
     lasersByCode: new Map(lasers.map((laser) => [laser.code, laser])),
     modulesByCode: new Map(modules.map((module) => [module.code, module])),
@@ -50,13 +49,17 @@ export function SavedLoadoutChecks({
   const vehiclesByCode = new Map(
     vehicles.map((vehicle) => [vehicle.code, vehicle]),
   );
-  const rock = { mass, resistancePct, gadget };
 
   return (
     <div className="flex flex-col gap-2">
+      {!hasRock && (
+        <p className="text-sm text-text-muted">{t("table.empty")}</p>
+      )}
       <ul className="flex flex-col gap-2">
         {loadouts.map((loadout) => {
-          const result = checkLoadout(loadout, catalog, rock);
+          const result = hasRock
+            ? checkLoadout(loadout, catalog, { mass, resistancePct, gadget })
+            : null;
           return (
             <li
               key={loadout.id}
@@ -69,7 +72,9 @@ export function SavedLoadoutChecks({
                     loadout.vehicleCode}
                 </span>
               </div>
-              {result.shipMining ? (
+              {result === null ? (
+                <span className="font-mono text-sm text-text-muted">—</span>
+              ) : result.shipMining ? (
                 <Badge tone={result.canBreak ? "success" : "warning"}>
                   {t(
                     result.canBreak ? "loadouts.breaks" : "loadouts.breaksNot",

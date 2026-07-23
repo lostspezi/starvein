@@ -76,7 +76,7 @@ describe("LaserBreakTable", () => {
         resistancePct={30}
       />,
     );
-    // Helix II: required(2) = 3822 ≤ 8160 → "2×"
+    // Helix II: required(2) = 6000/0.853 = 7034 ≤ 8160 → "2×"
     expect(within(rowOf("Helix II")).getByText("2×")).toBeInTheDocument();
   });
 
@@ -101,11 +101,12 @@ describe("LaserBreakTable", () => {
         lasers={[arborMh1]}
         modules={[]}
         gadget={sabir}
-        mass={10000}
+        mass={8000}
         resistancePct={20}
       />,
     );
-    // Arbor MH1 alleine schafft required 3000 nicht, mit Sabir (1500) schon
+    // Arbor MH1 alleine schafft required 2133 nicht,
+    // mit Sabir (effRes 0.125 → 1828.57) schon
     expect(within(rowOf("Arbor MH1")).getByText("1×")).toBeInTheDocument();
   });
 
@@ -120,7 +121,8 @@ describe("LaserBreakTable", () => {
         laserPowerBonusPct={60}
       />,
     );
-    // Arbor MH1: required(1) = 3000 > 1890, mit +60 % aber 3024 ≥ 3000
+    // Arbor MH1: required(1) = 2000/0.75 = 2666.67 > 1890,
+    // mit +60 % aber 3024 ≥ 2666.67
     const row = within(rowOf("Arbor MH1"));
     expect(row.getByText("3,024")).toBeInTheDocument();
     expect(row.getByText("1×")).toBeInTheDocument();
