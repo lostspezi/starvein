@@ -41,16 +41,11 @@ export async function findLoadoutShowcase(db: Db): Promise<LoadoutShowcase> {
     lasersByCode: new Map(catalog.lasers.map((l) => [l.code, l])),
     modulesByCode: new Map(catalog.modules.map((m) => [m.code, m])),
   };
-  const gadgetsByCode = new Map(catalog.gadgets.map((g) => [g.code, g]));
   const decorate = (loadout: Loadout): ShowcaseLoadout => ({
     loadout,
     vehicleName: vehicleNames.get(loadout.vehicleCode) ?? loadout.vehicleCode,
     laserSummary: summarizeLasers(loadout.hardpoints, laserNames),
-    breakabilityMass: bestCaseBreakableMass(
-      loadout,
-      catalogIndex,
-      gadgetsByCode,
-    ),
+    breakabilityMass: bestCaseBreakableMass(loadout, catalogIndex),
   });
 
   const feature = topRaw[0] ?? null;

@@ -82,6 +82,7 @@
       "oreHeader": "Erz",
       "resistanceHeader": "Resistenz",
       "massHeader": "Max. Masse",
+      "notBreakable": "Nicht knackbar",
       "gadgetNote": "Mit {name} einmal am Stein platziert (Best Case, Verbrauchsgegenstand)."
     },
     "stats": {

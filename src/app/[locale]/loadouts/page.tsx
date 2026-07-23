@@ -62,13 +62,12 @@ export default async function LoadoutsPage({
   const db = await getDb();
   const userId = await getSessionUserId(await headers());
 
-  const { vehicles, lasers, modules, gadgets } = await loadEquipmentCatalog(db);
+  const { vehicles, lasers, modules } = await loadEquipmentCatalog(db);
   const laserNames = new Map(lasers.map((l) => [l.code, l.name]));
   const catalogIndex = {
     lasersByCode: new Map(lasers.map((l) => [l.code, l])),
     modulesByCode: new Map(modules.map((m) => [m.code, m])),
   };
-  const gadgetsByCode = new Map(gadgets.map((g) => [g.code, g]));
   const vehicleCode = vehicles.some((v) => v.code === vehicleParam)
     ? vehicleParam
     : undefined;
@@ -112,11 +111,7 @@ export default async function LoadoutsPage({
               laserSummary={summarizeLasers(loadout.hardpoints, laserNames)}
               currentPatchVersion={CURRENT_PATCH_VERSION}
               viewerUserId={userId}
-              breakabilityMass={bestCaseBreakableMass(
-                loadout,
-                catalogIndex,
-                gadgetsByCode,
-              )}
+              breakabilityMass={bestCaseBreakableMass(loadout, catalogIndex)}
             />
           ))}
         </div>

@@ -13,13 +13,17 @@ import type { Ore } from "@/features/ores/ores.schema";
 
 /**
  * Break-Formel nach mort13/BreakabilityChart (MIT, Patch 4.x):
- *   requiredPower = mass × C × (1 + resistance%/100) × gadgetRes × Π headRes
- *   knackbar, wenn requiredPower ≤ Σ headPower.
- * Module stacken hier ADDITIV pro Kopf (Regolith-Konvention seit 4.0.1):
- * multiplier = Σ(mᵢ − 1) + 1. Das weicht bewusst von der multiplikativen
- * Anzeige-Aggregation in loadouts/loadout-stats.ts ab — die Angleichung
- * dort ist ein separates Follow-up. Gadgets liegen am Stein und wirken
- * deshalb genau einmal, nicht pro Kopf.
+ *   effRes = clamp(resistance%/100 × Π headRes × gadgetRes, 0..1)
+ *   requiredPower = mass × C / (1 − effRes); knackbar, wenn ≤ Σ headPower.
+ * Die Widerstands-Modifikatoren SENKEN also die Resistenz des Steins —
+ * bei 0 % Resistenz bewirken sie nichts (verifiziert 2026-07-23 gegen
+ * mort13 js/calculations.js nach Community-Feedback; die frühere Variante
+ * multiplizierte sie in die nötige Power und überschätzte die knackbare
+ * Masse um Faktor 1/Π headRes). Module stacken ADDITIV pro Kopf
+ * (Regolith-Konvention seit 4.0.1): multiplier = Σ(mᵢ − 1) + 1 — das
+ * weicht bewusst von der multiplikativen Anzeige-Aggregation in
+ * loadouts/loadout-stats.ts und von mort13 ab. Gadgets liegen am Stein
+ * und wirken deshalb genau einmal, nicht pro Kopf.
  */
 export const ROCK_BREAK_MASS_FACTOR = 0.2;
 
@@ -101,23 +105,30 @@ export function headStats(
   };
 }
 
+/** Effektive Resistenz des Steins nach allen Modifikatoren, clamp 0..1. */
+function effectiveResistance(input: {
+  resistancePct: number;
+  headResistanceModifiers: number[];
+  gadgetResistanceModifier?: number;
+}): number {
+  const combined =
+    input.headResistanceModifiers.reduce(
+      (product, modifier) => product * modifier,
+      1,
+    ) * (input.gadgetResistanceModifier ?? 1);
+  return Math.max(0, Math.min(1, (input.resistancePct / 100) * combined));
+}
+
+/** Infinity, wenn die effektive Resistenz 100 % erreicht (unknackbar). */
 export function requiredPower(input: {
   mass: number;
   resistancePct: number;
   headResistanceModifiers: number[];
   gadgetResistanceModifier?: number;
 }): number {
-  const headFactor = input.headResistanceModifiers.reduce(
-    (product, modifier) => product * modifier,
-    1,
-  );
-  return (
-    input.mass *
-    ROCK_BREAK_MASS_FACTOR *
-    (1 + input.resistancePct / 100) *
-    (input.gadgetResistanceModifier ?? 1) *
-    headFactor
-  );
+  const denominator = 1 - effectiveResistance(input);
+  if (denominator <= 0) return Infinity;
+  return (input.mass * ROCK_BREAK_MASS_FACTOR) / denominator;
 }
 
 /** Kleinste Kopf-Anzahl (1..MAX_HEADS), mit der der Laser den Stein knackt. */
@@ -236,9 +247,10 @@ export function checkLoadout(
 
 /**
  * Maximale knackbare Steinmasse eines gespeicherten Loadouts — Inversion
- * der Break-Ungleichung: maxMass = Σ headPower / (C × (1+res/100) ×
- * gadgetRes × Π headRes). null für Nicht-Ship-Loadouts und Loadouts ohne
- * vergleichbare Köpfe (Size 0 / unbekannte Codes).
+ * der Break-Ungleichung: maxMass = Σ headPower × (1 − effRes) / C.
+ * 0 bedeutet: bei dieser Resistenz für jede Masse unknackbar (effRes 100 %).
+ * null für Nicht-Ship-Loadouts und Loadouts ohne vergleichbare Köpfe
+ * (Size 0 / unbekannte Codes).
  */
 export function maxBreakableMass(
   loadout: Loadout,
@@ -251,13 +263,12 @@ export function maxBreakableMass(
   if (heads.length === 0) return null;
 
   const available = heads.reduce((sum, head) => sum + head.power, 0);
-  const requiredPerMass = requiredPower({
-    mass: 1,
+  const effRes = effectiveResistance({
     resistancePct: rock.resistancePct,
     headResistanceModifiers: heads.map((head) => head.resistanceModifier),
     gadgetResistanceModifier: rock.gadget?.modifiers.resistance ?? 1,
   });
-  return available / requiredPerMass;
+  return (available * (1 - effRes)) / ROCK_BREAK_MASS_FACTOR;
 }
 
 export type OreBreakabilityRow = {
@@ -298,18 +309,15 @@ export function oreBreakabilityRows(
 
 /**
  * Best-Case-Kennzahl für Loadout-Karten: maximale knackbare Masse bei 0 %
- * Resistenz mit dem besten gespeicherten Gadget einmal am Stein.
+ * Resistenz — Modifikatoren und Gadgets senken nur die Resistenz und sind
+ * bei 0 % deshalb wirkungslos.
  */
 export function bestCaseBreakableMass(
   loadout: Loadout,
   catalog: EquipmentCatalogIndex,
-  gadgetsByCode: Map<string, MiningGadget>,
 ): number | null {
-  const gadgets = loadout.gadgetCodes.flatMap(
-    (code) => gadgetsByCode.get(code) ?? [],
-  );
   return maxBreakableMass(loadout, catalog, {
     resistancePct: 0,
-    gadget: bestGadget(gadgets),
+    gadget: null,
   });
 }

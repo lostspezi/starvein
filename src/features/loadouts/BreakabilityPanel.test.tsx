@@ -30,6 +30,26 @@ describe("BreakabilityPanel", () => {
     expect(screen.getByText("594,752")).toBeVisible();
   });
 
+  it("marks ores that stay unbreakable at any mass", () => {
+    renderWithIntl(
+      <BreakabilityPanel
+        rows={[
+          {
+            oreCode: "QUAN",
+            oreName: "Quantanium",
+            resistancePct: 95,
+            maxMass: 0,
+          },
+        ]}
+        gadgetName={null}
+      />,
+      { locale: "en" },
+    );
+
+    expect(screen.getByText("Not breakable")).toBeVisible();
+    expect(screen.queryByText("0")).toBeNull();
+  });
+
   it("names the assumed gadget when one applies", () => {
     renderWithIntl(<BreakabilityPanel rows={rows} gadgetName="Sabir" />, {
       locale: "en",

@@ -48,9 +48,15 @@ export function BreakabilityPanel({
               <DataTableTd className="text-right font-mono">
                 {format.number(Math.round(row.resistancePct))} %
               </DataTableTd>
-              <DataTableTd className="text-right font-mono text-accent-secondary">
-                {format.number(Math.round(row.maxMass))}
-              </DataTableTd>
+              {row.maxMass > 0 ? (
+                <DataTableTd className="text-right font-mono text-accent-secondary">
+                  {format.number(Math.round(row.maxMass))}
+                </DataTableTd>
+              ) : (
+                <DataTableTd className="text-right text-text-muted">
+                  {t("notBreakable")}
+                </DataTableTd>
+              )}
             </DataTableRow>
           ))}
         </tbody>

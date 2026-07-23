@@ -82,6 +82,7 @@
       "oreHeader": "Ore",
       "resistanceHeader": "Resistance",
       "massHeader": "Max mass",
+      "notBreakable": "Not breakable",
       "gadgetNote": "Assumes one {name} placed on the rock (best case, consumable)."
     },
     "stats": {
