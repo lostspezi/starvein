@@ -15,6 +15,10 @@
       "hint": "Module gelten für jeden Laser, soweit seine Slots reichen; das Gadget wirkt einmal auf den Stein.",
       "activeHint": "Aktive Module werden als eingeschaltet gerechnet (Optimalfall)."
     },
+    "bonus": {
+      "label": "Craft-Bonus Laser-Power (%)",
+      "hint": "Wirkt auf alle Laser in der Tabelle — gespeicherte Loadouts bleiben unberührt."
+    },
     "table": {
       "laser": "Laser",
       "size": "Größe",

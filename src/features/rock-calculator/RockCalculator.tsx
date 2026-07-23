@@ -16,9 +16,14 @@ import type {
 } from "@/features/loadouts/equipment.schema";
 import type { Loadout } from "@/features/loadouts/loadouts.schema";
 import { Panel } from "@/lib/components/ui/Panel";
+import { CraftedBonusInput } from "./CraftedBonusInput";
 import { LaserBreakTable } from "./LaserBreakTable";
 import { ModuleGadgetPicker } from "./ModuleGadgetPicker";
-import { MAX_GLOBAL_MODULES } from "./rock-break";
+import {
+  CRAFTED_BONUS_MAX_PCT,
+  CRAFTED_BONUS_MIN_PCT,
+  MAX_GLOBAL_MODULES,
+} from "./rock-break";
 import { RockInputs } from "./RockInputs";
 import { SavedLoadoutChecks } from "./SavedLoadoutChecks";
 
@@ -50,6 +55,7 @@ export function RockCalculator({
     parseAsArrayOf(parseAsString).withDefault([]),
   );
   const [gadgetCode, setGadgetCode] = useQueryState("gadget", parseAsString);
+  const [bonus, setBonus] = useQueryState("bonus", parseAsFloat);
 
   const modulesByCode = new Map(modules.map((m) => [m.code, m]));
   const selectedModules = moduleCodes
@@ -60,6 +66,10 @@ export function RockCalculator({
 
   const safeMass = mass !== null && mass > 0 ? mass : null;
   const safeRes = res === null ? null : Math.min(100, Math.max(0, res));
+  const safeBonus =
+    bonus === null
+      ? null
+      : Math.min(CRAFTED_BONUS_MAX_PCT, Math.max(CRAFTED_BONUS_MIN_PCT, bonus));
   const hasActiveModule = selectedModules.some((m) => m.type === "active");
 
   return (
@@ -81,6 +91,7 @@ export function RockCalculator({
           }
           onGadgetChange={setGadgetCode}
         />
+        <CraftedBonusInput value={safeBonus} onChange={setBonus} />
         {hasActiveModule && (
           <p className="text-xs text-warning">{t("modules.activeHint")}</p>
         )}
@@ -92,6 +103,7 @@ export function RockCalculator({
         gadget={selectedGadget}
         mass={safeMass}
         resistancePct={safeRes}
+        laserPowerBonusPct={safeBonus ?? 0}
       />
 
       <section className="flex flex-col gap-2">

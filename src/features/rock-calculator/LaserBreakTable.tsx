@@ -22,12 +22,15 @@ export function LaserBreakTable({
   gadget,
   mass,
   resistancePct,
+  laserPowerBonusPct = 0,
 }: {
   lasers: MiningLaser[];
   modules: MiningModule[];
   gadget: MiningGadget | null;
   mass: number | null;
   resistancePct: number | null;
+  /** Craft-Bonus (%), wirkt auf jede Zeile — nicht auf gespeicherte Loadouts. */
+  laserPowerBonusPct?: number;
 }) {
   const t = useTranslations("calculator");
   const format = useFormatter();
@@ -38,11 +41,11 @@ export function LaserBreakTable({
     );
   }
 
-  const rock = { mass, resistancePct, modules, gadget };
+  const rock = { mass, resistancePct, modules, gadget, laserPowerBonusPct };
   const rows = [...lasers]
     .sort((a, b) => a.size - b.size || a.name.localeCompare(b.name))
     .flatMap((laser) => {
-      const head = headStats(laser, modules);
+      const head = headStats(laser, modules, laserPowerBonusPct);
       if (head === null) return [];
       return [{ laser, head, result: headsNeeded(laser, rock) }];
     });

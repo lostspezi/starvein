@@ -87,6 +87,18 @@ describe("RockCalculator", () => {
     expect(within(rowOf("Helix II")).getByText("2×")).toBeInTheDocument();
   });
 
+  it("applies a deep-linked crafted-laser bonus", () => {
+    // Helix II: required(1) = 5460 > 4080, mit +40 % aber 5712 ≥ 5460
+    renderCalculator("?mass=30000&res=30&bonus=40");
+    expect(within(rowOf("Helix II")).getByText("1×")).toBeInTheDocument();
+  });
+
+  it("clamps out-of-range crafted-laser bonus values", () => {
+    // Unclamped bonus=500 ergäbe Power 24,480, clamped auf 100 % sind es 8,160
+    renderCalculator("?mass=30000&res=30&bonus=500");
+    expect(within(rowOf("Helix II")).getByText("8,160")).toBeInTheDocument();
+  });
+
   it("clamps out-of-range resistance values", () => {
     // Unclamped res=250 ergäbe 3×, clamped auf 100 % ergibt 2×
     renderCalculator("?mass=30000&res=250");

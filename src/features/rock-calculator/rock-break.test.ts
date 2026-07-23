@@ -157,6 +157,20 @@ describe("headStats", () => {
     expect(stats?.resistanceModifier).toBe(0.55);
   });
 
+  it("scales the laser's base power by a crafted-laser bonus before modules", () => {
+    // +29 % auf 4080 = 5263.2; Resistenz bleibt unberührt
+    const bare = headStats(laser(), [], 29);
+    expect(bare?.power).toBeCloseTo(5263.2);
+    expect(bare?.resistanceModifier).toBeCloseTo(0.7);
+    // Bonus wirkt auf die Basis, der Modul-Stack danach: 4080 × 1.5 × 2.0
+    const modded = headStats(laser(), [surge(), surge()], 50);
+    expect(modded?.power).toBeCloseTo(12240);
+  });
+
+  it("accepts a negative crafted-laser bonus", () => {
+    expect(headStats(laser(), [], -50)?.power).toBeCloseTo(2040);
+  });
+
   it("returns null for size-0 lasers without comparable power", () => {
     const rocLaser = laser({
       size: 0,
@@ -236,6 +250,24 @@ describe("headsNeeded", () => {
     });
     expect(withGadget.canBreak).toBe(true);
     expect(withGadget.heads).toBe(1);
+  });
+
+  it("lets a crafted-laser bonus flip an unbreakable rock to breakable", () => {
+    const smallRock = {
+      mass: 10000,
+      resistancePct: 20,
+      modules: [],
+      gadget: null,
+    };
+    // Arbor MH1: required(1) = 3000 > 1890
+    expect(headsNeeded(arborMh1(), smallRock).heads).not.toBe(1);
+    // Mit +60 % Craft-Bonus: 1890 × 1.6 = 3024 ≥ 3000
+    const boosted = headsNeeded(arborMh1(), {
+      ...smallRock,
+      laserPowerBonusPct: 60,
+    });
+    expect(boosted.canBreak).toBe(true);
+    expect(boosted.heads).toBe(1);
   });
 
   it("caps at MAX_HEADS and reports unbreakable rocks", () => {

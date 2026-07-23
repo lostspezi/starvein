@@ -24,6 +24,10 @@ export const MAX_HEADS = 3;
 /** Obergrenze der globalen Modul-Auswahl (größtes Slot-Angebot je Laser). */
 export const MAX_GLOBAL_MODULES = 3;
 
+/** Eingabegrenzen für den Craft-Bonus (Crafting kann Stats auch senken). */
+export const CRAFTED_BONUS_MIN_PCT = -50;
+export const CRAFTED_BONUS_MAX_PCT = 100;
+
 export type RockInput = {
   mass: number;
   resistancePct: number;
@@ -68,15 +72,22 @@ export function additiveModuleStack(
  * Effektive Werte eines Kopfes; Module werden auf die Slot-Anzahl des
  * Lasers trunkiert. null bei Size-0-Lasern (laserPower in-game
  * normalisiert, nicht mit Schiffs-Lasern vergleichbar).
+ * laserPowerBonusPct (Craft-Bonus) skaliert die Basis-Power des Lasers,
+ * bevor der Modul-Stack greift — ein gecrafteter Laser hat höhere
+ * Grundwerte, Module wirken darauf.
  */
 export function headStats(
   laser: MiningLaser,
   modules: MiningModule[],
+  laserPowerBonusPct = 0,
 ): HeadStats | null {
   if (laser.stats.laserPower === null) return null;
   const slotted = modules.slice(0, laser.moduleSlots);
   return {
-    power: laser.stats.laserPower * additiveModuleStack("laserPower", slotted),
+    power:
+      laser.stats.laserPower *
+      (1 + laserPowerBonusPct / 100) *
+      additiveModuleStack("laserPower", slotted),
     resistanceModifier:
       (laser.modifiers.resistance ?? 1) *
       additiveModuleStack("resistance", slotted),
@@ -105,9 +116,13 @@ export function requiredPower(input: {
 /** Kleinste Kopf-Anzahl (1..MAX_HEADS), mit der der Laser den Stein knackt. */
 export function headsNeeded(
   laser: MiningLaser,
-  ctx: RockInput & { modules: MiningModule[]; gadget: MiningGadget | null },
+  ctx: RockInput & {
+    modules: MiningModule[];
+    gadget: MiningGadget | null;
+    laserPowerBonusPct?: number;
+  },
 ): HeadsNeededResult {
-  const head = headStats(laser, ctx.modules);
+  const head = headStats(laser, ctx.modules, ctx.laserPowerBonusPct ?? 0);
   if (head === null) {
     return {
       canBreak: false,
