@@ -20,6 +20,13 @@ test("computes heads needed per laser from mass and resistance", async ({
   const helixRow = page.getByRole("row", { name: /Helix II/ });
   await expect(helixRow.getByText("2×")).toBeVisible();
 
+  // Craft-Bonus +40 %: 4080 × 1.4 = 5712 ≥ 5460 → ein Kopf reicht
+  await page.getByLabel("Crafted laser power bonus (%)").fill("40");
+  await expect(page).toHaveURL(/bonus=40/);
+  await expect(helixRow.getByText("1×")).toBeVisible();
+  await page.getByLabel("Crafted laser power bonus (%)").fill("");
+  await expect(helixRow.getByText("2×")).toBeVisible();
+
   // 2× Surge (additiv ×2.0 Power, res-Stack 0.7) → ein Kopf reicht
   await page.getByLabel("Module slot 1").selectOption("surge");
   await page.getByLabel("Module slot 2").selectOption("surge");

@@ -109,6 +109,23 @@ describe("LaserBreakTable", () => {
     expect(within(rowOf("Arbor MH1")).getByText("1×")).toBeInTheDocument();
   });
 
+  it("applies a crafted-laser power bonus to power and verdict", () => {
+    renderWithIntl(
+      <LaserBreakTable
+        lasers={[arborMh1]}
+        modules={[]}
+        gadget={null}
+        mass={10000}
+        resistancePct={20}
+        laserPowerBonusPct={60}
+      />,
+    );
+    // Arbor MH1: required(1) = 3000 > 1890, mit +60 % aber 3024 ≥ 3000
+    const row = within(rowOf("Arbor MH1"));
+    expect(row.getByText("3,024")).toBeInTheDocument();
+    expect(row.getByText("1×")).toBeInTheDocument();
+  });
+
   it("shows how many of the picked modules fit each laser's slots", () => {
     renderWithIntl(
       <LaserBreakTable

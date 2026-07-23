@@ -15,6 +15,10 @@
       "hint": "Modules apply to every laser as far as its slots allow; the gadget affects the rock once.",
       "activeHint": "Active modules are treated as switched on (best case)."
     },
+    "bonus": {
+      "label": "Crafted laser power bonus (%)",
+      "hint": "Applies to every laser in the table — saved loadouts are unaffected."
+    },
     "table": {
       "laser": "Laser",
       "size": "Size",
