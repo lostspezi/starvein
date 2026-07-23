@@ -78,7 +78,8 @@
       "notFound": "Loadout not found"
     },
     "breakability": {
-      "heading": "Max breakable rock mass",
+      "heading": "Breakable ores (max rock mass)",
+      "oreHeader": "Ore",
       "resistanceHeader": "Resistance",
       "massHeader": "Max mass",
       "gadgetNote": "Assumes one {name} placed on the rock (best case, consumable)."

@@ -12,10 +12,10 @@ import {
   aggregateLoadoutStats,
 } from "@/features/loadouts/loadout-stats";
 import { getLoadoutForViewer } from "@/features/loadouts/loadouts.service";
+import { findAllOresCached } from "@/features/ores/ores.repository";
 import {
   bestGadget,
-  BREAKABILITY_RESISTANCE_TIERS,
-  maxBreakableMass,
+  oreBreakabilityRows,
 } from "@/features/rock-calculator/rock-break";
 import { OwnerActions } from "@/features/loadouts/OwnerActions";
 import { VoteButton } from "@/features/loadouts/VoteButton";
@@ -105,18 +105,16 @@ export default async function LoadoutDetailPage({
     .map((code) => gadgetsByCode.get(code))
     .filter((gadget) => gadget !== undefined);
 
-  // Knackbarkeit: bestes gespeichertes Gadget einmal angesetzt (Best Case);
-  // null-Tiers (ROC / Size 0 / unbekannte Laser) blenden das Panel aus
+  // Knackbarkeit pro Erz: bestes gespeichertes Gadget einmal angesetzt
+  // (Best Case); leere Zeilen (ROC / Size 0 / unbekannte Laser) blenden
+  // das Panel aus
   const breakabilityGadget = bestGadget(gadgets);
   const catalogIndex = { lasersByCode, modulesByCode };
-  const breakabilityTiers = BREAKABILITY_RESISTANCE_TIERS.flatMap(
-    (resistancePct) => {
-      const maxMass = maxBreakableMass(loadout, catalogIndex, {
-        resistancePct,
-        gadget: breakabilityGadget,
-      });
-      return maxMass === null ? [] : [{ resistancePct, maxMass }];
-    },
+  const breakabilityRows = oreBreakabilityRows(
+    await findAllOresCached(db),
+    loadout,
+    catalogIndex,
+    breakabilityGadget,
   );
 
   const shoppingList = buildShoppingList(loadout, catalog);
@@ -210,9 +208,9 @@ export default async function LoadoutDetailPage({
         </Panel>
       )}
 
-      {breakabilityTiers.length > 0 && (
+      {breakabilityRows.length > 0 && (
         <BreakabilityPanel
-          tiers={breakabilityTiers}
+          rows={breakabilityRows}
           gadgetName={breakabilityGadget?.name ?? null}
         />
       )}

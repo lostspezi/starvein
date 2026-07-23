@@ -9,6 +9,7 @@ import {
   CRAFTED_BONUS_MAX_PCT,
   CRAFTED_BONUS_MIN_PCT,
 } from "@/features/loadouts/loadouts.schema";
+import type { Ore } from "@/features/ores/ores.schema";
 
 /**
  * Break-Formel nach mort13/BreakabilityChart (MIT, Patch 4.x):
@@ -33,9 +34,6 @@ export const MAX_GLOBAL_MODULES = 3;
  * (das Zod-Schema braucht sie), hier für bestehende Importe re-exportiert.
  */
 export { CRAFTED_BONUS_MAX_PCT, CRAFTED_BONUS_MIN_PCT };
-
-/** Resistenz-Stufen der Knackbarkeits-Tabelle auf Loadout-Seiten. */
-export const BREAKABILITY_RESISTANCE_TIERS = [0, 25, 50, 75] as const;
 
 export type RockInput = {
   mass: number;
@@ -260,6 +258,42 @@ export function maxBreakableMass(
     gadgetResistanceModifier: rock.gadget?.modifiers.resistance ?? 1,
   });
   return available / requiredPerMass;
+}
+
+export type OreBreakabilityRow = {
+  oreCode: string;
+  oreName: string;
+  resistancePct: number;
+  maxMass: number;
+};
+
+/**
+ * Knackbarkeits-Tabelle pro Erz: für jedes ship-minebare Erz mit
+ * Resistenz-Daten die maximale Steinmasse, die das Loadout schafft —
+ * Näherung: die Resistenz des Erzes steht für Steine, die von diesem
+ * Erz dominiert werden. Sortiert schwierigste zuerst. Leer für
+ * Loadouts ohne vergleichbare Köpfe (ROC / Size 0).
+ */
+export function oreBreakabilityRows(
+  ores: Ore[],
+  loadout: Loadout,
+  catalog: EquipmentCatalogIndex,
+  gadget: MiningGadget | null,
+): OreBreakabilityRow[] {
+  return ores
+    .flatMap((ore) => {
+      if (!ore.mineableBy.ship || ore.resistance === undefined) return [];
+      const resistancePct = ore.resistance * 100;
+      const maxMass = maxBreakableMass(loadout, catalog, {
+        resistancePct,
+        gadget,
+      });
+      if (maxMass === null) return [];
+      return [
+        { oreCode: ore.code, oreName: ore.name_en, resistancePct, maxMass },
+      ];
+    })
+    .sort((a, b) => b.resistancePct - a.resistancePct);
 }
 
 /**

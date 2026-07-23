@@ -78,7 +78,8 @@
       "notFound": "Loadout nicht gefunden"
     },
     "breakability": {
-      "heading": "Maximale knackbare Masse",
+      "heading": "Knackbare Erze (max. Masse)",
+      "oreHeader": "Erz",
       "resistanceHeader": "Resistenz",
       "massHeader": "Max. Masse",
       "gadgetNote": "Mit {name} einmal am Stein platziert (Best Case, Verbrauchsgegenstand)."
