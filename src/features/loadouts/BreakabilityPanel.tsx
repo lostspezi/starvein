@@ -9,16 +9,21 @@ import {
 import { Panel } from "@/lib/components/ui/Panel";
 
 /**
- * Maximale knackbare Steinmasse eines Loadouts je Resistenz-Stufe —
- * vorberechnet von der Seite (maxBreakableMass aus dem Rock-Calculator),
- * die Komponente rendert nur. gadgetName benennt das angesetzte Best-Case-
- * Gadget; null = kein wirksames Gadget im Loadout.
+ * Knackbare Erze eines Loadouts: pro ship-minebarem Erz die maximale
+ * Steinmasse — vorberechnet von der Seite (oreBreakabilityRows aus dem
+ * Rock-Calculator), die Komponente rendert nur. gadgetName benennt das
+ * angesetzte Best-Case-Gadget; null = kein wirksames Gadget im Loadout.
  */
 export function BreakabilityPanel({
-  tiers,
+  rows,
   gadgetName,
 }: {
-  tiers: { resistancePct: number; maxMass: number }[];
+  rows: {
+    oreCode: string;
+    oreName: string;
+    resistancePct: number;
+    maxMass: number;
+  }[];
   gadgetName: string | null;
 }) {
   const t = useTranslations("loadouts.breakability");
@@ -30,17 +35,21 @@ export function BreakabilityPanel({
       <h2 className="text-base font-medium">{t("heading")}</h2>
       <DataTable>
         <DataTableHead>
-          <DataTableTh>{t("resistanceHeader")}</DataTableTh>
+          <DataTableTh>{t("oreHeader")}</DataTableTh>
+          <DataTableTh className="text-right">
+            {t("resistanceHeader")}
+          </DataTableTh>
           <DataTableTh className="text-right">{t("massHeader")}</DataTableTh>
         </DataTableHead>
         <tbody>
-          {tiers.map((tier) => (
-            <DataTableRow key={tier.resistancePct}>
-              <DataTableTd className="font-mono">
-                {tier.resistancePct} %
+          {rows.map((row) => (
+            <DataTableRow key={row.oreCode}>
+              <DataTableTd>{row.oreName}</DataTableTd>
+              <DataTableTd className="text-right font-mono">
+                {format.number(Math.round(row.resistancePct))} %
               </DataTableTd>
               <DataTableTd className="text-right font-mono text-accent-secondary">
-                {format.number(Math.round(tier.maxMass))}
+                {format.number(Math.round(row.maxMass))}
               </DataTableTd>
             </DataTableRow>
           ))}

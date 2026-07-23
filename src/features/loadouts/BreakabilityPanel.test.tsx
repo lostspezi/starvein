@@ -3,29 +3,35 @@ import { describe, expect, it } from "vitest";
 import { renderWithIntl } from "@/test/render";
 import { BreakabilityPanel } from "./BreakabilityPanel";
 
-const tiers = [
-  { resistancePct: 0, maxMass: 178425.66 },
-  { resistancePct: 25, maxMass: 142740.53 },
-  { resistancePct: 50, maxMass: 118950.44 },
-  { resistancePct: 75, maxMass: 101957.52 },
+const rows = [
+  {
+    oreCode: "QUAN",
+    oreName: "Quantanium",
+    resistancePct: 90,
+    maxMass: 93908.2,
+  },
+  { oreCode: "GOLD", oreName: "Gold", resistancePct: 25, maxMass: 142740.5 },
+  { oreCode: "COPP", oreName: "Copper", resistancePct: -70, maxMass: 594752.2 },
 ];
 
 describe("BreakabilityPanel", () => {
-  it("renders one row per resistance tier with the rounded mass", () => {
-    renderWithIntl(<BreakabilityPanel tiers={tiers} gadgetName={null} />, {
+  it("renders one row per ore with resistance and rounded max mass", () => {
+    renderWithIntl(<BreakabilityPanel rows={rows} gadgetName={null} />, {
       locale: "en",
     });
 
-    expect(screen.getByText("Max breakable rock mass")).toBeVisible();
-    expect(screen.getAllByRole("row")).toHaveLength(5); // Header + 4 Tiers
-    expect(screen.getByText("0 %")).toBeVisible();
-    expect(screen.getByText("75 %")).toBeVisible();
-    expect(screen.getByText("178,426")).toBeVisible();
-    expect(screen.getByText("101,958")).toBeVisible();
+    expect(screen.getByText("Breakable ores (max rock mass)")).toBeVisible();
+    expect(screen.getAllByRole("row")).toHaveLength(4); // Header + 3 Erze
+    expect(screen.getByText("Quantanium")).toBeVisible();
+    expect(screen.getByText("90 %")).toBeVisible();
+    expect(screen.getByText("93,908")).toBeVisible();
+    // negative Resistenz behält ihr Vorzeichen
+    expect(screen.getByText("-70 %")).toBeVisible();
+    expect(screen.getByText("594,752")).toBeVisible();
   });
 
   it("names the assumed gadget when one applies", () => {
-    renderWithIntl(<BreakabilityPanel tiers={tiers} gadgetName="Sabir" />, {
+    renderWithIntl(<BreakabilityPanel rows={rows} gadgetName="Sabir" />, {
       locale: "en",
     });
 
@@ -35,7 +41,7 @@ describe("BreakabilityPanel", () => {
   });
 
   it("shows no gadget note without an effective gadget", () => {
-    renderWithIntl(<BreakabilityPanel tiers={tiers} gadgetName={null} />, {
+    renderWithIntl(<BreakabilityPanel rows={rows} gadgetName={null} />, {
       locale: "en",
     });
 
@@ -43,7 +49,7 @@ describe("BreakabilityPanel", () => {
   });
 
   it("shows the break-formula attribution", () => {
-    renderWithIntl(<BreakabilityPanel tiers={tiers} gadgetName={null} />, {
+    renderWithIntl(<BreakabilityPanel rows={rows} gadgetName={null} />, {
       locale: "en",
     });
 

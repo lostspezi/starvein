@@ -5,17 +5,18 @@ import type {
   MiningModule,
 } from "@/features/loadouts/equipment.schema";
 import type { Loadout } from "@/features/loadouts/loadouts.schema";
+import type { Ore } from "@/features/ores/ores.schema";
 import {
   additiveModuleStack,
   bestCaseBreakableMass,
   bestGadget,
-  BREAKABILITY_RESISTANCE_TIERS,
   checkLoadout,
   headStats,
   headsNeeded,
   MAX_GLOBAL_MODULES,
   MAX_HEADS,
   maxBreakableMass,
+  oreBreakabilityRows,
   requiredPower,
   ROCK_BREAK_MASS_FACTOR,
 } from "./rock-break";
@@ -553,8 +554,75 @@ describe("bestCaseBreakableMass", () => {
   });
 });
 
-describe("BREAKABILITY_RESISTANCE_TIERS", () => {
-  it("exposes the resistance tiers for the loadout breakability table", () => {
-    expect(BREAKABILITY_RESISTANCE_TIERS).toEqual([0, 25, 50, 75]);
+describe("oreBreakabilityRows", () => {
+  function ore(overrides: Partial<Ore> = {}): Ore {
+    return {
+      code: "QUAN",
+      name_de: "Quantanium",
+      name_en: "Quantanium",
+      rarityTier: "legendary",
+      mineableBy: { ship: true, roc: false, fps: false },
+      resistance: 0.9,
+      ...overrides,
+    };
+  }
+
+  const ores: Ore[] = [
+    ore(),
+    ore({
+      code: "COPP",
+      name_de: "Kupfer",
+      name_en: "Copper",
+      rarityTier: "common",
+      resistance: -0.7,
+    }),
+    ore({
+      code: "GOLD",
+      name_de: "Gold",
+      name_en: "Gold",
+      rarityTier: "uncommon",
+      resistance: 0.25,
+    }),
+    // nicht ship-minebar → fliegt raus
+    ore({
+      code: "JANA",
+      name_en: "Janalite",
+      mineableBy: { ship: false, roc: false, fps: true },
+      resistance: 0.1,
+    }),
+    // keine Resistenz-Daten → fliegt raus
+    ore({ code: "ICEW", name_en: "Ice", resistance: undefined }),
+  ];
+
+  it("maps ship-mineable ores to max mass, hardest first", () => {
+    const rows = oreBreakabilityRows(ores, loadout(), catalog(), null);
+
+    expect(rows.map((row) => row.oreCode)).toEqual(["QUAN", "GOLD", "COPP"]);
+    const base = 178425.655; // 3× Helix II bei 0 % Resistenz
+    expect(rows[0]).toMatchObject({ oreName: "Quantanium", resistancePct: 90 });
+    expect(rows[0]?.maxMass).toBeCloseTo(base / 1.9, 1);
+    expect(rows[1]?.maxMass).toBeCloseTo(base / 1.25, 1);
+    // negative Resistenz (Kupfer) senkt die Anforderung
+    expect(rows[2]?.maxMass).toBeCloseTo(base / 0.3, 1);
+  });
+
+  it("applies the gadget to every ore row", () => {
+    const withGadget = oreBreakabilityRows(ores, loadout(), catalog(), sabir());
+    const without = oreBreakabilityRows(ores, loadout(), catalog(), null);
+    expect(withGadget[0]?.maxMass).toBeCloseTo(
+      (without[0]?.maxMass ?? 0) * 2,
+      5,
+    );
+  });
+
+  it("returns no rows for loadouts without comparable heads", () => {
+    expect(
+      oreBreakabilityRows(
+        ores,
+        loadout({ method: "roc", vehicleCode: "roc" }),
+        catalog(),
+        null,
+      ),
+    ).toEqual([]);
   });
 });
