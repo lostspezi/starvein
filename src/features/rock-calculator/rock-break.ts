@@ -28,8 +28,10 @@ export const MAX_HEADS = 3;
 /** Obergrenze der globalen Modul-Auswahl (größtes Slot-Angebot je Laser). */
 export const MAX_GLOBAL_MODULES = 3;
 
-/** Eingabegrenzen für den Craft-Bonus — definiert in der loadouts-Slice
- * (das Zod-Schema braucht sie), hier für bestehende Importe re-exportiert. */
+/**
+ * Eingabegrenzen für den Craft-Bonus — definiert in der loadouts-Slice
+ * (das Zod-Schema braucht sie), hier für bestehende Importe re-exportiert.
+ */
 export { CRAFTED_BONUS_MAX_PCT, CRAFTED_BONUS_MIN_PCT };
 
 /** Resistenz-Stufen der Knackbarkeits-Tabelle auf Loadout-Seiten. */
