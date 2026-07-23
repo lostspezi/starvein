@@ -7,11 +7,15 @@ import type {
 import type { Loadout } from "@/features/loadouts/loadouts.schema";
 import {
   additiveModuleStack,
+  bestCaseBreakableMass,
+  bestGadget,
+  BREAKABILITY_RESISTANCE_TIERS,
   checkLoadout,
   headStats,
   headsNeeded,
   MAX_GLOBAL_MODULES,
   MAX_HEADS,
+  maxBreakableMass,
   requiredPower,
   ROCK_BREAK_MASS_FACTOR,
 } from "./rock-break";
@@ -62,6 +66,16 @@ function surge(): MiningModule {
     charges: 7,
     durationSeconds: 15,
     modifiers: { laserPower: 1.5, instability: 1.1, resistance: 0.85 },
+    patchVersion,
+  };
+}
+
+function okunis(): MiningGadget {
+  return {
+    code: "okunis",
+    name: "OkuNis",
+    manufacturer: "Shubin Interstellar",
+    modifiers: { instability: 0.7, optimalChargeWindow: 1.7 },
     patchVersion,
   };
 }
@@ -347,5 +361,200 @@ describe("checkLoadout", () => {
     // Nur der bekannte Kopf zählt: required(1) = 5460 > 4080
     expect(result.available).toBeCloseTo(4080);
     expect(result.canBreak).toBe(false);
+  });
+
+  it("applies stored crafted bonuses per hardpoint", () => {
+    // 1 von 3 Köpfen gecraftet (+50 %): 4080 + 4080 + 6120 = 14280;
+    // required bleibt 2675.4 (Bonus ändert die Resistenz nicht)
+    const crafted = loadout({
+      hardpoints: [
+        {
+          hardpointIndex: 0,
+          laserCode: "helix-ii",
+          moduleCodes: [],
+          craftedBonusPct: 50,
+        },
+        { hardpointIndex: 1, laserCode: "helix-ii", moduleCodes: [] },
+        { hardpointIndex: 2, laserCode: "helix-ii", moduleCodes: [] },
+      ],
+    });
+    const result = checkLoadout(crafted, catalog(), rock);
+    expect(result.available).toBeCloseTo(14280);
+    expect(result.required).toBeCloseTo(2675.4);
+  });
+
+  it("clamps stored out-of-range bonuses (legacy/foreign data)", () => {
+    const outOfRange = (craftedBonusPct: number) =>
+      checkLoadout(
+        loadout({
+          hardpoints: [
+            {
+              hardpointIndex: 0,
+              laserCode: "helix-ii",
+              moduleCodes: [],
+              craftedBonusPct,
+            },
+          ],
+        }),
+        catalog(),
+        rock,
+      );
+    expect(outOfRange(150).available).toBeCloseTo(8160); // wie +100 %
+    expect(outOfRange(-80).available).toBeCloseTo(2040); // wie −50 %
+  });
+
+  it("lets a stored crafted bonus flip the verdict to breakable", () => {
+    const single = (craftedBonusPct?: number) =>
+      loadout({
+        hardpoints: [
+          {
+            hardpointIndex: 0,
+            laserCode: "helix-ii",
+            moduleCodes: [],
+            ...(craftedBonusPct === undefined ? {} : { craftedBonusPct }),
+          },
+        ],
+      });
+    // required(1 Kopf) = 5460 > 4080 — ohne Bonus unknackbar
+    expect(checkLoadout(single(), catalog(), rock).canBreak).toBe(false);
+    // +50 %: 6120 ≥ 5460
+    expect(checkLoadout(single(50), catalog(), rock).canBreak).toBe(true);
+  });
+});
+
+describe("bestGadget", () => {
+  it("picks the gadget with the strongest resistance reduction", () => {
+    expect(bestGadget([okunis(), sabir()])?.code).toBe("sabir");
+  });
+
+  it("returns null without gadgets or without a resistance effect", () => {
+    expect(bestGadget([])).toBeNull();
+    expect(bestGadget([okunis()])).toBeNull();
+    const counterproductive: MiningGadget = {
+      ...okunis(),
+      code: "worse",
+      modifiers: { resistance: 1.2 },
+    };
+    expect(bestGadget([counterproductive])).toBeNull();
+  });
+});
+
+describe("maxBreakableMass", () => {
+  const noRock = { resistancePct: 0, gadget: null };
+
+  it("inverts the break inequality for a full loadout", () => {
+    // 3× Helix II: 12240 / (0.2 × 1 × 0.7³) ≈ 178425.66
+    const maxMass = maxBreakableMass(loadout(), catalog(), noRock);
+    expect(maxMass).toBeCloseTo(178425.66, 1);
+  });
+
+  it("is consistent with checkLoadout at the boundary", () => {
+    const maxMass = maxBreakableMass(loadout(), catalog(), noRock);
+    expect(maxMass).not.toBeNull();
+    const at = (mass: number) =>
+      checkLoadout(loadout(), catalog(), {
+        mass,
+        resistancePct: 0,
+        gadget: null,
+      }).canBreak;
+    // exakt an der Grenze ist Gleitkomma-sensitiv → minimal darunter/darüber
+    expect(at((maxMass ?? 0) * (1 - 1e-9))).toBe(true);
+    expect(at((maxMass ?? 0) * 1.01)).toBe(false);
+  });
+
+  it("scales down with rock resistance", () => {
+    const atZero = maxBreakableMass(loadout(), catalog(), noRock);
+    const atFifty = maxBreakableMass(loadout(), catalog(), {
+      resistancePct: 50,
+      gadget: null,
+    });
+    expect(atFifty).toBeCloseTo((atZero ?? 0) / 1.5, 5);
+  });
+
+  it("doubles with a resistance-halving gadget", () => {
+    const withGadget = maxBreakableMass(loadout(), catalog(), {
+      resistancePct: 0,
+      gadget: sabir(),
+    });
+    const without = maxBreakableMass(loadout(), catalog(), noRock);
+    expect(withGadget).toBeCloseTo((without ?? 0) * 2, 5);
+  });
+
+  it("grows proportionally with stored crafted bonuses", () => {
+    const crafted = loadout({
+      hardpoints: [
+        {
+          hardpointIndex: 0,
+          laserCode: "helix-ii",
+          moduleCodes: [],
+          craftedBonusPct: 50,
+        },
+        { hardpointIndex: 1, laserCode: "helix-ii", moduleCodes: [] },
+        { hardpointIndex: 2, laserCode: "helix-ii", moduleCodes: [] },
+      ],
+    });
+    const boosted = maxBreakableMass(crafted, catalog(), noRock);
+    const base = maxBreakableMass(loadout(), catalog(), noRock);
+    expect(boosted).toBeCloseTo(((base ?? 0) * 14280) / 12240, 5);
+  });
+
+  it("returns null for non-ship loadouts and loadouts without comparable heads", () => {
+    expect(
+      maxBreakableMass(
+        loadout({ method: "roc", vehicleCode: "roc" }),
+        catalog(),
+        noRock,
+      ),
+    ).toBeNull();
+    expect(
+      maxBreakableMass(
+        loadout({
+          hardpoints: [
+            { hardpointIndex: 0, laserCode: "unknown-laser", moduleCodes: [] },
+          ],
+        }),
+        catalog(),
+        noRock,
+      ),
+    ).toBeNull();
+  });
+});
+
+describe("bestCaseBreakableMass", () => {
+  const gadgetsByCode = new Map([
+    ["okunis", okunis()],
+    ["sabir", sabir()],
+  ]);
+
+  it("uses 0 % resistance and the best stored gadget", () => {
+    const withGadgets = loadout({ gadgetCodes: ["okunis", "sabir"] });
+    expect(
+      bestCaseBreakableMass(withGadgets, catalog(), gadgetsByCode),
+    ).toBeCloseTo(
+      (maxBreakableMass(loadout(), catalog(), {
+        resistancePct: 0,
+        gadget: null,
+      }) ?? 0) * 2,
+      5,
+    );
+  });
+
+  it("matches maxBreakableMass at 0 % without effective gadgets", () => {
+    expect(
+      bestCaseBreakableMass(loadout(), catalog(), gadgetsByCode),
+    ).toBeCloseTo(178425.66, 1);
+    expect(
+      bestCaseBreakableMass(
+        loadout({ method: "roc", vehicleCode: "roc" }),
+        catalog(),
+        gadgetsByCode,
+      ),
+    ).toBeNull();
+  });
+});
+
+describe("BREAKABILITY_RESISTANCE_TIERS", () => {
+  it("exposes the resistance tiers for the loadout breakability table", () => {
+    expect(BREAKABILITY_RESISTANCE_TIERS).toEqual([0, 25, 50, 75]);
   });
 });

@@ -35,7 +35,12 @@ function showcaseLoadout(id: string, name: string): ShowcaseLoadout {
     createdAt: "2026-07-13T08:00:00.000Z",
     updatedAt: "2026-07-13T08:00:00.000Z",
   };
-  return { loadout, vehicleName: "MOLE", laserSummary: "Helix II" };
+  return {
+    loadout,
+    vehicleName: "MOLE",
+    laserSummary: "Helix II",
+    breakabilityMass: 45230,
+  };
 }
 
 const fullShowcase: LoadoutShowcase = {
@@ -77,6 +82,12 @@ describe("LoadoutShowcasePanel", () => {
     expect(
       screen.getByRole("link", { name: "Browse all loadouts" }),
     ).toHaveAttribute("href", "/loadouts");
+  });
+
+  it("passes the breakability stat through to the tiles", () => {
+    renderPanel(fullShowcase);
+    // Feature-Kachel + 2 newest-Karten
+    expect(screen.getAllByText("cracks up to 45.2K mass")).toHaveLength(3);
   });
 
   it("shows an empty state without loadout tiles when nothing is public", () => {

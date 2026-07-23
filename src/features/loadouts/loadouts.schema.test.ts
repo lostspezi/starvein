@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
+  CRAFTED_BONUS_MAX_PCT,
+  CRAFTED_BONUS_MIN_PCT,
   LOADOUT_SORTS,
   loadoutContentKey,
   loadoutInputSchema,
@@ -63,6 +65,43 @@ describe("loadoutSchema", () => {
       loadoutSchema.safeParse({ ...loadout, votes: { up: -1 } }).success,
     ).toBe(false);
   });
+
+  it("accepts a hardpoint with a crafted bonus", () => {
+    const crafted = {
+      ...loadout,
+      hardpoints: [
+        {
+          hardpointIndex: 0,
+          laserCode: "helix-ii",
+          moduleCodes: [],
+          craftedBonusPct: 29,
+        },
+      ],
+    };
+    expect(loadoutSchema.parse(crafted)).toEqual(crafted);
+  });
+
+  it("rejects crafted bonuses outside the allowed range", () => {
+    for (const craftedBonusPct of [
+      CRAFTED_BONUS_MIN_PCT - 1,
+      CRAFTED_BONUS_MAX_PCT + 1,
+      "29",
+    ]) {
+      expect(
+        loadoutSchema.safeParse({
+          ...loadout,
+          hardpoints: [
+            {
+              hardpointIndex: 0,
+              laserCode: "helix-ii",
+              moduleCodes: [],
+              craftedBonusPct,
+            },
+          ],
+        }).success,
+      ).toBe(false);
+    }
+  });
 });
 
 describe("loadoutInputSchema", () => {
@@ -90,6 +129,25 @@ describe("loadoutInputSchema", () => {
       votes: { up: 999 },
     };
     expect(loadoutInputSchema.safeParse(input).success).toBe(false);
+  });
+
+  it("round-trips the crafted bonus on hardpoints", () => {
+    const input = {
+      name: loadout.name,
+      method: loadout.method,
+      vehicleCode: loadout.vehicleCode,
+      hardpoints: [
+        {
+          hardpointIndex: 0,
+          laserCode: "helix-ii",
+          moduleCodes: [],
+          craftedBonusPct: -25,
+        },
+      ],
+      gadgetCodes: [],
+      isPublic: false,
+    };
+    expect(loadoutInputSchema.parse(input)).toEqual(input);
   });
 });
 
@@ -141,10 +199,37 @@ describe("loadoutContentKey", () => {
       loadoutContentKey({ ...content, vehicleCode: "prospector" }),
     ).not.toBe(loadoutContentKey(content));
   });
+
+  it("changes when a crafted bonus changes", () => {
+    const crafted = {
+      ...content,
+      hardpoints: [
+        { ...content.hardpoints[0], craftedBonusPct: 29 },
+        content.hardpoints[1],
+      ],
+    };
+    expect(loadoutContentKey(crafted)).not.toBe(loadoutContentKey(content));
+  });
+
+  it("treats a missing crafted bonus and an explicit 0 as identical", () => {
+    const explicitZero = {
+      ...content,
+      hardpoints: [
+        { ...content.hardpoints[0], craftedBonusPct: 0 },
+        content.hardpoints[1],
+      ],
+    };
+    expect(loadoutContentKey(explicitZero)).toBe(loadoutContentKey(content));
+  });
 });
 
 describe("constants", () => {
   it("exposes the sort options", () => {
     expect(LOADOUT_SORTS).toEqual(["top", "new"]);
+  });
+
+  it("exposes the crafted bonus bounds", () => {
+    expect(CRAFTED_BONUS_MIN_PCT).toBe(-50);
+    expect(CRAFTED_BONUS_MAX_PCT).toBe(100);
   });
 });

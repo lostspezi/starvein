@@ -28,7 +28,8 @@
       "votes": "{count} votes",
       "outdated": "Patch {patchVersion}",
       "private": "Private",
-      "public": "Public"
+      "public": "Public",
+      "cracksUpTo": "cracks up to {mass} mass"
     },
     "vote": {
       "upvote": "Upvote loadout",
@@ -46,6 +47,10 @@
       "moduleLabel": "Module slot {slot} on hardpoint {index}",
       "moduleNone": "— empty slot —",
       "gadgetsLegend": "Gadgets (placed on the rock)",
+      "craftedLabel": "Crafted laser",
+      "craftedCheckboxLabel": "Crafted laser on hardpoint {index}",
+      "craftedBonusLabel": "Crafted laser power bonus (%) for hardpoint {index}",
+      "craftedHint": "Applies to this laser's base power before modules kick in (−50 to +100 %).",
       "nameLabel": "Loadout name",
       "descriptionLabel": "Description (optional)",
       "isPublicLabel": "Make this loadout public",
@@ -58,6 +63,7 @@
     },
     "detail": {
       "hardpointHeading": "Hardpoint {index}",
+      "crafted": "Crafted ({bonus} %)",
       "modulesHeading": "Modules",
       "noModules": "No modules fitted",
       "gadgetsHeading": "Gadgets",
@@ -70,6 +76,12 @@
       "normalizedPower": "Vehicle-class laser — power values are not comparable to ship lasers.",
       "byOwner": "Shared loadout",
       "notFound": "Loadout not found"
+    },
+    "breakability": {
+      "heading": "Max breakable rock mass",
+      "resistanceHeader": "Resistance",
+      "massHeader": "Max mass",
+      "gadgetNote": "Assumes one {name} placed on the rock (best case, consumable)."
     },
     "stats": {
       "laserPower": "Laser power",

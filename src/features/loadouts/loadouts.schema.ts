@@ -4,10 +4,20 @@ import { LOADOUT_METHODS } from "./equipment.schema";
 
 export const LOADOUT_SORTS = ["top", "new"] as const;
 
+/** Eingabegrenzen für den Craft-Bonus (Crafting kann Stats auch senken). */
+export const CRAFTED_BONUS_MIN_PCT = -50;
+export const CRAFTED_BONUS_MAX_PCT = 100;
+
 const hardpointAssignmentSchema = z.object({
   hardpointIndex: z.number().int().min(0),
   laserCode: z.string().min(1),
   moduleCodes: z.array(z.string().min(1)).max(3),
+  // Selbst hergestellter Laser: %-Bonus auf die Basis-Power (fehlt = nicht gecraftet)
+  craftedBonusPct: z
+    .number()
+    .min(CRAFTED_BONUS_MIN_PCT)
+    .max(CRAFTED_BONUS_MAX_PCT)
+    .optional(),
 });
 
 export const loadoutSchema = z.object({
@@ -61,6 +71,8 @@ export function loadoutContentKey(content: LoadoutContent): string {
         hardpointIndex: h.hardpointIndex,
         laserCode: h.laserCode,
         moduleCodes: [...h.moduleCodes].sort(),
+        // fehlender Bonus == explizit 0 (stat-identisch, kein Vote-Reset)
+        craftedBonusPct: h.craftedBonusPct ?? 0,
       })),
     gadgetCodes: [...content.gadgetCodes].sort(),
   });

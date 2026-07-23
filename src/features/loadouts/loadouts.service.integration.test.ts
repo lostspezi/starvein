@@ -147,6 +147,24 @@ describe("loadouts service", () => {
         createLoadout(db, OWNER, { ...validInput, vehicleCode: "carrack" }),
       ).rejects.toThrow(LoadoutValidationError);
     });
+
+    it("persists the crafted bonus per hardpoint", async () => {
+      const created = await createLoadout(db, OWNER, {
+        ...validInput,
+        hardpoints: [
+          {
+            hardpointIndex: 0,
+            laserCode: "helix-ii",
+            moduleCodes: [],
+            craftedBonusPct: 29,
+          },
+        ],
+      });
+
+      expect(created.hardpoints[0]?.craftedBonusPct).toBe(29);
+      const reloaded = await getLoadoutForViewer(db, created.id, OWNER);
+      expect(reloaded?.hardpoints[0]?.craftedBonusPct).toBe(29);
+    });
   });
 
   describe("updateLoadout", () => {
@@ -203,6 +221,68 @@ describe("loadouts service", () => {
       });
 
       expect(same.votes.up).toBe(1);
+    });
+
+    it("resets votes when only a crafted bonus changes", async () => {
+      const created = await createLoadout(db, OWNER, validInput);
+      await toggleVote(db, VISITOR, created.id);
+
+      const changed = await updateLoadout(db, OWNER, created.id, {
+        hardpoints: [
+          {
+            hardpointIndex: 0,
+            laserCode: "helix-ii",
+            moduleCodes: ["rieger-c3"],
+            craftedBonusPct: 29,
+          },
+        ],
+      });
+
+      expect(changed.hardpoints[0]?.craftedBonusPct).toBe(29);
+      expect(changed.votes.up).toBe(0);
+      expect(changed.voters).toEqual([]);
+    });
+
+    it("does not reset votes when a legacy hardpoint gets an explicit 0 bonus", async () => {
+      // Altbestand: Feld fehlt — explizites 0 ist stat-identisch
+      const created = await createLoadout(db, OWNER, validInput);
+      await toggleVote(db, VISITOR, created.id);
+
+      const same = await updateLoadout(db, OWNER, created.id, {
+        hardpoints: [
+          {
+            hardpointIndex: 0,
+            laserCode: "helix-ii",
+            moduleCodes: ["rieger-c3"],
+            craftedBonusPct: 0,
+          },
+        ],
+      });
+
+      expect(same.votes.up).toBe(1);
+      expect(same.voters).toEqual([VISITOR]);
+    });
+
+    it("keeps votes and the bonus on a name-only edit", async () => {
+      const created = await createLoadout(db, OWNER, {
+        ...validInput,
+        hardpoints: [
+          {
+            hardpointIndex: 0,
+            laserCode: "helix-ii",
+            moduleCodes: [],
+            craftedBonusPct: -25,
+          },
+        ],
+      });
+      await toggleVote(db, VISITOR, created.id);
+
+      const renamed = await updateLoadout(db, OWNER, created.id, {
+        name: "Nur umbenannt",
+      });
+
+      expect(renamed.votes.up).toBe(1);
+      expect(renamed.hardpoints[0]?.craftedBonusPct).toBe(-25);
     });
 
     it("re-validates the merged loadout", async () => {

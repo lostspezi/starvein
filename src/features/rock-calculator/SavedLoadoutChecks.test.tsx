@@ -103,6 +103,29 @@ describe("SavedLoadoutChecks", () => {
     expect(screen.getByText("Not enough")).toBeInTheDocument();
   });
 
+  it("honors stored crafted bonuses when judging", () => {
+    // Solo-Helix: required(30000, 30 %) = 5460 > 4080 — ohne Bonus zu schwach
+    const solo = (craftedBonusPct?: number) =>
+      loadout({
+        name: "Solo-Prospector",
+        vehicleCode: "prospector",
+        hardpoints: [
+          {
+            hardpointIndex: 0,
+            laserCode: "helix-ii",
+            moduleCodes: [],
+            ...(craftedBonusPct === undefined ? {} : { craftedBonusPct }),
+          },
+        ],
+      });
+    renderChecks({ loadouts: [solo()] });
+    expect(screen.getByText("Not enough")).toBeInTheDocument();
+
+    // Mit +50 % Craft-Bonus: 6120 ≥ 5460
+    renderChecks({ loadouts: [solo(50)] });
+    expect(screen.getByText("Breaks the rock")).toBeInTheDocument();
+  });
+
   it("labels non-ship loadouts instead of judging them", () => {
     renderChecks({
       loadouts: [loadout({ name: "ROC-Runner", method: "roc" })],

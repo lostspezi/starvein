@@ -31,7 +31,10 @@ const loadout: Loadout = {
   updatedAt: "2026-07-13T08:00:00.000Z",
 };
 
-function renderCard(overrides: Partial<Loadout> = {}) {
+function renderCard(
+  overrides: Partial<Loadout> = {},
+  breakabilityMass?: number | null,
+) {
   renderWithIntl(
     <LoadoutCard
       loadout={{ ...loadout, ...overrides }}
@@ -39,6 +42,7 @@ function renderCard(overrides: Partial<Loadout> = {}) {
       laserSummary="3× Helix II"
       currentPatchVersion="4.7"
       viewerUserId={null}
+      breakabilityMass={breakabilityMass}
     />,
     { locale: "en" },
   );
@@ -63,5 +67,17 @@ describe("LoadoutCard", () => {
   it("shows no patch badge for current loadouts", () => {
     renderCard();
     expect(screen.queryByText(/^Patch /)).toBeNull();
+  });
+
+  it("shows the compact breakability stat when provided", () => {
+    renderCard({}, 45230);
+    expect(screen.getByText("cracks up to 45.2K mass")).toBeVisible();
+  });
+
+  it("shows no breakability stat when missing or not computable", () => {
+    renderCard();
+    expect(screen.queryByText(/cracks up to/)).toBeNull();
+    renderCard({ id: "loadout-2" }, null);
+    expect(screen.queryByText(/cracks up to/)).toBeNull();
   });
 });

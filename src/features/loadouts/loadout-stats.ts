@@ -43,6 +43,7 @@ function combinedFactor(
 export function aggregateHardpointStats(
   laser: MiningLaser,
   modules: MiningModule[],
+  craftedBonusPct = 0,
 ): AggregatedStats {
   const factors = Object.fromEntries(
     MODIFIER_KEYS.map((key) => [key, combinedFactor(key, laser, modules)]),
@@ -50,11 +51,15 @@ export function aggregateHardpointStats(
 
   return {
     ...factors,
-    // Power-Werte sind absolute Basiswerte, die Faktoren skalieren sie
+    // Power-Werte sind absolute Basiswerte, die Faktoren skalieren sie;
+    // der Craft-Bonus hebt die Basis an, bevor die Faktoren greifen
+    // (gleiche Semantik wie headStats im Rock-Calculator)
     laserPower:
       laser.stats.laserPower === null
         ? null
-        : laser.stats.laserPower * factors.laserPower,
+        : laser.stats.laserPower *
+          (1 + craftedBonusPct / 100) *
+          factors.laserPower,
     extractionLaserPower:
       laser.stats.extractionLaserPower === null
         ? null

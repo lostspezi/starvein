@@ -1,6 +1,7 @@
 import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import { BreakabilityPanel } from "@/features/loadouts/BreakabilityPanel";
 import { getCachedEquipmentPurchasesByCodes } from "@/features/loadouts/equipment-prices.read";
 import { EquipmentPurchasePanel } from "@/features/loadouts/EquipmentPurchasePanel";
 import { loadEquipmentCatalog } from "@/features/loadouts/equipment.repository";
@@ -11,6 +12,11 @@ import {
   aggregateLoadoutStats,
 } from "@/features/loadouts/loadout-stats";
 import { getLoadoutForViewer } from "@/features/loadouts/loadouts.service";
+import {
+  bestGadget,
+  BREAKABILITY_RESISTANCE_TIERS,
+  maxBreakableMass,
+} from "@/features/rock-calculator/rock-break";
 import { OwnerActions } from "@/features/loadouts/OwnerActions";
 import { VoteButton } from "@/features/loadouts/VoteButton";
 import { VehicleOffersPanel } from "@/features/ships/VehicleOffersPanel";
@@ -82,7 +88,12 @@ export default async function LoadoutDetailPage({
           index: assignment.hardpointIndex + 1,
           laser,
           modules,
-          stats: aggregateHardpointStats(laser, modules),
+          craftedBonusPct: assignment.craftedBonusPct,
+          stats: aggregateHardpointStats(
+            laser,
+            modules,
+            assignment.craftedBonusPct ?? 0,
+          ),
         },
       ];
     });
@@ -93,6 +104,20 @@ export default async function LoadoutDetailPage({
   const gadgets = loadout.gadgetCodes
     .map((code) => gadgetsByCode.get(code))
     .filter((gadget) => gadget !== undefined);
+
+  // Knackbarkeit: bestes gespeichertes Gadget einmal angesetzt (Best Case);
+  // null-Tiers (ROC / Size 0 / unbekannte Laser) blenden das Panel aus
+  const breakabilityGadget = bestGadget(gadgets);
+  const catalogIndex = { lasersByCode, modulesByCode };
+  const breakabilityTiers = BREAKABILITY_RESISTANCE_TIERS.flatMap(
+    (resistancePct) => {
+      const maxMass = maxBreakableMass(loadout, catalogIndex, {
+        resistancePct,
+        gadget: breakabilityGadget,
+      });
+      return maxMass === null ? [] : [{ resistancePct, maxMass }];
+    },
+  );
 
   const shoppingList = buildShoppingList(loadout, catalog);
   const [purchases, vehicleOffers] = await Promise.all([
@@ -146,6 +171,7 @@ export default async function LoadoutDetailPage({
             laser={hardpoint.laser}
             modules={hardpoint.modules}
             stats={hardpoint.stats}
+            craftedBonusPct={hardpoint.craftedBonusPct}
           />
         </Panel>
       ))}
@@ -182,6 +208,13 @@ export default async function LoadoutDetailPage({
             </div>
           </dl>
         </Panel>
+      )}
+
+      {breakabilityTiers.length > 0 && (
+        <BreakabilityPanel
+          tiers={breakabilityTiers}
+          gadgetName={breakabilityGadget?.name ?? null}
+        />
       )}
 
       {gadgets.length > 0 && (

@@ -1,4 +1,4 @@
-import { useTranslations } from "next-intl";
+import { useFormatter, useTranslations } from "next-intl";
 import { Badge } from "@/lib/components/ui/Badge";
 import {
   DataTable,
@@ -28,13 +28,16 @@ export function HardpointBreakdown({
   laser,
   modules,
   stats,
+  craftedBonusPct,
 }: {
   index: number;
   laser: MiningLaser;
   modules: MiningModule[];
   stats: AggregatedStats;
+  craftedBonusPct?: number;
 }) {
   const t = useTranslations("loadouts");
+  const format = useFormatter();
 
   const factorRows = MODIFIER_KEYS.filter(
     (key) => key !== "laserPower" && key !== "extractionLaserPower",
@@ -50,6 +53,15 @@ export function HardpointBreakdown({
         </h3>
         <span className="text-sm text-text-primary">{laser.name}</span>
         <span className="font-mono text-xs text-text-muted">S{laser.size}</span>
+        {craftedBonusPct !== undefined && (
+          <Badge tone="warning">
+            {t("detail.crafted", {
+              bonus: format.number(craftedBonusPct, {
+                signDisplay: "always",
+              }),
+            })}
+          </Badge>
+        )}
       </div>
 
       <div className="mb-3 flex flex-wrap items-center gap-2 text-sm">
