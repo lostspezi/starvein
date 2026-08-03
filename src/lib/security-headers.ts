@@ -31,6 +31,18 @@ const FRAME_SRCS = [
   "https://www.youtube-nocookie.com",
 ]; // eingebettete Guide-Videos (TipTap-YouTube-Extension)
 
+// Cloudflare Web Analytics: der Proxy injiziert beacon.min.js automatisch;
+// das Beacon lädt von static.cloudflareinsights.com und POSTet RUM-Events
+// nach cloudflareinsights.com — ohne beide Origins liefert das SEO-Panel
+// im Admin-Dashboard keine Daten.
+const SCRIPT_SRCS = [
+  "'self'",
+  "'unsafe-inline'",
+  "https://static.cloudflareinsights.com",
+];
+
+const CONNECT_SRCS = ["'self'", "https://cloudflareinsights.com"];
+
 export function buildContentSecurityPolicy(): string {
   return [
     "default-src 'self'",
@@ -38,11 +50,11 @@ export function buildContentSecurityPolicy(): string {
     "object-src 'none'",
     "frame-ancestors 'none'",
     "form-action 'self'",
-    "script-src 'self' 'unsafe-inline'",
+    `script-src ${SCRIPT_SRCS.join(" ")}`,
     "style-src 'self' 'unsafe-inline'",
     `img-src ${IMG_SRCS.join(" ")}`,
     "font-src 'self'",
-    "connect-src 'self'",
+    `connect-src ${CONNECT_SRCS.join(" ")}`,
     `frame-src ${FRAME_SRCS.join(" ")}`,
     "worker-src 'self' blob:",
   ].join("; ");
