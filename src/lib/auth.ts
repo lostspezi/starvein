@@ -50,6 +50,12 @@ export const auth = betterAuth({
         defaultValue: "user",
         input: false,
       },
+      // Admin-Sperre fürs Erstellen von API-Keys (apiKeyCapHook prüft sie)
+      apiKeysBanned: {
+        type: "boolean",
+        defaultValue: false,
+        input: false,
+      },
     },
   },
   plugins: [

@@ -35,14 +35,21 @@ function StatTile({ label, value }: { label: string; value: string }) {
  * Top-Endpoints mit proportionalen Balken. Lädt beim Aufklappen von
  * /api/account/api-keys/{id}/stats.
  */
-export function KeyStatsPanel({ keyId }: { keyId: string }) {
+export function KeyStatsPanel({
+  keyId,
+  statsBasePath = "/api/account/api-keys",
+}: {
+  keyId: string;
+  /** Admin-Übersicht nutzt die ownership-freie Route unter /api/admin. */
+  statsBasePath?: string;
+}) {
   const t = useTranslations("apiKeys.stats");
   const [stats, setStats] = useState<KeyStats | null>(null);
   const [state, setState] = useState<"loading" | "ready" | "error">("loading");
 
   useEffect(() => {
     let cancelled = false;
-    fetch(`/api/account/api-keys/${keyId}/stats`)
+    fetch(`${statsBasePath}/${keyId}/stats`)
       .then(async (response) => {
         if (!response.ok) throw new Error("stats failed");
         const data = (await response.json()) as KeyStats;
@@ -57,7 +64,7 @@ export function KeyStatsPanel({ keyId }: { keyId: string }) {
     return () => {
       cancelled = true;
     };
-  }, [keyId]);
+  }, [keyId, statsBasePath]);
 
   if (state === "loading") {
     return <p className="p-3 text-sm text-text-muted">{t("loading")}</p>;

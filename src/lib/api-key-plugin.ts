@@ -27,9 +27,9 @@ export const MAX_API_KEYS_PER_USER = 5;
  * (src/features/public-api).
  */
 /**
- * Erzwingt das Key-Limit vor jedem Create — als globaler before-Hook,
- * damit auch die vom Plugin gemounteten HTTP-Endpoints
- * (/api/auth/api-key/create) das Limit nicht umgehen können.
+ * Erzwingt Key-Limit und Erstellungs-Sperre vor jedem Create — als
+ * globaler before-Hook, damit auch die vom Plugin gemounteten
+ * HTTP-Endpoints (/api/auth/api-key/create) beides nicht umgehen können.
  */
 export function apiKeyCapHook() {
   return createAuthMiddleware(async (ctx) => {
@@ -40,6 +40,17 @@ export function apiKeyCapHook() {
       session?.user.id ?? (ctx.body as { userId?: string } | undefined)?.userId;
     // Ohne Nutzer wirft der Endpoint selbst UNAUTHORIZED
     if (!userId) return;
+
+    const user = (await ctx.context.adapter.findOne({
+      model: "user",
+      where: [{ field: "id", value: userId }],
+    })) as { apiKeysBanned?: unknown } | null;
+    if (user?.apiKeysBanned === true) {
+      throw new APIError("FORBIDDEN", {
+        message: "api key creation banned",
+        code: "API_KEYS_BANNED",
+      });
+    }
 
     const count = await ctx.context.adapter.count({
       model: "apikey",

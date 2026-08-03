@@ -40,7 +40,14 @@ export function ApiKeysManager({
         body: JSON.stringify({ name: name.trim() }),
       });
       if (response.status === 403) {
-        setCreateError(t("create.limitReached"));
+        const body = (await response.json().catch(() => null)) as {
+          error?: string;
+        } | null;
+        setCreateError(
+          body?.error === "banned"
+            ? t("create.banned")
+            : t("create.limitReached"),
+        );
         return;
       }
       if (!response.ok) {

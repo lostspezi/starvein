@@ -17,6 +17,14 @@ export class KeyLimitError extends Error {
   }
 }
 
+/** Nutzer wurde von einem Admin vom Key-Erstellen ausgeschlossen. */
+export class KeyCreationBannedError extends Error {
+  constructor() {
+    super("api key creation banned");
+    this.name = "KeyCreationBannedError";
+  }
+}
+
 type ApiKeyDoc = {
   _id: ObjectId;
   name?: string | null;
@@ -61,13 +69,12 @@ export async function createKey(
       key: created.key,
     };
   } catch (error) {
-    if (
-      error instanceof Error &&
-      "body" in error &&
-      (error as { body?: { code?: string } }).body?.code === "KEY_LIMIT_REACHED"
-    ) {
-      throw new KeyLimitError();
-    }
+    const code =
+      error instanceof Error && "body" in error
+        ? (error as { body?: { code?: string } }).body?.code
+        : undefined;
+    if (code === "KEY_LIMIT_REACHED") throw new KeyLimitError();
+    if (code === "API_KEYS_BANNED") throw new KeyCreationBannedError();
     throw error;
   }
 }

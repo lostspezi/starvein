@@ -9,6 +9,7 @@
       "namePlaceholder": "e.g. My Discord bot",
       "submit": "Create key",
       "limitReached": "Limit reached: 5 keys maximum. Revoke an existing key to make room.",
+      "banned": "Creating API keys has been disabled for your account.",
       "error": "Could not create the key — please try again later."
     },
     "showOnce": {
@@ -27,6 +28,23 @@
       "revokeConfirm": "Revoke key \"{name}\"? Applications using it lose access immediately.",
       "revokeCancel": "Cancel",
       "stats": "Statistics"
+    },
+    "admin": {
+      "title": "API keys",
+      "empty": "No API keys yet.",
+      "owner": "Owner",
+      "bannedBadge": "banned",
+      "createdAt": "Created",
+      "lastUsedAt": "Last used",
+      "neverUsed": "Never",
+      "requests": "requests (30 days)",
+      "stats": "Statistics",
+      "ban": "Ban from creating keys",
+      "unban": "Lift creation ban",
+      "delete": "Delete",
+      "deleteConfirm": "Confirm delete",
+      "deleteCancel": "Cancel",
+      "deleteWarning": "Delete key \"{name}\" owned by {owner}? Applications using it lose access immediately."
     },
     "stats": {
       "title": "Usage — {name}",

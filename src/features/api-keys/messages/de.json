@@ -9,6 +9,7 @@
       "namePlaceholder": "z.B. Mein Discord-Bot",
       "submit": "Key erstellen",
       "limitReached": "Limit erreicht: maximal 5 Keys. Widerrufe einen bestehenden Key, um Platz zu schaffen.",
+      "banned": "Das Erstellen von API-Keys wurde für deinen Account gesperrt.",
       "error": "Key konnte nicht erstellt werden — bitte später erneut versuchen."
     },
     "showOnce": {
@@ -27,6 +28,23 @@
       "revokeConfirm": "Key „{name}“ widerrufen? Anwendungen, die ihn nutzen, verlieren sofort den Zugriff.",
       "revokeCancel": "Abbrechen",
       "stats": "Statistiken"
+    },
+    "admin": {
+      "title": "API-Keys",
+      "empty": "Noch keine API-Keys vorhanden.",
+      "owner": "Besitzer",
+      "bannedBadge": "gesperrt",
+      "createdAt": "Erstellt",
+      "lastUsedAt": "Zuletzt benutzt",
+      "neverUsed": "Nie",
+      "requests": "Requests (30 Tage)",
+      "stats": "Statistiken",
+      "ban": "Vom Erstellen ausschließen",
+      "unban": "Sperre aufheben",
+      "delete": "Löschen",
+      "deleteConfirm": "Endgültig löschen",
+      "deleteCancel": "Abbrechen",
+      "deleteWarning": "Key „{name}“ von {owner} löschen? Anwendungen mit diesem Key verlieren sofort den Zugriff."
     },
     "stats": {
       "title": "Nutzung — {name}",

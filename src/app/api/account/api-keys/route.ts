@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createKeySchema } from "@/features/api-keys/api-keys.schema";
 import {
+  KeyCreationBannedError,
   KeyLimitError,
   createKey,
   listKeys,
@@ -41,6 +42,9 @@ export async function POST(request: Request) {
   } catch (error) {
     if (error instanceof KeyLimitError) {
       return NextResponse.json({ error: "key limit reached" }, { status: 403 });
+    }
+    if (error instanceof KeyCreationBannedError) {
+      return NextResponse.json({ error: "banned" }, { status: 403 });
     }
     throw error;
   }
