@@ -3,6 +3,7 @@ import { mongodbAdapter } from "better-auth/adapters/mongodb";
 import { nextCookies } from "better-auth/next-js";
 import { bearer, deviceAuthorization } from "better-auth/plugins";
 import { MongoClient } from "mongodb";
+import { apiKeyPlugin } from "@/lib/api-key-plugin";
 import { resolveTrustedOrigins } from "@/lib/auth-config";
 
 /** Einzige Client-ID, die den Device-Flow nutzen darf (Desktop-Companion). */
@@ -58,6 +59,9 @@ export const auth = betterAuth({
     // Erlaubt `Authorization: Bearer <session-token>` — damit funktionieren
     // alle bestehenden Route-Handler unverändert auch für die Desktop-App.
     bearer(),
+    // API-Keys für die öffentliche /api/v1 (Konfiguration + Konstanten in
+    // src/lib/api-key-plugin.ts, geteilt mit den Integration-Tests).
+    apiKeyPlugin(),
     // nextCookies muss laut Better-Auth-Doku das letzte Plugin sein.
     nextCookies(),
   ],
