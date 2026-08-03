@@ -26,6 +26,7 @@ const STATIC_PATHS = [
   "/ships",
   "/materials",
   "/blueprints",
+  "/api-docs",
 ] as const;
 
 /** Pfad ohne Locale-Prefix → ein Sitemap-Eintrag pro Locale inkl. hreflang. */

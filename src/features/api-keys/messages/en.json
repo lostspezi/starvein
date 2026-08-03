@@ -1,0 +1,45 @@
+{
+  "apiKeys": {
+    "title": "API keys",
+    "intro": "Up to 5 keys for the STARVEIN community API — free, 120 requests per minute per key.",
+    "docsLink": "API documentation",
+    "loginRequired": "Please sign in to manage API keys.",
+    "create": {
+      "nameLabel": "Name",
+      "namePlaceholder": "e.g. My Discord bot",
+      "submit": "Create key",
+      "limitReached": "Limit reached: 5 keys maximum. Revoke an existing key to make room.",
+      "error": "Could not create the key — please try again later."
+    },
+    "showOnce": {
+      "title": "Key created",
+      "warning": "This key is shown only once, right now. Copy it somewhere safe — afterwards only its beginning stays visible.",
+      "copy": "Copy",
+      "copied": "Copied!",
+      "close": "Got it, close"
+    },
+    "list": {
+      "empty": "No keys yet. Create your first key to use the API.",
+      "createdAt": "Created",
+      "lastUsedAt": "Last used",
+      "neverUsed": "Never",
+      "revoke": "Revoke",
+      "revokeConfirm": "Revoke key \"{name}\"? Applications using it lose access immediately.",
+      "revokeCancel": "Cancel",
+      "stats": "Statistics"
+    },
+    "stats": {
+      "title": "Usage — {name}",
+      "requests30d": "Requests (30 days)",
+      "requestsPerDay": "Requests per day",
+      "topEndpoints": "Top endpoints",
+      "totalRequests": "Total requests",
+      "errorRate": "Error rate",
+      "rateLimited": "Rate-limit hits",
+      "lastUsed": "Last used",
+      "empty": "No usage data yet — it appears shortly after your first requests.",
+      "loading": "Loading statistics…",
+      "error": "Could not load statistics."
+    }
+  }
+}

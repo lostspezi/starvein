@@ -86,6 +86,9 @@ export function SiteFooter() {
           >
             {t("footer.requestFeature")}
           </a>
+          <Link href="/api-docs" className={linkClasses}>
+            {t("footer.apiDocs")}
+          </Link>
           <a href={RSI_URL} className={linkClasses} {...externalProps}>
             {t("disclaimer.rsiLinkLabel")}
           </a>

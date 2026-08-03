@@ -1,0 +1,22 @@
+{
+  "publicApi": {
+    "title": "Community API",
+    "intro": "All STARVEIN reference data — ores, occurrences, signatures, locations, refinery yields and prices — is available as a free read-only REST API.",
+    "quickstart": {
+      "title": "Quickstart",
+      "step1": "Sign in with Discord — free; browsing the site itself never requires an account.",
+      "step2": "Create a key under \"API keys\" in the user menu. The full key is shown exactly once — copy it right away.",
+      "step3": "Send requests with the key as a bearer token (or as an x-api-key header):"
+    },
+    "limits": {
+      "title": "Rate limit",
+      "text": "120 requests per minute per key. Every response carries X-RateLimit-Limit, -Remaining and -Reset; 429 responses add Retry-After."
+    },
+    "envelope": {
+      "title": "Response format",
+      "text": "All responses are wrapped in { data, meta } — meta.patchVersion tells you which game patch the data belongs to."
+    },
+    "manageKeys": "Manage API keys",
+    "referenceTitle": "Reference"
+  }
+}

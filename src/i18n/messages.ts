@@ -53,6 +53,10 @@ import deShips from "@/features/ships/messages/de.json";
 import enShips from "@/features/ships/messages/en.json";
 import deRockCalculator from "@/features/rock-calculator/messages/de.json";
 import enRockCalculator from "@/features/rock-calculator/messages/en.json";
+import dePublicApi from "@/features/public-api/messages/de.json";
+import enPublicApi from "@/features/public-api/messages/en.json";
+import deApiKeys from "@/features/api-keys/messages/de.json";
+import enApiKeys from "@/features/api-keys/messages/en.json";
 
 const messages = {
   de: {
@@ -81,6 +85,8 @@ const messages = {
     ...deBlueprints,
     ...deShips,
     ...deRockCalculator,
+    ...dePublicApi,
+    ...deApiKeys,
   },
   en: {
     ...enCommon,
@@ -108,6 +114,8 @@ const messages = {
     ...enBlueprints,
     ...enShips,
     ...enRockCalculator,
+    ...enPublicApi,
+    ...enApiKeys,
   },
 };
 

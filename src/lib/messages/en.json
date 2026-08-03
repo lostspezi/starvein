@@ -87,6 +87,13 @@
     "companion": {
       "title": "Companion App",
       "description": "STARVEIN Companion for Windows: capture Star Citizen refinery work orders via hotkey and text recognition — with countdown and a notification when the order is done."
+    },
+    "apiDocs": {
+      "title": "Community API",
+      "description": "Free read-only REST API for Star Citizen mining data: ores, occurrences, signatures, locations, refinery yields and prices — with an OpenAPI reference."
+    },
+    "apiKeys": {
+      "title": "API keys"
     }
   },
   "common": {
@@ -130,7 +137,8 @@
       "requestFeature": "Request a feature",
       "craftedBy": "Crafted with ♥ by",
       "communityLogoAlt": "Star Citizen “Made by the Community” logo",
-      "sectionsLabel": "Reference sections"
+      "sectionsLabel": "Reference sections",
+      "apiDocs": "Community API"
     }
   },
   "og": {

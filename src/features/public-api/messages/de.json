@@ -1,0 +1,22 @@
+{
+  "publicApi": {
+    "title": "Community-API",
+    "intro": "Alle Referenzdaten von STARVEIN — Erze, Vorkommen, Signaturen, Locations, Refinery-Yields und Preise — gibt es als kostenlose Read-only-REST-API.",
+    "quickstart": {
+      "title": "Schnellstart",
+      "step1": "Mit Discord anmelden — kostenlos; das Browsen der Seite bleibt natürlich ohne Account möglich.",
+      "step2": "Im Nutzermenü unter „API-Keys“ einen Key erstellen. Der volle Key wird genau einmal angezeigt — direkt kopieren.",
+      "step3": "Requests mit dem Key als Bearer-Token senden (alternativ als x-api-key-Header):"
+    },
+    "limits": {
+      "title": "Rate-Limit",
+      "text": "120 Requests pro Minute und Key. Jede Antwort trägt X-RateLimit-Limit, -Remaining und -Reset; bei 429 zusätzlich Retry-After."
+    },
+    "envelope": {
+      "title": "Antwortformat",
+      "text": "Alle Antworten sind in { data, meta } verpackt — meta.patchVersion nennt den Spielpatch, aus dem die Daten stammen."
+    },
+    "manageKeys": "API-Keys verwalten",
+    "referenceTitle": "Referenz"
+  }
+}
