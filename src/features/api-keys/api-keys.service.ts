@@ -88,6 +88,22 @@ export async function listKeys(
   return docs.map(toSummary);
 }
 
+/** Key-Metadaten, sofern der Key existiert und dem Nutzer gehört. */
+export async function findKeySummary(
+  db: Db,
+  userId: string,
+  keyId: string,
+): Promise<ApiKeySummary | null> {
+  if (!ObjectId.isValid(keyId)) return null;
+  const doc = await db
+    .collection<ApiKeyDoc>(API_KEY_COLLECTION)
+    .findOne(
+      { _id: new ObjectId(keyId), referenceId: userId },
+      { projection: { name: 1, start: 1, createdAt: 1, lastRequest: 1 } },
+    );
+  return doc ? toSummary(doc) : null;
+}
+
 /** Löscht einen Key, sofern er dem Nutzer gehört. */
 export async function revokeKey(
   db: Db,

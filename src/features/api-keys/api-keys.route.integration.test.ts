@@ -1,6 +1,7 @@
 import { afterAll, describe, expect, it } from "vitest";
 import { GET, POST } from "@/app/api/account/api-keys/route";
 import { DELETE } from "@/app/api/account/api-keys/[id]/route";
+import { GET as getStats } from "@/app/api/account/api-keys/[id]/stats/route";
 import { closeMongo } from "@/lib/db";
 
 // Ohne Session-Cookie liefern alle Key-Management-Endpunkte 401 —
@@ -25,6 +26,14 @@ describe("api-keys API without a session", () => {
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ name: "bot" }),
       }),
+    );
+    expect(response.status).toBe(401);
+  });
+
+  it("rejects stats GET", async () => {
+    const response = await getStats(
+      new Request("http://localhost/api/account/api-keys/abc/stats"),
+      { params: Promise.resolve({ id: "abc" }) },
     );
     expect(response.status).toBe(401);
   });

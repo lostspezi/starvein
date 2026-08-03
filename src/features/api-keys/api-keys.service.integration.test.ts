@@ -5,6 +5,7 @@ import { API_KEY_PREFIX, MAX_API_KEYS_PER_USER } from "@/lib/api-key-plugin";
 import {
   KeyLimitError,
   createKey,
+  findKeySummary,
   listKeys,
   revokeKey,
 } from "./api-keys.service";
@@ -67,6 +68,18 @@ describe("api-keys service", () => {
 
     expect(await revokeKey(db, owner, created.id)).toBe(true);
     expect(await listKeys(db, owner)).toHaveLength(0);
+  });
+
+  it("finds a key summary only for its owner", async () => {
+    const db = await getDb();
+    const owner = userId();
+    const created = await createKey(db, owner, "mine");
+
+    const found = await findKeySummary(db, owner, created.id);
+    expect(found).toMatchObject({ id: created.id, name: "mine" });
+
+    expect(await findKeySummary(db, userId(), created.id)).toBeNull();
+    expect(await findKeySummary(db, owner, "not-an-object-id")).toBeNull();
   });
 
   it("returns false when revoking an unknown or malformed key id", async () => {
