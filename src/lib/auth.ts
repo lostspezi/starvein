@@ -3,7 +3,7 @@ import { mongodbAdapter } from "better-auth/adapters/mongodb";
 import { nextCookies } from "better-auth/next-js";
 import { bearer, deviceAuthorization } from "better-auth/plugins";
 import { MongoClient } from "mongodb";
-import { apiKeyPlugin } from "@/lib/api-key-plugin";
+import { apiKeyCapHook, apiKeyPlugin } from "@/lib/api-key-plugin";
 import { resolveTrustedOrigins } from "@/lib/auth-config";
 
 /** Einzige Client-ID, die den Device-Flow nutzen darf (Desktop-Companion). */
@@ -37,6 +37,10 @@ export const auth = betterAuth({
       clientId: process.env.DISCORD_CLIENT_ID ?? "",
       clientSecret: process.env.DISCORD_CLIENT_SECRET ?? "",
     },
+  },
+  hooks: {
+    // Key-Limit pro Nutzer, greift für Server-Calls UND Plugin-HTTP-Endpoints
+    before: apiKeyCapHook(),
   },
   user: {
     additionalFields: {
