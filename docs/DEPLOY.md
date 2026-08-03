@@ -114,7 +114,18 @@ GitHub (Profile → Packages) → Package settings → Change visibility → Pub
   17 4 * * * s=$(grep -m1 "^SYNC_SECRET=" /opt/starvein/.env | cut -d= -f2-); echo "$(date -Is) sync-wiki: $(curl -sS --max-time 1800 --resolve starvein.app:443:127.0.0.1 -X POST https://starvein.app/api/sync-wiki -H "x-sync-secret: $s" 2>&1)" >> /var/log/starvein-sync.log
   ```
 
-  Beide Routen sind fail closed (401 ohne konfiguriertes/korrektes
+- **API-Usage-Aggregation (cron on the VPS):** Das Usage-Tracking der
+  öffentlichen `/api/v1` zählt Requests in Redis-Stunden-Buckets;
+  `POST /api/sync-api-usage` flusht geschlossene Stunden in die
+  `apiUsage`-Collection (30-Tage-TTL). Stündlich reicht — ohne den Cron
+  wachsen die Buckets nicht ins Unermessliche (48h-TTL), aber das
+  Statistik-Dashboard bleibt dann bei "heute" stehen:
+
+  ```
+  7 * * * * s=$(grep -m1 "^SYNC_SECRET=" /opt/starvein/.env | cut -d= -f2-); echo "$(date -Is) sync-api-usage: $(curl -sS --max-time 300 --resolve starvein.app:443:127.0.0.1 -X POST https://starvein.app/api/sync-api-usage -H "x-sync-secret: $s" 2>&1)" >> /var/log/starvein-sync.log
+  ```
+
+  Alle drei Routen sind fail closed (401 ohne konfiguriertes/korrektes
   `SYNC_SECRET`). Die tsx-Skripte (`pnpm sync:uex`, `pnpm sync:wiki`) bleiben
   für lokale Läufe und One-offs über den `jobs`-Container erhalten.
 

@@ -22,6 +22,9 @@ STARVEIN baut auf Daten und Vorarbeiten der Star-Citizen-Community auf:
   Grundlage für die Stat-Tabellen der Mining-Laser, -Module und -Gadgets im
   Loadout-Katalog (`data/curated/mining-*.json`), gegengeprüft mit UEX und
   dem [Star Citizen Wiki](https://starcitizen.tools) (CC BY-SA 4.0).
+- **[Scalar](https://github.com/scalar/scalar)** (MIT-Lizenz) — interaktive
+  OpenAPI-Referenz der Community-API (`/api-docs`); das Standalone-Bundle wird
+  selbst-gehostet ausgeliefert (`scripts/vendor-scalar.ts`).
 - **[mort13/BreakabilityChart](https://github.com/mort13/BreakabilityChart)** (MIT-Lizenz) —
   Grundlage der Break-Formel des Rock-Rechners
   (`requiredPower = Masse × 0.2 × (1 + Resistenz/100) × Widerstands-Modifikatoren`),
