@@ -43,4 +43,13 @@ describe("buildContentSecurityPolicy", () => {
     expect(csp).toContain("https://cdn.discordapp.com");
     expect(csp).toContain("https://www.youtube.com");
   });
+
+  it("allows the Cloudflare Web Analytics beacon (script load + RUM upload)", () => {
+    // Cloudflare injiziert beacon.min.js automatisch; ohne diese Origins
+    // blockt die CSP das RUM-Tracking und das Admin-Dashboard bleibt leer.
+    expect(csp).toMatch(
+      /script-src [^;]*https:\/\/static\.cloudflareinsights\.com/,
+    );
+    expect(csp).toMatch(/connect-src [^;]*https:\/\/cloudflareinsights\.com/);
+  });
 });
