@@ -51,6 +51,7 @@ describe("buildStaticEntries", () => {
       "/calculator",
       "/loadouts",
       "/companion",
+      "/for-streamers",
       "/guides",
       "/ships",
       "/materials",

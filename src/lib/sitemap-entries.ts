@@ -22,6 +22,7 @@ const STATIC_PATHS = [
   "/calculator",
   "/loadouts",
   "/companion",
+  "/for-streamers",
   "/guides",
   "/ships",
   "/materials",

@@ -1,0 +1,48 @@
+{
+  "forStreamers": {
+    "title": "STARVEIN für Streamer",
+    "subtitle": "Mining-Referenz, Companion-App und offene Daten für deinen Star-Citizen-Stream",
+    "intro": "Du streamst Star Citizen und willst beim Mining nicht ständig aus dem Spiel tabben? Genau dafür ist STARVEIN gebaut. Die komplette Referenz läuft ohne Account und ohne Paywall. Jeder Link, den du in den Chat wirfst, öffnet sich für deine Zuschauer sofort.",
+    "sections": {
+      "companion": {
+        "title": "Refinery-Jobs erfassen, ohne den Stream zu unterbrechen",
+        "body": "Mit der Companion-App für Windows drückst du am Refinery-Terminal einen Hotkey, prüfst kurz die erkannten Werte und spielst weiter. Kein Alt-Tab, kein Szenenwechsel, keine Tabellenpflege zwischen zwei Quantum-Sprüngen. Die App wartet im Tray und meldet sich mit einer Benachrichtigung, sobald ein Auftrag abholbereit ist.",
+        "cta": "Companion-App ansehen"
+      },
+      "chatLinks": {
+        "title": "Links, die im Chat und auf Discord gut aussehen",
+        "body": "Jedes Erz, jede Location und jeder Rechner hat eine kurze, saubere URL mit eigener Vorschaukarte für Discord und Social Media. Wenn im Chat zum dritten Mal jemand fragt, wo es Bexalite gibt, reicht ein Link statt einer fünfminütigen Erklärung.",
+        "cta": "Erz-Referenz öffnen"
+      },
+      "api": {
+        "title": "Eigene Overlays und Chatbots mit der Community-API",
+        "body": "Die kostenlose Read-only-API liefert Erze, Vorkommen, Signaturen, Preise und Refinery-Yields als JSON. Dank CORS-Freigabe funktioniert das auch direkt aus einem Browser-Overlay in OBS. API-Key anlegen, OpenAPI-Referenz aufschlagen, loslegen: vom Preis-Ticker bis zum Erz-Befehl für deinen Chatbot.",
+        "cta": "Zur API-Dokumentation"
+      },
+      "guides": {
+        "title": "Guides und Loadouts zum Verlinken unter dem VOD",
+        "body": "Schreib deine Mining-Guides direkt auf STARVEIN und pack den Link in die Videobeschreibung oder deine Kanal-Panels. Loadouts teilst du genauso. Deine Community baut das Setup einfach nach, statt dein Video auf der Ausrüstungsseite zu pausieren.",
+        "cta": "Guides entdecken"
+      }
+    },
+    "faqTitle": "Häufige Fragen von Streamern",
+    "faq": {
+      "showOnStream": {
+        "question": "Darf ich STARVEIN in meinem Stream zeigen?",
+        "answer": "Ja, gern. STARVEIN ist ein kostenloses Community-Projekt. Du kannst die Seite ohne Rückfrage in Streams und Videos zeigen und verlinken. Eine Erwähnung freut uns, ist aber keine Bedingung."
+      },
+      "antiCheat": {
+        "question": "Ist die Companion-App mit Anti-Cheat vereinbar?",
+        "answer": "Die App macht ausschließlich normale Screenshots auf Betriebssystem-Ebene. Sie liest keinen Spielspeicher und injiziert nichts in den Spielprozess. Das ist dieselbe Technik, die auch andere etablierte Community-Tools verwenden."
+      },
+      "apiCost": {
+        "question": "Was kostet die Community-API?",
+        "answer": "Nichts. Der API-Key ist kostenlos, die API ist read-only und für Community-Projekte wie Overlays, Bots und Websites gedacht. Ein faires Rate-Limit hält sie für alle stabil."
+      },
+      "viewerAccount": {
+        "question": "Brauchen meine Zuschauer einen Account?",
+        "answer": "Nein. Erze, Fundorte, Signaturen und Rechner funktionieren komplett ohne Login. Ein Konto braucht nur, wer Favoriten, eigene Guides oder Refinery-Jobs speichern möchte."
+      }
+    }
+  }
+}

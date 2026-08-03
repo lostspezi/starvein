@@ -19,6 +19,8 @@ import deAdminDashboard from "@/features/admin-dashboard/messages/de.json";
 import enAdminDashboard from "@/features/admin-dashboard/messages/en.json";
 import deFavorites from "@/features/favorites/messages/de.json";
 import enFavorites from "@/features/favorites/messages/en.json";
+import deForStreamers from "@/features/for-streamers/messages/de.json";
+import enForStreamers from "@/features/for-streamers/messages/en.json";
 import deGuides from "@/features/guides/messages/de.json";
 import enGuides from "@/features/guides/messages/en.json";
 import deHome from "@/features/home/messages/de.json";
@@ -74,6 +76,7 @@ const messages = {
     ...deCompanion,
     ...deDeviceAuth,
     ...deFavorites,
+    ...deForStreamers,
     ...deCompare,
     ...deChat,
     ...deModeration,
@@ -103,6 +106,7 @@ const messages = {
     ...enCompanion,
     ...enDeviceAuth,
     ...enFavorites,
+    ...enForStreamers,
     ...enCompare,
     ...enChat,
     ...enModeration,

@@ -1,0 +1,48 @@
+{
+  "forStreamers": {
+    "title": "STARVEIN for streamers",
+    "subtitle": "Mining reference, companion app and open data for your Star Citizen stream",
+    "intro": "You stream Star Citizen and don't want to tab out of the game every time mining comes up? That is exactly what STARVEIN is built for. The whole reference works without an account and without a paywall. Every link you drop in chat opens instantly for your viewers.",
+    "sections": {
+      "companion": {
+        "title": "Capture refinery jobs without interrupting your stream",
+        "body": "With the Windows companion app you press a hotkey at the refinery terminal, glance over the recognized values and keep playing. No alt-tabbing, no scene switching, no spreadsheet upkeep between two quantum jumps. The app waits in the tray and sends a notification as soon as an order is ready for pickup.",
+        "cta": "Check out the companion app"
+      },
+      "chatLinks": {
+        "title": "Links that look good in chat and on Discord",
+        "body": "Every ore, location and calculator has a short, clean URL with its own preview card for Discord and social media. When chat asks for the third time where to find Bexalite, one link beats a five minute explanation.",
+        "cta": "Open the ore reference"
+      },
+      "api": {
+        "title": "Build your own overlays and chatbots with the community API",
+        "body": "The free read-only API serves ores, occurrences, signatures, prices and refinery yields as JSON. Thanks to CORS support that even works straight from a browser overlay in OBS. Create an API key, open the OpenAPI reference and get going: from a price ticker to an ore command for your chatbot.",
+        "cta": "Read the API docs"
+      },
+      "guides": {
+        "title": "Guides and loadouts to link below your VOD",
+        "body": "Write your mining guides directly on STARVEIN and put the link in your video description or channel panels. Loadouts share the same way. Your community simply rebuilds the setup instead of pausing your video on the equipment screen.",
+        "cta": "Discover guides"
+      }
+    },
+    "faqTitle": "Questions streamers ask",
+    "faq": {
+      "showOnStream": {
+        "question": "Can I show STARVEIN on my stream?",
+        "answer": "Yes, please do. STARVEIN is a free community project. You can show and link the site in streams and videos without asking first. A shout-out makes us happy but is never required."
+      },
+      "antiCheat": {
+        "question": "Does the companion app play nice with anti-cheat?",
+        "answer": "The app only takes regular screenshots at the operating system level. It never reads game memory and never injects anything into the game process. That is the same technique other established community tools use."
+      },
+      "apiCost": {
+        "question": "What does the community API cost?",
+        "answer": "Nothing. The API key is free, the API is read-only and meant for community projects like overlays, bots and websites. A fair rate limit keeps it stable for everyone."
+      },
+      "viewerAccount": {
+        "question": "Do my viewers need an account?",
+        "answer": "No. Ores, locations, signatures and calculators work entirely without a login. An account is only needed to save favorites, write guides or track refinery jobs."
+      }
+    }
+  }
+}

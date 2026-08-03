@@ -86,6 +86,9 @@ export function SiteFooter() {
           >
             {t("footer.requestFeature")}
           </a>
+          <Link href="/for-streamers" className={linkClasses}>
+            {t("footer.forStreamers")}
+          </Link>
           <Link href="/api-docs" className={linkClasses}>
             {t("footer.apiDocs")}
           </Link>

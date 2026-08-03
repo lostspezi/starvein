@@ -46,6 +46,7 @@ describe.each<AppLocale>(["de", "en"])("SiteFooter (%s)", (locale) => {
       "/signatures",
       "/blueprints",
       "/guides",
+      "/for-streamers",
     ]) {
       expect(hrefs).toContain(path);
     }

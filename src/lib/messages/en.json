@@ -94,6 +94,10 @@
     },
     "apiKeys": {
       "title": "API keys"
+    },
+    "forStreamers": {
+      "title": "For streamers",
+      "description": "STARVEIN on your Star Citizen stream: capture refinery jobs via hotkey instead of alt-tabbing, share reference links in chat and Discord, plus a free API for custom overlays and bots."
     }
   },
   "common": {
@@ -138,7 +142,8 @@
       "craftedBy": "Crafted with ♥ by",
       "communityLogoAlt": "Star Citizen “Made by the Community” logo",
       "sectionsLabel": "Reference sections",
-      "apiDocs": "Community API"
+      "apiDocs": "Community API",
+      "forStreamers": "For streamers"
     }
   },
   "og": {
