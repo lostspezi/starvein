@@ -1,6 +1,8 @@
 import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import { AdminApiKeysTable } from "@/features/api-keys/AdminApiKeysTable";
+import { listAllKeysWithOwners } from "@/features/api-keys/admin-api-keys.service";
 import { AdminTimeoutsTable } from "@/features/moderation/AdminTimeoutsTable";
 import { AdminUsersTable } from "@/features/moderation/AdminUsersTable";
 import { listActiveTimeouts } from "@/features/moderation/timeouts.repository";
@@ -41,10 +43,12 @@ export default async function AdminPage({
 
   const t = await getTranslations("admin");
   const db = await getDb();
-  const [users, timeouts] = await Promise.all([
+  const [users, timeouts, apiKeys] = await Promise.all([
     listUsers(db),
     listActiveTimeouts(db, new Date().toISOString()),
+    listAllKeysWithOwners(db),
   ]);
+  const tApiKeys = await getTranslations("apiKeys.admin");
 
   return (
     <PageShell>
@@ -60,6 +64,12 @@ export default async function AdminPage({
           {t("timeoutsTitle")}
         </h2>
         <AdminTimeoutsTable timeouts={timeouts} />
+      </section>
+      <section className="mt-8 space-y-2">
+        <h2 className="text-sm font-medium text-text-primary">
+          {tApiKeys("title")}
+        </h2>
+        <AdminApiKeysTable initialEntries={apiKeys} />
       </section>
     </PageShell>
   );

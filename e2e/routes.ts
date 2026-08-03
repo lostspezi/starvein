@@ -70,4 +70,8 @@ export const ROUTES: string[] = [
   "/en/device",
   "/de/companion",
   "/en/companion",
+  "/de/api-docs",
+  "/en/api-docs",
+  "/de/account/api-keys",
+  "/en/account/api-keys",
 ];

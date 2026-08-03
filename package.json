@@ -13,8 +13,9 @@
   },
   "packageManager": "pnpm@11.3.0",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
+    "dev": "tsx scripts/vendor-scalar.ts && next dev",
+    "build": "tsx scripts/vendor-scalar.ts && next build",
+    "vendor:scalar": "tsx scripts/vendor-scalar.ts",
     "start": "next start",
     "lint": "eslint",
     "lint:jsdoc": "eslint --config eslint.jsdoc.config.mjs --quiet .",
@@ -24,7 +25,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "playwright test",
-    "e2e:server": "next build && next start -p 3100",
+    "e2e:server": "tsx scripts/vendor-scalar.ts && next build && next start -p 3100",
     "seed": "tsx --env-file=.env.local scripts/seed.ts",
     "sync:uex": "tsx --env-file=.env.local scripts/sync-uex.ts",
     "sync:wiki": "tsx --env-file=.env.local scripts/sync-wiki.ts",
@@ -36,6 +37,7 @@
     "*.{ts,tsx,json,css,md}": "prettier --write"
   },
   "dependencies": {
+    "@better-auth/api-key": "1.6.25",
     "@starvein/shared": "workspace:*",
     "@tiptap/core": "^3.28.0",
     "@tiptap/extension-image": "^3.28.0",
@@ -45,7 +47,7 @@
     "@tiptap/pm": "^3.28.0",
     "@tiptap/react": "^3.28.0",
     "@tiptap/starter-kit": "^3.28.0",
-    "better-auth": "^1.6.23",
+    "better-auth": "^1.6.25",
     "clsx": "^2.1.1",
     "ioredis": "^5.11.1",
     "lucide-react": "^1.23.0",
@@ -58,10 +60,12 @@
     "recharts": "^3.9.2",
     "sanitize-html": "^2.17.6",
     "tailwind-merge": "^3.6.0",
-    "zod": "^4.4.3"
+    "zod": "^4.4.3",
+    "zod-openapi": "^6.0.0"
   },
   "devDependencies": {
     "@playwright/test": "^1.61.1",
+    "@scalar/api-reference": "^1.64.0",
     "@tailwindcss/postcss": "^4",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",

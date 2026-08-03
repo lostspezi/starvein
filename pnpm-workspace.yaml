@@ -21,6 +21,10 @@ allowBuilds:
   "@parcel/watcher": true
   "@swc/core": true
   msw: true
+  # transitiv via @scalar/api-reference (devDep) — Postinstall wählt nur
+  # den Vue-2/3-Entry; wir nutzen ausschließlich das fertige
+  # Standalone-Bundle, kein Build nötig.
+  vue-demi: false
 
 minimumReleaseAgeExclude:
   - "@tiptap/core@3.28.0"

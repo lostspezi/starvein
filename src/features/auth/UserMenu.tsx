@@ -197,6 +197,13 @@ export function UserMenu() {
           >
             {t("myWarehouse")}
           </Link>
+          <Link
+            href="/account/api-keys"
+            className={itemClasses}
+            onClick={() => setOpen(false)}
+          >
+            {t("myApiKeys")}
+          </Link>
           <button
             type="button"
             className={itemClasses}

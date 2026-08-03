@@ -50,3 +50,6 @@ next-env.d.ts
 
 # Playwright-Server-Log (lokal)
 e2e-server.log
+
+# vendored client bundles (copied from node_modules before dev/build)
+/public/vendor/

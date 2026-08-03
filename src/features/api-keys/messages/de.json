@@ -1,0 +1,63 @@
+{
+  "apiKeys": {
+    "title": "API-Keys",
+    "intro": "Bis zu 5 Keys für die STARVEIN Community-API — kostenlos, 120 Requests pro Minute und Key.",
+    "docsLink": "Zur API-Dokumentation",
+    "loginRequired": "Zum Verwalten von API-Keys bitte anmelden.",
+    "create": {
+      "nameLabel": "Name",
+      "namePlaceholder": "z.B. Mein Discord-Bot",
+      "submit": "Key erstellen",
+      "limitReached": "Limit erreicht: maximal 5 Keys. Widerrufe einen bestehenden Key, um Platz zu schaffen.",
+      "banned": "Das Erstellen von API-Keys wurde für deinen Account gesperrt.",
+      "error": "Key konnte nicht erstellt werden — bitte später erneut versuchen."
+    },
+    "showOnce": {
+      "title": "Key erstellt",
+      "warning": "Dieser Key wird nur jetzt einmal angezeigt. Kopiere ihn an einen sicheren Ort — danach ist nur noch der Anfang sichtbar.",
+      "copy": "Kopieren",
+      "copied": "Kopiert!",
+      "close": "Verstanden, schließen"
+    },
+    "list": {
+      "empty": "Noch keine Keys. Erstelle deinen ersten Key, um die API zu nutzen.",
+      "createdAt": "Erstellt",
+      "lastUsedAt": "Zuletzt benutzt",
+      "neverUsed": "Nie",
+      "revoke": "Widerrufen",
+      "revokeConfirm": "Key „{name}“ widerrufen? Anwendungen, die ihn nutzen, verlieren sofort den Zugriff.",
+      "revokeCancel": "Abbrechen",
+      "stats": "Statistiken"
+    },
+    "admin": {
+      "title": "API-Keys",
+      "empty": "Noch keine API-Keys vorhanden.",
+      "owner": "Besitzer",
+      "bannedBadge": "gesperrt",
+      "createdAt": "Erstellt",
+      "lastUsedAt": "Zuletzt benutzt",
+      "neverUsed": "Nie",
+      "requests": "Requests (30 Tage)",
+      "stats": "Statistiken",
+      "ban": "Vom Erstellen ausschließen",
+      "unban": "Sperre aufheben",
+      "delete": "Löschen",
+      "deleteConfirm": "Endgültig löschen",
+      "deleteCancel": "Abbrechen",
+      "deleteWarning": "Key „{name}“ von {owner} löschen? Anwendungen mit diesem Key verlieren sofort den Zugriff."
+    },
+    "stats": {
+      "title": "Nutzung — {name}",
+      "requests30d": "Requests (30 Tage)",
+      "requestsPerDay": "Requests pro Tag",
+      "topEndpoints": "Top-Endpoints",
+      "totalRequests": "Requests gesamt",
+      "errorRate": "Fehlerquote",
+      "rateLimited": "Rate-Limit-Treffer",
+      "lastUsed": "Zuletzt benutzt",
+      "empty": "Noch keine Nutzungsdaten — sie erscheinen kurz nach den ersten Requests.",
+      "loading": "Lade Statistiken…",
+      "error": "Statistiken konnten nicht geladen werden."
+    }
+  }
+}
