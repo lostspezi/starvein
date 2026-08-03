@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import type { Db } from "mongodb";
 import { getDb } from "@/lib/db";
 import { v1Preflight, withCors } from "./cors";
+import { trackUsage } from "./usage-tracking";
 import { checkV1RateLimit, rateLimitHeaders } from "./v1-rate-limit";
 import { extractApiKey, verifyApiKey } from "./verify-key";
 
@@ -53,8 +54,17 @@ export function withApiV1<P = Record<string, never>>(
       );
     }
 
+    const track = (status: number) =>
+      void trackUsage({
+        keyId: verified.keyId,
+        userId: verified.userId,
+        endpoint,
+        status,
+      });
+
     const rate = await checkV1RateLimit(verified.keyId);
     if (!rate.allowed) {
+      track(429);
       const retryAfter = Math.max(
         1,
         rate.resetEpochSeconds - Math.ceil(Date.now() / 1000),
@@ -82,6 +92,7 @@ export function withApiV1<P = Record<string, never>>(
       );
     }
 
+    track(response.status);
     return applyHeaders(response, rateLimitHeaders(rate));
   };
 }
