@@ -14,7 +14,7 @@
     },
     "envelope": {
       "title": "Antwortformat",
-      "text": "Alle Antworten sind in { data, meta } verpackt — meta.patchVersion nennt den Spielpatch, aus dem die Daten stammen."
+      "text": "Alle Antworten sind in '{ data, meta }' verpackt — meta.patchVersion nennt den Spielpatch, aus dem die Daten stammen."
     },
     "manageKeys": "API-Keys verwalten",
     "referenceTitle": "Referenz"

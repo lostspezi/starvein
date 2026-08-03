@@ -14,7 +14,7 @@
     },
     "envelope": {
       "title": "Response format",
-      "text": "All responses are wrapped in { data, meta } — meta.patchVersion tells you which game patch the data belongs to."
+      "text": "All responses are wrapped in '{ data, meta }' — meta.patchVersion tells you which game patch the data belongs to."
     },
     "manageKeys": "Manage API keys",
     "referenceTitle": "Reference"
