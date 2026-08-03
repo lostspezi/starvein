@@ -14,14 +14,10 @@ test("api docs page shows quickstart and mounts scalar", async ({ page }) => {
   await expect(page.getByText("Quickstart")).toBeVisible();
   await expect(page.getByText(/curl -H "Authorization: Bearer/)).toBeVisible();
 
-  // Scalar lädt aus /public/vendor (kein CDN) und rendert die Referenz
-  await expect(page.locator("script#api-reference")).toHaveAttribute(
-    "data-url",
-    "/api/v1/openapi.json",
-  );
-  await expect(
-    page.locator("[data-v-app], .scalar-app, .scalar-api-reference").first(),
-  ).toBeAttached({ timeout: 20_000 });
+  // Scalar lädt aus /public/vendor (kein CDN) und mountet in den Container
+  const mount = page.locator("#scalar-reference");
+  await expect(mount).toBeAttached();
+  await expect(mount.locator("*").first()).toBeAttached({ timeout: 20_000 });
 });
 
 test("openapi spec is served keyless with CORS", async ({ request }) => {

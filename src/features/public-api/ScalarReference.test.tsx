@@ -1,15 +1,21 @@
 import { render } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import { ScalarReference } from "./ScalarReference";
+import { SCALAR_CONFIGURATION, ScalarReference } from "./ScalarReference";
 
 describe("ScalarReference", () => {
-  it("mounts the scalar marker pointing at the v1 spec", () => {
+  it("renders the mount container without an inline script marker", () => {
     const { container } = render(<ScalarReference />);
-    const marker = container.querySelector("script#api-reference");
-    expect(marker).not.toBeNull();
-    expect(marker?.getAttribute("data-url")).toBe("/api/v1/openapi.json");
-    // Kein CDN: das Bundle kommt selbst-gehostet aus /public/vendor
-    const config = marker?.getAttribute("data-configuration") ?? "";
-    expect(JSON.parse(config)).toMatchObject({ withDefaultFonts: false });
+    // React führt Script-Tags in Komponenten nie aus — der Mount läuft
+    // über window.Scalar.createApiReference im onLoad des Bundles.
+    expect(container.querySelector("script#api-reference")).toBeNull();
+    expect(container.querySelector("#scalar-reference")).not.toBeNull();
+  });
+
+  it("points the configuration at the v1 spec without external fonts", () => {
+    expect(SCALAR_CONFIGURATION).toMatchObject({
+      url: "/api/v1/openapi.json",
+      // Kein CDN/Font-Fetch: strikte CSP erlaubt nur 'self'
+      withDefaultFonts: false,
+    });
   });
 });
