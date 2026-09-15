@@ -35,7 +35,7 @@ pub struct OcrCapture {
 /// Windows-OCR erwartet Bgra8 — xcap liefert RGBA, also R/B tauschen.
 pub fn rgba_to_bgra(rgba: &[u8]) -> Vec<u8> {
     let mut bgra = rgba.to_vec();
-    for pixel in bgra.chunks_exact_mut(4) {
+    for pixel in bgra.as_chunks_mut::<4>().0 {
         pixel.swap(0, 2);
     }
     bgra
