@@ -3,15 +3,20 @@ packages:
   - "apps/*"
   - "packages/*"
 
-# sharp <0.35.0 zieht libvips mit CVE-2026-33327/-33328/-35590/-35591
-# (GHSA-f88m-g3jw-g9cj, high) — Next 16.2 pinnt noch eine ältere Version.
-# Override entfernen, sobald Next selbst auf sharp >=0.35 ist.
-# postcss <=8.5.17: GHSA-r28c-9q8g-f849 (high, Nachfolger von
-# GHSA-6g55-p6wh-862q) — transitiv via next; Override entfernen,
-# sobald Next postcss >=8.5.18 mitbringt.
+# Transitive Pakete mit High-Advisories, deren Konsumenten noch keine
+# gepatchte Version anfordern. Bewusst auf die jeweilige Major-Linie
+# begrenzt, damit kein Konsument ungewollt eine neue Major bekommt.
+# Override jeweils entfernen, sobald der genannte Konsument selbst eine
+# gepatchte Version mitbringt.
+# nanoid 3.x <3.3.18: GHSA-2v37-7h3g-55p8 — via postcss (next).
+# undici 7.x <7.29.0: GHSA-4cwx-7wf7-3272 — via jsdom (better-auth → vitest);
+# jsdom 29 verlangt undici 7, daher nicht auf 8 heben.
+# browserslist 4.x <4.28.7: GHSA-c83g-rgw3-j3cx und GHSA-73wf-gq98-2v4g — via
+# @babel/helper-compilation-targets.
 overrides:
-  sharp: ">=0.35.0"
-  postcss: ">=8.5.18"
+  "nanoid@3": ">=3.3.18 <4"
+  "undici@7": ">=7.29.0 <8"
+  "browserslist@4": ">=4.28.7 <5"
 
 allowBuilds:
   sharp: true
@@ -25,37 +30,3 @@ allowBuilds:
   # den Vue-2/3-Entry; wir nutzen ausschließlich das fertige
   # Standalone-Bundle, kein Build nötig.
   vue-demi: false
-
-minimumReleaseAgeExclude:
-  - "@tiptap/core@3.28.0"
-  - "@tiptap/extension-blockquote@3.28.0"
-  - "@tiptap/extension-bold@3.28.0"
-  - "@tiptap/extension-bubble-menu@3.28.0"
-  - "@tiptap/extension-bullet-list@3.28.0"
-  - "@tiptap/extension-code-block@3.28.0"
-  - "@tiptap/extension-code@3.28.0"
-  - "@tiptap/extension-document@3.28.0"
-  - "@tiptap/extension-dropcursor@3.28.0"
-  - "@tiptap/extension-floating-menu@3.28.0"
-  - "@tiptap/extension-gapcursor@3.28.0"
-  - "@tiptap/extension-hard-break@3.28.0"
-  - "@tiptap/extension-heading@3.28.0"
-  - "@tiptap/extension-horizontal-rule@3.28.0"
-  - "@tiptap/extension-image@3.28.0"
-  - "@tiptap/extension-italic@3.28.0"
-  - "@tiptap/extension-link@3.28.0"
-  - "@tiptap/extension-list-item@3.28.0"
-  - "@tiptap/extension-list-keymap@3.28.0"
-  - "@tiptap/extension-list@3.28.0"
-  - "@tiptap/extension-ordered-list@3.28.0"
-  - "@tiptap/extension-paragraph@3.28.0"
-  - "@tiptap/extension-strike@3.28.0"
-  - "@tiptap/extension-text@3.28.0"
-  - "@tiptap/extension-underline@3.28.0"
-  - "@tiptap/extension-youtube@3.28.0"
-  - "@tiptap/extensions@3.28.0"
-  - "@tiptap/html@3.28.0"
-  - "@tiptap/markdown@3.28.0"
-  - "@tiptap/pm@3.28.0"
-  - "@tiptap/react@3.28.0"
-  - "@tiptap/starter-kit@3.28.0"
