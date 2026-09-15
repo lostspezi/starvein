@@ -17,6 +17,28 @@ The stack (see [docker-compose.prod.yml](../docker-compose.prod.yml)):
 · `redis` · `caddy` (ports 80/443, automatic Let's Encrypt TLS)
 · `jobs` (profile-only, for one-off commands).
 
+## Shared VPS
+
+The VPS also hosts elivs (`ekocard.de`, compose project in `/opt/elivs`),
+which brings no reverse proxy of its own: its app container joins this
+project's Docker network `starvein_default`, and the `Caddyfile` here carries
+its routes (`ekocard.de`, `www.ekocard.de`, `cards.kozar.info`). Two things
+follow from that:
+
+- **The `Caddyfile` in this repository is the only source of truth.** Step 2
+  of the deploy copies it over `/opt/starvein/Caddyfile`, so a route edited
+  only on the VPS is gone with the next deploy, and after the next restart of
+  the Caddy container the other domain is unreachable. Edit it here, deploy,
+  then `docker exec starvein-caddy-1 caddy reload --config /etc/caddy/Caddyfile`
+  (the deploy copies the file but does not reload Caddy).
+- **Upstreams are addressed by container name** (`starvein-app-1:3000`,
+  `elivs-app-1:3000`), never by service name. Both projects call their web
+  service `app`, and Compose registers the service name as a DNS alias in
+  every network a container joins, so inside `starvein_default` the name
+  `app` resolves to both containers. With `reverse_proxy app:3000` Caddy sent
+  every second request for `starvein.app` to elivs; Discord logins ended on
+  `ekocard.de`.
+
 ## One-time setup
 
 ### 1. DNS

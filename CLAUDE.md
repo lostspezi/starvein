@@ -565,10 +565,15 @@ pnpm test:e2e       # Playwright
 
 ```
 starvein.example.com {
-    reverse_proxy app:3000
+    reverse_proxy starvein-app-1:3000
     encode gzip zstd
 }
 ```
+
+Upstream immer über den Containernamen (`starvein-app-1:3000`), nie über den Service-Namen
+`app`: der VPS ist mit elivs geteilt, dessen Web-Service ebenfalls `app` heißt und im selben
+Docker-Netz hängt, `app` löst dort also auf beide Container auf. Details und die Routen der
+Nachbar-Domain stehen in `docs/DEPLOY.md`, Abschnitt „Shared VPS“.
 
 Caddy übernimmt automatisches TLS per Let's-Encrypt-HTTP-01-Challenge — funktioniert auch hinter
 Cloudflares Proxy (orange cloud), da Cloudflare den ACME-Challenge-Pfad durchreicht. Alternative
