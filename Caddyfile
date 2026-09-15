@@ -1,7 +1,10 @@
 # TLS besorgt Caddy automatisch per Let's Encrypt (HTTP-01),
 # sobald der DNS-A-Record von starvein.app auf den VPS zeigt.
 starvein.app {
-	reverse_proxy app:3000
+	# Container name, not the service name: elivs (below) also calls its web service "app" and
+	# joins this network, so "app" resolves to both containers and requests would alternate
+	# between them. Container names are unique per host.
+	reverse_proxy starvein-app-1:3000
 	encode gzip zstd
 
 	# Security-Header am TLS-Terminator (Defense in Depth zu next.config.ts).
@@ -18,4 +21,29 @@ starvein.app {
 
 www.starvein.app {
 	redir https://starvein.app{uri} permanent
+}
+
+# elivs (digital business cards) — a separate compose project in /opt/elivs.
+# Its app container joins this proxy's network as a second network, which is why it can be
+# addressed by container name here without either project knowing about the other's compose file.
+ekocard.de {
+	reverse_proxy elivs-app-1:3000
+	encode gzip zstd
+
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+		X-Content-Type-Options "nosniff"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		-Server
+	}
+}
+
+www.ekocard.de {
+	redir https://ekocard.de{uri} permanent
+}
+
+# Former address of elivs. QR codes and NFC tags written before the move to ekocard.de still
+# carry this host, so it keeps answering and forwards every path to the new domain.
+cards.kozar.info {
+	redir https://ekocard.de{uri} permanent
 }
